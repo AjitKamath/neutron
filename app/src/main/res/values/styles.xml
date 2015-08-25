@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <!-- Inherit from the light Material Theme -->
+    <style name="FinappleTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Override the app bar color -->
+        <item name="android:colorPrimaryDark">@color/SteelBlue</item>
+        <!-- Override the color of UI controls -->
+        <item name="android:colorAccent">@color/twitterBlue</item>
+
+        <item name="android:colorPrimary">@color/twitterBlue</item>
+
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+
+        <item name="android:windowContentTransitions">true</item>
+
+        <!-- enable overlap of transitions -->
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+    </style>
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@android:color/holo_purple</item>
+    </style>
+
+    <style name="AppTheme" parent="android:Theme.Light" />
+    <style name="PauseDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/PauseDialogAnimation</item>
+    </style>
+
+    <style name="PauseDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/fadein</item>
+        <item name="android:windowExitAnimation">@anim/fadeout</item>
+    </style>
+
+</resources>

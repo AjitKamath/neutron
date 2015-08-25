@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:id="@+id/calendarTransactionsPopperLLId"
+    android:layout_width="fill_parent"
+    android:gravity="center"
+    android:alpha="@android:integer/config_mediumAnimTime"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_marginLeft="2dp"
+        android:background="@drawable/oval_buttons_text_view"
+        android:id="@+id/transactionPopperNewTVId"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="New"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="22dp"/>
+
+    <TextView
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/oval_buttons_text_view"
+        android:id="@+id/transactionPopperQuickTVId"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="Quick"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="22dp"/>
+
+
+    <TextView
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/oval_buttons_text_view"
+        android:id="@+id/transactionPopperSchedTVId"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="Sched."
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="22dp"/>
+</LinearLayout>

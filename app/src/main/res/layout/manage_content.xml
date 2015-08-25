@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:id="@+id/manageContentRLId"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/manageContentHeaderLLId"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/twitterBlue"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:onClick="onBackClick"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:background="@drawable/back"/>
+
+        <TextView
+            android:layout_width="290dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Manage Content"
+            android:textColor="@color/white"
+            android:textSize="25sp"/>
+
+        <ImageView
+            android:src="@drawable/add_white"
+            android:layout_marginRight="5dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:onClick="onAddClick"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/manageContentTabsLLId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/manageContentHeaderLLId"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/manageContentCatTabLLId"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="@color/activeTab"
+            android:paddingBottom="1dp"
+            android:tag="SELECTED"
+            android:onClick="onTabClick">
+
+            <LinearLayout
+                android:padding="2dp"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/manageContentCatTabTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="Categories"
+                    android:textColor="@color/activeTab"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/manageContentCatTabCounterTVId"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="top"
+                    android:background="@drawable/circle_income_text_view"
+                    android:gravity="center"
+                    android:maxLength="2"
+                    android:text="99"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/finappleTheme"/>
+
+        <LinearLayout
+            android:id="@+id/manageContentAccTabLLId"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="@color/inactiveTab"
+            android:paddingBottom="1dp"
+            android:onClick="onTabClick"
+            android:tag="">
+
+            <LinearLayout
+                android:padding="2dp"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/manageContentAccTabTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="Accounts"
+                    android:textColor="@color/inactiveTab"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/manageContentAccTabCounterTVId"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="top"
+                    android:background="@drawable/circle_income_text_view"
+                    android:gravity="center"
+                    android:maxLength="2"
+                    android:text="99"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/finappleTheme"/>
+
+        <LinearLayout
+            android:id="@+id/manageContentSpntOnTabLLId"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="@color/inactiveTab"
+            android:paddingBottom="1dp"
+            android:onClick="onTabClick"
+            android:tag="">
+
+            <LinearLayout
+                android:padding="2dp"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/manageContentSpntOnTabTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="Spent On's"
+                    android:textColor="@color/inactiveTab"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/manageContentSpntOnTabCounterTVId"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="top"
+                    android:background="@drawable/circle_income_text_view"
+                    android:gravity="center"
+                    android:maxLength="2"
+                    android:text="99"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/manageContentTabsLLId"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/manageContentCatLLId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingBottom="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/manageContentCatLVId"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:choiceMode="singleChoice"
+                    android:dividerHeight="0.5dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/manageContentAccLLId"
+            android:visibility="gone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingBottom="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/manageContentAccLVId"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:choiceMode="singleChoice"
+                    android:dividerHeight="0.5dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/manageContentSpntOnLLId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingBottom="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/manageContentSpntOnLVId"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:choiceMode="singleChoice"
+                    android:dividerHeight="0.5dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

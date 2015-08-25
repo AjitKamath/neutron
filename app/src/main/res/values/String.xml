@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">finapple</string>
+    <string name="app_name_main">finappl</string>
+    <string name="approx">+</string>
+
+    <!--Notifications-->
+    <string name="notifTitleSchedules">Hi XXXXX,</string>
+    <string name="notifMsgSchedules">You have scheduled a YYYYY of </string>
+    <string name="notifMsgSchedulesAdd">Scheduled YYYYY for WWWWW has been added automatically</string>
+</resources>

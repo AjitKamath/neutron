@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <!-- Inherit from the light Material Theme -->
+    <style name="FinappleTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Override the app bar color -->
+        <item name="android:colorPrimaryDark">@color/SteelBlue</item>
+        <!-- Override the color of UI controls -->
+        <item name="android:colorAccent">@color/twitterBlue</item>
+
+        <item name="android:colorPrimary">@color/twitterBlue</item>
+
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+    </style>
+
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@color/white</item>
+    </style>
+</resources>

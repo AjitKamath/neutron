@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_gravity="center_horizontal"
+              android:id="@+id/budgetsViewListHeaderLLId"
+              android:layout_width="347dp"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/budgetsViewListHeaderHeadingLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="2dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/budgetsViewListHeaderHeadingTVId"
+            android:layout_marginLeft="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categories"
+            android:textSize="24dp"
+            android:textColor="@color/budgetsViewHeadingCategory"/>
+
+
+        <!--<TextView
+            android:id="@+id/budgetsViewListCounterTVId"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="top"
+            android:background="@drawable/circle_income_text_view"
+            android:gravity="center"
+            android:layout_marginLeft="2dp"
+            android:maxLength="2"
+            android:text="99"
+            android:textColor="@color/white"
+            android:textSize="8sp"/>-->
+
+    </LinearLayout>
+
+</LinearLayout>

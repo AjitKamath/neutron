@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.finapple"
+    android:installLocation="auto">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:icon="@drawable/appicon"
+        android:label="@string/app_name"
+        android:theme="@style/FinappleTheme"
+        tools:ignore="NewApi">
+        <activity
+            android:name="com.finapple.activities.CalendarActivity"
+            android:label="Finapple"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--Login-->
+        <activity
+            android:name="com.finapple.activities.LoginActivity"
+            android:label="Login"/>
+
+        <!--Registration-->
+        <activity
+            android:name="com.finapple.activities.RegisterUserActivity"
+            android:label="Register User"/>
+        <activity
+            android:name="com.finapple.activities.RegisterProfilePersonalActivity"
+            android:label="Register Profile - Personal"/>
+        <activity
+            android:name="com.finapple.activities.RegisterProfileWorkActivity"
+            android:label="Register Profile - Work"/>
+        <activity
+            android:name="com.finapple.activities.RegisterProfileContactActivity"
+            android:label="Register Profile - Contact"/>
+
+        <!--Add's-->
+        <activity
+            android:name="com.finapple.activities.AddUpdateTransactionActivity"
+            android:label="Transaction Add/Update"/>
+        <activity
+            android:name="com.finapple.activities.AddUpdateCategoryActivity"
+            android:label="Category Add/Update"/>
+        <activity
+            android:name="com.finapple.activities.AddUpdateAccountActivity"
+            android:label="Account Add/Update"/>
+        <activity
+            android:name="com.finapple.activities.AddUpdateSpentOnActivity"
+            android:label="Spent On Add/Update"/>
+        <activity
+            android:name="com.finapple.activities.AddUpdateTransferActivity"
+            android:label="Transfer Add/Update"/>
+        <activity
+            android:name="com.finapple.activities.AddUpdateBudgetActivity"
+            android:label="Budget Add/Update"/>
+        <activity
+            android:name=".activities.AddUpdateScheduleTransactionActivity"
+            android:label="Schedule Transaction Add/Update"/>
+        <activity
+            android:name=".activities.AddUpdateScheduleTransferActivity"
+            android:label="Schedule Transfer Add/Update"/>
+
+        <!--View's-->
+        <activity
+            android:name="com.finapple.activities.ViewActivitiesActivity"
+            android:label="View Activities"/>
+
+        <!--Setting's-->
+        <activity
+            android:name="com.finapple.activities.SettingsActivity"
+            android:label="Settings"/>
+        <activity
+            android:name="com.finapple.activities.ManageContentActivity"
+            android:label="Manage Content"/>
+        <activity
+            android:name=".activities.BudgetsViewActivity"
+            android:label="Budgets"/>
+
+        <!--Notifications-->
+        <activity
+            android:name=".activities.NotificationScheduledTransactionActivity"
+            android:label="Notification Scheduled Transaction"/>
+
+        <!--Services-->
+        <service android:name=".service.NotificationsService" />
+
+        <!--Receivers-->
+        <receiver android:name=".receivers.BootCompleteReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.TimeSetReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.DateChangeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.NotificationActionReceiver" />
+
+        <!--Error page-->
+        <activity
+            android:name="com.finapple.activities.JimBrokeItActivity"
+            android:label="Error Page"/>
+    </application>
+</manifest>

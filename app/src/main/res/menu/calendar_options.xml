@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/calendarOptionBudgetId" android:title="Budgets" />
+    <item android:id="@+id/calendarOptionReportId" android:title="Reports"/>
+    <item android:id="@+id/calendarOptionPlanABuy" android:title="Plan-A-Buy"/>
+</menu>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:background="@color/white"
+              android:orientation="horizontal"
+              android:padding="5dp" >
+
+    <View
+        android:id="@+id/settingsChildItemViewId"
+        android:layout_marginLeft="30dp"
+        android:layout_width="2dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:background="@color/Orange"/>
+
+    <TextView
+        android:text="child item 1"
+        android:id="@+id/settingsChildItemTVId"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp" />
+
+</LinearLayout>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/summayAccountsLLId"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_marginLeft="2dp"
+        android:layout_width="3dp"
+        android:layout_height="fill_parent"
+        android:background="@drawable/capsule_vertical_positive_view"
+        android:id="@+id/accountsAmtStatViewId" />
+
+    <!--<TextView
+        android:id="@+id/accountsAmtStatTVId"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:background="@drawable/circle_income_text_view"
+        android:gravity="center"
+        android:maxLength="1"
+        android:text="C"
+        android:textColor="@color/white"
+        android:textSize="15sp"/>-->
+
+    <TextView
+        android:layout_marginLeft="2dp"
+        android:id="@+id/accountsNameTVId"
+        android:textColor="@color/black"
+        android:layout_width="235dp"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:gravity="bottom|left"
+        android:maxLength="25"
+        android:text="MMMMMMMMM"
+        android:textSize="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="1dp"
+        android:gravity="center_vertical|right"
+        android:orientation="horizontal">
+
+        <!--<View
+            android:layout_width="0.5dp"
+            android:layout_height="15dp"
+            android:background="@color/finappleTheme" />-->
+
+        <ImageView
+            android:layout_marginLeft="5dp"
+            android:id="@+id/accountsCurrIVId"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="@drawable/india"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/accountsTotalTVId"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="1dp"
+            android:gravity="left|center"
+            android:maxLength="7"
+            android:text="999.99M"
+            android:textColor="@color/finappleCurrencyPosColor"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/accountsApproxTVId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLength="1"
+            android:text="@string/approx"
+            android:textColor="@color/finappleCurrencyApproxColor"
+            android:textSize="10dp"/>
+
+    </LinearLayout>
+</LinearLayout>

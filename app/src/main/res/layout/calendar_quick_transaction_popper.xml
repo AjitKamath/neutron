@@ -1,0 +1,164 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:id="@+id/quickTransactionPopperLLId"
+    android:background="@color/white"
+    android:padding="2dp"
+    android:elevation="15dp"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:background="@color/finappleTheme"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:text="Quick Transaction"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/quickTransactionAmtETId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/gray"
+                android:hint="amount"
+                android:inputType="numberDecimal"
+                android:paddingLeft="90dp"
+                android:textStyle="italic"
+                android:textAlignment="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/quickTransactionCatSpnId"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:spinnerMode="dialog"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/quickTransactionAccSpnId"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:spinnerMode="dialog"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/quickTransactionSpntOnSpnId"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:spinnerMode="dialog"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioGroup
+                android:id="@+id/quickTransactionExpIncRadioGrpId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/quickTransactionExpRadioId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="left"
+                    android:checked="true"
+                    android:tag="EXPENSE"
+                    android:text="Expense"
+                    android:textColor="@color/finappleTheme"
+                    android:textSize="15sp"/>
+
+                <RadioButton
+                    android:id="@+id/quickTransactionIncRadioId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="25dp"
+                    android:tag="INCOME"
+                    android:text="Income"
+                    android:textColor="@color/finappleTheme"
+                    android:textSize="15sp"/>
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:layout_width="fill_parent"
+            android:background="@color/white"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/quickTransactionDoneTVId"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:background="@drawable/oval_buttons_text_view"
+                android:textColor="@color/white"
+                android:text="Done"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

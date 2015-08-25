@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="@android:color/white"
+    android:id="@+id/settingsProfilePersonalCountryLLId"
+    android:gravity="center_vertical"
+	android:orientation="horizontal"
+    android:paddingLeft="15dp"
+    android:layout_marginBottom="3dp">
+
+    <ImageView
+        android:id="@+id/settingsProfilePersonalCountryFlagIVId"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/india"/>
+
+	<TextView
+		android:id="@+id/settingsProfilePersonalCountryNameTVId"
+		android:layout_width="match_parent"
+        android:gravity="center_vertical"
+		android:layout_height="wrap_content"
+        android:maxLength="25"
+        android:text="Afghanistan Afghanistan Afghanistan"
+		android:paddingLeft="3dp"
+		android:textColor="@color/black"
+		android:textSize="25dp" />
+
+</LinearLayout>

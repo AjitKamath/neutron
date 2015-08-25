@@ -1,0 +1,188 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/profileContactRLId"
+                android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/profileContactHeaderId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Profile - Contact"
+                android:textColor="@color/finappleTheme"
+                android:background="@color/white"
+                android:textStyle="italic"
+                android:textSize="30sp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_below="@+id/profileContactHeaderId"
+        android:id="@+id/profileContactStepsOrbsLLId">
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/finished_step"
+            android:onClick="onBackClick"/>
+
+        <ImageView
+            android:layout_marginLeft="2dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/finished_step"
+            android:onClick="onBackClick"/>
+
+        <ImageView
+            android:layout_marginLeft="2dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/finished_step"
+            android:onClick="onBackClick"/>
+
+        <ImageView
+            android:layout_marginLeft="2dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/finished_step"
+            android:onClick="onBackClick"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profileContactContentLLId"
+        android:layout_width="fill_parent"
+        android:layout_height="475dp"
+        android:layout_below="@+id/profileContactStepsOrbsLLId"
+        android:paddingTop="50dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_marginTop="15dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="@color/finappleThemeDark"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:text="Mobile"/>
+
+            <EditText
+                android:id="@+id/profileContactTelephoneETId"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:hint="phone number"
+                android:inputType="phone"
+                android:maxLength="10"
+                android:text="9884463437"
+                android:background="@drawable/edit_text_border"
+                android:maxLines="1"
+                android:textColor="@color/Black"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_marginTop="25dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="@color/finappleThemeDark"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:text="Email"/>
+
+            <EditText
+                android:id="@+id/profileContactEmailETId"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:hint="email id"
+                android:inputType="textEmailAddress"
+                android:maxLength="50"
+                android:background="@drawable/edit_text_border"
+                android:maxLines="1"
+                android:text="ajitkamathk@gmail.com"
+                android:textColor="@color/Black"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/profileContactContentLLId"
+        android:background="@color/white"
+        android:gravity="center"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="goToCalendarPage"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:background="@drawable/oval_buttons_text_view"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="OK, Lets Start"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="22dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,230 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/profileWorkRLId"
+                android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/profileWorkHeaderId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Profile - Work"
+                android:textColor="@color/finappleTheme"
+                android:background="@color/white"
+                android:textStyle="italic"
+                android:textSize="30sp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_below="@+id/profileWorkHeaderId"
+        android:id="@+id/profileWorkStepsOrbsLLId">
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/finished_step"
+            android:onClick="onBackClick"/>
+
+        <ImageView
+            android:layout_marginLeft="2dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/finished_step"
+            android:onClick="onBackClick"/>
+
+        <ImageView
+            android:layout_marginLeft="2dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/finished_step"
+            android:onClick="onBackClick"/>
+
+        <ImageView
+            android:layout_marginLeft="2dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/unfinished_step"
+            android:onClick="onBackClick"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profileWorkContentLLId"
+        android:layout_width="fill_parent"
+        android:layout_height="475dp"
+        android:layout_below="@+id/profileWorkStepsOrbsLLId"
+        android:paddingTop="50dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_marginTop="15dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="@color/finappleThemeDark"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:text="Profession"/>
+
+            <Spinner
+                android:id="@+id/profileWorkWorkTypeSpnId"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_marginTop="15dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="@color/finappleThemeDark"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:text="Company"/>
+
+            <EditText
+                android:id="@+id/profileWorkCompanyETId"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:hint="working @"
+                android:inputType="textCapWords|textAutoComplete"
+                android:maxLength="25"
+                android:background="@drawable/edit_text_border"
+                android:maxLines="1"
+                android:textColor="@color/Black"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_marginTop="60dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="@color/finappleThemeDark"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:text="Salary"/>
+
+            <EditText
+                android:id="@+id/profileWorkSalaryETId"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:hint="amount"
+                android:inputType="numberDecimal"
+                android:maxLength="25"
+                android:background="@drawable/edit_text_border"
+                android:maxLines="1"
+                android:textColor="@color/Black"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_marginTop="15dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="@color/finappleThemeDark"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:text="Frequency"/>
+
+            <Spinner
+                android:id="@+id/profileWorkSalaryFreqSpnId"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/profileWorkContentLLId"
+        android:background="@color/white"
+        android:gravity="center"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="goToRegisterProfileContact"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:background="@drawable/oval_buttons_text_view"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="Next"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="22dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

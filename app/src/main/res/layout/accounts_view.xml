@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/viewAccLLId"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/twitterBlue"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/viewAccHeaderBackImgId"
+            android:onClick="onBackClick"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center"
+            android:background="@drawable/back"/>
+
+        <TextView
+            android:id="@+id/viewAccLabelTVId"
+            android:layout_width="290dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="accounts"
+            android:textColor="@color/white"
+            android:textSize="30sp"/>
+
+        <ImageView
+            android:onClick="onAddClick"
+            android:src="@drawable/add_white"
+            android:layout_marginRight="5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/viewAccItemsLLId"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/viewAccLLId"
+        android:background="@color/white">
+
+        <ListView
+            android:background="@color/white"
+            android:id="@+id/viewAccItemsLVId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:cacheColorHint="#00000000"
+            android:choiceMode="singleChoice"
+            android:divider="@null"
+            android:dividerHeight="0dp"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="40dp"
+	android:background="@android:color/white"
+    android:id="@+id/spinnerLLId"
+    android:gravity="left|center_vertical"
+	android:orientation="horizontal"
+    android:layout_marginBottom="3dp">
+
+    <View
+        android:layout_marginLeft="5dp"
+        android:id="@+id/spinnerItemVId"
+        android:layout_width="4dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center_vertical"
+        android:background="@color/Orange" />
+
+	<TextView
+		android:id="@+id/spinnerItemTVId"
+		android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+		android:layout_height="30dp"
+        android:maxLength="25"
+        android:text="XXXXXXXXXXXXXXX"
+		android:paddingLeft="3dp"
+		android:textColor="@color/black"
+		android:textSize="22dp" />
+
+</LinearLayout>

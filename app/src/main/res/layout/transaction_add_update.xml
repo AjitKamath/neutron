@@ -1,0 +1,426 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addUpdateTransactionRLId"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center_vertical"
+    android:background="@color/cardBackground"
+    android:gravity="right"
+    android:orientation="vertical"
+    tools:context=".ExpensePageView">
+
+    <!-- header -->
+
+    <LinearLayout
+        android:id="@+id/addUpdateTranHeaderLLId"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/twitterBlue"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal"
+        android:paddingRight="5dp">
+
+        <ImageView
+            android:id="@+id/addUpdateTranBackImgId"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back"
+            android:onClick="showMessagePopper"
+            android:tag="BACK" />
+
+
+        <LinearLayout
+            android:id="@+id/addUpdateDateLLId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="5dp"
+            android:background="@color/twitterBlue"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/addUpdateDayTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right|center_vertical"
+                android:maxLength="2"
+                android:onClick="showDatePicker"
+                android:text="28"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/addUpdateSuperScriptTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:gravity="left"
+                android:maxLength="2"
+                android:onClick="showDatePicker"
+                android:text="nd"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+
+            <TextView
+                android:id="@+id/addUpdateMonthTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:maxLength="9"
+                android:onClick="showDatePicker"
+                android:text="September"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/addUpdateYearTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="10dp"
+                android:gravity="bottom"
+                android:maxLength="3"
+                android:onClick="showDatePicker"
+                android:text="'16"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--Page-->
+    <ScrollView
+        android:id="@+id/addUpdatePageSVId"
+        android:layout_width="fill_parent"
+        android:layout_height="492dp"
+        android:layout_below="@+id/addUpdateTranHeaderLLId"
+        android:background="@color/cardBackground">
+
+        <LinearLayout
+            android:id="@+id/addUpdateTransactionPageLLId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/basicLLId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/addUpdateTranTVId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/finappleTheme"
+                        android:paddingLeft="10dp"
+                        android:text="Transaction"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_background_selector"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <EditText
+                            android:id="@+id/addUpdateTranNameETId"
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:background="@drawable/edit_text_border"
+                            android:hint="title"
+                            android:inputType="textCapWords"
+                            android:maxLength="25"
+                            android:maxLines="1"
+                            android:paddingLeft="15dp"
+                            android:textColor="@color/Black"
+                            android:textSize="20sp"
+                            android:textStyle="italic"></EditText>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:background="@drawable/india"
+                                android:gravity="center" />
+
+                            <EditText
+
+                                android:id="@+id/addUpdateTranAmtETId"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:background="@drawable/edit_text_border"
+                                android:hint="amount"
+                                android:inputType="numberDecimal"
+                                android:paddingLeft="15dp"
+                                android:textColor="@color/Black"
+                                android:textSize="20sp"
+                                android:textStyle="italic" />
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:padding="0.5dp">
+
+                    <TextView
+                        android:id="@+id/addUpdateCatAccHeaderTVId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/finappleTheme"
+                        android:paddingLeft="10dp"
+                        android:text="Category &amp; Account"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_background_selector"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <Spinner
+                            android:id="@+id/addUpdateCatSpnId"
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:spinnerMode="dialog" />
+
+                        <Spinner
+                            android:id="@+id/addUpdateAccSpnId"
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:layout_marginTop="10dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:padding="0.5dp">
+
+                    <TextView
+                        android:id="@+id/addUpdateTranTypeHeaderTVId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/finappleTheme"
+                        android:paddingLeft="10dp"
+                        android:text="Transaction Type"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_background_selector"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <RadioGroup
+                            android:id="@+id/addUpdateTranExpIncRadioGrpId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="5dp"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/addUpdateTranExpRadioId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:layout_gravity="left"
+                                android:checked="true"
+                                android:tag="EXPENSE"
+                                android:text="Expense"
+                                android:textColor="@color/finappleTheme"
+                                android:textSize="20sp" />
+
+                            <RadioButton
+                                android:id="@+id/addUpdateTranIncRadioId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:layout_gravity="right"
+                                android:layout_marginLeft="25dp"
+                                android:tag="INCOME"
+                                android:text="Income"
+                                android:textColor="@color/finappleTheme"
+                                android:textSize="20sp" />
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addUpdateAdvanceLLId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <!-- spent on -->
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:padding="0.5dp">
+
+                    <TextView
+                        android:id="@+id/addUpdateSpntOnNoteHeaderTVId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/finappleTheme"
+                        android:paddingLeft="10dp"
+                        android:text="Spent On &amp; Notes"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_background_selector"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <Spinner
+                            android:id="@+id/addUpdateSpntOnSpnId"
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:layout_marginTop="5dp" />
+
+                        <EditText
+                            android:id="@+id/addUpdateNoteETId"
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/edit_text_border"
+                            android:hint="notes"
+                            android:inputType="textCapWords|textMultiLine"
+                            android:maxLength="50"
+                            android:paddingLeft="15dp"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp"
+                            android:textStyle="italic" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/transctionActionButtons"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addUpdatePageSVId"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="1dp">
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!--<ImageView
+                android:id="@+id/addUpdateDoneUpdateImgId"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/done"/>-->
+
+            <TextView
+                android:onClick="onDoneUpdate"
+                android:id="@+id/addUpdateDoneTVId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@drawable/oval_buttons_text_view"
+                android:text="Done"
+                android:textColor="@color/white"
+                android:textSize="25dp" />
+        </LinearLayout>
+
+        <!--<View
+            android:layout_width="2dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/white" />-->
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_height="fill_parent"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onDonePlusNew"
+            android:orientation="horizontal">
+
+            <!--<ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/doneandnew" />-->
+
+            <TextView
+                android:id="@+id/addUpdateDoneNewTVId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Done + New"
+                android:textColor="@color/white"
+                android:background="@drawable/oval_buttons_text_view"
+                android:textSize="25dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
