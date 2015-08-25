@@ -205,6 +205,7 @@ public class CalendarActivity extends Activity {
         Intent intent = new Intent(this, NotificationsService.class);
         intent.putExtra("TODAYS_NOTIFS", getTodaysNotifications());
 
+        
         //reboot service
         stopService(intent);
         startService(intent);
