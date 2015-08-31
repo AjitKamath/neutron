@@ -22,8 +22,8 @@
 
         <ImageView
             android:id="@+id/addUpdateTranBackImgId"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:background="@drawable/back"
@@ -50,7 +50,7 @@
                 android:onClick="showDatePicker"
                 android:text="28"
                 android:textColor="@color/white"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/addUpdateSuperScriptTVId"
@@ -61,7 +61,7 @@
                 android:onClick="showDatePicker"
                 android:text="nd"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:textSize="8sp" />
 
 
             <TextView
@@ -75,7 +75,7 @@
                 android:onClick="showDatePicker"
                 android:text="September"
                 android:textColor="@color/white"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/addUpdateYearTVId"
@@ -88,7 +88,7 @@
                 android:onClick="showDatePicker"
                 android:text="'16"
                 android:textColor="@color/white"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -187,9 +187,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/addUpdateCatAccHeaderTVId"
@@ -230,9 +229,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/addUpdateTranTypeHeaderTVId"
@@ -302,9 +300,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/addUpdateSpntOnNoteHeaderTVId"
@@ -381,12 +378,12 @@
                 android:onClick="onDoneUpdate"
                 android:id="@+id/addUpdateDoneTVId"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:background="@drawable/oval_buttons_text_view"
-                android:text="Done"
+                android:text="DONE"
                 android:textColor="@color/white"
-                android:textSize="25dp" />
+                android:textSize="18dp" />
         </LinearLayout>
 
         <!--<View
@@ -405,21 +402,15 @@
             android:onClick="onDonePlusNew"
             android:orientation="horizontal">
 
-            <!--<ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/doneandnew" />-->
-
             <TextView
                 android:id="@+id/addUpdateDoneNewTVId"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:gravity="center"
-                android:text="Done + New"
+                android:text="DONE + NEW"
                 android:textColor="@color/white"
                 android:background="@drawable/oval_buttons_text_view"
-                android:textSize="25dp" />
+                android:textSize="18dp" />
         </LinearLayout>
     </LinearLayout>
 

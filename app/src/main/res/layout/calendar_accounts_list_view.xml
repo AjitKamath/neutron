@@ -5,6 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
+    android:padding="2dp"
     android:background="@color/white"
     android:orientation="horizontal">
 
@@ -14,18 +15,6 @@
         android:layout_height="fill_parent"
         android:background="@drawable/capsule_vertical_positive_view"
         android:id="@+id/accountsAmtStatViewId" />
-
-    <!--<TextView
-        android:id="@+id/accountsAmtStatTVId"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:background="@drawable/circle_income_text_view"
-        android:gravity="center"
-        android:maxLength="1"
-        android:text="C"
-        android:textColor="@color/white"
-        android:textSize="15sp"/>-->
 
     <TextView
         android:layout_marginLeft="2dp"

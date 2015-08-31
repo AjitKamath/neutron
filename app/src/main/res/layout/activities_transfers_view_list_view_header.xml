@@ -8,16 +8,16 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:padding="2dp"
+        android:padding="5dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/finappleTheme"
+        android:background="@color/transferIndicator"
         android:gravity="left|center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/viewTransferHeaderDateId"
-            android:layout_width="195dp"
+            android:layout_width="190dp"
             android:layout_marginLeft="2dp"
             android:layout_height="wrap_content"
             android:text="1st April '15"

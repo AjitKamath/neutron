@@ -3,7 +3,8 @@
     android:id="@+id/calendarBudgetLLId"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="20dp"
+    android:layout_height="wrap_content"
+    android:padding="2dp"
     android:background="@color/white"
     android:orientation="horizontal">
 

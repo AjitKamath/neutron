@@ -3,12 +3,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/addSpentOnRLId"
-                android:background="@color/white">
+                android:background="@color/cardBackground">
 
     <LinearLayout
         android:id="@+id/addSpentOnLLId"
         android:layout_width="fill_parent"
-        android:layout_height="527dp"
+        android:layout_height="530dp"
         android:orientation="vertical">
 
         <!--header-->
@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/addSpentOnHeaderBackImgId"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:tag="BACK"
                 android:background="@drawable/back"
@@ -35,7 +35,7 @@
                 android:gravity="center"
                 android:text="Spent On"
                 android:textColor="@color/white"
-                android:textSize="30dp"/>
+                android:textSize="20dp"/>
 
             <ImageView
                 android:layout_width="30dp"
@@ -58,8 +58,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/finappleTheme"
-                android:orientation="vertical"
-                android:padding="0.5dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -76,9 +75,9 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="@drawable/card_background_selector"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="10dp">
 
                     <EditText
                         android:id="@+id/addSpentOnSpentOnNameETId"
@@ -103,8 +102,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/finappleTheme"
-                android:orientation="vertical"
-                android:padding="0.5dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -121,9 +119,9 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="@drawable/card_background_selector"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="10dp">
 
                     <EditText
                         android:id="@+id/addSpentOnNoteETId"
@@ -150,37 +148,29 @@
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/addSpentOnLLId"
-        android:background="@color/twitterBlue"
         android:gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:background="@drawable/default_button"
             android:id="@+id/addSpentOnDoneLLId"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:clickable="true"
-            android:gravity="center_horizontal"
-            android:onClick="onDoneUpdate"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/done"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/view_activities_tab_outer">
 
             <TextView
                 android:id="@+id/addSpentOnDoneTVId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:text="Save"
-                android:textAlignment="center"
+                android:onClick="onDoneUpdate"
+                android:layout_width="170dp"
+                android:layout_height="30dp"
+                android:background="@drawable/view_activities_active_tab_inner"
+                android:gravity="center"
+                android:text="SAVE"
                 android:textColor="@color/white"
-                android:textSize="30dp"/>
+                android:textSize="18sp" />
+
         </LinearLayout>
+
+
     </LinearLayout>
 
 

@@ -22,8 +22,8 @@
 
         <ImageView
             android:id="@+id/schedTransferAddUpdBackImgId"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:background="@drawable/back"
@@ -100,7 +100,6 @@
                         <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -132,9 +131,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -183,9 +181,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -208,7 +205,6 @@
                             android:id="@+id/schedTransferSchedRadioGrpId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
                             android:orientation="horizontal">
 
                             <RadioButton
@@ -273,9 +269,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -298,7 +293,6 @@
                             android:id="@+id/schedTransferAutoRadioGrpId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
                             android:orientation="horizontal">
 
                             <RadioButton
@@ -330,9 +324,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -355,7 +348,6 @@
                             android:id="@+id/schTranAddUpdNoteETId"
                             android:layout_width="fill_parent"
                             android:layout_height="35dp"
-                            android:layout_marginTop="5dp"
                             android:background="@drawable/edit_text_border"
                             android:hint="notes"
                             android:inputType="textCapWords|textMultiLine"
@@ -395,14 +387,14 @@
             <TextView
                 android:id="@+id/addUpdateDoneTVId"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:background="@drawable/oval_buttons_text_view"
                 android:gravity="center"
                 android:onClick="onDoneUpdate"
-                android:text="Done"
+                android:text="DONE"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="24dp" />
+                android:textSize="18dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -416,14 +408,14 @@
             <TextView
                 android:id="@+id/addUpdateDoneNewTVId"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:background="@drawable/oval_buttons_text_view"
                 android:gravity="center"
                 android:onClick="onDonePlusNew"
-                android:text="Done+New"
+                android:text="DONE + NEW"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="24dp" />
+                android:textSize="18dp" />
         </LinearLayout>
     </LinearLayout>
 

@@ -15,9 +15,10 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:layout_marginLeft="5dp"
             android:onClick="onBackClick"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:background="@drawable/back"/>
 
@@ -28,7 +29,7 @@
             android:gravity="center"
             android:text="Budgets"
             android:textColor="@color/white"
-            android:textSize="25sp"/>
+            android:textSize="20sp"/>
 
         <ImageView
             android:src="@drawable/add_white"
@@ -44,195 +45,176 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/budgetsHeaderLLId"
+        android:padding="3dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/budgetsDailyTabLLId"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:background="@color/activeTab"
-            android:paddingBottom="1dp"
-            android:tag="SELECTED"
-            android:onClick="onTabClick">
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:padding="2dp"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:background="@color/white"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/view_activities_tab_outer"
+                android:padding="0.5dp">
 
                 <TextView
                     android:id="@+id/budgetsDailyTabTVId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:onClick="onTabClick"
+                    android:tag="SELECTED"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/view_activities_active_tab_inner"
                     android:gravity="center"
-                    android:text="Daily"
-                    android:textColor="@color/activeTab"
-                    android:textSize="20sp"/>
-
-                <TextView
-                    android:id="@+id/budgetsDailyTabCounterTVId"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_gravity="top"
-                    android:background="@drawable/circle_income_text_view"
-                    android:gravity="center"
-                    android:maxLength="2"
-                    android:text="99"
+                    android:text="DAILY"
                     android:textColor="@color/white"
-                    android:textSize="8sp"/>
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
+
+            <TextView
+                android:layout_marginLeft="-10dp"
+                android:id="@+id/budgetsDailyTabCounterTVId"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="top"
+                android:background="@drawable/circle_income_text_view"
+                android:gravity="center"
+                android:maxLength="2"
+                android:text="99"
+                android:textColor="@color/white"
+                android:textSize="8sp"/>
+
         </LinearLayout>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:background="@color/finappleTheme"/>
 
         <LinearLayout
-            android:id="@+id/budgetsWeeklyTabLLId"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:background="@color/inactiveTab"
-            android:paddingBottom="1dp"
-            android:onClick="onTabClick"
-            android:tag="">
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:padding="2dp"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:background="@color/white"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/view_activities_tab_outer"
+                android:padding="0.5dp">
 
                 <TextView
                     android:id="@+id/budgetsWeeklyTabTVId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:onClick="onTabClick"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/view_activities_inactive_tab_inner"
                     android:gravity="center"
-                    android:text="Weekly"
-                    android:textColor="@color/inactiveTab"
-                    android:textSize="20sp"/>
+                    android:text="WEEKLY"
+                    android:textColor="@color/finappleTheme"
+                    android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/budgetsWeeklyTabCounterTVId"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_gravity="top"
-                    android:background="@drawable/circle_income_text_view"
-                    android:gravity="center"
-                    android:maxLength="2"
-                    android:text="99"
-                    android:textColor="@color/white"
-                    android:textSize="8sp"/>
             </LinearLayout>
+
+
+            <TextView
+                android:layout_marginLeft="-10dp"
+                android:id="@+id/budgetsWeeklyTabCounterTVId"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="top"
+                android:background="@drawable/circle_income_text_view"
+                android:gravity="center"
+                android:maxLength="2"
+                android:text="99"
+                android:textColor="@color/white"
+                android:textSize="8sp"/>
 
         </LinearLayout>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:background="@color/finappleTheme"/>
-
         <LinearLayout
-            android:id="@+id/budgetsMonthlyTabLLId"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:background="@color/inactiveTab"
-            android:paddingBottom="1dp"
-            android:onClick="onTabClick"
-            android:tag="">
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:padding="2dp"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:background="@color/white"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/view_activities_tab_outer"
+                android:padding="0.5dp">
 
                 <TextView
                     android:id="@+id/budgetsMonthlyTabTVId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:onClick="onTabClick"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/view_activities_inactive_tab_inner"
                     android:gravity="center"
-                    android:text="Monthly"
-                    android:textColor="@color/inactiveTab"
-                    android:textSize="20sp"/>
+                    android:text="MONTHLY"
+                    android:textColor="@color/finappleTheme"
+                    android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/budgetsMonthlyTabCounterTVId"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_gravity="top"
-                    android:background="@drawable/circle_income_text_view"
-                    android:gravity="center"
-                    android:maxLength="2"
-                    android:text="99"
-                    android:textColor="@color/white"
-                    android:textSize="8sp"/>
             </LinearLayout>
+
+            <TextView
+                android:layout_marginLeft="-10dp"
+                android:id="@+id/budgetsMonthlyTabCounterTVId"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="top"
+                android:background="@drawable/circle_income_text_view"
+                android:gravity="center"
+                android:maxLength="2"
+                android:text="99"
+                android:textColor="@color/white"
+                android:textSize="8sp"/>
 
         </LinearLayout>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:background="@color/finappleTheme"/>
-
         <LinearLayout
-            android:id="@+id/budgetsYearlyTabLLId"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:background="@color/inactiveTab"
-            android:paddingBottom="1dp"
-            android:onClick="onTabClick"
-            android:tag="">
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:padding="2dp"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:background="@color/white"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/view_activities_tab_outer"
+                android:padding="0.5dp">
 
                 <TextView
                     android:id="@+id/budgetsYearlyTabTVId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:onClick="onTabClick"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/view_activities_inactive_tab_inner"
                     android:gravity="center"
-                    android:text="Yearly"
-                    android:textColor="@color/inactiveTab"
-                    android:textSize="20sp"/>
+                    android:text="YEARLY"
+                    android:textColor="@color/finappleTheme"
+                    android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/budgetsYearlyTabCounterTVId"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_gravity="top"
-                    android:background="@drawable/circle_income_text_view"
-                    android:gravity="center"
-                    android:maxLength="2"
-                    android:text="99"
-                    android:textColor="@color/white"
-                    android:textSize="8sp"/>
             </LinearLayout>
 
-        </LinearLayout>
+            <TextView
+                android:layout_marginLeft="-10dp"
+                android:id="@+id/budgetsYearlyTabCounterTVId"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="top"
+                android:background="@drawable/circle_income_text_view"
+                android:gravity="center"
+                android:maxLength="2"
+                android:text="99"
+                android:textColor="@color/white"
+                android:textSize="8sp"/>
 
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

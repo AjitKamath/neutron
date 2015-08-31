@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="5dp"
+        android:padding="10dp"
         android:background="@drawable/card_background_selector"
         android:descendantFocusability="afterDescendants"
         android:orientation="horizontal">
@@ -31,10 +31,9 @@
                 android:layout_gravity="center_horizontal|top"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="2dp"
-                android:background="@drawable/circle_income_text_view"
+                android:background="@drawable/circle_calendar_transaction_indicator"
                 android:gravity="center"
                 android:maxLength="1"
-                android:text="I"
                 android:textColor="@color/white"
                 android:textSize="12sp"/>
 

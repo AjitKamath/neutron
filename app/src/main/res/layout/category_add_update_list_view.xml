@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:background="@android:color/white"
+	android:background="@drawable/card_background_selector"
     android:id="@+id/spinnerLLId"
     android:gravity="left"
+    android:layout_gravity="center_horizontal"
 	android:orientation="horizontal"
-    android:paddingLeft="15dp"
+    android:padding="10dp"
     android:layout_marginBottom="3dp">
 
     <View
@@ -29,9 +30,9 @@
 
     <ImageView
         android:id="@+id/addCatDelTagListItemIVId"
-        android:src="@drawable/cancel_grey"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:src="@drawable/delete_small_grey"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="center_vertical"
         android:onClick="remOldCatTag"/>
 

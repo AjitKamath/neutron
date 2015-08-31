@@ -28,7 +28,7 @@
             android:gravity="center"
             android:text="Scheduled Transaction"
             android:textColor="@color/white"
-            android:textSize="22sp" />
+            android:textSize="20sp" />
 
         <ImageView
             android:layout_width="30dp"
@@ -309,10 +309,10 @@
                 android:layout_height="30dp"
                 android:background="@drawable/oval_buttons_text_view"
                 android:gravity="center"
-                android:text="Add"
+                android:text="ADD"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="22dp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -331,10 +331,10 @@
                 android:layout_height="30dp"
                 android:background="@drawable/oval_buttons_text_view"
                 android:gravity="center"
-                android:text="Cancel"
+                android:text="CANCEL"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="22dp" />
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 

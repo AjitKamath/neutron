@@ -1,42 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_gravity="center_horizontal"
-              android:id="@+id/budgetsViewListHeaderLLId"
-              android:layout_width="347dp"
-              android:layout_height="match_parent">
+    android:id="@+id/budgetsViewListHeaderLLId"
+    android:layout_width="347dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/cardBackground"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/budgetsViewListHeaderHeadingLLId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/card_background_selector"
         android:gravity="center"
-        android:padding="2dp"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/budgetsViewListHeaderHeadingTVId"
-            android:layout_marginLeft="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Categories"
-            android:textSize="24dp"
-            android:textColor="@color/budgetsViewHeadingCategory"/>
-
-
-        <!--<TextView
-            android:id="@+id/budgetsViewListCounterTVId"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_gravity="top"
-            android:background="@drawable/circle_income_text_view"
-            android:gravity="center"
             android:layout_marginLeft="2dp"
-            android:maxLength="2"
-            android:text="99"
-            android:textColor="@color/white"
-            android:textSize="8sp"/>-->
+            android:text="Categories"
+            android:textColor="@color/budgetsViewHeadingCategory"
+            android:textSize="24dp" />
 
     </LinearLayout>
 

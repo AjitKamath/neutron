@@ -22,8 +22,8 @@
 
         <ImageView
             android:id="@+id/schedTranAddUpdBackImgId"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:background="@drawable/back"
@@ -145,7 +145,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -194,7 +194,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -251,9 +251,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:paddingLeft="10dp"
@@ -341,7 +340,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -462,14 +461,14 @@
             <TextView
                 android:id="@+id/addUpdateDoneTVId"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:gravity="center"
-                android:text="Done"
+                android:text="DONE"
                 android:onClick="onDoneUpdate"
                 android:background="@drawable/oval_buttons_text_view"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="24dp" />
+                android:textSize="20dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -483,14 +482,14 @@
             <TextView
                 android:id="@+id/addUpdateDoneNewTVId"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:background="@drawable/oval_buttons_text_view"
-                android:text="Done+New"
+                android:text="DONE + NEW"
                 android:onClick="onDonePlusNew"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="24dp" />
+                android:textSize="20dp" />
         </LinearLayout>
     </LinearLayout>
 

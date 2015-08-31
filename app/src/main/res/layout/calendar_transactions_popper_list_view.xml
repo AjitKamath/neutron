@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/viewTransactPopperTileLLId"
+    android:id="@+id/summaryPopperTileLLId"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@drawable/card_background_selector"
     android:orientation="vertical"
-    android:padding="1dp">
+    android:layout_gravity="center_horizontal"
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -16,13 +17,14 @@
 
 
         <LinearLayout
-            android:layout_width="210dp"
-            android:layout_height="wrap_content"
+            android:layout_width="190dp"
+            android:layout_height="fill_parent"
             android:orientation="horizontal">
 
             <LinearLayout
+                android:gravity="top"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -31,40 +33,83 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/viewTransactTilePopperTypTVId"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:id="@+id/summaryPopperTypTVId"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:background="@drawable/circle_income_text_view"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:maxLength="1"
-                        android:text="I"
                         android:textColor="@color/white"
                         android:textSize="15sp"/>
 
                     <TextView
-                        android:id="@+id/viewTransactTilePopperNameTVId"
+                        android:visibility="gone"
+                        android:id="@+id/summaryPopperNameTVId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="bottom"
                         android:layout_gravity="bottom"
                         android:maxLength="25"
                         android:layout_marginLeft="2dp"
-                        android:text="MMMMMMMMM"
+                        android:text="MMMMMM"
                         android:textColor="@color/finappleThemeDark"
                         android:textSize="20sp"/>
+
+                    <LinearLayout
+                        android:id="@+id/summaryPopperTransferLLId"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/summaryPopperFromAccountTVId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:maxLength="25"
+                            android:text="MMMMMM"
+                            android:textColor="@color/finappleThemeDark"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:layout_gravity="bottom"
+                            android:maxLength="25"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:text="TO"
+                            android:textColor="@color/finappleThemeDark"
+                            android:textSize="8sp"/>
+
+                        <TextView
+                            android:id="@+id/summaryPopperToAccountTVId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:layout_gravity="bottom"
+                            android:maxLength="25"
+                            android:layout_marginLeft="2dp"
+                            android:text="MMMMMM"
+                            android:textColor="@color/finappleThemeDark"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
                 </LinearLayout>
 
 
                 <TextView
-                    android:id="@+id/viewTransactTilePopperAccTVId"
+                    android:layout_marginTop="3dp"
+                    android:id="@+id/summaryPopperAccTVId"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
+                    android:layout_height="fill_parent"
                     android:paddingLeft="20dp"
-                    android:layout_marginLeft="2dp"
                     android:maxLength="25"
-                    android:text="MMMMMMMMMM"
+                    android:gravity="bottom"
+                    android:text="MMMMM"
                     android:textColor="@color/finappleTheme"
                     android:textSize="16sp"/>
 
@@ -74,34 +119,25 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:gravity="center_vertical|left"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:background="@color/finappleTheme"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                />
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical|left"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/viewTransactTilePopperCurImageId"
+                    android:id="@+id/summaryPopperCurImageId"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:background="@drawable/india"/>
 
                 <TextView
-                    android:id="@+id/viewTransactTilePopperAmtTVId"
+                    android:id="@+id/summaryPopperAmtTVId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -111,7 +147,7 @@
                     android:textSize="20sp"/>
 
                 <TextView
-                    android:id="@+id/viewTransactTilePopperAppxTVId"
+                    android:id="@+id/summaryPopperAppxTVId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -120,6 +156,16 @@
                     android:textColor="@color/black"
                     android:textSize="15sp"/>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/summaryPopperTimeTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:maxLength="25"
+                android:paddingLeft="20dp"
+                android:text="12:56 AM"
+                android:textColor="@color/tertiaryText"
+                android:textSize="12sp" />
 
 
         </LinearLayout>

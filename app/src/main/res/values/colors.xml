@@ -205,10 +205,15 @@
     <!--Calendar grid colors-->
     <color name="calendarThisMonthDate">#000000</color>
     <color name="calendarNextPrevMonthDate">#A0A0A9</color>
-    <color name="calendarTodayDate">#e33d1b</color>
-    <color name="calendarOneTap">#ADD8E6</color>
-    <color name="calendarTwoTap">#00BFFF</color>
+    <color name="calendarTodayDate">#FF9800</color>
+    <color name="calendarOneTap">#BBDEFB</color>
+    <color name="calendarTwoTap">#64B5F6</color>
     <color name="calendarNoTap">#FFFFFF</color>
+
+    <color name="transactionIndicator">#009688</color>
+    <color name="schedTransactionIndicator">#80CBC4</color>
+    <color name="transferIndicator">#795548</color>
+    <color name="schedTransferIndicator">#BCAAA4</color>
 
     <!-- week colors -->
     <color name="weekdays">#000000</color>
@@ -218,17 +223,20 @@
     <color name="today">#FF3200</color>
 
     <!--finapple color-->
-    <color name="finappleTheme">#00ABEC</color>
-    <color name="finappleThemeDark">#4682B4</color>
+    <color name="finappleTheme">#2196F3</color>
+    <color name="finappleThemeLight">#64B5F6</color>
+    <color name="finappleThemeDark">#3F51B5</color>
+    <color name="finappleThemeLightViolet">#E1BEE7</color>
+    <color name="finappleThemeLightGreen">#DCEDC8</color>
 
     <!--button colors-->
-    <color name="negativeButtonColor">#E33231</color>
-    <color name="positiveButtonColor">#2E8B57</color>
+    <color name="negativeButtonColor">#F44336</color>
+    <color name="positiveButtonColor">#4CAF50</color>
 
     <!--Currency colors-->
     <color name="finappleCurrencyApproxColor">#000000</color>
-    <color name="finappleCurrencyNegColor">#FF0000</color>
-    <color name="finappleCurrencyPosColor">#008000</color>
+    <color name="finappleCurrencyNegColor">#F44336</color>
+    <color name="finappleCurrencyPosColor">#4CAF50</color>
     <color name="finappleCurrencyDividerColor">#000000</color>
     <color name="finappleLimitCrossColor">#FFEFD5</color>
 
@@ -246,5 +254,5 @@
     <color name="secondaryButton">#FF6347</color>
 
     <!--Card-->
-    <color name="cardBackground">#e7e7e7</color>
+    <color name="cardBackground">#EEEEEE</color>
 </resources>

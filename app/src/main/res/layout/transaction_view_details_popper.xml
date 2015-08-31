@@ -3,9 +3,8 @@
     android:layout_width="325dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/white"
+    android:background="@drawable/card_background_selector"
     android:id="@+id/tranDtlPopperLLId"
-    android:elevation="15dp"
     android:gravity="center"
     android:clickable="false"
     android:orientation="vertical">
@@ -13,8 +12,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@drawable/card_background_selector"
+        android:padding="10dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -25,7 +23,7 @@
 
             <LinearLayout
                 android:id="@+id/tranDtlPopperSchTranLLId"
-                android:layout_width="255dp"
+                android:layout_width="250dp"
                 android:gravity="left|center_vertical"
                 android:orientation="vertical"
                 android:layout_height="wrap_content">
@@ -38,7 +36,7 @@
                     android:gravity="left|center_vertical"
                     android:text="28 mar '15"
                     android:textColor="@color/Orange"
-                    android:textSize="20sp"/>
+                    android:textSize="15sp"/>
 
             </LinearLayout>
 
@@ -133,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:text="Category"
                 android:textColor="@color/tertiaryText"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/tranDtlPopperCatTVId"
@@ -142,7 +140,7 @@
                 android:text="MMMMMMMMM"
                 android:maxLength="25"
                 android:textColor="@color/finappleTheme"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -156,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:text="Account"
                 android:textColor="@color/tertiaryText"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/tranDtlPopperAccTVId"
@@ -165,7 +163,7 @@
                 android:text="MMMMMMMMM"
                 android:maxLength="25"
                 android:textColor="@color/finappleTheme"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
 
         </LinearLayout>
 
@@ -180,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:text="Spent On"
                 android:textColor="@color/tertiaryText"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/tranDtlPopperSpntOnTVId"
@@ -189,7 +187,7 @@
                 android:text="MMMMMMMMM"
                 android:maxLength="25"
                 android:textColor="@color/finappleTheme"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -204,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:text="Note"
                 android:textColor="@color/tertiaryText"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/tranDtlPopperNoteTVId"
@@ -213,7 +211,7 @@
                 android:text="MMMMMMMMMMMMMMMMMM"
                 android:maxLength="50"
                 android:textColor="@color/finappleTheme"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <View

@@ -3,15 +3,14 @@
     android:layout_width="325dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/white"
+    android:background="@drawable/card_background_selector"
     android:id="@+id/transferDtlPopperLLId"
-    android:elevation="15dp"
+    android:padding="10dp"
     android:gravity="center"
     android:clickable="false"
     android:orientation="vertical">
 
     <LinearLayout
-        android:background="@drawable/card_background_selector"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -38,7 +37,7 @@
                     android:gravity="left|center_vertical"
                     android:text="28 mar '15"
                     android:textColor="@color/Orange"
-                    android:textSize="20sp"/>
+                    android:textSize="15sp"/>
 
             </LinearLayout>
 
@@ -106,7 +105,7 @@
                 android:maxLength="25"
                 android:text="MMMMMMMMM"
                 android:textColor="@color/finappleCurrencyNegColor"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -121,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:text="to"
                 android:textColor="@color/tertiaryText"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
         </LinearLayout>
 
@@ -140,7 +139,7 @@
                 android:maxLength="25"
                 android:text="MMMMMMMMM"
                 android:textColor="@color/finappleCurrencyPosColor"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <LinearLayout
