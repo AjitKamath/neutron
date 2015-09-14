@@ -28,7 +28,7 @@
     <color name="yearMonthBlue">#3C92DE</color>
     <color name="facebookBlue">#3B5998</color>
     <color name="googleRed">#E33231</color>
-    <color name="twitterBlue">#00ABEC</color>
+    <!--<color name="twitterBlue">#00ABEC</color>-->
     <color name="finappleGreen">#4DB849</color>
     <color name="holo_blue_light">#33b5e5</color>
     <color name="holo_blue_dark">#0099cc</color>
@@ -254,5 +254,5 @@
     <color name="secondaryButton">#FF6347</color>
 
     <!--Card-->
-    <color name="cardBackground">#EEEEEE</color>
+    <color name="cardBackground">#E0E0E0</color>
 </resources>

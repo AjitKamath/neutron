@@ -15,14 +15,15 @@
         <LinearLayout
             android:id="@+id/addAccHeaderLLId"
             android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:background="@color/twitterBlue"
+            android:layout_height="@dimen/layout_header_size"
+            android:background="@color/finappleTheme"
+            android:elevation="@dimen/layout_header_elevation"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/addAccHeaderBackImgId"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="@dimen/image_header_size"
+                android:layout_height="@dimen/image_header_size"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:tag="BACK"
@@ -36,7 +37,7 @@
                 android:gravity="center"
                 android:text="Account"
                 android:textColor="@color/white"
-                android:textSize="20dp"/>
+                android:textSize="@dimen/text_header_title_size"/>
 
             <ImageView
                 android:layout_width="30dp"
@@ -212,7 +213,7 @@
                 android:gravity="center"
                 android:text="SAVE"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/text_button_big_text_size" />
 
         </LinearLayout>
     </LinearLayout>

@@ -10,9 +10,10 @@
     <LinearLayout
         android:id="@+id/calendarHeaderId"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:background="@color/twitterBlue"
+        android:layout_height="@dimen/layout_header_size"
+        android:background="@color/finappleTheme"
         android:gravity="center_vertical"
+        android:elevation="@dimen/layout_header_elevation"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -24,9 +25,9 @@
 
             <ImageView
                 android:id="@+id/calendarSidePaneImgId"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="-10dp"
+                android:layout_width="@dimen/image_header_size"
+                android:layout_height="@dimen/image_header_size"
+                android:layout_marginLeft="5dp"
                 android:background="@drawable/side_pane"/>
         </LinearLayout>
 
@@ -47,7 +48,7 @@
             android:layout_width="285dp"
             android:layout_height="fill_parent"
             android:layout_marginRight="5dp"
-            android:background="@color/twitterBlue"
+            android:background="@color/finappleTheme"
             android:gravity="right"
             android:orientation="horizontal">
 
@@ -59,9 +60,9 @@
                 android:gravity="center|right"
                 android:maxLength="9"
                 android:onClick="showDatePicker"
-                android:text="September"
+                android:text="SEPTEMBER"
                 android:textColor="@color/white"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/text_header_title_size"/>
 
             <TextView
                 android:id="@+id/calendarFullYearId"
@@ -72,7 +73,7 @@
                 android:onClick="showDatePicker"
                 android:text="2016"
                 android:textColor="@color/white"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/text_header_title_size"/>
         </LinearLayout>
 
         <ImageView
@@ -200,7 +201,7 @@
                     android:layout_width="85dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:background="@drawable/calendar_small_tab_outer"
                     android:padding="0.5dp"
                     android:orientation="horizontal">
@@ -211,18 +212,18 @@
                         android:layout_height="fill_parent"
                         android:background="@drawable/calendar_small_tab_active_inner"
                         android:gravity="center"
-                        android:text="Summary"
+                        android:text="SUMMARY"
                         android:tag="SELECTED"
                         android:onClick="onTabSelect"
                         android:textColor="@color/white"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_tab_small_size"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="85dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:background="@drawable/calendar_small_tab_outer"
                     android:padding="0.5dp"
                     android:orientation="horizontal">
@@ -235,16 +236,16 @@
                         android:layout_height="fill_parent"
                         android:background="@drawable/calendar_small_tab_inactive_inner"
                         android:gravity="center"
-                        android:text="Accounts"
+                        android:text="ACCOUNTS"
                         android:textColor="@color/finappleTheme"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_tab_small_size"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="85dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:background="@drawable/calendar_small_tab_outer"
                     android:padding="0.5dp"
                     android:orientation="horizontal">
@@ -257,16 +258,16 @@
                         android:onClick="onTabSelect"
                         android:background="@drawable/calendar_small_tab_inactive_inner"
                         android:gravity="center"
-                        android:text="Budgets"
+                        android:text="BUDGETS"
                         android:textColor="@color/tab_text"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_tab_small_size"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="85dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:background="@drawable/calendar_small_tab_outer"
                     android:padding="0.5dp"
                     android:orientation="horizontal">
@@ -279,9 +280,9 @@
                         android:onClick="onTabSelect"
                         android:background="@drawable/calendar_small_tab_inactive_inner"
                         android:gravity="center"
-                        android:text="Schedules"
+                        android:text="SCHEDULES"
                         android:textColor="@color/tab_text"
-                        android:textSize="15sp"/>
+                        android:textSize="12sp"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -454,10 +455,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="Transaction"
+                android:text="TRANSACTION"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/text_button_big_text_size"/>
         </LinearLayout>
 
         <LinearLayout
@@ -478,10 +479,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="Transfer"
+                android:text="TRANSFER"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/text_button_big_text_size"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

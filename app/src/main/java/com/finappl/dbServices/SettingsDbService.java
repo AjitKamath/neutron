@@ -5,9 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.finappl.models.CountryModel;
 import com.finappl.models.CurrencyModel;
+import com.finappl.models.SettingsNotificationModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.ColumnFetcher;
 import com.finappl.utils.Constants;
@@ -46,6 +48,50 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(USERS_TABLE, values,	"USER_IS_DEL = '" + Constants.DB_NONAFFIRMATIVE + "'", null);
+    }
+
+    public void saveNotificationSetting(SettingsNotificationModel settingsNotificationModelObj){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("SET_NOTIF_TIME", settingsNotificationModelObj.getSET_NOTIF_TIME());
+        values.put("SET_NOTIF_BUZZ", settingsNotificationModelObj.getSET_NOTIF_BUZZ());
+
+        // Updating an old Row
+        db.update(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + settingsNotificationModelObj.getUSER_ID() + "'", null);
+    }
+
+    public void enableDisableNotificationOnUserId(String userIdStr, boolean isEnabled){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        if(isEnabled){
+            values.put("SET_NOTIF_ACTIVE", Constants.DB_AFFIRMATIVE);
+        }
+        else{
+            values.put("SET_NOTIF_ACTIVE", Constants.DB_NONAFFIRMATIVE);
+        }
+
+        // Updating an old Row
+        db.update(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + userIdStr + "'", null);
+    }
+
+    public void enableDisableNotificationVibrationsOnUserId(String userIdStr, boolean isEnabled){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        if(isEnabled){
+            values.put("SET_NOTIF_BUZZ", Constants.DB_AFFIRMATIVE);
+        }
+        else{
+            values.put("SET_NOTIF_BUZZ", Constants.DB_NONAFFIRMATIVE);
+        }
+
+        // Updating an old Row
+        db.update(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + userIdStr + "'", null);
     }
 
     //returns 0 on fail and 1 on success
@@ -174,6 +220,189 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         return countryModelList;
+    }
+
+    public SettingsNotificationModel getNotifSettingsOnUserId(String userIdStr){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" SET_NOTIF_ACTIVE, ");
+        sqlQuerySB.append(" SET_NOTIF_TIME, ");
+        sqlQuerySB.append(" SET_NOTIF_BUZZ ");
+
+        sqlQuerySB.append(" FROM ");
+
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" USER_ID = '" + userIdStr + "' ");
+
+        Log.i(CLASS_NAME, "Query to know users notification settings  :" + sqlQuerySB);
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        SettingsNotificationModel notificationModelObj = null;
+        while (cursor.moveToNext()){
+            String notifIsActiveStr = ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_ACTIVE");
+            String notifTimeStr = ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_TIME");
+            String notifBuzzStr = ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_BUZZ");
+
+            notificationModelObj = new SettingsNotificationModel();
+            notificationModelObj.setSET_NOTIF_ACTIVE(notifIsActiveStr);
+            notificationModelObj.setSET_NOTIF_TIME(notifTimeStr);
+            notificationModelObj.setSET_NOTIF_BUZZ(notifBuzzStr);
+        }
+        cursor.close();
+
+        return notificationModelObj;
+    }
+
+    public void enableDisableSoundsOnUserId(String userIdStr, boolean isEnabled){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        if(isEnabled){
+            values.put("SET_SND_ACTIVE", Constants.DB_AFFIRMATIVE);
+        }
+        else{
+            values.put("SET_SND_ACTIVE", Constants.DB_NONAFFIRMATIVE);
+        }
+
+        // Updating an old Row
+        db.update(Constants.DB_TABLE_SETTINGS_SOUNDS, values,	"USER_ID = '" + userIdStr + "'", null);
+    }
+
+    public void saveSecurityKeyUserId(String userIdStr, String keyStr){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("SET_SEC_KEY", keyStr);
+
+        // Updating an old Row
+        db.update(Constants.DB_TABLE_SETTINGS_SECURITY, values,	"USER_ID = '" + userIdStr + "'", null);
+    }
+
+    public boolean isSoundsEnabledOnUserId(String userIdStr) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" SET_SND_ACTIVE ");
+
+        sqlQuerySB.append(" FROM ");
+
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SOUNDS);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" USER_ID = '" + userIdStr + "' ");
+
+        Log.i(CLASS_NAME, "Query to know if sound is enabled  :" + sqlQuerySB);
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        while (cursor.moveToNext()){
+            if(Constants.DB_AFFIRMATIVE.equalsIgnoreCase(ColumnFetcher.getInstance().loadString(cursor, "SET_SND_ACTIVE"))){
+                Log.i(CLASS_NAME, "This user has enabled sounds");
+                return true;
+            }
+        }
+        cursor.close();
+
+        Log.i(CLASS_NAME, "This user has not enabled sounds");
+        return false;
+    }
+
+    public boolean isNotifEnabledOnUserId(String userIdStr) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" SET_NOTIF_ACTIVE ");
+
+        sqlQuerySB.append(" FROM ");
+
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" USER_ID = '" + userIdStr + "' ");
+
+        Log.i(CLASS_NAME, "Query to know if notification is enabled  :" + sqlQuerySB);
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        while (cursor.moveToNext()){
+            if(Constants.DB_AFFIRMATIVE.equalsIgnoreCase(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_ACTIVE"))){
+                Log.i(CLASS_NAME, "This user has enabled notifications");
+                return true;
+            }
+        }
+        cursor.close();
+
+        Log.i(CLASS_NAME, "This user has not enabled notifications");
+        return false;
+    }
+
+    public String getUserSecurityKeyOnUserId(String userIdStr){
+        String keyStr = "";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" SET_SEC_KEY ");
+
+        sqlQuerySB.append(" FROM ");
+
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SECURITY);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" USER_ID = '" + userIdStr + "' ");
+
+        Log.i(CLASS_NAME, "Query to get Security Key on user id  :" + sqlQuerySB);
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        while (cursor.moveToNext()){
+            keyStr = ColumnFetcher.getInstance().loadString(cursor, "SET_SEC_KEY");
+        }
+        cursor.close();
+
+        if(keyStr == null){
+            keyStr = "";
+        }
+
+        return keyStr;
+    }
+
+    public boolean authenticateOnUserIdAndKey(String userIdStr, String keyStr) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" SET_NOTIF_ACTIVE ");
+
+        sqlQuerySB.append(" FROM ");
+
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" USER_ID = '" + userIdStr + "' ");
+
+        Log.i(CLASS_NAME, "Query to know if notification is enabled  :" + sqlQuerySB);
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        while (cursor.moveToNext()){
+            if(Constants.DB_AFFIRMATIVE.equalsIgnoreCase(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_ACTIVE"))){
+                Log.i(CLASS_NAME, "This user has enabled notifications");
+                return true;
+            }
+        }
+        cursor.close();
+
+        Log.i(CLASS_NAME, "This user has not enabled notifications");
+        return false;
     }
 
     public List<CurrencyModel> getAllCurrency(){

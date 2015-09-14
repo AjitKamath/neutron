@@ -9,14 +9,15 @@
     <LinearLayout
         android:id="@+id/viewActsHeaderLLId"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:background="@color/twitterBlue"
+        android:layout_height="@dimen/layout_header_size"
+        android:elevation="@dimen/layout_header_elevation"
+        android:background="@color/finappleTheme"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/image_header_size"
+            android:layout_height="@dimen/image_header_size"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:background="@drawable/back"
@@ -59,9 +60,9 @@
                         android:layout_height="30dp"
                         android:background="@drawable/view_activities_active_tab_inner"
                         android:gravity="center"
-                        android:text="Transactions"
+                        android:text="TRANSACTIONS"
                         android:textColor="@color/white"
-                        android:textSize="22sp" />
+                        android:textSize="@dimen/text_tab_big_size" />
 
                 </LinearLayout>
 
@@ -77,7 +78,7 @@
                     android:maxLength="2"
                     android:text="99"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/text_bubble_counter_small_size" />
 
             </LinearLayout>
 
@@ -109,9 +110,9 @@
                         android:gravity="center"
                         android:onClick="onTabSelect"
                         android:tag=""
-                        android:text="Transfers"
+                        android:text="TRANSFERS"
                         android:textColor="@color/finappleTheme"
-                        android:textSize="22sp" />
+                        android:textSize="@dimen/text_tab_big_size" />
                 </LinearLayout>
 
                 <TextView
@@ -125,7 +126,7 @@
                     android:maxLength="2"
                     android:text="99"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/text_bubble_counter_small_size" />
             </LinearLayout>
 
         </LinearLayout>
@@ -175,6 +176,7 @@
                     android:cacheColorHint="@android:color/transparent"
                     android:choiceMode="singleChoice"
                     android:dividerHeight="4dp"
+                    android:divider="@color/cardBackground"
                     android:listSelector="@android:color/transparent" />
 
             </LinearLayout>

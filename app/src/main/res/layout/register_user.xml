@@ -1,183 +1,156 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/registerRLId"
-                android:background="@color/white">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/registerRLId"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/registerHeaderId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_margin="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/layout_header_size"
+        android:elevation="@dimen/layout_header_elevation"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:background="@color/white">
 
             <ImageView
                 android:id="@+id/addAccHeaderBackImgId"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="@dimen/image_header_size"
+                android:layout_height="@dimen/image_header_size"
+                android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
-                android:tag="BACK"
                 android:background="@drawable/back_black"
-                android:onClick="onBackClick"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
+                android:onClick="onBackClick"
+                android:tag="BACK" />
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_marginLeft="-35dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Register into"
-                android:textColor="@color/Orange"
-                android:background="@color/white"
-                android:textStyle="italic"
-                android:textSize="30sp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginLeft="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-
-            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/app_name_main"
-                android:textColor="@color/finappleTheme"
-                android:background="@color/white"
-                android:textStyle="italic"
-                android:textSize="30sp"/>
+                android:textSize="@dimen/text_header_title_size"
+                android:textColor="@color/finappleThemeDark"
+                android:text="Register"
+                />
 
         </LinearLayout>
-
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/registerStepsOrbsLLId"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
         android:layout_below="@+id/registerHeaderId"
-        android:id="@+id/registerStepsOrbsLLId">
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center"
             android:background="@drawable/finished_step"
-            android:onClick="onBackClick"/>
+            android:onClick="onBackClick" />
 
         <ImageView
-            android:layout_marginLeft="2dp"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="2dp"
             android:background="@drawable/unfinished_step"
-            android:onClick="onBackClick"/>
+            android:onClick="onBackClick" />
 
         <ImageView
-            android:layout_marginLeft="2dp"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="2dp"
             android:background="@drawable/unfinished_step"
-            android:onClick="onBackClick"/>
+            android:onClick="onBackClick" />
 
         <ImageView
-            android:layout_marginLeft="2dp"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="2dp"
             android:background="@drawable/unfinished_step"
-            android:onClick="onBackClick"/>
+            android:onClick="onBackClick" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/registerContentLLId"
         android:layout_width="fill_parent"
-        android:layout_height="477dp"
+        android:layout_height="465dp"
         android:layout_below="@+id/registerStepsOrbsLLId"
-        android:paddingTop="50dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:paddingTop="50dp">
 
         <EditText
             android:id="@+id/registerUsernameETId"
             android:layout_width="250dp"
             android:layout_height="35dp"
+            android:background="@drawable/edit_text_border"
+            android:gravity="center"
             android:hint="username"
-            android:text="ajitkamath47"
             android:inputType="text"
             android:maxLength="25"
-            android:background="@drawable/edit_text_border"
             android:maxLines="1"
+            android:text="ajitkamath47"
             android:textColor="@color/Black"
             android:textSize="25sp"
-            android:gravity="center"
             android:textStyle="italic" />
 
         <EditText
-            android:layout_marginTop="20dp"
             android:id="@+id/registerPasswordETId"
             android:layout_width="250dp"
             android:layout_height="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_text_border"
+            android:gravity="center"
             android:hint="password"
-            android:text="newton"
             android:inputType="textPassword"
             android:maxLength="25"
-            android:background="@drawable/edit_text_border"
             android:maxLines="1"
+            android:text="newton"
             android:textColor="@color/Black"
             android:textSize="25sp"
-            android:gravity="center"
             android:textStyle="italic" />
 
         <EditText
-            android:layout_marginTop="20dp"
             android:id="@+id/registerRepeatPasswordETId"
             android:layout_width="250dp"
             android:layout_height="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_text_border"
+            android:gravity="center"
             android:hint="repeat password"
-            android:text="newton"
             android:inputType="textPassword"
             android:maxLength="25"
-            android:background="@drawable/edit_text_border"
             android:maxLines="1"
+            android:text="newton"
             android:textColor="@color/Black"
             android:textSize="25sp"
-            android:gravity="center"
             android:textStyle="italic" />
 
         <TextView
-            android:layout_marginTop="5dp"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:gravity="right"
             android:text="Already Registered ?"
             android:textColor="@color/finappleThemeDark"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -187,9 +160,9 @@
         android:layout_below="@+id/registerContentLLId"
         android:background="@color/white"
         android:gravity="center"
-        android:paddingTop="2dp"
+        android:orientation="horizontal"
         android:paddingBottom="2dp"
-        android:orientation="horizontal">
+        android:paddingTop="2dp">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -198,19 +171,19 @@
             android:clickable="true"
             android:gravity="center"
             android:onClick="goToRegisterProfilePersonal"
+            android:orientation="horizontal"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:orientation="horizontal">
+            android:paddingRight="5dp">
 
             <TextView
-                android:background="@drawable/oval_buttons_text_view"
                 android:layout_width="fill_parent"
                 android:layout_height="30dp"
+                android:background="@drawable/oval_buttons_text_view"
                 android:gravity="center"
-                android:text="Next"
+                android:text="NEXT"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="22dp"/>
+                android:textSize="@dimen/text_button_big_text_size" />
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

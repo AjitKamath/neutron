@@ -10,7 +10,7 @@ public class Constants extends Activity {
     public static final String DB_NAME = "FINAPPL.db";
 
     //DB version
-    public static final int DB_VERSION = 5;
+    public static final int DB_VERSION = 13;
 
     //DB Properties
     public static final String USERNAME = "Ajit";
@@ -71,6 +71,8 @@ public class Constants extends Activity {
     public static final String DB_TABLE_WORK_TIMELINETABLE = "WORK_TIMELINE";
     public static final String DB_TABLE_NOTIFICATIONSTABLE = "NOTIFICATIONS";
     public static final String DB_TABLE_SETTINGS_NOTIFICATIONS = "SETTINGS_NOTIFICATIONS";
+    public static final String DB_TABLE_SETTINGS_SOUNDS = "SETTINGS_SOUNDS";
+    public static final String DB_TABLE_SETTINGS_SECURITY = "SETTINGS_SECURITY";
 
     //defaults & their id's
     public static final String DEFAULTS_CATEGORIES = "Food-CAT_1-expense,Fuel-CAT_2-expense,Medicine-CAT_3-expense,Shopping-CAT_4-expense,Accommodation-CAT_5-expense," +
@@ -103,8 +105,8 @@ public class Constants extends Activity {
     public static final String[] WEEK_ARRAY = new String[]{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
     //months
-    public static final String[] MONTHS_ARRAY = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
-                "December"};
+    public static final String[] MONTHS_ARRAY = new String[]{"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER",
+                "DECEMBER"};
 
     //date super scripts
     public static final String[] DATE_SUPERSCRIPT_ARRAY = new String[]{"", "st", "nd", "rd", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th",

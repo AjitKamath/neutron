@@ -11,18 +11,19 @@
     <!-- header -->
 
     <LinearLayout
+        android:elevation="@dimen/layout_header_elevation"
         android:id="@+id/addUpdBdgtHdrLLId"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:background="@color/twitterBlue"
+        android:layout_height="@dimen/layout_header_size"
+        android:background="@color/finappleTheme"
         android:gravity="left|center_vertical"
         android:orientation="horizontal"
         android:paddingRight="5dp">
 
         <ImageView
             android:id="@+id/addUpdBdgtHdrBackImgId"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/image_header_size"
+            android:layout_height="@dimen/image_header_size"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:tag="BACK"
@@ -345,7 +346,7 @@
                 android:gravity="center"
                 android:text="DONE"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/text_button_big_text_size" />
 
         </LinearLayout>
 
@@ -364,7 +365,7 @@
                 android:gravity="center"
                 android:text="DONE + NEW"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/text_button_big_text_size" />
 
         </LinearLayout>
 

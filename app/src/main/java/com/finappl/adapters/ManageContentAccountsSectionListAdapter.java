@@ -51,7 +51,10 @@ public class ManageContentAccountsSectionListAdapter extends BaseAdapter {
 
     private void buildSectionList() {
         for(Map.Entry<String, List<AccountsModel>> iterMap : itemsMap.entrySet()) {
-            addSeparatorItem(iterMap);
+            //if there's only default Accounts then no need of showing dividers
+            /*if(itemsMap.size() != 1 && "Y-DEFAULT".equalsIgnoreCase(iterMap.getKey())){
+                addSeparatorItem(iterMap);
+            }*/
 
             List<AccountsModel> accList = iterMap.getValue();
 
@@ -117,9 +120,9 @@ public class ManageContentAccountsSectionListAdapter extends BaseAdapter {
                 case TYPE_SEPARATOR:
                     convertView = (LinearLayout)inflater.inflate(sectionId, null);
 
-                    mHolder.manageContentAccHeaderLL = (LinearLayout) convertView.findViewById(R.id.manageContentAccHeaderLLId);
+                    /*mHolder.manageContentAccHeaderLL = (LinearLayout) convertView.findViewById(R.id.manageContentAccHeaderLLId);
                     mHolder.manageContentAccCounterTV = (TextView) convertView.findViewById(R.id.manageContentAccCounterTVId);
-                    mHolder.manageContentAccHeaderHeadingTV = (TextView) convertView.findViewById(R.id.manageContentAccHeaderHeadingTVId);
+                    mHolder.manageContentAccHeaderHeadingTV = (TextView) convertView.findViewById(R.id.manageContentAccHeaderHeadingTVId);*/
 
                     break;
             }
@@ -168,7 +171,7 @@ public class ManageContentAccountsSectionListAdapter extends BaseAdapter {
     }
 
     private void makeSectionHeader(int position, ViewHolder mHolder) {
-        Map.Entry<String, List<AccountsModel>> accountsListMap = (Map.Entry<String, List<AccountsModel>>) mData.get(position);
+        /*Map.Entry<String, List<AccountsModel>> accountsListMap = (Map.Entry<String, List<AccountsModel>>) mData.get(position);
 
         if("USER".equalsIgnoreCase(accountsListMap.getKey())){
             mHolder.manageContentAccHeaderHeadingTV.setText(userNameStr+"'s Accounts");
@@ -181,7 +184,7 @@ public class ManageContentAccountsSectionListAdapter extends BaseAdapter {
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) mHolder.manageContentAccHeaderLL, robotoCondensedLightFont);
+        setFont((ViewGroup) mHolder.manageContentAccHeaderLL, robotoCondensedLightFont);*/
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
@@ -204,9 +207,9 @@ public class ManageContentAccountsSectionListAdapter extends BaseAdapter {
         private TextView manageContentAccNameTV;
         private TextView manageContentAccNoteTV;
         private TextView manageContentAccTotalTV;
-        private TextView manageContentAccCounterTV;
-        private TextView manageContentAccHeaderHeadingTV;
+        /*private TextView manageContentAccCounterTV;
+        private TextView manageContentAccHeaderHeadingTV;*/
         private LinearLayout manageContentAccContentLL;
-        private LinearLayout manageContentAccHeaderLL;
+       /* private LinearLayout manageContentAccHeaderLL;*/
     }
 }

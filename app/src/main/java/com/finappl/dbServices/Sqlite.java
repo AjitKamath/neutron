@@ -73,6 +73,12 @@ public class Sqlite extends SQLiteOpenHelper{
 		createSettingsNotificationsTable(db);
 		Log.i(CLASS_NAME, Constants.DB_TABLE_SETTINGS_NOTIFICATIONS + " table created successfully");
 
+		createSettingsSoundsTable(db);
+		Log.i(CLASS_NAME, Constants.DB_TABLE_SETTINGS_SOUNDS + " table created successfully");
+
+        createSettingsSecurityTable(db);
+        Log.i(CLASS_NAME, Constants.DB_TABLE_SETTINGS_SECURITY + " table created successfully");
+
         createWorkTimelineTable(db);
         Log.i(CLASS_NAME, WORK_TIMELINE_TABLE + " table created successfully");
 		
@@ -129,6 +135,43 @@ public class Sqlite extends SQLiteOpenHelper{
 		checkAndAddDefault(db, countryDefaultsStrArr, COUNTRY_TABLE, "CNTRY_NAME");
 	}
 
+    private void createSettingsSecurityTable(SQLiteDatabase db) {
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SECURITY);
+        sqlQuerySB.append(" (SET_SEC_ID TEXT PRIMARY KEY, ");	            //pk
+        sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");          		    //fk1
+        sqlQuerySB.append(" SET_SEC_ACTIVE TEXT NOT NULL, ");
+        sqlQuerySB.append(" SET_SEC_KEY TEXT, ");
+        sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
+        sqlQuerySB.append(" MOD_DTM DATETIME, ");
+
+        sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+USERS_TABLE+" (USER_ID)) ");
+
+        Log.i(CLASS_NAME, "Create " + Constants.DB_TABLE_SETTINGS_SECURITY + " Table query:" + sqlQuerySB.toString());
+
+        db.execSQL(sqlQuerySB.toString());
+    }
+
+    private void createSettingsSoundsTable(SQLiteDatabase db) {
+		StringBuilder sqlQuerySB = new StringBuilder(50);
+
+		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
+		sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SOUNDS);
+		sqlQuerySB.append(" (SET_SND_ID TEXT PRIMARY KEY, ");	            //pk
+		sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");          		    //fk1
+		sqlQuerySB.append(" SET_SND_ACTIVE TEXT NOT NULL, ");
+		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sqlQuerySB.append(" MOD_DTM DATETIME, ");
+
+		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+USERS_TABLE+" (USER_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + Constants.DB_TABLE_SETTINGS_SOUNDS + " Table query:" + sqlQuerySB.toString());
+
+		db.execSQL(sqlQuerySB.toString());
+	}
+
 	private void createSettingsNotificationsTable(SQLiteDatabase db) {
 		StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -137,7 +180,8 @@ public class Sqlite extends SQLiteOpenHelper{
 		sqlQuerySB.append(" (SET_NOTIF_ID TEXT PRIMARY KEY, ");	            //pk
 		sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");          		    //fk1
 		sqlQuerySB.append(" SET_NOTIF_ACTIVE TEXT NOT NULL, ");
-		sqlQuerySB.append(" SET_NOTIF_TIME TEXT, ");
+		sqlQuerySB.append(" SET_NOTIF_TIME TEXT NOT NULL, ");
+        sqlQuerySB.append(" SET_NOTIF_BUZZ TEXT NOT NULL, ");
 		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sqlQuerySB.append(" MOD_DTM DATETIME, ");
 
@@ -700,8 +744,10 @@ public class Sqlite extends SQLiteOpenHelper{
 		db.execSQL("DROP TABLE IF EXISTS " + Constants.DB_TABLE_WORK_TIMELINETABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + Constants.DB_TABLE_NOTIFICATIONSTABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Constants.DB_TABLE_SETTINGS_NOTIFICATIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.DB_TABLE_SETTINGS_SOUNDS);
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.DB_TABLE_SETTINGS_SECURITY);
 
-		// Create tables again
-		onCreate(db);
+                // Create tables again
+                onCreate(db);
 	}
 }

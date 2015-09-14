@@ -51,7 +51,10 @@ public class ManageContentCategoriesSectionListAdapter extends BaseAdapter {
 
     private void buildSectionList() {
         for(Map.Entry<String, List<CategoryModel>> iterMap : itemsMap.entrySet()) {
-            addSeparatorItem(iterMap);
+            //if there's only default Categories then no need of showing dividers
+            /*if(itemsMap.size() != 1 && "Y-DEFAULT".equalsIgnoreCase(iterMap.getKey())){
+                addSeparatorItem(iterMap);
+            }*/
 
             List<CategoryModel> catList = iterMap.getValue();
 
@@ -118,9 +121,9 @@ public class ManageContentCategoriesSectionListAdapter extends BaseAdapter {
                 case TYPE_SEPARATOR:
                     convertView = (LinearLayout)inflater.inflate(sectionId, null);
 
-                    mHolder.manageContentCatHeaderLL = (LinearLayout) convertView.findViewById(R.id.manageContentCatHeaderLLId);
+                    /*mHolder.manageContentCatHeaderLL = (LinearLayout) convertView.findViewById(R.id.manageContentCatHeaderLLId);
                     mHolder.manageContentCatHeaderHeadingTV = (TextView) convertView.findViewById(R.id.manageContentCatHeaderHeadingTVId);
-                    mHolder.manageContentCatCounterTV = (TextView) convertView.findViewById(R.id.manageContentCatCounterTVId);
+                    mHolder.manageContentCatCounterTV = (TextView) convertView.findViewById(R.id.manageContentCatCounterTVId);*/
 
                     break;
             }
@@ -162,7 +165,7 @@ public class ManageContentCategoriesSectionListAdapter extends BaseAdapter {
     }
 
     private void makeSectionHeader(int position, ViewHolder mHolder) {
-        Map.Entry<String, List<CategoryModel>> categoriesListMap = (Map.Entry<String, List<CategoryModel>>) mData.get(position);
+        /*Map.Entry<String, List<CategoryModel>> categoriesListMap = (Map.Entry<String, List<CategoryModel>>) mData.get(position);
 
         if("USER".equalsIgnoreCase(categoriesListMap.getKey())) {
             mHolder.manageContentCatHeaderHeadingTV.setText(userNameStr + "'s Categories");
@@ -174,7 +177,7 @@ public class ManageContentCategoriesSectionListAdapter extends BaseAdapter {
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) mHolder.manageContentCatHeaderLL, robotoCondensedLightFont);
+        setFont((ViewGroup) mHolder.manageContentCatHeaderLL, robotoCondensedLightFont);*/
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
@@ -193,11 +196,11 @@ public class ManageContentCategoriesSectionListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        private TextView manageContentCatHeaderHeadingTV;
-        private TextView manageContentCatCounterTV;
+        /*private TextView manageContentCatHeaderHeadingTV;
+        private TextView manageContentCatCounterTV;*/
         private TextView manageContentCatNameTV;
         private TextView manageContentCatNoteTV;
         private LinearLayout manageContentCatContentLL;
-        private LinearLayout manageContentCatHeaderLL;
+        /*private LinearLayout manageContentCatHeaderLL;*/
     }
 }

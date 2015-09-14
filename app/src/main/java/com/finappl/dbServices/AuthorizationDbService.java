@@ -146,10 +146,41 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         //inserting a new row into SETTINGS_NOTIFICATIONS table
         values.clear();
         values.put("SET_NOTIF_ID", IdGenerator.getInstance().generateUniqueId("SET_NOTIF"));
+        values.put("SET_NOTIF_ACTIVE", Constants.DB_AFFIRMATIVE);
+        values.put("SET_NOTIF_TIME", Constants.DB_DEFAULT_NOTIF_TIME);
+        values.put("SET_NOTIF_BUZZ", Constants.DB_NONAFFIRMATIVE);
         values.put("USER_ID", userModelObj.getUSER_ID());
         values.put("CREAT_DTM", sdf1.format(new Date()));
 
         result = db.insert(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS, null, values);
+
+        if(result == -1){
+            Log.e(CLASS_NAME, "Something went wrong while registering the user");
+            return result;
+        }
+
+        //inserting a new row into SETTINGS_SOUNDS table
+        values.clear();
+        values.put("SET_SND_ID", IdGenerator.getInstance().generateUniqueId("SET_SND"));
+        values.put("SET_SND_ACTIVE", Constants.DB_AFFIRMATIVE);
+        values.put("USER_ID", userModelObj.getUSER_ID());
+        values.put("CREAT_DTM", sdf1.format(new Date()));
+
+        result = db.insert(Constants.DB_TABLE_SETTINGS_SOUNDS, null, values);
+
+        if(result == -1){
+            Log.e(CLASS_NAME, "Something went wrong while registering the user");
+            return result;
+        }
+
+        //inserting a new row into SETTINGS_SECURITY table
+        values.clear();
+        values.put("SET_SEC_ID", IdGenerator.getInstance().generateUniqueId("SET_SEC"));
+        values.put("SET_SEC_ACTIVE", Constants.DB_NONAFFIRMATIVE);
+        values.put("USER_ID", userModelObj.getUSER_ID());
+        values.put("CREAT_DTM", sdf1.format(new Date()));
+
+        result = db.insert(Constants.DB_TABLE_SETTINGS_SECURITY, null, values);
 
         return result;
     }

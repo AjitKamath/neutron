@@ -33,7 +33,7 @@
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:gravity="center"
-                    android:background="@drawable/circle_budgets_account_text_view"/>
+                    android:background="@drawable/circle_account_text_view"/>
 
                 <TextView
                     android:id="@+id/budgetsViewListNameTVId"

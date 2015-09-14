@@ -51,7 +51,10 @@ public class ManageContentSpentOnsSectionListAdapter extends BaseAdapter {
 
     private void buildSectionList() {
         for(Map.Entry<String, List<SpentOnModel>> iterMap : itemsMap.entrySet()) {
-            addSeparatorItem(iterMap);
+            //if there's only default Spentons then no need of showing dividers
+            /*if(itemsMap.size() != 1 && "Y-DEFAULT".equalsIgnoreCase(iterMap.getKey())){
+                addSeparatorItem(iterMap);
+            }*/
 
             List<SpentOnModel> spntOnList = iterMap.getValue();
 
@@ -68,6 +71,8 @@ public class ManageContentSpentOnsSectionListAdapter extends BaseAdapter {
 
     public void addSeparatorItem(Object item) {
         mData.add(item);
+        // save separator position
+        mSeparatorsSet.add(mData.size() - 1);
         notifyDataSetChanged();
     }
 
@@ -114,9 +119,9 @@ public class ManageContentSpentOnsSectionListAdapter extends BaseAdapter {
                 case TYPE_SEPARATOR:
                     convertView = inflater.inflate(sectionId, null);
 
-                    mHolder.manageContentSpntOnHeaderLL = (LinearLayout) convertView.findViewById(R.id.manageContentSpntOnHeaderLLId);
+                    /*mHolder.manageContentSpntOnHeaderLL = (LinearLayout) convertView.findViewById(R.id.manageContentSpntOnHeaderLLId);
                     mHolder.manageContentSpntOnHeaderHeadingTV = (TextView) convertView.findViewById(R.id.manageContentSpntOnHeaderHeadingTVId);
-                    mHolder.manageContentSpntOnCounterTV = (TextView) convertView.findViewById(R.id.manageContentSpntOnCounterTVId);
+                    mHolder.manageContentSpntOnCounterTV = (TextView) convertView.findViewById(R.id.manageContentSpntOnCounterTVId);*/
 
                     break;
             }
@@ -158,7 +163,7 @@ public class ManageContentSpentOnsSectionListAdapter extends BaseAdapter {
     }
 
     private void makeSectionHeader(int position, ViewHolder mHolder) {
-        Map.Entry<String, List<SpentOnModel>> spntOnListMap = (Map.Entry<String, List<SpentOnModel>>) mData.get(position);
+        /*Map.Entry<String, List<SpentOnModel>> spntOnListMap = (Map.Entry<String, List<SpentOnModel>>) mData.get(position);
 
         if("USER".equalsIgnoreCase(spntOnListMap.getKey())){
             mHolder.manageContentSpntOnHeaderHeadingTV.setText(userNameStr+"'s Categories");
@@ -171,7 +176,7 @@ public class ManageContentSpentOnsSectionListAdapter extends BaseAdapter {
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) mHolder.manageContentSpntOnHeaderLL, robotoCondensedLightFont);
+        setFont((ViewGroup) mHolder.manageContentSpntOnHeaderLL, robotoCondensedLightFont);*/
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
@@ -193,9 +198,9 @@ public class ManageContentSpentOnsSectionListAdapter extends BaseAdapter {
     private class ViewHolder {
         private TextView manageContentSpntOnNameTV;
         private TextView manageContentSpntOnNoteTV;
-        private TextView manageContentSpntOnHeaderHeadingTV;
-        private TextView manageContentSpntOnCounterTV;
+        /*private TextView manageContentSpntOnHeaderHeadingTV;
+        private TextView manageContentSpntOnCounterTV;*/
         private LinearLayout manageContentSpntOnContentLL;
-        private LinearLayout manageContentSpntOnHeaderLL;
+        /*private LinearLayout manageContentSpntOnHeaderLL;*/
     }
 }

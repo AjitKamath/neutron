@@ -376,15 +376,6 @@ public class AddUpdateTransactionActivity extends Activity {
         return String.valueOf(index);
     }
 
-    //on click of discard default_button
-	public void onDiscard(View view)
-	{
-		//discard the screen and go to calendar page
-    	Intent intent = new Intent(AddUpdateTransactionActivity.this,CalendarActivity.class);
-		startActivity(intent);
-        finish();
-	}
-	
     public void showMessagePopper(View view){
         if("BACK".equalsIgnoreCase(addUpdateTranBackImg.getTag().toString())){
             Intent intent = new Intent(AddUpdateTransactionActivity.this, CalendarActivity.class);

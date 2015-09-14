@@ -15,10 +15,10 @@
         android:layout_width="110dp"
         android:layout_height="30dp"
         android:gravity="center"
-        android:text="New"
+        android:text="NEW"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="18dp"/>
+        android:textSize="@dimen/text_button_big_text_size"/>
 
     <TextView
         android:layout_marginLeft="5dp"
@@ -27,10 +27,10 @@
         android:layout_width="110dp"
         android:layout_height="30dp"
         android:gravity="center"
-        android:text="Quick"
+        android:text="QUICK"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="18dp"/>
+        android:textSize="@dimen/text_button_big_text_size"/>
 
 
     <TextView
@@ -40,8 +40,8 @@
         android:layout_width="110dp"
         android:layout_height="30dp"
         android:gravity="center"
-        android:text="Schedule"
+        android:text="SCHEDULE"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="18dp"/>
+        android:textSize="@dimen/text_button_big_text_size"/>
 </LinearLayout>

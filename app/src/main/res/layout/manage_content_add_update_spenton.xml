@@ -13,16 +13,18 @@
 
         <!--header-->
         <LinearLayout
+            android:elevation="@dimen/layout_header_elevation"
             android:id="@+id/addSpentOnHeaderLLId"
             android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:background="@color/twitterBlue"
+            android:layout_height="@dimen/layout_header_size"
+            android:background="@color/finappleTheme"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/addSpentOnHeaderBackImgId"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/image_header_size"
+                android:layout_height="@dimen/image_header_size"
+                android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
                 android:tag="BACK"
                 android:background="@drawable/back"
@@ -35,7 +37,7 @@
                 android:gravity="center"
                 android:text="Spent On"
                 android:textColor="@color/white"
-                android:textSize="20dp"/>
+                android:textSize="@dimen/text_header_title_size"/>
 
             <ImageView
                 android:layout_width="30dp"
@@ -166,7 +168,7 @@
                 android:gravity="center"
                 android:text="SAVE"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/text_button_big_text_size" />
 
         </LinearLayout>
 

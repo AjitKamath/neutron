@@ -12,18 +12,19 @@
     <!-- header -->
 
     <LinearLayout
+        android:elevation="@dimen/layout_header_elevation"
         android:id="@+id/addUpdTrnfrHdrLLId"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:background="@color/twitterBlue"
+        android:layout_height="@dimen/layout_header_size"
+        android:background="@color/finappleTheme"
         android:layout_gravity="left|center_vertical"
         android:orientation="horizontal"
         android:paddingRight="5dp">
 
         <ImageView
             android:id="@+id/addUpdTrnfrHdrBackIVId"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/image_header_size"
+            android:layout_height="@dimen/image_header_size"
             android:layout_gravity="center"
             android:tag="BACK"
             android:layout_marginLeft="5dp"
@@ -37,7 +38,7 @@
             android:layout_height="fill_parent"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="5dp"
-            android:background="@color/twitterBlue"
+            android:background="@color/finappleTheme"
             android:gravity="right"
             android:orientation="horizontal">
 
@@ -50,7 +51,7 @@
                 android:onClick="showDatePicker"
                 android:text="28"
                 android:textColor="@color/white"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/text_header_title_size"/>
 
             <TextView
                 android:id="@+id/addUpdTrnfrSuperScriptTVId"
@@ -75,7 +76,7 @@
                 android:onClick="showDatePicker"
                 android:text="November"
                 android:textColor="@color/white"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/text_header_title_size"/>
 
             <TextView
                 android:id="@+id/addUpdTrnfrYearTVId"
@@ -87,7 +88,7 @@
                 android:onClick="showDatePicker"
                 android:text="'16"
                 android:textColor="@color/white"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/text_header_title_size"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -276,7 +277,7 @@
                 android:background="@drawable/oval_buttons_text_view"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="18dp" />
+                android:textSize="@dimen/text_button_big_text_size" />
         </LinearLayout>
 
         <LinearLayout
@@ -297,7 +298,7 @@
                 android:onClick="onDonePlusNew"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="18dp" />
+                android:textSize="@dimen/text_button_big_text_size" />
         </LinearLayout>
     </LinearLayout>
 

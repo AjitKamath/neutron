@@ -7,8 +7,9 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:elevation="@dimen/layout_header_elevation"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/layout_header_size"
         android:gravity="center_vertical"
         android:background="@color/finappleTheme"
         android:orientation="vertical">
@@ -16,7 +17,7 @@
         <LinearLayout
             android:id="@+id/summaryPoppeTitleLLId"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="5dp">
@@ -27,16 +28,16 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/summaryPopperTransactionTitleTVId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLength="25"
                     android:text="MMMMMMMMMM"
                     android:textColor="@color/white"
-                    android:textSize="22sp" />
+                    android:textSize="14sp" />
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/summaryPopperTransferTitleLLId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -75,7 +76,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="5dp"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">

@@ -3,11 +3,11 @@
     <!-- Inherit from the light Material Theme -->
     <style name="FinappleTheme" parent="android:Theme.Material.Light.NoActionBar">
         <!-- Override the app bar color -->
-        <item name="android:colorPrimaryDark">@color/SteelBlue</item>
+        <item name="android:colorPrimaryDark">@color/finappleThemeDark</item>
         <!-- Override the color of UI controls -->
-        <item name="android:colorAccent">@color/twitterBlue</item>
+        <item name="android:colorAccent">@color/finappleTheme</item>
 
-        <item name="android:colorPrimary">@color/twitterBlue</item>
+        <item name="android:colorPrimary">@color/finappleTheme</item>
 
         <item name="android:textColorPrimary">@color/white</item>
 
@@ -16,5 +16,14 @@
 
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
         <item name="android:popupBackground">@color/white</item>
+    </style>
+
+    <style name="finappleScrollBar">
+        <item name="android:scrollbarSize">2sp</item>
+        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:fadeScrollbars">false</item>
+        <item name="android:scrollbarThumbVertical">@drawable/finished_step</item>
     </style>
 </resources>

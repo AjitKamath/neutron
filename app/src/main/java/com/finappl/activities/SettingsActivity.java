@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,21 +15,26 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.finappl.R;
 import com.finappl.adapters.SettingsProfilePersonalCountryAdapter;
 import com.finappl.adapters.SettingsProfilePersonalCurrencyAdapter;
-import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.SettingsDbService;
 import com.finappl.models.CountryModel;
 import com.finappl.models.CurrencyModel;
+import com.finappl.models.SettingsNotificationModel;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.Constants;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,10 +69,15 @@ public class SettingsActivity extends Activity {
             return;
         }
 
+        setUpNotifications();
+
+        setUpSounds();
+
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(this.getAssets(), "Roboto-Light.ttf");
         setFont((ViewGroup) this.findViewById(R.id.settingsParentRLId), robotoCondensedLightFont);
     }
+
 
     public void toManageContent(View view){
         Intent intent = new Intent(this, ManageContentActivity.class);
@@ -183,12 +194,31 @@ public class SettingsActivity extends Activity {
     }
 
     public void logoutUser(View view){
-        settingsDbService.logoutAllUsers();
+        // Create custom message popper object
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.message_popper);
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-        showToast("Logged Out");
+        dialog.show();
+
+        //buttons
+        LinearLayout msgPoprPosLL, msgPoprNegLL;
+        msgPoprPosLL = (LinearLayout) dialog.findViewById(R.id.msgPoprPosLLId);
+        msgPoprNegLL = (LinearLayout) dialog.findViewById(R.id.msgPoprNegLLId);
+
+        //set listeners for the buttons
+        msgPoprPosLL.setOnClickListener(logoutPoppeButtonClickListener);
+        msgPoprNegLL.setOnClickListener(logoutPoppeButtonClickListener);
+
+        //texts
+        TextView msgPoprMsgTV;
+        msgPoprMsgTV = (TextView) dialog.findViewById(R.id.msgPoprMsgTVId);
+
+        msgPoprMsgTV.setText("Logout "+mContext.getResources().getString(R.string.app_name_main)+" ?");
+
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+        setFont((ViewGroup) dialog.findViewById(R.id.msgPoprLLId), robotoCondensedLightFont);
     }
 
     private Integer getSpinnerItemIndex(List<SpinnerModel> spnList, String itemStr){
@@ -233,6 +263,181 @@ public class SettingsActivity extends Activity {
         return null;
     }
 
+    public void showChangeSecurityPinPopper(View view){
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.settings_security_popper);
+
+        dialog.show();
+
+        final TextView settingsSecurityMsgTV = (TextView) dialog.findViewById(R.id.settingsSecurityMsgTVId);
+        final EditText settingsSecurityKeyET = (EditText) dialog.findViewById(R.id.settingsSecurityKeyETId);
+        final TextView settingsSecurityPopperActionTV = (TextView) dialog.findViewById(R.id.settingsSecurityPopperActionTVId);
+
+        if(settingsDbService.getUserSecurityKeyOnUserId(loggedInUserObj.getUSER_ID()).isEmpty()){
+            settingsSecurityMsgTV.setText("Set Your PIN");
+            settingsSecurityPopperActionTV.setText("SAVE");
+        }
+        else{
+            settingsSecurityMsgTV.setText("Enter Your PIN");
+            settingsSecurityPopperActionTV.setText("OK");
+        }
+
+        settingsSecurityPopperActionTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if("SAVE".equalsIgnoreCase(String.valueOf(settingsSecurityPopperActionTV.getText()))){
+                    if(String.valueOf(settingsSecurityKeyET.getText()).trim().isEmpty()){
+                        showToast("Enter PIN");
+                    }
+                    else{
+                        settingsDbService.saveSecurityKeyUserId(loggedInUserObj.getUSER_ID(), String.valueOf(settingsSecurityKeyET.getText()));
+                        dialog.dismiss();
+                        showToast("PIN saved");
+                    }
+                }
+                else{
+                    if(String.valueOf(settingsSecurityKeyET.getText()).trim().isEmpty()){
+                        showToast("Enter your PIN");
+                    }
+                    else if(settingsDbService.authenticateOnUserIdAndKey(loggedInUserObj.getUSER_ID(), String.valueOf(settingsSecurityKeyET.getText()))){
+                        if(settingsDbService.getUserSecurityKeyOnUserId(loggedInUserObj.getUSER_ID()).equals(String.valueOf(settingsSecurityKeyET.getText()))){
+                            settingsSecurityMsgTV.setText("Enter Your New PIN");
+                            settingsSecurityPopperActionTV.setText("SAVE");
+                            settingsSecurityKeyET.setText("");
+                        }
+                        else{
+                            showToast("Incorrect PIN");
+                            dialog.dismiss();
+                        }
+                    }
+                }
+            }
+        });
+
+
+
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+        setFont((ViewGroup) dialog.findViewById(R.id.settingsSecurityPopperLLId), robotoCondensedLightFont);
+    }
+
+    public void showNotificationsPopper(View view){
+        // Create custom message popper object
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.settings_notifications_popper);
+
+        dialog.show();
+
+        //get user preferences
+        SettingsNotificationModel settingsNotificationModelObj = settingsDbService.getNotifSettingsOnUserId(loggedInUserObj.getUSER_ID());
+
+        //set time picker
+        TimePicker settingsNotifsPopperTimeTP = (TimePicker) dialog.findViewById(R.id.settingsNotifsPopperTimeTPId);
+        settingsNotifsPopperTimeTP.setIs24HourView(false);
+
+        String timeStrArr[] = settingsNotificationModelObj.getSET_NOTIF_TIME().split(":");
+        settingsNotifsPopperTimeTP.setCurrentHour(Integer.parseInt(timeStrArr[0]));
+        settingsNotifsPopperTimeTP.setCurrentMinute(Integer.parseInt(timeStrArr[1]));
+
+        //set vibrate
+        LinearLayout settingsNotifsPopperVibeLL = (LinearLayout) dialog.findViewById(R.id.settingsNotifsPopperVibeLLId);
+        LinearLayout settingsNotifsPopperBuzzTickLL = (LinearLayout) dialog.findViewById(R.id.settingsNotifsPopperBuzzTickLLId);
+        ImageView settingsNotifsPopperBuzzTickIV = (ImageView) dialog.findViewById(R.id.settingsNotifsPopperBuzzTickIVId);
+
+        if(Constants.DB_AFFIRMATIVE.equalsIgnoreCase(settingsNotificationModelObj.getSET_NOTIF_BUZZ())){
+            settingsNotifsPopperBuzzTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_checked);
+            settingsNotifsPopperBuzzTickIV.setBackgroundResource(R.drawable.tick_white);
+            settingsNotifsPopperBuzzTickLL.setTag("ENABLED");
+        }
+        else {
+            settingsNotifsPopperBuzzTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_unchecked);
+            settingsNotifsPopperBuzzTickIV.setBackgroundResource(R.drawable.tick_grey);
+            settingsNotifsPopperBuzzTickLL.setTag("DISABLED");
+        }
+
+        TextView settingsNotifsPopperSaveTV = (TextView) dialog.findViewById(R.id.settingsNotifsPopperSaveTVId);
+
+        settingsNotifsPopperVibeLL.setOnClickListener(notifPoppeButtonClickListener);
+        settingsNotifsPopperSaveTV.setOnClickListener(notifPoppeButtonClickListener);
+
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+        setFont((ViewGroup) dialog.findViewById(R.id.settingsNotifsPopperLLId), robotoCondensedLightFont);
+    }
+
+    public void setUpNotifications(){
+        LinearLayout settingsNotifsTickLL = (LinearLayout) this.findViewById(R.id.settingsNotifsTickLLId);
+        ImageView settingsNotifsTickIV = (ImageView) this.findViewById(R.id.settingsNotifsTickIVId);
+
+        if(settingsDbService.isNotifEnabledOnUserId(loggedInUserObj.getUSER_ID())){
+            settingsNotifsTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_checked);
+            settingsNotifsTickLL.setTag("ENABLED");
+            settingsNotifsTickIV.setBackgroundResource(R.drawable.tick_white);
+        }
+        else{
+            settingsNotifsTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_unchecked);
+            settingsNotifsTickLL.setTag("DISABLED");
+            settingsNotifsTickIV.setBackgroundResource(R.drawable.tick_grey);
+        }
+    }
+
+    public void setUpSounds(){
+        LinearLayout settingsSoundsTickLL = (LinearLayout) this.findViewById(R.id.settingsSoundsTickLLId);
+        ImageView settingsSoundsTickIV = (ImageView) this.findViewById(R.id.settingsSoundsTickIVId);
+
+        if(settingsDbService.isSoundsEnabledOnUserId(loggedInUserObj.getUSER_ID())){
+            settingsSoundsTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_checked);
+            settingsSoundsTickLL.setTag("ENABLED");
+            settingsSoundsTickIV.setBackgroundResource(R.drawable.tick_white);
+        }
+        else{
+            settingsSoundsTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_unchecked);
+            settingsSoundsTickLL.setTag("DISABLED");
+            settingsSoundsTickIV.setBackgroundResource(R.drawable.tick_grey);
+        }
+    }
+
+    public void enableDisableSounds(View view){
+        LinearLayout settingsSoundsTickLL = (LinearLayout) this.findViewById(R.id.settingsSoundsTickLLId);
+        ImageView settingsSoundsTickIV = (ImageView) this.findViewById(R.id.settingsSoundsTickIVId);
+
+        if("ENABLED".equalsIgnoreCase(String.valueOf(settingsSoundsTickLL.getTag()))){
+            showToast("Sounds disabled");
+            settingsSoundsTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_unchecked);
+            settingsSoundsTickLL.setTag("DISABLED");
+            settingsSoundsTickIV.setBackgroundResource(R.drawable.tick_grey);
+            settingsDbService.enableDisableSoundsOnUserId(loggedInUserObj.getUSER_ID(), false);
+        }
+        else{
+            showToast("Sounds enabled");
+            settingsSoundsTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_checked);
+            settingsSoundsTickLL.setTag("ENABLED");
+            settingsSoundsTickIV.setBackgroundResource(R.drawable.tick_white);
+            settingsDbService.enableDisableSoundsOnUserId(loggedInUserObj.getUSER_ID(), true);
+        }
+    }
+
+    public void enableDisableNotifications(View view){
+        LinearLayout settingsNotifsTickLL = (LinearLayout) this.findViewById(R.id.settingsNotifsTickLLId);
+        ImageView settingsNotifsTickIV = (ImageView) this.findViewById(R.id.settingsNotifsTickIVId);
+
+        if("ENABLED".equalsIgnoreCase(String.valueOf(settingsNotifsTickLL.getTag()))){
+            showToast("Notifications disabled");
+            settingsNotifsTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_unchecked);
+            settingsNotifsTickLL.setTag("DISABLED");
+            settingsNotifsTickIV.setBackgroundResource(R.drawable.tick_grey);
+            settingsDbService.enableDisableNotificationOnUserId(loggedInUserObj.getUSER_ID(), false);
+        }
+        else{
+            showToast("Notifications enabled");
+            settingsNotifsTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_checked);
+            settingsNotifsTickLL.setTag("ENABLED");
+            settingsNotifsTickIV.setBackgroundResource(R.drawable.tick_white);
+            settingsDbService.enableDisableNotificationOnUserId(loggedInUserObj.getUSER_ID(), true);
+        }
+    }
 
     private DatePickerDialog.OnDateSetListener myDateListener;
     {
@@ -254,7 +459,6 @@ public class SettingsActivity extends Activity {
                 SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
                 SimpleDateFormat rightSdf = new SimpleDateFormat("d MMMM ''yy");
 
-                String newDobStrArr[] = null;
                 try{
                     settingsProfilePersonalPoprDobTV.setText(rightSdf.format(wrongSdf.parse(newDobStr)));
                 }
@@ -269,6 +473,73 @@ public class SettingsActivity extends Activity {
     protected void showToast(String string){
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
     }
+
+    //--------------------------------------logout popper button listener----------------------------------------
+    private LinearLayout.OnClickListener logoutPoppeButtonClickListener;
+    {
+        logoutPoppeButtonClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+                switch(v.getId()){
+                    case R.id.msgPoprPosLLId: settingsDbService.logoutAllUsers();
+                        showToast("Logged Out");
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                }
+            }
+        };
+    }
+    //---------------------------------------logout popper button listener ends------------------------------------
+
+    //--------------------------------------notif popper button listener----------------------------------------
+    private LinearLayout.OnClickListener notifPoppeButtonClickListener;
+    {
+        notifPoppeButtonClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout settingsNotifsPopperBuzzTickLL = (LinearLayout) dialog.findViewById(R.id.settingsNotifsPopperBuzzTickLLId);
+                ImageView settingsNotifsPopperBuzzTickIV = (ImageView) dialog.findViewById(R.id.settingsNotifsPopperBuzzTickIVId);
+
+                switch (v.getId()) {
+                    case R.id.settingsNotifsPopperVibeLLId:
+                        if ("ENABLED".equalsIgnoreCase(String.valueOf(settingsNotifsPopperBuzzTickLL.getTag()))) {
+                            settingsNotifsPopperBuzzTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_unchecked);
+                            settingsNotifsPopperBuzzTickIV.setBackgroundResource(R.drawable.tick_grey);
+                            settingsNotifsPopperBuzzTickLL.setTag("DISABLED");
+                            //settingsDbService.enableDisableNotificationVibrationsOnUserId(loggedInUserObj.getUSER_ID(), false);
+                        } else {
+                            settingsNotifsPopperBuzzTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_checked);
+                            settingsNotifsPopperBuzzTickIV.setBackgroundResource(R.drawable.tick_white);
+                            settingsNotifsPopperBuzzTickLL.setTag("ENABLED");
+                            //settingsDbService.enableDisableNotificationVibrationsOnUserId(loggedInUserObj.getUSER_ID(), true);
+                        }
+                        break;
+                    case R.id.settingsNotifsPopperSaveTVId:
+                        showToast("Saved");
+                        dialog.dismiss();
+                        SettingsNotificationModel settingsNotificationModelObj = new SettingsNotificationModel();
+                        TimePicker settingsNotifsPopperTimeTP = (TimePicker) dialog.findViewById(R.id.settingsNotifsPopperTimeTPId);
+                        settingsNotificationModelObj.setSET_NOTIF_TIME(settingsNotifsPopperTimeTP.getCurrentHour() + ":" + settingsNotifsPopperTimeTP.getCurrentMinute());
+                        if ("ENABLED".equalsIgnoreCase(String.valueOf(settingsNotifsPopperBuzzTickLL.getTag()))) {
+                            settingsNotificationModelObj.setSET_NOTIF_BUZZ(Constants.DB_AFFIRMATIVE);
+                        } else {
+                            settingsNotificationModelObj.setSET_NOTIF_BUZZ(Constants.DB_NONAFFIRMATIVE);
+                        }
+
+                        //add user id
+                        settingsNotificationModelObj.setUSER_ID(loggedInUserObj.getUSER_ID());
+
+                        settingsDbService.saveNotificationSetting(settingsNotificationModelObj);
+                        break;
+                }
+            }
+        };
+    }
+    //---------------------------------------notif popper button listener ends------------------------------------
 
     //--------------------------------Linear Layout click listener--------------------------------------------------
     private LinearLayout.OnClickListener linearLayoutClickListener;

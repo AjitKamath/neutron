@@ -103,32 +103,51 @@ public class ManageContentActivity extends Activity {
 
         //set categories list
         ManageContentCategoriesSectionListAdapter manageContentCategoriesSectionListAdapter = new ManageContentCategoriesSectionListAdapter(mContext, R.layout
-                    .manage_content_list_view_header_categories, R.layout.manage_content_list_view_content_categories, manageContentModelObj.getCategoriesMap(),
+                    .manage_content_list_view_divider, R.layout.manage_content_list_view_content_categories, manageContentModelObj.getCategoriesMap(),
                     manageContentModelObj.getUserNameStr());
         manageContentCategoriesSectionListAdapter.notifyDataSetChanged();
         manageContentCatLV.setAdapter(manageContentCategoriesSectionListAdapter);
-        manageContentCatTabCounterTV.setText(String.valueOf(manageContentCategoriesSectionListAdapter.getCount() - manageContentModelObj.getCategoriesMap().size()));
+
+        if(manageContentModelObj.getCategoriesMap().size() ==1){
+            manageContentCatTabCounterTV.setText(String.valueOf(manageContentCategoriesSectionListAdapter.getCount()));
+        }
+        else{
+            manageContentCatTabCounterTV.setText(String.valueOf(manageContentCategoriesSectionListAdapter.getCount() - 1));
+        }
+
 
         //set accounts list
         ManageContentAccountsSectionListAdapter manageContentAccountsSectionListAdapter = new ManageContentAccountsSectionListAdapter(mContext, R.layout
-                    .manage_content_list_view_header_accounts, R.layout.manage_content_list_view_content_accounts, manageContentModelObj.getAccountsMap(),
+                    .manage_content_list_view_divider, R.layout.manage_content_list_view_content_accounts, manageContentModelObj.getAccountsMap(),
                     manageContentModelObj.getUserNameStr());
         manageContentAccountsSectionListAdapter.notifyDataSetChanged();
         manageContentAccLV.setAdapter(manageContentAccountsSectionListAdapter);
-        manageContentAccTabCounterTV.setText(String.valueOf(manageContentAccountsSectionListAdapter.getCount() - manageContentModelObj.getAccountsMap().size()));
+
+        if(manageContentModelObj.getAccountsMap().size() ==1){
+            manageContentAccTabCounterTV.setText(String.valueOf(manageContentAccountsSectionListAdapter.getCount()));
+        }
+        else{
+            manageContentAccTabCounterTV.setText(String.valueOf(manageContentAccountsSectionListAdapter.getCount() - 1));
+        }
 
         //set spent ons list
         ManageContentSpentOnsSectionListAdapter manageContentSpentOnsSectionListAdapter = new ManageContentSpentOnsSectionListAdapter(mContext, R.layout
-                    .manage_content_list_view_header_spent_ons, R.layout.manage_content_list_view_content_spent_ons, manageContentModelObj.getSpentOnsMap(),
+                    .manage_content_list_view_divider, R.layout.manage_content_list_view_content_spent_ons, manageContentModelObj.getSpentOnsMap(),
                     manageContentModelObj.getUserNameStr());
         manageContentSpentOnsSectionListAdapter.notifyDataSetChanged();
         manageContentSpntOnLV.setAdapter(manageContentSpentOnsSectionListAdapter);
-        manageContentSpntOnTabCounterTV.setText(String.valueOf(manageContentSpentOnsSectionListAdapter.getCount() - manageContentModelObj.getSpentOnsMap().size()));
+
+        if(manageContentModelObj.getSpentOnsMap().size() ==1){
+            manageContentSpntOnTabCounterTV.setText(String.valueOf(manageContentSpentOnsSectionListAdapter.getCount()));
+        }
+        else{
+            manageContentSpntOnTabCounterTV.setText(String.valueOf(manageContentSpentOnsSectionListAdapter.getCount() - 1));
+        }
 
         resetTabs();
 
         manageContentCatTabTV.setBackgroundResource(R.drawable.view_activities_active_tab_inner);
-        manageContentCatTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.finappleTheme));
+        manageContentCatTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.white));
         manageContentCatLL.setVisibility(View.VISIBLE);
     }
 
@@ -138,9 +157,9 @@ public class ManageContentActivity extends Activity {
         manageContentSpntOnTabTV.setBackgroundResource(R.drawable.view_activities_inactive_tab_inner);
 
         //labels
-        manageContentCatTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.white));
-        manageContentAccTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.white));
-        manageContentSpntOnTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.white));
+        manageContentCatTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.finappleTheme));
+        manageContentAccTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.finappleTheme));
+        manageContentSpntOnTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.finappleTheme));
 
         //lists
         manageContentCatLL.setVisibility(View.GONE);
@@ -153,17 +172,17 @@ public class ManageContentActivity extends Activity {
 
         switch(view.getId()){
             case R.id.manageContentCatTabTVId : manageContentCatTabTV.setBackgroundResource(R.drawable.view_activities_active_tab_inner);
-                manageContentCatTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.finappleTheme));
+                manageContentCatTabTV.setTextColor(mContext.getResources().getColor(R.color.white));
                 manageContentCatLL.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.manageContentAccTabTVId : manageContentAccTabTV.setBackgroundResource(R.drawable.view_activities_active_tab_inner);
-                manageContentAccTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.finappleTheme));
+                manageContentAccTabTV.setTextColor(mContext.getResources().getColor(R.color.white));
                 manageContentAccLL.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.manageContentSpntOnTabTVId : manageContentSpntOnTabTV.setBackgroundResource(R.drawable.view_activities_active_tab_inner);
-                manageContentSpntOnTabTV.setTextColor(manageContentCatTabTV.getResources().getColor(R.color.finappleTheme));
+                manageContentSpntOnTabTV.setTextColor(mContext.getResources().getColor(R.color.white));
                 manageContentSpntOnLL.setVisibility(View.VISIBLE);
                 break;
 

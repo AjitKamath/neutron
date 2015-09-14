@@ -24,7 +24,7 @@
 
             <LinearLayout
                 android:id="@+id/tranDtlPopperSchTranLLId"
-                android:layout_width="255dp"
+                android:layout_width="235dp"
                 android:layout_height="wrap_content"
                 android:gravity="left|center_vertical"
                 android:orientation="vertical">
@@ -44,14 +44,14 @@
 
             <ImageView
                 android:id="@+id/tranferDtlPopperEditIVId"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="@dimen/image_header_size"
+                android:layout_height="@dimen/image_header_size"
                 android:src="@drawable/edit_grey"/>
 
             <ImageView
                 android:id="@+id/transferDtlPopperDelIVId"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="@dimen/image_header_size"
+                android:layout_height="@dimen/image_header_size"
                 android:layout_marginLeft="10dp"
                 android:onClick="showMessagePopper"
                 android:src="@drawable/delete_grey"/>

@@ -153,15 +153,15 @@ public class BudgetsViewSectionListAdapter extends BaseAdapter {
         mHolder.budgetsViewListNoteTV.setText(budgetModelObj.getBUDGET_NOTE());
 
         if("CATEGORY".equalsIgnoreCase(budgetModelObj.getBUDGET_GRP_TYPE())){
-            mHolder.budgetsViewListBubbleTV.setBackgroundResource(R.drawable.circle_budgets_category_text_view);
+            mHolder.budgetsViewListBubbleTV.setBackgroundResource(R.drawable.circle_category_text_view);
             mHolder.budgetsViewListGroupNameTV.setText(budgetModelObj.getCategoryNameStr());
         }
         else if("ACCOUNT".equalsIgnoreCase(budgetModelObj.getBUDGET_GRP_TYPE())){
-            mHolder.budgetsViewListBubbleTV.setBackgroundResource(R.drawable.circle_budgets_account_text_view);
+            mHolder.budgetsViewListBubbleTV.setBackgroundResource(R.drawable.circle_account_text_view);
             mHolder.budgetsViewListGroupNameTV.setText(budgetModelObj.getAccountNameStr());
         }
         else if("SPENT ON".equalsIgnoreCase(budgetModelObj.getBUDGET_GRP_TYPE())){
-            mHolder.budgetsViewListBubbleTV.setBackgroundResource(R.drawable.circle_budgets_spenton_text_view);
+            mHolder.budgetsViewListBubbleTV.setBackgroundResource(R.drawable.circle_spenton_text_view);
             mHolder.budgetsViewListGroupNameTV.setText(budgetModelObj.getSpentOnNameStr());
         }
 

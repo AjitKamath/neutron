@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="image_header_size">25dp</dimen>
+    <dimen name="text_header_title_size">18sp</dimen>
+    <dimen name="text_button_big_text_size">15sp</dimen>
+    <dimen name="text_tab_big_size">15sp</dimen>
+    <dimen name="text_tab_small_size">12sp</dimen>
+    <dimen name="text_bubble_counter_small_size">8sp</dimen>
+    <dimen name="layout_header_size">40dp</dimen>
+    <dimen name="layout_header_elevation">10dp</dimen>
+</resources>

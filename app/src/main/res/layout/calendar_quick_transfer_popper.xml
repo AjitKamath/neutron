@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/layout_header_size"
             android:background="@color/finappleTheme"
             android:gravity="center"
             android:orientation="horizontal">
@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:text="Quick Transfer"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="@dimen/text_header_title_size" />
 
         </LinearLayout>
 
@@ -109,12 +109,13 @@
                 android:id="@+id/quickTransferDoneTVId"
                 android:layout_width="80dp"
                 android:layout_height="30dp"
+                android:layout_marginBottom="5dp"
                 android:layout_gravity="center"
                 android:background="@drawable/oval_buttons_text_view"
                 android:gravity="center"
                 android:text="DONE"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/text_button_big_text_size" />
 
         </LinearLayout>
 

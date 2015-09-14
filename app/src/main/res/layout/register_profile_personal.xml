@@ -9,17 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_margin="5dp"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_marginLeft="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:elevation="@dimen/layout_header_elevation"
+            android:layout_width="fill_parent"
+            android:layout_gravity="left"
+            android:layout_height="@dimen/layout_header_size"
             android:background="@color/white">
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
@@ -27,7 +28,7 @@
                 android:textColor="@color/finappleTheme"
                 android:background="@color/white"
                 android:textStyle="italic"
-                android:textSize="30sp"/>
+                android:textSize="@dimen/text_header_title_size"/>
 
         </LinearLayout>
 
@@ -39,6 +40,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/profilePersonalHeaderId"
         android:id="@+id/profilePersonalStepsOrbsLLId">
 
@@ -78,7 +80,7 @@
     <LinearLayout
         android:id="@+id/profilePersonalContentLLId"
         android:layout_width="fill_parent"
-        android:layout_height="475dp"
+        android:layout_height="470dp"
         android:layout_below="@+id/profilePersonalStepsOrbsLLId"
         android:paddingTop="50dp"
         android:paddingLeft="10dp"
@@ -270,10 +272,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="Next"
+                android:text="NEXT"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="22dp"/>
+                android:textSize="@dimen/text_button_big_text_size"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

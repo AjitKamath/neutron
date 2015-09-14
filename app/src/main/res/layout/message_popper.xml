@@ -14,19 +14,21 @@
         android:padding="5dp"
         android:orientation="vertical">
 
-        <TextView
-            android:padding="3dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/msgPoprMsgTVId"
-            android:textColor="@color/finappleTheme"
-            android:textSize="24dp"
-            android:layout_gravity="center"
-            android:text="Discard changes ?"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:gravity="center">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/msgPoprMsgTVId"
+                android:textColor="@color/finappleTheme"
+                android:textSize="18dp"
+                android:text="Discard changes ?"/>
+        </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="20dp"
             android:background="@color/white"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
@@ -46,7 +48,7 @@
                     android:gravity="center"
                     android:text="YES"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_button_big_text_size" />
 
             </LinearLayout>
 
@@ -65,7 +67,7 @@
                     android:gravity="center"
                     android:text="NO"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_button_big_text_size" />
 
             </LinearLayout>
         </LinearLayout>
