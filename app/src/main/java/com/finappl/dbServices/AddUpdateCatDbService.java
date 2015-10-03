@@ -106,6 +106,8 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
             values.put("CAT_TAG_IS_DEL", Constants.DB_NONAFFIRMATIVE);
             values.put("CREAT_DTM", DateTimeUtil.getInstance().dateDateToDbDateString(new Date()));
 
+            Log.i(CLASS_NAME, "TAG ID:" + tagIdStr);
+
             result =  db.insert(CATEGORY_TAGS_TABLE, null, values);
 
             if(result == -1){

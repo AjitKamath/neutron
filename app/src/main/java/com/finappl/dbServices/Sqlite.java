@@ -559,7 +559,6 @@ public class Sqlite extends SQLiteOpenHelper{
 		sqlQuerySB.append(" CNTRY_ID TEXT NOT NULL, ");		//fk 1
 		sqlQuerySB.append(" CUR_ID TEXT NOT NULL, ");		//fk 2
 		sqlQuerySB.append(" TELEPHONE TEXT, ");
-		sqlQuerySB.append(" NOTIF_TIME TEXT NOT NULL, ");
 		sqlQuerySB.append(" DEV_ID TEXT NOT NULL, ");
 		sqlQuerySB.append(" USER_IS_DEL TEXT NOT NULL, ");
 		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");

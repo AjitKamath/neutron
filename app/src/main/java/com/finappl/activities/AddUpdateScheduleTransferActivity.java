@@ -286,6 +286,11 @@ public class AddUpdateScheduleTransferActivity extends Activity {
             if(result != -1){
                 showToast("New Scheduled Transfer Created");
 
+                //notify the notification service by calling the receiver
+                Intent notifIntent = new Intent();
+                notifIntent.setAction("ACTIVITY_ACTION");
+                sendBroadcast(notifIntent);
+
                 //navigate back to calendar screen
                 Intent intent = new Intent(this, CalendarActivity.class);
                 startActivity(intent);

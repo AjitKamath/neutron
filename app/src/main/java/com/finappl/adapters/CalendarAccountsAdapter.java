@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * Created by ajit on 17/1/15.
  */
-public class AccountsAdapter extends ArrayAdapter<AccountsModel> {
+public class CalendarAccountsAdapter extends BaseAdapter {
 
     private Context mContext;
     private int layoutResourceId;
@@ -26,8 +27,8 @@ public class AccountsAdapter extends ArrayAdapter<AccountsModel> {
     private List<Integer> colorList;
     private LayoutInflater inflater;
 
-    public AccountsAdapter(Context mContext, int layoutResourceId, List<AccountsModel> data) {
-        super(mContext, layoutResourceId, data);
+    public CalendarAccountsAdapter(Context mContext, int layoutResourceId, List<AccountsModel> data) {
+        super();
 
         this.layoutResourceId = layoutResourceId;
         this.mContext = mContext;
@@ -43,28 +44,24 @@ public class AccountsAdapter extends ArrayAdapter<AccountsModel> {
         ViewHolder mHolder;
 
         if(convertView == null) {
-            convertView = inflater.inflate(layoutResourceId, null);
-
             mHolder = new ViewHolder();
+            convertView = inflater.inflate(layoutResourceId, null);
 
             mHolder.summayAccountsLL = (LinearLayout) convertView.findViewById(R.id.summayAccountsLLId);
             mHolder.accountNameTV = (TextView) convertView.findViewById(R.id.accountsNameTVId);
             mHolder.accountTotalTV = (TextView) convertView.findViewById(R.id.accountsTotalTVId);
             mHolder.accountsAmtStatView = convertView.findViewById(R.id.accountsAmtStatViewId);
 
-            //set font for all the text view
-            final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-            setFont(mHolder.summayAccountsLL, robotoCondensedLightFont);
-
-            convertView.setTag(mHolder);
+            convertView.setTag(layoutResourceId, mHolder);
 
         } else {
-            mHolder = (ViewHolder) convertView.getTag();
+            mHolder = (ViewHolder) convertView.getTag(layoutResourceId);
         }
 
         // object item based on the position
         AccountsModel accountItem = dataList.get(position);
 
+        mHolder.summayAccountsLL.setTag(accountItem);
         mHolder.accountTotalTV.setText(String.valueOf(accountItem.getACC_TOTAL()));
         mHolder.accountNameTV.setText(accountItem.getACC_NAME());
 
@@ -76,9 +73,29 @@ public class AccountsAdapter extends ArrayAdapter<AccountsModel> {
             mHolder.accountTotalTV.setTextColor(mHolder.accountTotalTV.getResources().getColor(R.color.finappleCurrencyPosColor));
             mHolder.accountsAmtStatView.setBackgroundResource(R.drawable.capsule_vertical_positive_view);
         }
+
         //TODO: Approximatization required
 
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        setFont(mHolder.summayAccountsLL, robotoCondensedLightFont);
+
         return convertView;
+    }
+
+    @Override
+    public int getCount() {
+        return dataList.size();
+    }
+
+    @Override
+    public AccountsModel getItem(int position) {
+        return dataList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font

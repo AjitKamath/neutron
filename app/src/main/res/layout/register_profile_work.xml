@@ -7,33 +7,45 @@
     <LinearLayout
         android:id="@+id/profileWorkHeaderId"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="250dp"
+        android:background="@color/finappleTheme"
+        android:elevation="@dimen/layout_header_elevation"
+        android:orientation="vertical">
+
+        <!--<ImageView
+            android:id="@+id/addAccHeaderBackImgId"
+            android:layout_width="@dimen/image_header_size"
+            android:layout_height="@dimen/image_header_size"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/back"
+            android:onClick="onBackClick"
+            android:tag="BACK" />-->
 
         <LinearLayout
-            android:elevation="@dimen/layout_header_elevation"
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/layout_header_size"
-            android:layout_gravity="left"
-            android:background="@color/white">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:text="Precise"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_header_primary" />
+
+            <TextView
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Profile - Work"
-                android:textColor="@color/finappleTheme"
-                android:background="@color/white"
-                android:textStyle="italic"
-                android:textSize="@dimen/text_header_title_size"/>
+                android:text="track untill the last cent"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_header_secondary" />
 
         </LinearLayout>
-
-
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -48,58 +60,50 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center"
-            android:background="@drawable/finished_step"
-            android:onClick="onBackClick"/>
+            android:background="@drawable/finished_step"/>
 
         <ImageView
             android:layout_marginLeft="2dp"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center"
-            android:background="@drawable/finished_step"
-            android:onClick="onBackClick"/>
+            android:background="@drawable/finished_step"/>
 
         <ImageView
             android:layout_marginLeft="2dp"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center"
-            android:background="@drawable/finished_step"
-            android:onClick="onBackClick"/>
+            android:background="@drawable/finished_step"/>
 
         <ImageView
             android:layout_marginLeft="2dp"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center"
-            android:background="@drawable/unfinished_step"
-            android:onClick="onBackClick"/>
+            android:background="@drawable/unfinished_step"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/profileWorkContentLLId"
         android:layout_width="fill_parent"
-        android:layout_height="475dp"
+        android:layout_height="260dp"
         android:layout_below="@+id/profileWorkStepsOrbsLLId"
-        android:paddingTop="50dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
             android:gravity="center_vertical"
-            android:layout_marginTop="15dp"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:textColor="@color/finappleThemeDark"
-                android:layout_width="140dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:text="Profession"/>
 
             <Spinner
@@ -120,16 +124,16 @@
 
             <TextView
                 android:textColor="@color/finappleThemeDark"
-                android:layout_width="140dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:text="Company"/>
 
             <EditText
                 android:id="@+id/profileWorkCompanyETId"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:hint="working @"
+                android:hint="\@working"
                 android:inputType="textCapWords|textAutoComplete"
                 android:maxLength="25"
                 android:background="@drawable/edit_text_border"
@@ -143,16 +147,16 @@
 
         <LinearLayout
             android:gravity="center_vertical"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="15dp"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:textColor="@color/finappleThemeDark"
-                android:layout_width="140dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:text="Salary"/>
 
             <EditText
@@ -180,9 +184,9 @@
 
             <TextView
                 android:textColor="@color/finappleThemeDark"
-                android:layout_width="140dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:text="Frequency"/>
 
             <Spinner
@@ -202,8 +206,6 @@
         android:layout_below="@+id/profileWorkContentLLId"
         android:background="@color/white"
         android:gravity="center"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -211,15 +213,14 @@
             android:layout_height="fill_parent"
             android:background="@color/white"
             android:clickable="true"
-            android:gravity="center"
+            android:gravity="right"
+            android:layout_marginRight="10dp"
             android:onClick="goToRegisterProfileContact"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:background="@drawable/oval_buttons_text_view"
-                android:layout_width="fill_parent"
+                android:layout_width="120dp"
                 android:layout_height="30dp"
                 android:gravity="center"
                 android:text="NEXT"

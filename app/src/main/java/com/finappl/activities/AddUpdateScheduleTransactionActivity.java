@@ -309,6 +309,11 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
             if(result != -1){
                 showToast("New Scheduled Transaction Created");
 
+                //notify the notification service by calling the receiver
+                Intent notifIntent = new Intent();
+                notifIntent.setAction("ACTIVITY_ACTION");
+                sendBroadcast(notifIntent);
+
                 //navigate back to calendar screen
                 Intent intent = new Intent(this, CalendarActivity.class);
                 startActivity(intent);
@@ -326,7 +331,7 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
         SimpleDateFormat wrongSdf = new SimpleDateFormat("d MMM ''yy");
         SimpleDateFormat rightSdf = new SimpleDateFormat("dd-MM-yyyy");
 
-        String dateStr = null;
+        String dateStr;
 
         try{
             dateStr = rightSdf.format(wrongSdf.parse(String.valueOf(schedTranAddUpdDateTV.getText())));

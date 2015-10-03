@@ -62,6 +62,22 @@ public class SettingsDbService extends SQLiteOpenHelper {
         db.update(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + settingsNotificationModelObj.getUSER_ID() + "'", null);
     }
 
+    public void enableDisableSecurityOnUserId(String userIdStr, boolean isEnabled){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        if(isEnabled){
+            values.put("SET_SEC_ACTIVE", Constants.DB_AFFIRMATIVE);
+        }
+        else{
+            values.put("SET_SEC_ACTIVE", Constants.DB_NONAFFIRMATIVE);
+        }
+
+        // Updating an old Row
+        db.update(Constants.DB_TABLE_SETTINGS_SECURITY, values,	"USER_ID = '" + userIdStr + "'", null);
+    }
+
     public void enableDisableNotificationOnUserId(String userIdStr, boolean isEnabled){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -310,6 +326,36 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This user has not enabled sounds");
+        return false;
+    }
+
+    public boolean isSecurityEnabledOnUserId(String userIdStr) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" SET_SEC_ACTIVE ");
+
+        sqlQuerySB.append(" FROM ");
+
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SECURITY);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" USER_ID = '" + userIdStr + "' ");
+
+        Log.i(CLASS_NAME, "Query to know if security is enabled  :" + sqlQuerySB);
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        while (cursor.moveToNext()){
+            if(Constants.DB_AFFIRMATIVE.equalsIgnoreCase(ColumnFetcher.getInstance().loadString(cursor, "SET_SEC_ACTIVE"))){
+                Log.i(CLASS_NAME, "This user has enabled security");
+                return true;
+            }
+        }
+        cursor.close();
+
+        Log.i(CLASS_NAME, "This user has not enabled security");
         return false;
     }
 

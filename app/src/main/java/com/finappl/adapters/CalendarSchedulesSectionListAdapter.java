@@ -34,7 +34,7 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater inflater;
 
-    public CalendarSchedulesSectionListAdapter(Context context, int headerLayoutId, int contentLayoutId, MonthLegend monthLegendObj) {
+    public CalendarSchedulesSectionListAdapter(Context context, int contentLayoutId, MonthLegend monthLegendObj) {
         super();
         this.contentLayoutId = contentLayoutId;
         this.monthLegendObj = monthLegendObj;
@@ -43,7 +43,6 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
 
         buildSectionList();
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -73,7 +72,6 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
                 addItem(iterList);
             }
         }
-
     }
 
     public void addItem(Object item) {

@@ -24,7 +24,7 @@
             android:onClick="onBackClick" />
 
         <TextView
-            android:layout_width="300dp"
+            android:layout_width="290dp"
             android:layout_height="fill_parent"
             android:layout_gravity="center"
             android:gravity="center"
@@ -35,7 +35,7 @@
         <ImageView
             android:layout_width="@dimen/image_header_size"
             android:layout_height="@dimen/image_header_size"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="10dp"
             android:onClick="onAddClick"
             android:src="@drawable/add_white" />
 
@@ -184,10 +184,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/manageContentTabsLLId"
         android:orientation="vertical"
-        android:paddingBottom="0dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp">
+        android:paddingRight="10dp">
 
 
         <LinearLayout

@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:background="@drawable/card_background_selector"
     android:id="@+id/spinnerLLId"
     android:gravity="left"
     android:layout_gravity="center_horizontal"
@@ -19,7 +18,7 @@
 
 	<TextView
 		android:id="@+id/addCatTagListItemTVId"
-		android:layout_width="260dp"
+		android:layout_width="282dp"
         android:gravity="center_vertical"
 		android:layout_height="30dp"
         android:maxLength="20"

@@ -1,41 +1,72 @@
-package com.finappl.receivers;
+package com.finappl.activities;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.finappl.activities.JimBrokeItActivity;
-import com.finappl.activities.LoginActivity;
+import com.finappl.R;
+import com.finappl.adapters.SettingsProfilePersonalCountryAdapter;
+import com.finappl.adapters.SettingsProfilePersonalCurrencyAdapter;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.NotificationDbService;
+import com.finappl.dbServices.SettingsDbService;
+import com.finappl.models.CountryModel;
+import com.finappl.models.CurrencyModel;
 import com.finappl.models.NotificationModel;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
+import com.finappl.models.SettingsNotificationModel;
+import com.finappl.models.SpinnerModel;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.Constants;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-/**
- * Created by ajit on 9/8/15.
- */
-
-public class NotificationActionReceiver extends BroadcastReceiver {
+@SuppressLint("NewApi")
+public class NotificationsHandlerActivity extends Activity {
     private final String CLASS_NAME = this.getClass().getName();
-    private Context mContext;
 
-    public static String NOTIF_ACTION = "CANCEL";
+    private Context mContext = this;
 
     private NotificationDbService notificationDbService;
 
     //User
     private UsersModel loggedInUserObj;
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        mContext = context;
+    @SuppressLint("NewApi")
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        playWithNotif();
+
+        finish();
+    }
+
+    private void playWithNotif(){
+        Intent intent = getIntent();
 
         if(intent.getExtras() == null){
             Log.e(CLASS_NAME, "Extras in Intent is not supposed to be null here... ");
@@ -51,13 +82,12 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             return;
         }
 
-
         //for CANCEL action in notification STARTS--
         //get the id of the notification from the intent and kill it
         if(intent.getExtras().get("CANCEL_NOTIF_ID") != null){
             Log.i(CLASS_NAME, "User wants to cancel notification having NOTIFICATION ID = " + intent.getExtras().get("CANCEL_NOTIF_ID"));
             NotificationManager manager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
-            manager.cancel(Integer.parseInt(String.valueOf(intent.getExtras().get("CANCEL_NOTIF_ID"))));
+            manager.cancel(String.valueOf(intent.getExtras().get("CANCEL_NOTIF_ID")), Integer.parseInt(String.valueOf(intent.getExtras().get("CANCEL_NOTIF_ID"))));
             Log.i(CLASS_NAME, "Notification having NOTIFICATION ID = " + intent.getExtras().get("CANCEL_NOTIF_ID")+" has been cancelled");
 
             //now update the NOTIFICATIONS table saying that user has cancelled this notification
@@ -131,5 +161,6 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     protected void showToast(String string){
         Toast.makeText(mContext, string, Toast.LENGTH_SHORT).show();
     }
+
 
 }

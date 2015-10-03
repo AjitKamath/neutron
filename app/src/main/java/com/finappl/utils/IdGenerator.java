@@ -2,6 +2,7 @@ package com.finappl.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 public class IdGenerator {
 	
@@ -17,8 +18,12 @@ public class IdGenerator {
 	}
 
 	public String generateUniqueId(String id){
-		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy'"+id+"'HHmmss");
-		return sdf.format(new Date());
+		return genRand()+id+genRand();
+	}
+
+	public int genRand() {
+		Random r = new Random( System.currentTimeMillis() );
+		return 10000 + r.nextInt(20000);
 	}
 
 	public Integer getIntegerOnString(String str){

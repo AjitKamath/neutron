@@ -1,8 +1,7 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/calendarPageRLId"
-    android:layout_height="570dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:layout_gravity="center_horizontal"
     android:background="@color/white"
     android:visibility="visible">
@@ -12,23 +11,23 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/layout_header_size"
         android:background="@color/finappleTheme"
-        android:gravity="center_vertical"
         android:elevation="@dimen/layout_header_elevation"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:gravity="center_vertical"
-            android:paddingRight="15dp"
-            android:onClick="goToSettings">
+            android:onClick="goToSettings"
+            android:paddingRight="15dp">
 
             <ImageView
                 android:id="@+id/calendarSidePaneImgId"
                 android:layout_width="@dimen/image_header_size"
                 android:layout_height="@dimen/image_header_size"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/side_pane"/>
+                android:background="@drawable/side_pane" />
         </LinearLayout>
 
 
@@ -45,7 +44,7 @@
 
         <LinearLayout
             android:id="@+id/calendarDateLLId"
-            android:layout_width="285dp"
+            android:layout_width="280dp"
             android:layout_height="fill_parent"
             android:layout_marginRight="5dp"
             android:background="@color/finappleTheme"
@@ -62,7 +61,7 @@
                 android:onClick="showDatePicker"
                 android:text="SEPTEMBER"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_header_title_size"/>
+                android:textSize="@dimen/text_header_title_size" />
 
             <TextView
                 android:id="@+id/calendarFullYearId"
@@ -73,7 +72,7 @@
                 android:onClick="showDatePicker"
                 android:text="2016"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_header_title_size"/>
+                android:textSize="@dimen/text_header_title_size" />
         </LinearLayout>
 
         <ImageView
@@ -81,7 +80,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/options_white"/>
+            android:src="@drawable/options_white" />
     </LinearLayout>
 
 
@@ -90,7 +89,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/calendarHeaderId"
-        android:layout_margin="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingLeft="3dp"
@@ -98,391 +99,116 @@
 
         <GridLayout
             android:layout_width="fill_parent"
-            android:layout_height="15dp"
-            android:layout_marginBottom="2dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
             android:columnCount="7"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:orientation="horizontal"
             android:rowCount="1">
 
             <TextView
                 android:layout_width="49.1dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="MON"
+                android:text="M"
                 android:textColor="@color/navy"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="49.1dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="TUE"
+                android:text="T"
                 android:textColor="@color/navy"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="49.1dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="WED"
+                android:text="W"
                 android:textColor="@color/navy"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="49.1dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="THU"
+                android:text="T"
                 android:textColor="@color/navy"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="49.1dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="FRI"
+                android:text="F"
                 android:textColor="@color/navy"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="49.1dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="SAT"
+                android:text="S"
                 android:textColor="@color/Orange"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="49.1dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="SUN"
+                android:text="S"
                 android:textColor="@color/Orange"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
         </GridLayout>
 
         <GridView
-            android:gravity="center"
             android:id="@+id/calendarPageCalendarGVId"
             android:layout_width="fill_parent"
-            android:background="@color/white"
             android:layout_height="270dp"
             android:clickable="true"
+            android:gravity="center"
             android:listSelector="#00000000"
             android:numColumns="7"
-            android:scrollbars="none">
-        </GridView>
-
-
+            android:scrollbars="none"></GridView>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/calendarPageSummaryLLId"
-        android:layout_width="fill_parent"
-        android:layout_height="190dp"
-        android:layout_below="@id/calendarFLID"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/calendarFLID"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/calendarActionsTabsVPId"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/calendar_small_tab_outer"
-                    android:padding="0.5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/calendarSummaryTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@drawable/calendar_small_tab_active_inner"
-                        android:gravity="center"
-                        android:text="SUMMARY"
-                        android:tag="SELECTED"
-                        android:onClick="onTabSelect"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_tab_small_size"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/calendar_small_tab_outer"
-                    android:padding="0.5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/calendarAccountsTVId"
-                        android:tag=""
-                        android:onClick="onTabSelect"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@drawable/calendar_small_tab_inactive_inner"
-                        android:gravity="center"
-                        android:text="ACCOUNTS"
-                        android:textColor="@color/finappleTheme"
-                        android:textSize="@dimen/text_tab_small_size"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/calendar_small_tab_outer"
-                    android:padding="0.5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/calendarBudgetsTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:tag=""
-                        android:onClick="onTabSelect"
-                        android:background="@drawable/calendar_small_tab_inactive_inner"
-                        android:gravity="center"
-                        android:text="BUDGETS"
-                        android:textColor="@color/tab_text"
-                        android:textSize="@dimen/text_tab_small_size"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/calendar_small_tab_outer"
-                    android:padding="0.5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/calendarSchedulesTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:tag=""
-                        android:onClick="onTabSelect"
-                        android:background="@drawable/calendar_small_tab_inactive_inner"
-                        android:gravity="center"
-                        android:text="SCHEDULES"
-                        android:textColor="@color/tab_text"
-                        android:textSize="12sp"/>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="@color/finappleTheme"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/calendarSummaryTabLLId"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:gravity="center"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:id="@+id/calendarNoTransTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:text="No Transactions/Transfers"
-                        android:textColor="@color/DarkGray"/>
-
-                    <ListView
-                        android:visibility="gone"
-                        android:id="@+id/consolTranLVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:divider="@null"
-                        android:dividerHeight="8dp"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="2dp"
-                        android:paddingRight="2dp"
-                        android:paddingTop="5dp"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/calendarAccTabLLId"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:gravity="center"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/calendarNoAccountsTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:text="No Accounts"
-                        android:textColor="@color/DarkGray"/>
-
-                    <ListView
-                        android:visibility="gone"
-                        android:id="@+id/accountsLVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@color/white"
-                        android:divider="@null"
-                        android:dividerHeight="8dp"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="2dp"
-                        android:paddingRight="2dp"
-                        android:paddingTop="5dp"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/calendarBudgetsTabLLId"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/calendarNoBudgetsTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:text="No Budgets"
-                        android:textColor="@color/DarkGray"/>
-
-                    <ListView
-                        android:visibility="gone"
-                        android:id="@+id/budgetsLVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@color/white"
-                        android:divider="@null"
-                        android:dividerHeight="8dp"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="2dp"
-                        android:paddingRight="2dp"
-                        android:paddingTop="5dp"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/calendarSchedulesTabLLId"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:layout_height="fill_parent"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/calendarTransHeaderOrMsgTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:text="No Scheduled Transactions/Transfers"
-                        android:textColor="@color/DarkGray"/>
-
-                    <ListView
-                        android:visibility="gone"
-                        android:id="@+id/schedulesLVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@color/white"
-                        android:divider="@null"
-                        android:dividerHeight="8dp"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="2dp"
-                        android:paddingRight="2dp"
-                        android:paddingTop="5dp"/>
-
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-    <!--Buttons-->
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/calendarPageSummaryLLId"
-        android:background="@color/white"
-        android:gravity="center"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/calendarAddLLId"
-            android:layout_width="175dp"
-            android:layout_height="fill_parent"
-            android:background="@color/white"
-            android:clickable="true"
+            android:layout_height="20dp"
             android:gravity="center"
-            android:onClick="showTransactionPopper"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
             android:orientation="horizontal">
 
-            <TextView
-                android:background="@drawable/oval_buttons_text_view"
-                android:id="@+id/calendarAddTVId"
-                android:layout_width="fill_parent"
-                android:layout_height="30dp"
-                android:gravity="center"
-                android:text="TRANSACTION"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_button_big_text_size"/>
+            <ImageView
+                android:id="@+id/calendarMultiViewTabsActiveIndIVId"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/ring_darkblue_in_darkblue" />
+
+            <ImageView
+                android:id="@+id/calendarMultiViewActionsActiveIndIVId"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/ring_white_in_blue" />
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/calendarTransferLLId"
-            android:layout_width="175dp"
-            android:layout_height="fill_parent"
-            android:background="@color/white"
-            android:clickable="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:gravity="center"
-            android:onClick="showTransferPopper"
-            android:orientation="horizontal">
-
-            <TextView
-                android:background="@drawable/oval_buttons_text_view"
-                android:id="@+id/calendarTransferTVId"
-                android:layout_width="fill_parent"
-                android:layout_height="30dp"
-                android:gravity="center"
-                android:text="TRANSFER"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_button_big_text_size"/>
-        </LinearLayout>
     </LinearLayout>
+
+
 </RelativeLayout>

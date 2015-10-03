@@ -25,7 +25,7 @@ import java.util.Objects;
 /**
  * Created by ajit on 17/1/15.
  */
-public class ConsolidatedSummaryAdapter extends BaseAdapter {
+public class ConsolidatedSummarySectionAdapter extends BaseAdapter {
 
     private Context mContext;
     private int layoutResourceId;
@@ -33,7 +33,7 @@ public class ConsolidatedSummaryAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<Object> itemsList = new ArrayList<>();
 
-    public ConsolidatedSummaryAdapter(Context mContext, int layoutResourceId, SummaryModel data) {
+    public ConsolidatedSummarySectionAdapter(Context mContext, int layoutResourceId, SummaryModel data) {
         super();
         this.layoutResourceId = layoutResourceId;
         this.mContext = mContext;
@@ -63,6 +63,7 @@ public class ConsolidatedSummaryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
+
         if(convertView == null) {
             mHolder = new ViewHolder();
             convertView = inflater.inflate(layoutResourceId, null);
@@ -79,10 +80,10 @@ public class ConsolidatedSummaryAdapter extends BaseAdapter {
             mHolder.consolTrfrFrmAccTV = (TextView) convertView.findViewById(R.id.consolTrfrFrmAccTVId);
             mHolder.consolTrfrToAccTV = (TextView) convertView.findViewById(R.id.consolTrfrToAccTVId);
 
-            convertView.setTag(mHolder);
+            convertView.setTag(layoutResourceId, mHolder);
 
         } else {
-            mHolder = (ViewHolder) convertView.getTag();
+            mHolder = (ViewHolder) convertView.getTag(layoutResourceId);
         }
 
         makeList(position, mHolder);
@@ -90,7 +91,7 @@ public class ConsolidatedSummaryAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void makeList(int position, ViewHolder mHolder) {
+    private void makeList(int  position, ViewHolder mHolder) {
         // object item based on the position
         Object item = itemsList.get(position);
 
@@ -103,9 +104,12 @@ public class ConsolidatedSummaryAdapter extends BaseAdapter {
             mHolder.catTV.setText(((ConsolidatedTransactionModel) item).getCategory());
             mHolder.countTV.setText("x " + ((ConsolidatedTransactionModel) item).getCount());
 
+            mHolder.totalTV.setText(String.valueOf(((ConsolidatedTransactionModel) item).getTotal()));
             if(((ConsolidatedTransactionModel) item).getTotal() < 0) {
-                mHolder.totalTV.setText(String.valueOf(((ConsolidatedTransactionModel) item).getTotal()));
                 mHolder.totalTV.setTextColor(mHolder.totalTV.getResources().getColor(R.color.finappleCurrencyNegColor));
+            }
+            else{
+                mHolder.totalTV.setTextColor(mHolder.totalTV.getResources().getColor(R.color.finappleCurrencyPosColor));
             }
         }
         else if(item instanceof ConsolidatedTransferModel){

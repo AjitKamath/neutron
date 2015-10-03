@@ -5,13 +5,12 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="horizontal"
-    android:padding="4dp">
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/consolTranTypTVId"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:layout_gravity="center"
         android:background="@drawable/circle_calendar_transaction_indicator"
         android:gravity="center"

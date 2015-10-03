@@ -35,6 +35,39 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
     private static final String BUDGET_TABLE = Constants.DB_TABLE_BUDGETTABLE;
     private static final String CATEGORY_TAGS_TABLE = Constants.DB_TABLE_CATEGORYTAGSTABLE;
 
+    public AccountsModel getAccountDetailsOnAccountId(String accountIdStr) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" ACC_NAME, ");
+        sqlQuerySB.append(" ACC_TOTAL, ");
+        sqlQuerySB.append(" ACC_NOTE ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(ACCOUNT_TABLE);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" ACC_ID  = '" + accountIdStr + "' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" ACC_IS_DEL = '" + Constants.DB_NONAFFIRMATIVE + "'");
+
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        AccountsModel accountsModelObj = null;
+        if(cursor.moveToNext()) {
+            accountsModelObj = new AccountsModel();
+            accountsModelObj.setACC_NAME(ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME"));
+            accountsModelObj.setACC_NOTE(ColumnFetcher.getInstance().loadString(cursor, "ACC_NOTES"));
+            accountsModelObj.setACC_TOTAL(ColumnFetcher.getInstance().loadDouble(cursor, "ACC_TOTAL"));
+
+            return accountsModelObj;
+        }
+
+        Log.e(CLASS_NAME, "If this is printed, Something went wrong while fetching Account details from db");
+        return null;
+    }
+
 	public long addNewAccount(AccountsModel accObject){
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
@@ -133,16 +166,14 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
 	{
 		// Use the application context, which will ensure that you
 		// don't accidentally leak an Activity's context.
-		if (sInstance == null)
-		{
+		if (sInstance == null){
 			sInstance = new AddUpdateAccDbService(context.getApplicationContext());
 		}
 		return sInstance;
 	}
 
 	// constructors
-	public AddUpdateAccDbService(Context context)
-	{
+	public AddUpdateAccDbService(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 

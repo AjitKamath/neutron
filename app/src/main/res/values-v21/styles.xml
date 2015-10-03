@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <!-- Inherit from the light Material Theme -->
-    <style name="FinappleTheme" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="FinappleTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Override the app bar color -->
         <item name="android:colorPrimaryDark">@color/finappleThemeDark</item>
         <!-- Override the color of UI controls -->
@@ -25,5 +25,16 @@
         <item name="android:scrollbars">vertical</item>
         <item name="android:fadeScrollbars">false</item>
         <item name="android:scrollbarThumbVertical">@drawable/finished_step</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:minWidth">88dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:translationZ">1dp</item>
+        <item name="android:background">@color/finappleThemeDark</item>
     </style>
 </resources>

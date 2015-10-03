@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/addCatRLId"
-                android:background="@color/cardBackground">
+    android:id="@+id/addCatRLId"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardBackground">
 
     <LinearLayout
         android:id="@+id/addCatLLId"
@@ -13,265 +13,260 @@
 
         <!--header-->
         <LinearLayout
-            android:elevation="@dimen/layout_header_elevation"
             android:id="@+id/addCatHeaderLLId"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/layout_header_size"
-            android:gravity="center_vertical"
             android:background="@color/finappleTheme"
+            android:elevation="@dimen/layout_header_elevation"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/addCatHeaderBackImgId"
                 android:layout_width="@dimen/image_header_size"
                 android:layout_height="@dimen/image_header_size"
-                android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
                 android:background="@drawable/back"
-                android:tag="BACK"
-                android:onClick="onBackClick"/>
+                android:onClick="onBackClick"
+                android:tag="BACK" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="Category"
                 android:textColor="@color/headerText"
-                android:gravity="center"
-                android:textSize="@dimen/text_header_title_size"/>
+                android:textSize="@dimen/text_header_title_size" />
 
         </LinearLayout>
 
         <!--page-->
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/finappleTheme"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="1dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
-                    android:paddingTop="1dp"
-                    android:text="Category"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/card_background_selector"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                    android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/addCatCatNameETId"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/edit_text_border"
-                        android:hint="title"
-                        android:maxLength="20"
-                        android:paddingLeft="15dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/DarkGray"
-                        android:textStyle="italic"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <!-- Transaction type -->
-            <LinearLayout
-                android:layout_marginTop="15dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/finappleTheme"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="1dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
-                    android:paddingTop="1dp"
-                    android:text="Category Type"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold"/>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_background_selector"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <RadioGroup
-                        android:id="@+id/addCatTranTypeRGId"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/addCatTranExpRBId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
-                            android:checked="true"
-                            android:tag="EXPENSE"
-                            android:text="Expense"
-                            android:textColor="@color/SteelBlue"
-                            android:textSize="20sp"/>
-
-                        <RadioButton
-                            android:id="@+id/addCatTranIncRBId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginLeft="10dp"
-                            android:tag="INCOME"
-                            android:text="Income"
-                            android:textColor="@color/SteelBlue"
-                            android:textSize="20sp"/>
-                    </RadioGroup>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="15dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/finappleTheme"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="1dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
-                    android:paddingTop="1dp"
-                    android:text="Notes"
-                    android:textColor="@color/headerText"
-                    android:textSize="15sp"
-                    android:textStyle="bold"/>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_background_selector"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <EditText
-                        android:id="@+id/addCatNoteNameETId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/edit_text_border"
-                        android:hint="notes"
-                        android:maxLength="50"
-                        android:paddingLeft="15dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/DarkGray"
-                        android:textStyle="italic"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="15dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/finappleTheme"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="1dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
-                    android:paddingTop="1dp"
-                    android:text="Tags"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold"/>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_background_selector"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                        android:background="@color/finappleTheme"
+                        android:paddingLeft="5dp"
+                        android:text="Category"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
                         <EditText
-                            android:id="@+id/addCatTagETId"
-                            android:layout_width="310dp"
+                            android:id="@+id/addCatCatNameETId"
+                            android:layout_width="fill_parent"
                             android:layout_height="40dp"
                             android:background="@drawable/edit_text_border"
-                            android:hint="add tags"
+                            android:hint="title"
+                            android:inputType="textCapWords"
                             android:maxLength="20"
                             android:paddingLeft="15dp"
                             android:textColor="@color/black"
                             android:textColorHint="@color/DarkGray"
-                            android:textStyle="italic"/>
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_gravity="center_vertical"
-                            android:onClick="addNewCatTag"
-                            android:src="@drawable/add_expense_blue"/>
+                            android:textStyle="italic" />
 
                     </LinearLayout>
+
+                </LinearLayout>
+
+
+                <!-- Transaction type -->
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/card_background_selector"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/finappleTheme"
+                        android:paddingLeft="5dp"
+                        android:text="Category Type"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
-                        <TextView
-                            android:id="@+id/addCatNoTagsLabelTVId"
+                        <RadioGroup
+                            android:id="@+id/addCatTranTypeRGId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/addCatTranExpRBId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:checked="true"
+                                android:tag="EXPENSE"
+                                android:text="Expense"
+                                android:textColor="@color/SteelBlue"
+                                android:textSize="20sp" />
+
+                            <RadioButton
+                                android:id="@+id/addCatTranIncRBId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:layout_marginLeft="10dp"
+                                android:tag="INCOME"
+                                android:text="Income"
+                                android:textColor="@color/SteelBlue"
+                                android:textSize="20sp" />
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/card_background_selector"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/finappleTheme"
+                        android:paddingLeft="5dp"
+                        android:text="Notes"
+                        android:textColor="@color/headerText"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_background_selector"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <EditText
+                            android:id="@+id/addCatNoteNameETId"
+                            android:layout_width="fill_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/edit_text_border"
+                            android:hint="notes"
+                            android:inputType="textCapWords"
+                            android:maxLength="50"
+                            android:paddingLeft="15dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/DarkGray"
+                            android:textStyle="italic" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/card_background_selector"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/finappleTheme"
+                        android:paddingLeft="5dp"
+                        android:text="Tags"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_background_selector"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="-no tags yet-"
-                            android:textColor="@color/DarkGray"/>
+                            android:orientation="horizontal">
 
-                        <ListView
-                            android:id="@+id/addCatTagsLVId"
+                            <EditText
+                                android:id="@+id/addCatTagETId"
+                                android:layout_width="280dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/edit_text_border"
+                                android:hint="add tags"
+                                android:inputType="textCapWords"
+                                android:maxLength="20"
+                                android:paddingLeft="15dp"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/DarkGray"
+                                android:textStyle="italic" />
+
+                            <ImageView
+                                android:layout_marginLeft="10dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center_vertical"
+                                android:onClick="addNewCatTag"
+                                android:src="@drawable/add_expense_blue" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="fill_parent"
-                            android:layout_height="wrap_content">
-                        </ListView>
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/addCatNoTagsLabelTVId"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="-no tags yet-"
+                                android:textColor="@color/DarkGray" />
+
+                            <ListView
+                                android:id="@+id/addCatTagsLVId"
+                                android:layout_width="fill_parent"
+                                android:layout_height="100dp"></ListView>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
 
 
     </LinearLayout>
@@ -291,15 +286,16 @@
 
             <TextView
                 android:id="@+id/addCatDoneTVId"
-                android:onClick="onDoneUpdate"
                 android:layout_width="170dp"
                 android:layout_height="30dp"
                 android:background="@drawable/view_activities_active_tab_inner"
                 android:gravity="center"
+                android:onClick="onDoneUpdate"
                 android:text="SAVE"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_button_big_text_size" />
 
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

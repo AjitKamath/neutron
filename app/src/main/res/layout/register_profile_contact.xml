@@ -7,34 +7,44 @@
     <LinearLayout
         android:id="@+id/profileContactHeaderId"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="250dp"
+        android:background="@color/finappleTheme"
+        android:elevation="@dimen/layout_header_elevation"
+        android:orientation="vertical">
+
+        <!--<ImageView
+            android:id="@+id/addAccHeaderBackImgId"
+            android:layout_width="@dimen/image_header_size"
+            android:layout_height="@dimen/image_header_size"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/back"
+            android:onClick="onBackClick"
+            android:tag="BACK" />-->
 
         <LinearLayout
-            android:elevation="@dimen/layout_header_elevation"
             android:layout_width="fill_parent"
-            android:layout_gravity="left"
-            android:layout_height="@dimen/layout_header_size"
-            android:background="@color/white">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_gravity="center"
+                android:text="Its finappl"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_header_primary" />
+
+            <TextView
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Profile - Contact"
-                android:textColor="@color/finappleTheme"
-                android:background="@color/white"
-                android:textStyle="italic"
-                android:textSize="@dimen/text_header_title_size"/>
+                android:text="welcome to the club"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_header_secondary" />
 
         </LinearLayout>
-
-
     </LinearLayout>
-
     <LinearLayout
         android:layout_marginTop="10dp"
         android:layout_width="fill_parent"
@@ -80,12 +90,9 @@
     <LinearLayout
         android:id="@+id/profileContactContentLLId"
         android:layout_width="fill_parent"
-        android:layout_height="475dp"
+        android:layout_height="260dp"
         android:layout_below="@+id/profileContactStepsOrbsLLId"
-        android:paddingTop="50dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
@@ -97,9 +104,9 @@
 
             <TextView
                 android:textColor="@color/finappleThemeDark"
-                android:layout_width="90dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:text="Mobile"/>
 
             <EditText
@@ -109,11 +116,12 @@
                 android:hint="phone number"
                 android:inputType="phone"
                 android:maxLength="10"
+                android:textColorHint="@color/gray"
                 android:text="9884463437"
                 android:background="@drawable/edit_text_border"
                 android:maxLines="1"
                 android:textColor="@color/Black"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:gravity="center"
                 android:textStyle="italic" />
 
@@ -121,30 +129,31 @@
 
         <LinearLayout
             android:gravity="center_vertical"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:textColor="@color/finappleThemeDark"
-                android:layout_width="90dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:text="Email"/>
 
             <EditText
                 android:id="@+id/profileContactEmailETId"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:hint="email id"
+                android:hint="\@email"
                 android:inputType="textEmailAddress"
                 android:maxLength="50"
                 android:background="@drawable/edit_text_border"
                 android:maxLines="1"
                 android:text="ajitkamathk@gmail.com"
                 android:textColor="@color/Black"
-                android:textSize="25sp"
+                android:textSize="20sp"
+                android:textColorHint="@color/gray"
                 android:gravity="center"
                 android:textStyle="italic" />
 
@@ -159,8 +168,6 @@
         android:layout_below="@+id/profileContactContentLLId"
         android:background="@color/white"
         android:gravity="center"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -168,15 +175,14 @@
             android:layout_height="fill_parent"
             android:background="@color/white"
             android:clickable="true"
-            android:gravity="center"
+            android:gravity="right"
             android:onClick="goToCalendarPage"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingRight="10dp"
             android:orientation="horizontal">
 
             <TextView
                 android:background="@drawable/oval_buttons_text_view"
-                android:layout_width="fill_parent"
+                android:layout_width="170dp"
                 android:layout_height="30dp"
                 android:gravity="center"
                 android:text="OK, LETS START"

@@ -205,15 +205,15 @@
     <!--Calendar grid colors-->
     <color name="calendarThisMonthDate">#000000</color>
     <color name="calendarNextPrevMonthDate">#A0A0A9</color>
-    <color name="calendarTodayDate">#FF9800</color>
-    <color name="calendarOneTap">#BBDEFB</color>
+    <color name="calendarTodayDate">#d50000</color>
+    <color name="calendarOneTap">@color/finappleTheme</color>
     <color name="calendarTwoTap">#64B5F6</color>
     <color name="calendarNoTap">#FFFFFF</color>
 
-    <color name="transactionIndicator">#009688</color>
-    <color name="schedTransactionIndicator">#80CBC4</color>
-    <color name="transferIndicator">#795548</color>
-    <color name="schedTransferIndicator">#BCAAA4</color>
+    <color name="transactionIndicator">#2196f3</color>
+    <color name="schedTransactionIndicator">#90caf9</color>
+    <color name="transferIndicator">#ffc107</color>
+    <color name="schedTransferIndicator">#ffd54f</color>
 
     <!-- week colors -->
     <color name="weekdays">#000000</color>

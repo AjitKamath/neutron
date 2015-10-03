@@ -4,25 +4,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:background="@color/white"
-    android:orientation="horizontal"
-    android:padding="2dp">
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/calendarScheduleFreqTattooTVId"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:maxLength="1"
         android:background="@drawable/circle_week_text_view"
         android:text="M"
         android:textColor="@color/white"
-        android:textSize="15sp"/>
+        android:textSize="8sp"/>
 
     <LinearLayout
         android:layout_width="278dp"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="1dp"
         android:gravity="center|left"
         android:orientation="horizontal">
@@ -30,7 +30,7 @@
         <LinearLayout
             android:id="@+id/calendarScheduleTransferLLId"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:paddingLeft="2dp"
             android:orientation="horizontal">
 
@@ -39,7 +39,7 @@
                 android:textColor="@color/text"
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:textSize="13sp"
                 android:text="MMMMMMMMMM"/>
 
@@ -51,14 +51,14 @@
                 android:layout_height="fill_parent"
                 android:textSize="10sp"
                 android:textColor="@color/orrange"
-                android:text="to"/>
+                android:text="TO"/>
 
             <TextView
                 android:id="@+id/calendarScheduleTransferToTVId"
                 android:textColor="@color/text"
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:textSize="13sp"
                 android:text="MMMMMMMMMM"/>
 

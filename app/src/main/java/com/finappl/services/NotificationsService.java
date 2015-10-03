@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -14,13 +15,13 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
-import com.finappl.activities.NotificationScheduledTransactionActivity;
 import com.finappl.dbServices.AddUpdateTransactionsDbService;
 import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.NotificationDbService;
 import com.finappl.models.MonthLegend;
+import com.finappl.models.NotificationActionModel;
 import com.finappl.models.NotificationModel;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
@@ -28,10 +29,8 @@ import com.finappl.models.TodaysNotifications;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
 import com.finappl.models.UsersModel;
-import com.finappl.receivers.NotificationActionReceiver;
 import com.finappl.utils.IdGenerator;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +43,8 @@ import java.util.Map;
  */
 public class NotificationsService extends Service {
     private final String CLASS_NAME = this.getClass().getName();
+
+    private Context mContext = this;
 
     private UsersModel loggedInUserObj;
 
@@ -59,8 +60,19 @@ public class NotificationsService extends Service {
         if(loggedInUserObj == null){
             return Service.START_STICKY;
         }
+        else if("N".equalsIgnoreCase(loggedInUserObj.getSET_NOTIF_ACTIVE())){
+            return Service.START_STICKY;
+        }
 
-        final long timeDelay = getTimeDelayForNotificationOnTime(loggedInUserObj.getNOTIF_TIME());
+        //handling notification actions
+        if(intent != null && intent.getExtras() != null && intent.getExtras().get("NOTIFICATION_ACTION") != null){
+            Log.i(CLASS_NAME, "User Performed action on a notification");
+            NotificationActionModel notificationActionModelObj = (NotificationActionModel) intent.getExtras().get("NOTIFICATION_ACTION");
+            handleNotificationAction(notificationActionModelObj);
+            return Service.START_STICKY;
+        }
+
+        final long timeDelay = getTimeDelayForNotificationOnTime(loggedInUserObj.getSET_NOTIF_TIME());
 
         final Handler handler= new Handler();
         handler.postDelayed(new Runnable() {
@@ -73,6 +85,210 @@ public class NotificationsService extends Service {
         }, timeDelay);
 
         return Service.START_STICKY;
+    }
+
+    private void handleNotificationAction(NotificationActionModel notificationActionModelObj){
+        NotificationDbService notificationDbService = new NotificationDbService(mContext);
+
+        //to cancel the notifications
+        if("CANCEL".equalsIgnoreCase(notificationActionModelObj.getNotificationActionStr())){
+            Log.i(CLASS_NAME, "User Performed 'CANCEL' action on a notification");
+            Log.i(CLASS_NAME, "Attempting to cancel the Notification..");
+            NotificationManager manager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
+            manager.cancel(String.valueOf(notificationActionModelObj.getNotificationIdStr()), Integer.parseInt(String.valueOf(notificationActionModelObj.getNotificationIdStr())));
+            Log.i(CLASS_NAME, "Attempting is completed. Notification must have disappeared by now");
+
+            NotificationModel notificationModelObj = new NotificationModel();
+
+            if("SCHEDULED_TRANSFER".equalsIgnoreCase(notificationActionModelObj.getNotificationTypeStr())) {
+                Log.i(CLASS_NAME, "The Notifications was for 'SCHEDULED_TRANSFER'");
+                ScheduledTransferModel scheduledTransferModelObj = (ScheduledTransferModel) notificationActionModelObj.getNotificationObject();
+                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransferModelObj.getSCH_TRNFR_DATE());
+                notificationModelObj.setCNCL_NOTIF_TYPE("SCHEDULED_TRANSFER");
+                notificationModelObj.setCNCL_NOTIF_EVNT_ID(scheduledTransferModelObj.getSCH_TRNFR_ID());
+            }
+            else if("SCHEDULED_TRANSACTION".equalsIgnoreCase(notificationActionModelObj.getNotificationTypeStr())){
+                Log.i(CLASS_NAME, "The Notifications was for 'SCHEDULED_TRANSACTION'");
+                ScheduledTransactionModel scheduledTransactionModelObj = (ScheduledTransactionModel) notificationActionModelObj.getNotificationObject();
+                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransactionModelObj.getSCH_TRAN_DATE());
+                notificationModelObj.setCNCL_NOTIF_TYPE("SCHEDULED_TRANSACTION");
+                notificationModelObj.setCNCL_NOTIF_EVNT_ID(scheduledTransactionModelObj.getSCH_TRAN_ID());
+            }
+            else{
+                Log.e(CLASS_NAME, "Error !! Expected either SCHEDULED_TRANSACTION or SCHEDULED_TRANSFER in the intent. Found neither");
+                return;
+            }
+
+            notificationModelObj.setCNCL_NOTIF_RSN("CANCEL");
+            notificationModelObj.setUSER_ID(loggedInUserObj.getUSER_ID());
+
+            Log.i(CLASS_NAME, "Attempting to save the cancelled notification into db..");
+            long result = notificationDbService.cancelOrAddNotif(notificationModelObj);
+
+            if(result == -1){
+                Log.e(CLASS_NAME, "Error !! Could not save the notification into db !!");
+                showToast("Something went wrong !");
+                return;
+            }
+
+            if("SCHEDULED_TRANSACTION".equalsIgnoreCase(notificationActionModelObj.getNotificationTypeStr())){
+                Log.i(CLASS_NAME, "Cancelled Notification for 'SCHEDULED_TRANSACTION' is saved into db to avoid repetitions");
+                showToast("Scheduled Transaction has been cancelled");
+            }
+            else if("SCHEDULED_TRANSFER".equalsIgnoreCase(notificationActionModelObj.getNotificationTypeStr())){
+                Log.i(CLASS_NAME, "Cancelled Notification for 'SCHEDULED_TRANSFER' is saved into db to avoid repetitions");
+                showToast("Scheduled Transfer has been cancelled");
+            }
+        }
+        //to cancel the notifications ends--
+
+        //TODO: yet to implement add and show
+    }
+
+    private void buildSchTransferNotification(ScheduledTransferModel scheduledTransferModelObj, UsersModel loggedInUserObj){
+        String notificationTitle = this.getResources().getString(R.string.notifTitleSchedTransfer);
+        String notificationMessage = this.getResources().getString(R.string.notifMsgSchedules);
+        notificationTitle = notificationTitle.replace("XXXXX", loggedInUserObj.getNAME());
+        notificationMessage = notificationMessage.replace("YYYYY", "Transfer")+" "+loggedInUserObj.getCurrencyText()+scheduledTransferModelObj.getSCH_TRNFR_AMT();
+
+        //generate unique hash for this particular transfer using its id
+        int notifHashCode = IdGenerator.getInstance().getIntegerOnString(scheduledTransferModelObj.getSCH_TRNFR_ID());
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        //to handle action on notification when the user clicks on the notification
+        Intent intent = new Intent(this, CalendarActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        //ACTIONS on notifications starts--
+        //to handle add action
+        Intent addIntent = new Intent(this, NotificationsService.class);
+        addIntent.setAction("ADD");
+        NotificationActionModel notificationActionModel = new NotificationActionModel();
+        notificationActionModel.setNotificationActionStr("ADD");
+        notificationActionModel.setNotificationIdStr(String.valueOf(notifHashCode));
+        notificationActionModel.setNotificationTypeStr("SCHEDULED_TRANSFER");
+        notificationActionModel.setNotificationObject(scheduledTransferModelObj);
+        addIntent.putExtra("NOTIFICATION_ACTION", notificationActionModel);
+        PendingIntent pendingIntentAdd = PendingIntent.getService(this, notifHashCode, addIntent, 0);
+        //to handle add action
+
+        //to handle cancel action
+        Intent cancelIntent = new Intent(this, NotificationsService.class);
+        cancelIntent.setAction("CANCEL");
+        notificationActionModel = new NotificationActionModel();
+        notificationActionModel.setNotificationActionStr("CANCEL");
+        notificationActionModel.setNotificationIdStr(String.valueOf(notifHashCode));
+        notificationActionModel.setNotificationTypeStr("SCHEDULED_TRANSFER");
+        notificationActionModel.setNotificationObject(scheduledTransferModelObj);
+        cancelIntent.putExtra("NOTIFICATION_ACTION", notificationActionModel);
+        PendingIntent pendingIntentCancel = PendingIntent.getService(this, notifHashCode, cancelIntent, 0);
+        //to handle cancel action
+
+        //to handle show action in the notification_scheduled_transfer
+        Intent showIntent = new Intent(this, NotificationsService.class);
+        cancelIntent.setAction("SHOW");
+        notificationActionModel = new NotificationActionModel();
+        notificationActionModel.setNotificationActionStr("SHOW");
+        notificationActionModel.setNotificationIdStr(String.valueOf(notifHashCode));
+        notificationActionModel.setNotificationTypeStr("SCHEDULED_TRANSFER");
+        notificationActionModel.setNotificationObject(scheduledTransferModelObj);
+        cancelIntent.putExtra("NOTIFICATION_ACTION", notificationActionModel);
+        PendingIntent pendingIntentShow = PendingIntent.getService(this, notifHashCode, showIntent, 0);
+        //to handle show action
+        //ACTIONS on notifications ends--
+
+        Notification mNotification = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.india)
+                .setContentIntent(pIntent)
+                .setSound(soundUri)
+                .addAction(R.drawable.plus_small_grey, "ADD", pendingIntentAdd)
+                .addAction(R.drawable.show_small_grey, "SHOW", pendingIntentShow)
+                .addAction(R.drawable.delete_small_grey, "CANCEL", pendingIntentCancel)
+                .setStyle(new Notification.InboxStyle()
+                        .setBigContentTitle(scheduledTransferModelObj.getFromAccountStr() + " to " + scheduledTransferModelObj.getToAccountStr())
+                        .addLine(loggedInUserObj.getCurrencyText() + scheduledTransferModelObj.getSCH_TRNFR_AMT())
+                        .setSummaryText("This Scheduled Transfer will happen " + scheduledTransferModelObj.getSCH_TRNFR_FREQ()))
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        mNotification.setLatestEventInfo(this, notificationTitle, notificationMessage, pIntent);
+        notificationManager.notify(String.valueOf(notifHashCode), notifHashCode, mNotification);
+    }
+
+    private void buildSchTransactionNotification(ScheduledTransactionModel scheduledTransactionModelObj, UsersModel loggedInUserObj){
+        String notificationTitle = this.getResources().getString(R.string.notifTitleSchedTransaction);
+        String notificationMessage = this.getResources().getString(R.string.notifMsgSchedules);
+        notificationTitle = notificationTitle.replace("XXXXX", loggedInUserObj.getNAME());
+        notificationMessage = notificationMessage.replace("YYYYY", "Transaction")+" "+loggedInUserObj.getCurrencyText()+scheduledTransactionModelObj.getSCH_TRAN_AMT();
+
+        //generate unique hash for this particular transfer using its id
+        int notifHashCode = IdGenerator.getInstance().getIntegerOnString(scheduledTransactionModelObj.getSCH_TRAN_ID());
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        //to handle action on notification when the user clicks on the notification
+        Intent intent = new Intent(this, CalendarActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        //ACTIONS on notifications starts--
+        //to handle add action
+        Intent addIntent = new Intent(this, NotificationsService.class);
+        addIntent.setAction("ADD");
+        NotificationActionModel notificationActionModel = new NotificationActionModel();
+        notificationActionModel.setNotificationActionStr("ADD");
+        notificationActionModel.setNotificationIdStr(String.valueOf(notifHashCode));
+        notificationActionModel.setNotificationTypeStr("SCHEDULED_TRANSACTION");
+        notificationActionModel.setNotificationObject(scheduledTransactionModelObj);
+        addIntent.putExtra("NOTIFICATION_ACTION", notificationActionModel);
+        PendingIntent pendingIntentAdd = PendingIntent.getService(this, notifHashCode, addIntent, 0);
+        //to handle add action
+
+        //to handle cancel action
+        Intent cancelIntent = new Intent(this, NotificationsService.class);
+        cancelIntent.setAction("CANCEL");
+        notificationActionModel = new NotificationActionModel();
+        notificationActionModel.setNotificationActionStr("CANCEL");
+        notificationActionModel.setNotificationIdStr(String.valueOf(notifHashCode));
+        notificationActionModel.setNotificationTypeStr("SCHEDULED_TRANSACTION");
+        notificationActionModel.setNotificationObject(scheduledTransactionModelObj);
+        cancelIntent.putExtra("NOTIFICATION_ACTION", notificationActionModel);
+        PendingIntent pendingIntentCancel = PendingIntent.getService(this, notifHashCode, cancelIntent, 0);
+        //to handle cancel action
+
+        //to handle show action
+        Intent showIntent = new Intent(this, NotificationsService.class);
+        cancelIntent.setAction("SHOW");
+        notificationActionModel = new NotificationActionModel();
+        notificationActionModel.setNotificationActionStr("SHOW");
+        notificationActionModel.setNotificationIdStr(String.valueOf(notifHashCode));
+        notificationActionModel.setNotificationTypeStr("SCHEDULED_TRANSACTION");
+        notificationActionModel.setNotificationObject(scheduledTransactionModelObj);
+        cancelIntent.putExtra("NOTIFICATION_ACTION", notificationActionModel);
+        PendingIntent pendingIntentShow = PendingIntent.getService(this, notifHashCode, showIntent, 0);
+        //to handle show action
+        //ACTIONS on notifications ends--
+
+        Notification mNotification = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.india)
+                .setContentIntent(pIntent)
+                .setSound(soundUri)
+                .addAction(R.drawable.plus_small_grey, "ADD", pendingIntentAdd)
+                .addAction(R.drawable.show_small_grey, "SHOW", pendingIntentShow)
+                .addAction(R.drawable.delete_small_grey, "CANCEL", pendingIntentCancel)
+                .setStyle(new Notification.InboxStyle()
+                        .setBigContentTitle(scheduledTransactionModelObj.getSCH_TRAN_NAME())
+                        .addLine(loggedInUserObj.getCurrencyText() + scheduledTransactionModelObj.getSCH_TRAN_AMT() + " (" + scheduledTransactionModelObj.getSCH_TRAN_TYPE() + ")")
+                        .setSummaryText("This Scheduled Transaction will happen " + scheduledTransactionModelObj.getSCH_TRAN_FREQ()))
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        mNotification.setLatestEventInfo(this, notificationTitle, notificationMessage, pIntent);
+        notificationManager.notify(String.valueOf(notifHashCode), notifHashCode, mNotification);
     }
 
     private TodaysNotifications getTodaysNotifications(){
@@ -92,7 +308,8 @@ public class NotificationsService extends Service {
         List<ScheduledTransferModel> scheduledTransferModelObjList = null;
 
         if(monthLegendMap != null && !monthLegendMap.isEmpty() && monthLegendMap.get(todayStr) != null
-                && monthLegendMap.get(todayStr).getScheduledTransactionModelList() != null){
+                && ((monthLegendMap.get(todayStr).getScheduledTransactionModelList() != null && !monthLegendMap.get(todayStr).getScheduledTransactionModelList().isEmpty())
+                || ((monthLegendMap.get(todayStr).getScheduledTransferModelList() != null && !monthLegendMap.get(todayStr).getScheduledTransferModelList().isEmpty())))){
             Log.i(CLASS_NAME, "Trying to get All Scheduled Transactions/Transfers from MonthLegend to display them as notification_scheduled_transaction");
             MonthLegend monthLegendObj = monthLegendMap.get(todayStr);
 
@@ -320,17 +537,6 @@ public class NotificationsService extends Service {
     //this method returns the delay between current time and the time user has opted to get notifications. If the current time is more than the users, then the delay is
     //proposed to be 0
     private long getTimeDelayForNotificationOnTime(String timeStr){
-        SimpleDateFormat wrongSdf = new SimpleDateFormat("hh:mm");
-        SimpleDateFormat rightSdf = new SimpleDateFormat("HH:mm");
-
-        try{
-            timeStr = rightSdf.format(wrongSdf.parse(timeStr));
-        }
-        catch(ParseException e){
-            Log.e(CLASS_NAME, "Parse Exception : "+e);
-            return -1;
-        }
-
         String timeStrArr[] = timeStr.split(":");
         Calendar calendar = Calendar.getInstance();
         long currentTimestamp = calendar.getTimeInMillis();
@@ -342,119 +548,6 @@ public class NotificationsService extends Service {
     }
 
 
-    private void buildSchTransferNotification(ScheduledTransferModel scheduledTransferModelObj, UsersModel loggedInUserObj){
-        String notificationTitle = this.getResources().getString(R.string.notifTitleSchedules);
-        String notificationMessage = this.getResources().getString(R.string.notifMsgSchedules);
-        notificationTitle = notificationTitle.replace("XXXXX", loggedInUserObj.getNAME());
-        notificationMessage = notificationMessage.replace("YYYYY", "Transfer")+" "+loggedInUserObj.getCurrencyText()+scheduledTransferModelObj.getSCH_TRNFR_AMT();
-
-        //generate unique hash for this particular tranfer using its id
-        int notifHashCode = IdGenerator.getInstance().getIntegerOnString(scheduledTransferModelObj.getSCH_TRNFR_ID());
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        //to handle action on notifiation when the user clicks on the notification_scheduled_transaction
-        Intent intent = new Intent(this, CalendarActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        //ACTIONS on notifications starts--
-        //to handle cancel action in the notification_scheduled_transfer
-        Intent addIntent = new Intent(this, NotificationActionReceiver.class);
-        addIntent.putExtra("SCH_TRANSFER", scheduledTransferModelObj);
-        addIntent.putExtra("NOTIF_ACTION", "ADD");
-        PendingIntent pendingIntentAdd = PendingIntent.getBroadcast(this, 0, addIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //to handle cancel action in the notification_scheduled_transfer
-        Intent cancelIntent = new Intent(this, NotificationActionReceiver.class);
-        cancelIntent.putExtra("SCH_TRANSFER", scheduledTransferModelObj);
-        cancelIntent.putExtra("CANCEL_NOTIF_ID", notifHashCode);
-        cancelIntent.putExtra("NOTIF_ACTION", "CANCEL");
-        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //to handle show action in the notification_scheduled_transfer
-        Intent showIntent = new Intent(this, NotificationScheduledTransactionActivity.class);
-        showIntent.putExtra("SCH_TRANSFER", scheduledTransferModelObj);
-        showIntent.putExtra("NOTIF_ACTION", "SHOW");
-        showIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntentShow = PendingIntent.getActivity(this, 0, showIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //ACTIONS on notifications ends--
-
-        Notification mNotification = new Notification.Builder(this)
-                .setSmallIcon(R.drawable.india)
-                .setContentIntent(pIntent)
-                .setSound(soundUri)
-                .addAction(R.drawable.plus_small_grey, "ADD", pendingIntentAdd)
-                .addAction(R.drawable.show_small_grey, "SHOW", pendingIntentShow)
-                .addAction(R.drawable.delete_small_grey, "CANCEL", pendingIntentCancel)
-                .setStyle(new Notification.InboxStyle()
-                        .setBigContentTitle(scheduledTransferModelObj.getFromAccountStr() + " to " + scheduledTransferModelObj.getToAccountStr())
-                        .addLine(loggedInUserObj.getCurrencyText() + scheduledTransferModelObj.getSCH_TRNFR_AMT())
-                        .setSummaryText("This Transfer is scheduled to happen " + scheduledTransferModelObj.getSCH_TRNFR_FREQ()))
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .build();
-
-        mNotification.setLatestEventInfo(this, notificationTitle, notificationMessage, pIntent);
-        notificationManager.notify(notifHashCode, mNotification);
-    }
-
-    private void buildSchTransactionNotification(ScheduledTransactionModel scheduledTransactionModelObj, UsersModel loggedInUserObj){
-        String notificationTitle = this.getResources().getString(R.string.notifTitleSchedules);
-        String notificationMessage = this.getResources().getString(R.string.notifMsgSchedules);
-        notificationTitle = notificationTitle.replace("XXXXX", loggedInUserObj.getNAME());
-        notificationMessage = notificationMessage.replace("YYYYY", "Transaction")+" "+loggedInUserObj.getCurrencyText()+scheduledTransactionModelObj.getSCH_TRAN_AMT();
-
-        //generate unique hash for this particular transfer using its id
-        int notifHashCode = IdGenerator.getInstance().getIntegerOnString(scheduledTransactionModelObj.getSCH_TRAN_ID());
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        //to handle action on notification when the user clicks on the notification_scheduled_transaction
-        Intent intent = new Intent(this, CalendarActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        //ACTIONS on notifications starts--
-        //to handle cancel action in the notification_scheduled_transaction
-        Intent addIntent = new Intent(this, NotificationActionReceiver.class);
-        addIntent.putExtra("SCH_TRANSACTION", scheduledTransactionModelObj);
-        addIntent.putExtra("NOTIF_ACTION", "ADD");
-        PendingIntent pendingIntentAdd = PendingIntent.getBroadcast(this, 0, addIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //to handle cancel action in the notification_scheduled_transaction
-        Intent cancelIntent = new Intent(this, NotificationActionReceiver.class);
-        cancelIntent.putExtra("SCH_TRANSACTION", scheduledTransactionModelObj);
-        cancelIntent.putExtra("NOTIF_ACTION", "CANCEL");
-        cancelIntent.putExtra("CANCEL_NOTIF_ID", notifHashCode);
-        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //to handle show action in the notification_scheduled_transaction
-        Intent showIntent = new Intent(this, NotificationScheduledTransactionActivity.class);
-        showIntent.putExtra("SCH_TRANSACTION", scheduledTransactionModelObj);
-        showIntent.putExtra("NOTIF_ACTION", "SHOW");
-        showIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntentShow = PendingIntent.getActivity(this, 0, showIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //ACTIONS on notifications ends--
-
-        Notification mNotification = new Notification.Builder(this)
-                .setSmallIcon(R.drawable.india)
-                .setContentIntent(pIntent)
-                .setSound(soundUri)
-                .addAction(R.drawable.plus_small_grey, "ADD", pendingIntentAdd)
-                .addAction(R.drawable.show_small_grey, "SHOW", pendingIntentShow)
-                .addAction(R.drawable.delete_small_grey, "CANCEL", pendingIntentCancel)
-                .setStyle(new Notification.InboxStyle()
-                        .setBigContentTitle(scheduledTransactionModelObj.getSCH_TRAN_NAME())
-                        .addLine(loggedInUserObj.getCurrencyText() + scheduledTransactionModelObj.getSCH_TRAN_AMT() + " (" + scheduledTransactionModelObj.getSCH_TRAN_TYPE() + ")")
-                        .setSummaryText("This Transaction is scheduled to happen " + scheduledTransactionModelObj.getSCH_TRAN_FREQ()))
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .build();
-
-        mNotification.setLatestEventInfo(this, notificationTitle, notificationMessage, pIntent);
-        notificationManager.notify(notifHashCode, mNotification);
-    }
 
     private UsersModel getUser(){
         AuthorizationDbService authorizationDbService = new AuthorizationDbService(getApplicationContext());

@@ -1,14 +1,16 @@
 package com.finappl.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -16,9 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -32,14 +36,17 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.finappl.R;
-import com.finappl.adapters.AccountsAdapter;
 import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
-import com.finappl.adapters.BudgetsAdapter;
+import com.finappl.adapters.CalendarAccountsAdapter;
+import com.finappl.adapters.CalendarActionsViewPagerAdapter;
+import com.finappl.adapters.CalendarBudgetsAdapter;
 import com.finappl.adapters.CalendarGridAdpter;
 import com.finappl.adapters.CalendarSchedulesSectionListAdapter;
-import com.finappl.adapters.ConsolidatedSummaryAdapter;
+import com.finappl.adapters.ConsolidatedSummarySectionAdapter;
+import com.finappl.adapters.CalendarTransactionsOptionsPopperViewPagerAdapter;
 import com.finappl.adapters.SummaryPopperListAdapter;
 import com.finappl.dbServices.AddUpdateTransactionsDbService;
 import com.finappl.dbServices.AddUpdateTransfersDbService;
@@ -55,29 +62,30 @@ import com.finappl.models.MonthLegend;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.SpinnerModel;
-import com.finappl.models.TodaysNotifications;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
 import com.finappl.models.UsersModel;
-import com.finappl.services.NotificationsService;
 import com.finappl.utils.Constants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 @SuppressLint("NewApi")
-public class CalendarActivity extends Activity {
+public class CalendarActivity extends AppCompatActivity {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext = this;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+    //header
+    private TextView yearTV, /*calendarFinappleNameTV,*/ calendarMonthTV;
 
     //calendar
     private CalendarGridAdpter adapter;// adapter instance
@@ -85,14 +93,8 @@ public class CalendarActivity extends Activity {
     private Calendar _calendar;
     private String selectedDateStr = sdf.format(new Date());
 
-    //header
-    private TextView yearTV, /*calendarFinappleNameTV,*/ calendarMonthTV;
-
-    //summary
-    private ListView consolTranLV, accountsLV, budgetsLV, schedulesLV;
-    private TextView calendarNoTransTV, calendarNoAccountsTV, calendarNoBudgetsTV, calendarTransHeaderOrMsgTV,
-            calendarAddTV, calendarTransferTV;
-    private TextView calendarSummaryTV, calendarAccountsTV, calendarBudgetsTV, calendarSchedulesTV;
+    //Swipe Multi Views
+    private ViewPager viewPager;
 
     //month legend
     private Map<String, MonthLegend> monthLegendMap = new HashMap<String, MonthLegend>();
@@ -125,20 +127,15 @@ public class CalendarActivity extends Activity {
         Log.i(CLASS_NAME, "Initializing the application database ends");
 
         //get the Active user
-        Log.i(CLASS_NAME, "Getting the active/logged in user starts");
         loggedInUserObj = getUser();
         if(loggedInUserObj == null){
             return;
         }
-        Log.i(CLASS_NAME, "Getting the active/logged in user ends");
 
         //initialize calendar
-        Log.i(CLASS_NAME, "Initializing the calendar starts");
         initializeCalendar();
-        Log.i(CLASS_NAME, "Initializing the calendar ends");
 
         String selectedDateStrArr[] = selectedDateStr.split("-");
-
         if(selectedDateStrArr[0].length() == 1){
             selectedDateStrArr[0] = "0"+ selectedDateStrArr[0];
         }
@@ -149,118 +146,68 @@ public class CalendarActivity extends Activity {
         //set current date
         selectedDateStr = selectedDateStrArr[0]+"-"+selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
 
-        Log.i(CLASS_NAME, "Initializing the UI components starts");
         initUIComponents();
-        Log.i(CLASS_NAME, "Initializing the UI components ends");
-
-        //set up header
-        Log.i(CLASS_NAME, "setting up the header starts");
-        setUpHeader();
-        Log.i(CLASS_NAME, "setting up the header ends");
 
         //set up calendar
-        Log.i(CLASS_NAME, "setting up calendar in the UI starts");
         setGridCellAdapterToDate(Integer.parseInt(selectedDateStrArr[0]), Integer.parseInt(selectedDateStrArr[1]), Integer.parseInt(selectedDateStrArr[2]));
-        Log.i(CLASS_NAME, "setting up calendar in the UI ends");
 
-        //set up summary
-        Log.i(CLASS_NAME, "setting up summary tab in the UI starts");
-        setUpSummary();
-        Log.i(CLASS_NAME, "setting up summary tab in the UI ends");
-
-        //set up accounts
-        Log.i(CLASS_NAME, "setting up accounts tab in the UI starts");
-        setUpAccounts();
-        Log.i(CLASS_NAME, "setting up accounts tab in the UI ends");
-
-        //set up budgets_view
-        Log.i(CLASS_NAME, "setting up budgets tab in the UI starts");
-        setUpBudgets();
-        Log.i(CLASS_NAME, "setting up budgets tab in the UI ends");
-
-        //set up schedules
-        Log.i(CLASS_NAME, "setting up schedules tab in the UI starts");
-        setUpSchedules();
-        Log.i(CLASS_NAME, "setting up schedules tab in the UI ends");
-
-        //prepare services
-        Log.i(CLASS_NAME, "setting up all the services starts ");
+        //call notification service
+        //TODO: this might not be required in production
         setUpServices();
-        Log.i(CLASS_NAME, "setting up all the services ends");
 
         //set font for all the text view
-        Log.i(CLASS_NAME, "setting fonts for all the UI components starts");
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
         setFont((ViewGroup) this.findViewById(R.id.calendarPageRLId), robotoCondensedLightFont);
-        Log.i(CLASS_NAME, "setting fonts for all the UI components ends");
+    }
+
+    private void setUpActions() {
+        List<Integer> list = new ArrayList<>();
+        list.add(R.layout.calendar_tabs_flipper);
+        list.add(R.layout.calendar_actions_flipper);
+
+        CalendarActionsViewPagerAdapter calendarActionsViewPagerAdapter =
+                new CalendarActionsViewPagerAdapter(mContext, list, monthLegendMap, selectedDateStr, loggedInUserObj);
+        viewPager.setAdapter(calendarActionsViewPagerAdapter);
+
+        final ImageView calendarMultiViewTabsActiveIndIV = (ImageView)this.findViewById(R.id.calendarMultiViewTabsActiveIndIVId);
+        final ImageView calendarMultiViewActionsActiveIndIV = (ImageView)this.findViewById(R.id.calendarMultiViewActionsActiveIndIVId);
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 0){
+                    calendarMultiViewTabsActiveIndIV.setBackgroundResource(R.drawable.ring_darkblue_in_darkblue);
+                    calendarMultiViewActionsActiveIndIV.setBackgroundResource(R.drawable.ring_white_in_blue);
+
+                }
+                else if(position == 1){
+                    calendarMultiViewActionsActiveIndIV.setBackgroundResource(R.drawable.ring_darkblue_in_darkblue);
+                    calendarMultiViewTabsActiveIndIV.setBackgroundResource(R.drawable.ring_white_in_blue);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private void setUpServices() {
-        //prepare notifications service
-        //pass todaysNotificationsObj to the NotificationsService through the intent
-        Intent intent = new Intent(this, NotificationsService.class);
-        intent.putExtra("TODAYS_NOTIFS", getTodaysNotifications());
-
-        //reboot service
-        stopService(intent);
-        startService(intent);
-    }
-
-    private TodaysNotifications getTodaysNotifications(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String todayStr = sdf.format(new Date());
-
-        //get all the scheduled Transactions/Transfers from the month legend
-        List<ScheduledTransactionModel> schedTransactionModelObjList = null;
-        List<ScheduledTransferModel> scheduledTransferModelObjList = null;
-        if(monthLegendMap != null && !monthLegendMap.isEmpty() && monthLegendMap.get(todayStr) != null
-                && monthLegendMap.get(todayStr).getScheduledTransactionModelList() != null){
-            Log.i(CLASS_NAME, "Trying to get All Scheduled Transactions/Transfers from MonthLegend to display them as notification_scheduled_transaction");
-            MonthLegend monthLegendObj = monthLegendMap.get(todayStr);
-
-            schedTransactionModelObjList = monthLegendObj.getScheduledTransactionModelList();
-            scheduledTransferModelObjList = monthLegendObj.getScheduledTransferModelList();
-        }
-
-        TodaysNotifications todaysNotificationsObj = new TodaysNotifications();
-        todaysNotificationsObj.setLoggedInUser(loggedInUserObj);
-
-        //for scheduled transactions starts--
-        if(schedTransactionModelObjList != null && !schedTransactionModelObjList.isEmpty()){
-            Log.i(CLASS_NAME, "There are no Scheduled Transactions for the date("+todayStr+")");
-            //remove those schedules who have been either addded already or rejected by the user.
-            Log.i(CLASS_NAME, "Found " + schedTransactionModelObjList.size() + " Scheduled Transactions...but need to filter out those which are already added/cancelled");
-            todaysNotificationsObj.setTodaysSchedTransactionsList(calendarDbService.getSchedTransactionsListAfterCancelledNotifsOnDate(schedTransactionModelObjList
-                    , loggedInUserObj.getUSER_ID(), todayStr));
-            Log.i(CLASS_NAME, "After filtering already added or cancelled , found " + schedTransactionModelObjList.size() + " scheduled transactions");
-            Log.i(CLASS_NAME, "Finished building notifications for Scheduled Transactions");
-        }
-        //for scheduled transactions ends--
-
-        //for scheduled transfers starts--
-        if(scheduledTransferModelObjList != null && !scheduledTransferModelObjList.isEmpty()){
-            Log.i(CLASS_NAME, "There are no Scheduled Transfers for the date("+todayStr+")");
-            //remove those schedules who have been either addded already or rejected by the user.
-            Log.i(CLASS_NAME, "Found " + scheduledTransferModelObjList.size() + " Scheduled Transfers...but need to filter out those which are already added/cancelled");
-            todaysNotificationsObj.setTodaysSchedTransfersList(calendarDbService.getSchedTransfersListAfterCancelledNotifsOnDate(scheduledTransferModelObjList
-                    , loggedInUserObj.getUSER_ID(), todayStr));
-            Log.i(CLASS_NAME, "After filtering already added or cancelled , found " + scheduledTransferModelObjList.size() + " scheduled transfers");
-            Log.i(CLASS_NAME, "Finished building notifications for Scheduled Transfers");
-        }
-        //for scheduled transfers ends--
-
-        return todaysNotificationsObj;
+        //notify the notification service by calling the receiver
+        Intent notifIntent = new Intent();
+        notifIntent.setAction("ACTIVITY_ACTION");
+        sendBroadcast(notifIntent);
     }
 
     private void getMonthLegend() {
         monthLegendMap = calendarDbService.getMonthLegendOnDate(selectedDateStr, loggedInUserObj.getUSER_ID());
-    }
-
-    public void onSettingsClick(View view){
-        Intent intent
-                = new Intent(CalendarActivity.this, SettingsActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private Intent toAddUpdateTransaction(){
@@ -279,204 +226,6 @@ public class CalendarActivity extends Activity {
         return  intent;
     }
 
-    private void setUpAccounts() {
-        List<AccountsModel> accountsList = calendarDbService.getAllAccounts(loggedInUserObj.getUSER_ID());
-
-        AccountsAdapter accAdapter = new AccountsAdapter(this, R.layout.calendar_accounts_list_view, accountsList);
-        accountsLV.setAdapter(accAdapter);
-
-        //if there are no accounts o the selected date then show no accounts text
-        if(accAdapter != null & accAdapter.getCount() != 0){
-            calendarNoAccountsTV.setVisibility(View.GONE);
-            accountsLV.setVisibility(View.VISIBLE);
-        }
-        else{
-            calendarNoAccountsTV.setVisibility(View.VISIBLE);
-            accountsLV.setVisibility(View.GONE);
-        }
-    }
-
-    private void setUpBudgets() {
-        List<BudgetModel> budgetsList = calendarDbService.getAllBudgets(selectedDateStr, loggedInUserObj.getUSER_ID());
-
-        if(budgetsList == null){
-            return;
-        }
-
-        BudgetsAdapter budgetsAdapter = new BudgetsAdapter(this, R.layout.calendar_budgets_list_view, budgetsList);
-        budgetsLV.setAdapter(budgetsAdapter);
-
-        //if there are no transactions o the selected date then show no transaction text
-        if(budgetsAdapter != null & budgetsAdapter.getCount() != 0){
-            calendarNoBudgetsTV.setVisibility(View.GONE);
-            budgetsLV.setVisibility(View.VISIBLE);
-        }
-        else{
-            calendarNoBudgetsTV.setVisibility(View.VISIBLE);
-            budgetsLV.setVisibility(View.GONE);
-        }
-    }
-
-    private void setUpSchedules() {
-        if(monthLegendMap == null || (monthLegendMap != null && monthLegendMap.isEmpty())){
-            Log.i(CLASS_NAME, "Nothing found in MonthLegend... No point in setting up Schedules. Continuing");
-            return;
-        }
-
-        String selectedDateStrArr[] = selectedDateStr.split("-");
-        Integer tempMonth =  Integer.parseInt(selectedDateStrArr[1]);
-        if(tempMonth < 10){
-            selectedDateStrArr[1] = "0"+ tempMonth;
-        }
-        String tempDateStr = selectedDateStrArr[0]+"-"+selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
-
-        CalendarSchedulesSectionListAdapter schedulesListAdapter = new CalendarSchedulesSectionListAdapter(this,
-                R.layout.calendar_schedules_list_view_header,  R.layout.calendar_schedules_list_view, monthLegendMap.get(tempDateStr));
-        schedulesLV.setAdapter(schedulesListAdapter);
-        schedulesListAdapter.notifyDataSetChanged();
-
-        if(schedulesListAdapter != null & schedulesListAdapter.getCount() != 0){
-            SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
-            SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
-            try {
-                String dayStr = rightSdf.format(wrongSdf.parse(tempDateStr));
-                calendarTransHeaderOrMsgTV.setText(dayStr);
-            }
-            catch (ParseException e) {
-                Log.e(CLASS_NAME, "ERROR !! "+e);
-            }
-
-            calendarTransHeaderOrMsgTV.setTextColor(calendarTransHeaderOrMsgTV.getResources().getColor(R.color.orrange));
-            schedulesLV.setVisibility(View.VISIBLE);
-        }
-        else{
-            calendarTransHeaderOrMsgTV.setText("No Scheduled Transactions/Transfers");
-            calendarTransHeaderOrMsgTV.setTextColor(calendarTransHeaderOrMsgTV.getResources().getColor(R.color.DarkGray));
-            schedulesLV.setVisibility(View.GONE);
-        }
-    }
-
-    private void setUpSummary() {
-        String selectedDateStrArr[] = selectedDateStr.split("-");
-        Integer tempMonth =  Integer.parseInt(selectedDateStrArr[1]);
-        if(tempMonth < 10){
-            selectedDateStrArr[1] = "0"+ tempMonth;
-        }
-
-        String tempDate = selectedDateStrArr[0]+"-"+selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
-
-        if(!monthLegendMap.containsKey(tempDate) || (monthLegendMap.containsKey(tempDate)
-                && (monthLegendMap.get(tempDate).getSummaryModel().getConsolidatedTransactionModelMap().isEmpty()
-                && monthLegendMap.get(tempDate).getSummaryModel().getConsolidatedTransferModelMap().isEmpty()))){
-            Log.i(CLASS_NAME, "Boring Day !! No summary to show today");
-
-            calendarNoTransTV.setText("No Transactions/Transfers");
-            calendarNoTransTV.setTextColor(calendarNoTransTV.getResources().getColor(R.color.DarkGray));
-            consolTranLV.setVisibility(View.GONE);
-
-            return;
-        }
-
-        SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
-        try {
-            String dayStr = rightSdf.format(wrongSdf.parse(tempDate));
-            calendarNoTransTV.setText(dayStr);
-        }
-        catch (ParseException e) {
-            Log.e(CLASS_NAME, "ERROR !! "+e);
-        }
-
-        calendarNoTransTV.setTextColor(calendarNoTransTV.getResources().getColor(R.color.orrange));
-        consolTranLV.setVisibility(View.VISIBLE);
-
-
-        ConsolidatedSummaryAdapter consolAdapter = new ConsolidatedSummaryAdapter(this, R.layout.calendar_summary_list_view, monthLegendMap.get(tempDate).getSummaryModel());
-        consolTranLV.setAdapter(consolAdapter);
-        consolTranLV.setOnItemClickListener(listViewClickListener);
-    }
-
-    public void onTabSelect(View view){
-        Log.i(CLASS_NAME, "Son....i created you. The tab implementation...although sucks, a very own of my creation. And you work !! selected: " + view.getId());
-
-        LinearLayout calendarSummaryTabLL, calendarAccTabLL, calendarBudgetsTabLL, calendarSchedulesTabLL;
-        calendarSummaryTabLL = (LinearLayout) this.findViewById(R.id.calendarSummaryTabLLId);
-        calendarAccTabLL = (LinearLayout) this.findViewById(R.id.calendarAccTabLLId);
-        calendarBudgetsTabLL = (LinearLayout) this.findViewById(R.id.calendarBudgetsTabLLId);
-        calendarSchedulesTabLL = (LinearLayout) this.findViewById(R.id.calendarSchedulesTabLLId);
-
-        switch(view.getId()){
-            case R.id.calendarSummaryTVId: if(!"SELECTED".equalsIgnoreCase(view.getTag().toString())){
-                    deselectAllTabs();
-                    calendarSummaryTV.setBackgroundResource(R.drawable.calendar_small_tab_active_inner);
-                    calendarSummaryTV.setTextColor(calendarSummaryTV.getResources().getColor(R.color.white));
-                    view.setTag("SELECTED");
-                    calendarSummaryTabLL.setVisibility(View.VISIBLE);
-                    calendarAccTabLL.setVisibility(View.GONE);
-                    calendarBudgetsTabLL.setVisibility(View.GONE);
-                    calendarSchedulesTabLL.setVisibility(View.GONE);
-                }
-                break;
-
-            case R.id.calendarAccountsTVId : if(!"SELECTED".equalsIgnoreCase(view.getTag().toString())){
-                    deselectAllTabs();
-                    calendarAccountsTV.setBackgroundResource(R.drawable.calendar_small_tab_active_inner);
-                    calendarAccountsTV.setTextColor(calendarSummaryTV.getResources().getColor(R.color.white));
-                    view.setTag("SELECTED");
-                    calendarSummaryTabLL.setVisibility(View.GONE);
-                    calendarAccTabLL.setVisibility(View.VISIBLE);
-                    calendarBudgetsTabLL.setVisibility(View.GONE);
-                    calendarSchedulesTabLL.setVisibility(View.GONE);
-                }
-                break;
-
-            case R.id.calendarBudgetsTVId : if(!"SELECTED".equalsIgnoreCase(view.getTag().toString())){
-                    deselectAllTabs();
-                    calendarBudgetsTV.setBackgroundResource(R.drawable.calendar_small_tab_active_inner);
-                    calendarBudgetsTV.setTextColor(calendarSummaryTV.getResources().getColor(R.color.white));
-                    view.setTag("SELECTED");
-                    calendarSummaryTabLL.setVisibility(View.GONE);
-                    calendarAccTabLL.setVisibility(View.GONE);
-                    calendarBudgetsTabLL.setVisibility(View.VISIBLE);
-                    calendarSchedulesTabLL.setVisibility(View.GONE);
-                }
-                break;
-
-            case R.id.calendarSchedulesTVId : if(!"SELECTED".equalsIgnoreCase(view.getTag().toString())){
-                    deselectAllTabs();
-                    calendarSchedulesTV.setBackgroundResource(R.drawable.calendar_small_tab_active_inner);
-                    calendarSchedulesTV.setTextColor(calendarSchedulesTV.getResources().getColor(R.color.white));
-                    view.setTag("SELECTED");
-                    calendarSummaryTabLL.setVisibility(View.GONE);
-                    calendarAccTabLL.setVisibility(View.GONE);
-                    calendarBudgetsTabLL.setVisibility(View.GONE);
-                    calendarSchedulesTabLL.setVisibility(View.VISIBLE);
-                }
-                break;
-
-            default: showToast("Tab Error !!");
-        }
-    }
-
-    private void deselectAllTabs(){
-        //summary tab
-        calendarSummaryTV.setBackgroundResource(R.drawable.calendar_small_tab_inactive_inner);
-        calendarSummaryTV.setTextColor(calendarSummaryTV.getResources().getColor(R.color.finappleTheme));
-        calendarSummaryTV.setTag("");
-
-        calendarAccountsTV.setBackgroundResource(R.drawable.calendar_small_tab_inactive_inner);
-        calendarAccountsTV.setTextColor(calendarSummaryTV.getResources().getColor(R.color.finappleTheme));
-        calendarAccountsTV.setTag("");
-
-        calendarBudgetsTV.setBackgroundResource(R.drawable.calendar_small_tab_inactive_inner);
-        calendarBudgetsTV.setTextColor(calendarSummaryTV.getResources().getColor(R.color.finappleTheme));
-        calendarBudgetsTV.setTag("");
-
-        calendarSchedulesTV.setBackgroundResource(R.drawable.calendar_small_tab_inactive_inner);
-        calendarSchedulesTV.setTextColor(calendarSummaryTV.getResources().getColor(R.color.finappleTheme));
-        calendarSchedulesTV.setTag("");
-    }
-
     private void initializeCalendar(){
         //this method runs on app start up, so setting the calendar to current actual state
         _calendar = Calendar.getInstance(Locale.getDefault());
@@ -486,66 +235,14 @@ public class CalendarActivity extends Activity {
         //get UI components
 
         //header
-        //calendarFinappleNameTV = (TextView) this.findViewById(R.id.calendarFinappleNameTVId);
         yearTV = (TextView) this.findViewById(R.id.calendarFullYearId);
         calendarMonthTV = (TextView) this.findViewById(R.id.calendarMonthId);
-
-        //set up options popper
-        setUpOptionsPopper();
 
         //calendar
         calendarView = (GridView) this.findViewById(R.id.calendarPageCalendarGVId);
 
-        //summary
-        calendarNoTransTV = (TextView) this.findViewById(R.id.calendarNoTransTVId);
-        calendarNoAccountsTV = (TextView) this.findViewById(R.id.calendarNoAccountsTVId);
-        calendarNoBudgetsTV = (TextView) this.findViewById(R.id.calendarNoBudgetsTVId);
-        calendarTransHeaderOrMsgTV = (TextView) this.findViewById(R.id.calendarTransHeaderOrMsgTVId);
-
-        //tabs
-        calendarSummaryTV = (TextView) this.findViewById(R.id.calendarSummaryTVId);
-        calendarAccountsTV = (TextView) this.findViewById(R.id.calendarAccountsTVId);
-        calendarBudgetsTV = (TextView) this.findViewById(R.id.calendarBudgetsTVId);
-        calendarSchedulesTV = (TextView) this.findViewById(R.id.calendarSchedulesTVId);
-
-        //buttons
-        calendarAddTV = (TextView) this.findViewById(R.id.calendarAddTVId);
-        calendarTransferTV = (TextView) this.findViewById(R.id.calendarTransferTVId);
-
-        consolTranLV = (ListView) this.findViewById(R.id.consolTranLVId);
-        accountsLV = (ListView) this.findViewById(R.id.accountsLVId);
-        budgetsLV = (ListView) this.findViewById(R.id.budgetsLVId);
-        schedulesLV = (ListView) this.findViewById(R.id.schedulesLVId);
-    }
-
-    private void setUpOptionsPopper() {
-        //setup options
-        ImageView optionsIV = (ImageView) this.findViewById(R.id.calendarOptionsIVId);
-        final PopupMenu popupMenu = new PopupMenu(this, optionsIV);
-        popupMenu.inflate(R.menu.calendar_options);
-
-        optionsIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupMenu.show();
-            }
-        });
-
-
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.calendarOptionBudgetId:
-                        break;
-                    case R.id.calendarOptionReportId:
-                        break;
-                    case R.id.calendarOptionPlanABuy:
-                        break;
-                }
-                return true;
-            }
-        });
+        //view pager
+        viewPager = (ViewPager) this.findViewById(R.id.calendarActionsTabsVPId);
     }
 
     private void setUpHeader() {
@@ -554,7 +251,6 @@ public class CalendarActivity extends Activity {
         Calendar cal = Calendar.getInstance();
         cal.set(Integer.parseInt(tempSelectedDateStrArr[2]), Integer.parseInt(tempSelectedDateStrArr[1]) - 1, Integer.parseInt(tempSelectedDateStrArr[0]));
 
-        int date = Integer.parseInt(tempSelectedDateStrArr[0]);
         String yearStr = String.valueOf(cal.get(cal.YEAR));
         int month = cal.get(cal.MONTH);
 
@@ -564,51 +260,37 @@ public class CalendarActivity extends Activity {
     }
 
     //pass month as jan-1 feb-2
+    //TODO: Convert this into ViewPager
     private void setGridCellAdapterToDate(int day, int month, int year) {
         _calendar.set(year, month-1, day);
         month = _calendar.get(Calendar.MONTH);
         year = _calendar.get(Calendar.YEAR);
         day = _calendar.get(Calendar.DAY_OF_MONTH);
 
-       // GridView calendarView2 = (GridView) this.findViewById(R.id.calendarPageCalendarGVId2);
-       // GridView calendarView3 = (GridView) this.findViewById(R.id.calendarPageCalendarGVId3);
-
         //get this months legend
         getMonthLegend();
 
-        //update summary
-        //setUpSummary();
+        setUpHeader();
 
-        //set up budgets_view
-        //setUpBudgets();
-
-        //set up schedules
-        //setUpSchedules();
+        setUpActions();
 
         adapter = new CalendarGridAdpter(this, monthLegendMap, day, month+1, year);
-
         adapter.notifyDataSetChanged();
         calendarView.setAdapter(adapter);
 
-        //calendarView2.setAdapter(adapter);
-        //calendarView3.setAdapter(adapter);
-
         String tempMonthStr = String.valueOf(month+1);
         String tempDayStr= String.valueOf(day);
-        if(month<10){
+        if(month+1<10){
             tempMonthStr = "0" + tempMonthStr;
         }
-
         if(day < 10){
             tempDayStr = "0" + tempDayStr;
         }
 
         selectedDateStr = tempDayStr + "-" + tempMonthStr + "-" + year + "-PRESENT";
-
         calendarView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 selectedDateStr = CalendarGridAdpter.list.get(position);
                 String selectedDateStrArr[] = selectedDateStr.split("-");
                 int selectedDate = Integer.parseInt(selectedDateStrArr[0]);
@@ -625,9 +307,6 @@ public class CalendarActivity extends Activity {
                 //user selected date is not in current month..either past month or next month
                 if (selectedDateStr.contains("PAST") || selectedDateStr.contains("FUTURE")) {
                     Log.i(CLASS_NAME, "I clicked on either PAST or FUTURE month");
-
-                    //get month legend before the month is refreshed
-                    //getMonthLegend();
 
                     //user has selected the past month
                     if (position < 7) {
@@ -683,6 +362,8 @@ public class CalendarActivity extends Activity {
                         }
                         calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_one_tap);
                         calendarGridDayContentGL.setTag(R.drawable.circle_calendar_one_tap);
+
+                        setUpActions();
                     } else {
                         //if the activity transaction indicator or transfer indicator both are invisible...then do not proceed to ViewTransaction page..because there's no point
                         if (calendarGridDayContentGL.findViewById(R.id.calendarCellTransactionIndicatorTVId).getVisibility() == View.GONE
@@ -692,15 +373,6 @@ public class CalendarActivity extends Activity {
                         }
                     }
                 }
-
-                //update summary
-                setUpSummary();
-
-                //update budgets_view
-                setUpBudgets();
-
-                //update schedules
-                setUpSchedules();
             }
         });
     }
@@ -740,40 +412,41 @@ public class CalendarActivity extends Activity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(layout);
 
-        Window window = dialog.getWindow();
-        WindowManager.LayoutParams wlp = window.getAttributes();
 
-        wlp.gravity = Gravity.BOTTOM;
-        wlp.y = 80;
+        Window window = dialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        window.setDimAmount(0.8f);
+        wlp.gravity = Gravity.CENTER;
+        //wlp.y = 80;
         window.setAttributes(wlp);
         window.setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                calendarAddTV.setBackgroundResource(R.drawable.oval_buttons_text_view);
-                calendarTransferTV.setBackgroundResource(R.drawable.oval_buttons_text_view);
-            }
-        });
     }
 
     public void showTransactionPopper(View view){
         // Create custom calendar_transaction_options_popper object
         prepareDialog(R.layout.calendar_transaction_options_popper);
 
-        calendarAddTV.setBackgroundResource(R.drawable.oval_buttons_selected_text_view);
+        final ViewPager viewPager = (ViewPager) dialog.findViewById(R.id.viewpager);
+
+        List<Integer> list = new ArrayList<>();
+        list.add(R.layout.calendar_transaction_options_popper_info);
+        list.add(R.layout.blue);
+        list.add(R.layout.orange);
+
+        final CalendarTransactionsOptionsPopperViewPagerAdapter calendarTransactionsOptionsPopperViewPagerAdapter = new CalendarTransactionsOptionsPopperViewPagerAdapter(mContext, list);
+        viewPager.setAdapter(calendarTransactionsOptionsPopperViewPagerAdapter);
 
         //texts
-        TextView transactionPopperNewTV, transactionPopperQuickTV, transactionPopperSchedTV;
-        transactionPopperNewTV = (TextView) dialog.findViewById(R.id.transactionPopperNewTVId);
-        transactionPopperQuickTV = (TextView) dialog.findViewById(R.id.transactionPopperQuickTVId);
-        transactionPopperSchedTV = (TextView) dialog.findViewById(R.id.transactionPopperSchedTVId);
+        LinearLayout transactionPopperNewLV, transactionPopperQuickLV, transactionPopperSchedLV;
+        transactionPopperNewLV = (LinearLayout) dialog.findViewById(R.id.transactionPopperNewLVId);
+        transactionPopperQuickLV = (LinearLayout) dialog.findViewById(R.id.transactionPopperQuickLVId);
+        transactionPopperSchedLV = (LinearLayout) dialog.findViewById(R.id.transactionPopperSchedLVId);
 
-        transactionPopperNewTV.setOnClickListener(linearLayoutClickListener);
-        transactionPopperQuickTV.setOnClickListener(linearLayoutClickListener);
-        transactionPopperSchedTV.setOnClickListener(linearLayoutClickListener);
-
+        transactionPopperNewLV.setOnClickListener(linearLayoutClickListener);
+        transactionPopperQuickLV.setOnClickListener(linearLayoutClickListener);
+        transactionPopperSchedLV.setOnClickListener(linearLayoutClickListener);
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
@@ -790,17 +463,15 @@ public class CalendarActivity extends Activity {
         // Create custom calendar_transfer_options_popper object
         prepareDialog(R.layout.calendar_transfer_options_popper);
 
-        calendarTransferTV.setBackgroundResource(R.drawable.oval_buttons_selected_text_view);
-
         //texts
-        TextView transferPopperNewTV, transferPopperQuickTV, transferPopperSchedTV;
-        transferPopperNewTV = (TextView) dialog.findViewById(R.id.transferPopperNewTVId);
-        transferPopperQuickTV = (TextView) dialog.findViewById(R.id.transferPopperQuickTVId);
-        transferPopperSchedTV = (TextView) dialog.findViewById(R.id.transferPopperSchedTVId);
+        LinearLayout transferPopperNewLV, transferPopperQuickLV, transferPopperSchedLV;
+        transferPopperNewLV = (LinearLayout) dialog.findViewById(R.id.transferPopperNewLVId);
+        transferPopperQuickLV = (LinearLayout) dialog.findViewById(R.id.transferPopperQuickLVId);
+        transferPopperSchedLV = (LinearLayout) dialog.findViewById(R.id.transferPopperSchedLVId);
 
-        transferPopperNewTV.setOnClickListener(linearLayoutClickListener);
-        transferPopperQuickTV.setOnClickListener(linearLayoutClickListener);
-        transferPopperSchedTV.setOnClickListener(linearLayoutClickListener);
+        transferPopperNewLV.setOnClickListener(linearLayoutClickListener);
+        transferPopperQuickLV.setOnClickListener(linearLayoutClickListener);
+        transferPopperSchedLV.setOnClickListener(linearLayoutClickListener);
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
@@ -812,10 +483,6 @@ public class CalendarActivity extends Activity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_quick_transaction_popper);
 
-        /*((ViewGroup)dialog.getWindow().getDecorView())
-                .getChildAt(0).startAnimation(AnimationUtils.loadAnimation(
-                mContext, android.R.anim.fadein));*/
-
         //ui
         final EditText quickTransactionAmtET;
         final Spinner quickTransactionCatSpn, quickTransactionAccSpn, quickTransactionSpntOnSpn;
@@ -824,14 +491,13 @@ public class CalendarActivity extends Activity {
         TextView quickTransactionDoneTV;
 
         quickTransactionAmtET = (EditText) dialog.findViewById(R.id.quickTransactionAmtETId);
+        quickTransactionAmtET.requestFocus();
 
         quickTransactionCatSpn = (Spinner) dialog.findViewById(R.id.quickTransactionCatSpnId);
         quickTransactionAccSpn = (Spinner) dialog.findViewById(R.id.quickTransactionAccSpnId);
         quickTransactionSpntOnSpn = (Spinner) dialog.findViewById(R.id.quickTransactionSpntOnSpnId);
 
         quickTransactionExpIncRadioGrp = (RadioGroup) dialog.findViewById(R.id.quickTransactionExpIncRadioGrpId);
-        //quickTransactionExpRadio = (RadioButton) dialog.findViewById(R.id.quickTransactionExpRadioId);
-        //quickTransactionIncRadio = (RadioButton) dialog.findViewById(R.id.quickTransactionIncRadioId);
 
         quickTransactionDoneTV = (TextView) dialog.findViewById(R.id.quickTransactionDoneTVId);
 
@@ -890,15 +556,6 @@ public class CalendarActivity extends Activity {
                     //refresh the calendar to fetch updates after quick transaction
                     String selectedDateStrArr[] = selectedDateStr.split("-");
                     setGridCellAdapterToDate(Integer.parseInt(selectedDateStrArr[0]), Integer.parseInt(selectedDateStrArr[1]), Integer.parseInt(selectedDateStrArr[2]));
-
-                    //update summary
-                    setUpSummary();
-
-                    //update budgets
-                    setUpBudgets();
-
-                    //refresh the accounts list view to fetch updates after quick transaction
-                    setUpAccounts();
                 }
                 else{
                     showToast("Error !! Could not create Transaction");
@@ -906,7 +563,6 @@ public class CalendarActivity extends Activity {
                 }
             }
         });
-
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
@@ -934,7 +590,7 @@ public class CalendarActivity extends Activity {
         }
 
         Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                    "probably die twice by now.");
+                "probably die twice by now.");
         return null;
     }
 
@@ -1022,6 +678,120 @@ public class CalendarActivity extends Activity {
         setFont((ViewGroup) summaryPopperLL, robotoCondensedLightFont);
     }
 
+    private void showAccountPopper(final AccountsModel accountsModelObj){
+        dialog = new Dialog(CalendarActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.calendar_account_popper);
+
+        dialog.show();
+
+        //commons
+        TextView accountPopperTitleTV = (TextView) dialog.findViewById(R.id.accountPopperTitleTVId);
+        ImageView accountPopperEditIV = (ImageView) dialog.findViewById(R.id.accountPopperEditIVId);
+        TextView accountPopperBalanceTV = (TextView) dialog.findViewById(R.id.accountPopperBalanceTVId);
+        View accountPopperDividerView = (View) dialog.findViewById(R.id.accountPopperDividerViewId);
+        View accountPopperDividerTwoView = (View) dialog.findViewById(R.id.accountPopperDividerTwoViewId);
+
+        //Last Transactions
+        LinearLayout accountPopperLastTransactionLL = (LinearLayout) dialog.findViewById(R.id.accountPopperLastTransactionLLId);
+        TextView accountPopperTransactionCategoryTV = (TextView) dialog.findViewById(R.id.accountPopperTransactionCategoryTVId);
+        TextView accountPopperTransactionAmtTV = (TextView) dialog.findViewById(R.id.accountPopperTransactionAmtTVId);
+        TextView accountPopperTransactionDateTV = (TextView) dialog.findViewById(R.id.accountPopperTransactionDateTVId);
+
+        //Last Transfers
+        LinearLayout accountPopperLastTransferLL = (LinearLayout) dialog.findViewById(R.id.accountPopperLastTransferLLId);
+        TextView accountPopperTransferFromTV = (TextView) dialog.findViewById(R.id.accountPopperTransferFromTVId);
+        TextView accountPopperTransferToTV = (TextView) dialog.findViewById(R.id.accountPopperTransferToTVId);
+        TextView accountPopperTransferAmtTV = (TextView) dialog.findViewById(R.id.accountPopperTransferAmtTVId);
+        TextView accountPopperTransferDateTV = (TextView) dialog.findViewById(R.id.accountPopperTransferDateTVId);
+
+        accountPopperTitleTV.setText(accountsModelObj.getACC_NAME());
+        accountPopperBalanceTV.setText(String.valueOf(accountsModelObj.getACC_TOTAL()));
+
+        if(accountsModelObj.getACC_TOTAL() <= 0){
+            accountPopperBalanceTV.setTextColor(getResources().getColor(R.color.finappleCurrencyNegColor));
+        }
+        else{
+            accountPopperBalanceTV.setTextColor(getResources().getColor(R.color.finappleCurrencyPosColor));
+        }
+
+        //set Last Transaction
+        TransactionModel transactionModelObj = calendarDbService.getLastTransactionOnAccountId(accountsModelObj.getACC_ID());
+
+        //convert dd-MM-yyyy into dd MMM 'yy
+        SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
+
+        if(transactionModelObj == null){
+            accountPopperLastTransactionLL.setVisibility(View.GONE);
+        }
+        else{
+            accountPopperTransactionCategoryTV.setText(transactionModelObj.getCategory());
+
+            if("EXPENSE".equalsIgnoreCase(transactionModelObj.getTRAN_TYPE())){
+                accountPopperTransactionAmtTV.setText("-"+transactionModelObj.getTRAN_AMT());
+                accountPopperTransactionAmtTV.setTextColor(getResources().getColor(R.color.finappleCurrencyNegColor));
+            }
+            else{
+                accountPopperTransactionAmtTV.setText(String.valueOf(transactionModelObj.getTRAN_AMT()));
+                accountPopperTransactionAmtTV.setTextColor(getResources().getColor(R.color.finappleCurrencyPosColor));
+            }
+
+            try{
+                accountPopperTransactionDateTV.setText(rightSdf.format(wrongSdf.parse(transactionModelObj.getTRAN_DATE())));
+            }
+            catch(ParseException ex){
+                Log.e(CLASS_NAME, "Date parsing is sick of your wrong date formats...correction required !!"+ex);
+            }
+        }
+
+        //Set Last Transfer
+        TransferModel transferModelObj = calendarDbService.getLastTransferOnAccountId(accountsModelObj.getACC_ID());
+
+        if(transferModelObj == null){
+            accountPopperLastTransferLL.setVisibility(View.GONE);
+        }
+        else{
+            accountPopperTransferFromTV.setText(transferModelObj.getFromAccName());
+            accountPopperTransferToTV.setText(transferModelObj.getToAccName());
+            accountPopperTransferAmtTV.setText(String.valueOf(transferModelObj.getTRNFR_AMT()));
+
+            try{
+                accountPopperTransferDateTV.setText(rightSdf.format(wrongSdf.parse(transferModelObj.getTRNFR_DATE())));
+            }
+            catch(ParseException ex){
+                Log.e(CLASS_NAME, "Date parsing is sick of your wrong date formats...correction required !!"+ex);
+            }
+        }
+
+        if(transactionModelObj == null && transferModelObj == null){
+            accountPopperDividerView.setVisibility(View.GONE);
+            accountPopperDividerTwoView.setVisibility(View.GONE);
+        }
+        else if(transactionModelObj == null || transferModelObj == null){
+            accountPopperDividerTwoView.setVisibility(View.GONE);
+        }
+
+        accountPopperEditIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(getApplicationContext(), AddUpdateAccountActivity.class);
+                intent.putExtra("ACCOUNT_OBJ", accountsModelObj);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        if("Y".equalsIgnoreCase(accountsModelObj.getACC_IS_DEFAULT())){
+            accountPopperEditIV.setVisibility(View.GONE);
+        }
+
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        setFont((ViewGroup) dialog.findViewById(R.id.accountPopperLLId), robotoCondensedLightFont);
+    }
+
     private void showTransfersPopper(ConsolidatedTransferModel consolidatedTransferModelObj){
         dialog = new Dialog(CalendarActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1101,6 +871,9 @@ public class CalendarActivity extends Activity {
                 else if(listItemObject instanceof ConsolidatedTransferModel){
                     showTransfersPopper((ConsolidatedTransferModel) listItemObject);
                 }
+                else if(listItemObject instanceof AccountsModel){
+                    showAccountPopper((AccountsModel) listItemObject);
+                }
 
             }
         };
@@ -1118,28 +891,28 @@ public class CalendarActivity extends Activity {
                 Intent intent = null;
 
                 switch(v.getId()){
-                    case R.id.transactionPopperNewTVId :
+                    case R.id.transactionPopperNewLVId :
                         killPopper();
                         intent = toAddUpdateTransaction();
                         break;
-                    case R.id.transactionPopperQuickTVId :
+                    case R.id.transactionPopperQuickLVId :
                         killPopper();
                         showQuickTransactionPopper();
                         break;
-                    case R.id.transactionPopperSchedTVId :
+                    case R.id.transactionPopperSchedLVId :
                         killPopper();
                         intent = new Intent(CalendarActivity.this, AddUpdateScheduleTransactionActivity.class);
                         ScheduledTransactionModel scheduledTransactionModelObj = new ScheduledTransactionModel();
                         scheduledTransactionModelObj.setSCH_TRAN_DATE(selectedDateStr.substring(0, selectedDateStr.lastIndexOf("-")));
                         intent.putExtra("SCHEDULED_TRANSACTION_OBJ", scheduledTransactionModelObj);
                         break;
-                    case R.id.transferPopperNewTVId :  intent = toAddUpdateTransfer();
+                    case R.id.transferPopperNewLVId :  intent = toAddUpdateTransfer();
                         break;
-                    case R.id.transferPopperQuickTVId :
+                    case R.id.transferPopperQuickLVId :
                         killPopper();
                         showQuickTransferPopper();
                         break;
-                    case R.id.transferPopperSchedTVId :
+                    case R.id.transferPopperSchedLVId :
                         killPopper();
                         intent = new Intent(CalendarActivity.this, AddUpdateScheduleTransferActivity.class);
                         ScheduledTransferModel scheduledTransferModelObj = new ScheduledTransferModel();
@@ -1169,6 +942,7 @@ public class CalendarActivity extends Activity {
         TextView quickTransferDoneTV;
 
         quickTransferAmtET = (EditText) dialog.findViewById(R.id.quickTransferAmtETId);
+        quickTransferAmtET.requestFocus();
 
         quickTransferAccFrmSpn = (Spinner) dialog.findViewById(R.id.quickTransferAccFrmSpnId);
         quickTransferAccToSpn = (Spinner) dialog.findViewById(R.id.quickTransferAccToSpnId);
@@ -1230,19 +1004,12 @@ public class CalendarActivity extends Activity {
 
                     dialog.dismiss();
 
-                    //refresh the calendar to fetch updates after quick transfer
+                    //refresh the calendar to fetch updates after quick transaction
                     String selectedDateStrArr[] = selectedDateStr.split("-");
                     setGridCellAdapterToDate(Integer.parseInt(selectedDateStrArr[0]), Integer.parseInt(selectedDateStrArr[1]), Integer.parseInt(selectedDateStrArr[2]));
-
-                    //refresh the accounts list view to fetch updates after quick transfer
-                    setUpAccounts();
-
-                    //update summary
-                    setUpSummary();
                 }
             }
         });
-
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");

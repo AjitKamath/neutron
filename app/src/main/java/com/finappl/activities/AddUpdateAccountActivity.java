@@ -72,9 +72,44 @@ public class AddUpdateAccountActivity extends Activity {
         //init ui components
         initUIComponents();
 
+        //get Account details from the intent
+        getAccountFromIntent();
+
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
         setFont((ViewGroup) this.findViewById(R.id.addAccRLId), robotoCondensedLightFont);
+    }
+
+    private void getAccountFromIntent() {
+        AccountsModel accountsModelObj = null;
+
+        if(getIntent().getExtras() != null && getIntent().getExtras().get("ACCOUNT_OBJ") != null){
+            accountsModelObj = (AccountsModel) getIntent().getExtras().get("ACCOUNT_OBJ");
+        }
+
+        if(accountsModelObj == null){
+            Log.i(CLASS_NAME, "Account Details is null in intent... User is here to create a new Account");
+            return;
+        }
+
+        Log.i(CLASS_NAME, "Account Details is found in the intent... User is here to edit an old Account");
+
+        //get all the details for account using account id
+        accountsModelObj = addUpdateAccDbService.getAccountDetailsOnAccountId(accountsModelObj.getACC_ID());
+
+        //pre set ui values
+        addAccAccNameET.setText(accountsModelObj.getACC_NAME());
+        addAccInitAmtET.setFocusable(false);
+        addAccInitAmtET.setText(String.valueOf(accountsModelObj.getACC_TOTAL()));
+        addAccNoteET.setText(accountsModelObj.getACC_NOTE());
+        addAccDoneTV.setText("UPDATE");
+
+        addAccInitAmtET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Account total can change only by a transaction/transfer");
+            }
+        });
     }
 
     public AccountsModel getInputs(){

@@ -73,11 +73,12 @@ public class SettingsActivity extends Activity {
 
         setUpSounds();
 
+        setUpSecurity();
+
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(this.getAssets(), "Roboto-Light.ttf");
         setFont((ViewGroup) this.findViewById(R.id.settingsParentRLId), robotoCondensedLightFont);
     }
-
 
     public void toManageContent(View view){
         Intent intent = new Intent(this, ManageContentActivity.class);
@@ -399,6 +400,22 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    public void setUpSecurity(){
+        LinearLayout settingsSecurityTickLL = (LinearLayout) this.findViewById(R.id.settingsSecurityTickLLId);
+        ImageView settingsSecurityTickIV = (ImageView) this.findViewById(R.id.settingsSecurityTickIVId);
+
+        if(settingsDbService.isSecurityEnabledOnUserId(loggedInUserObj.getUSER_ID())){
+            settingsSecurityTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_checked);
+            settingsSecurityTickLL.setTag("ENABLED");
+            settingsSecurityTickIV.setBackgroundResource(R.drawable.tick_white);
+        }
+        else{
+            settingsSecurityTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_unchecked);
+            settingsSecurityTickLL.setTag("DISABLED");
+            settingsSecurityTickIV.setBackgroundResource(R.drawable.tick_grey);
+        }
+    }
+
     public void enableDisableSounds(View view){
         LinearLayout settingsSoundsTickLL = (LinearLayout) this.findViewById(R.id.settingsSoundsTickLLId);
         ImageView settingsSoundsTickIV = (ImageView) this.findViewById(R.id.settingsSoundsTickIVId);
@@ -417,6 +434,30 @@ public class SettingsActivity extends Activity {
             settingsSoundsTickIV.setBackgroundResource(R.drawable.tick_white);
             settingsDbService.enableDisableSoundsOnUserId(loggedInUserObj.getUSER_ID(), true);
         }
+    }
+
+    public void enableDisableSecurity(View view){
+        LinearLayout settingsSecurityTickLL = (LinearLayout) this.findViewById(R.id.settingsSecurityTickLLId);
+        ImageView settingsSecurityTickIV = (ImageView) this.findViewById(R.id.settingsSecurityTickIVId);
+
+        if("ENABLED".equalsIgnoreCase(String.valueOf(settingsSecurityTickLL.getTag()))){
+            showToast("Security disabled");
+            settingsSecurityTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_unchecked);
+            settingsSecurityTickLL.setTag("DISABLED");
+            settingsSecurityTickIV.setBackgroundResource(R.drawable.tick_grey);
+            settingsDbService.enableDisableSecurityOnUserId(loggedInUserObj.getUSER_ID(), false);
+        }
+        else{
+            showToast("Security enabled");
+            settingsSecurityTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_checked);
+            settingsSecurityTickLL.setTag("ENABLED");
+            settingsSecurityTickIV.setBackgroundResource(R.drawable.tick_white);
+            settingsDbService.enableDisableSecurityOnUserId(loggedInUserObj.getUSER_ID(), true);
+        }
+    }
+
+    public void enableDisableWidget(View view){
+        showToast("Widget is not yet implemented");
     }
 
     public void enableDisableNotifications(View view){

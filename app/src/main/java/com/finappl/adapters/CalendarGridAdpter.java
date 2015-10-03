@@ -254,20 +254,6 @@ public class CalendarGridAdpter extends BaseAdapter {
         calendarCellTransferIndicatorTV = (TextView) row.findViewById(R.id.calendarCellTransferIndicatorTVId);
         calendarCellSchTransferIndicatorTV = (TextView) row.findViewById(R.id.calendarCellSchTransferIndicatorTVId);
 
-        //Algo impl for setting up padding to show thin borders on date cells |_|_|_|_|
-        int right=1, bottom=1, left=0, top=0;
-
-        if(position >= 0 && position < 7){
-            top = 1;
-        }
-
-        if(position == 0 || position == 7 || position == 14 || position == 21 || position == 28 || position == 35){
-            left = 1;
-        }
-
-        grid_cell_GL.setPadding(left,top,right,bottom);
-        //--end of Algo impl
-
         // ACCOUNT FOR SPACING-
         String[] daysArr = list.get(position).split("-");
         String theday = daysArr[0];

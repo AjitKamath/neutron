@@ -40,19 +40,19 @@
                     android:maxLength="25"
                     android:text="MMMMMMMMM"
                     android:textColor="@color/finappleThemeDark"
-                    android:textSize="25sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/manageContentSpntOnNoteTVId"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:gravity="center_vertical|left"
                 android:maxLength="50"
                 android:text="MMMMMMMMMMMMMMMMMMMM"
                 android:textColor="@color/tertiaryText"
-                android:textSize="12sp" />
+                android:textSize="8sp" />
 
         </LinearLayout>
 
@@ -65,7 +65,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="20dp"
                 android:gravity="center_vertical|right"
                 android:text="31 SEP '15"
                 android:textColor="@color/tertiaryText"

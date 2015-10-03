@@ -29,7 +29,8 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
@@ -106,12 +107,12 @@
                     android:id="@+id/summaryPopperAccTVId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
+                    android:paddingLeft="18dp"
                     android:maxLength="25"
-                    android:gravity="bottom"
+                    android:gravity="center_vertical"
                     android:text="MMMMM"
                     android:textColor="@color/finappleTheme"
-                    android:textSize="16sp"/>
+                    android:textSize="12sp"/>
 
             </LinearLayout>
 
@@ -144,7 +145,7 @@
                     android:maxLength="8"
                     android:text="-999.99M"
                     android:textColor="@color/finappleCurrencyPosColor"
-                    android:textSize="20sp"/>
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/summaryPopperAppxTVId"

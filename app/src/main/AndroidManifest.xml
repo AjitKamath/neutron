@@ -13,7 +13,7 @@
         android:theme="@style/FinappleTheme"
         tools:ignore="NewApi">
         <activity
-            android:name="com.finappl.activities.CalendarActivity"
+            android:name=".activities.CalendarActivity"
             android:label="Finapple"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -24,97 +24,105 @@
 
         <!--Login-->
         <activity
-            android:name="com.finappl.activities.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="Login"/>
 
         <!--Registration-->
         <activity
-            android:name="com.finappl.activities.RegisterUserActivity"
+            android:name=".activities.RegisterUserActivity"
             android:label="Register User"/>
         <activity
-            android:name="com.finappl.activities.RegisterProfilePersonalActivity"
+            android:name=".activities.RegisterProfilePersonalActivity"
             android:label="Register Profile - Personal"/>
         <activity
-            android:name="com.finappl.activities.RegisterProfileWorkActivity"
+            android:name=".activities.RegisterProfileWorkActivity"
             android:label="Register Profile - Work"/>
         <activity
-            android:name="com.finappl.activities.RegisterProfileContactActivity"
+            android:name=".activities.RegisterProfileContactActivity"
             android:label="Register Profile - Contact"/>
 
         <!--Add's-->
         <activity
-            android:name="com.finappl.activities.AddUpdateTransactionActivity"
+            android:name=".activities.AddUpdateTransactionActivity"
             android:label="Transaction Add/Update"/>
         <activity
-            android:name="com.finappl.activities.AddUpdateCategoryActivity"
+            android:name=".activities.AddUpdateCategoryActivity"
             android:label="Category Add/Update"/>
         <activity
-            android:name="com.finappl.activities.AddUpdateAccountActivity"
+            android:name=".activities.AddUpdateAccountActivity"
             android:label="Account Add/Update"/>
         <activity
-            android:name="com.finappl.activities.AddUpdateSpentOnActivity"
+            android:name=".activities.AddUpdateSpentOnActivity"
             android:label="Spent On Add/Update"/>
         <activity
-            android:name="com.finappl.activities.AddUpdateTransferActivity"
+            android:name=".activities.AddUpdateTransferActivity"
             android:label="Transfer Add/Update"/>
         <activity
-            android:name="com.finappl.activities.AddUpdateBudgetActivity"
+            android:name=".activities.AddUpdateBudgetActivity"
             android:label="Budget Add/Update"/>
         <activity
-            android:name="com.finappl.activities.AddUpdateScheduleTransactionActivity"
+            android:name=".activities.AddUpdateScheduleTransactionActivity"
             android:label="Schedule Transaction Add/Update"/>
         <activity
-            android:name="com.finappl.activities.AddUpdateScheduleTransferActivity"
+            android:name=".activities.AddUpdateScheduleTransferActivity"
             android:label="Schedule Transfer Add/Update"/>
 
         <!--View's-->
         <activity
-            android:name="com.finappl.activities.ViewActivitiesActivity"
+            android:name=".activities.ViewActivitiesActivity"
             android:label="View Activities"/>
 
         <!--Setting's-->
         <activity
-            android:name="com.finappl.activities.SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="Settings"/>
         <activity
-            android:name="com.finappl.activities.ManageContentActivity"
+            android:name=".activities.ManageContentActivity"
             android:label="Manage Content"/>
         <activity
-            android:name="com.finappl.activities.BudgetsViewActivity"
+            android:name=".activities.BudgetsViewActivity"
             android:label="Budgets"/>
 
         <!--Notifications-->
         <activity
-            android:name="com.finappl.activities.NotificationScheduledTransactionActivity"
+            android:name=".activities.NotificationScheduledTransactionActivity"
             android:label="Notification Scheduled Transaction"/>
+        <activity
+            android:name=".activities.NotificationsHandlerActivity"
+            android:label="Notification Handler"/>
 
         <!--Services-->
-        <service android:name="com.finappl.services.NotificationsService" />
+        <service android:name=".services.NotificationsService" />
 
         <!--Receivers-->
-        <receiver android:name="com.finappl.receivers.BootCompleteReceiver">
+        <receiver android:name=".receivers.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.finappl.receivers.TimeSetReceiver">
+        <receiver android:name=".receivers.TimeSetReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.finappl.receivers.DateChangeReceiver">
+        <receiver android:name=".receivers.DateChangeReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DATE_CHANGED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.finappl.receivers.NotificationActionReceiver" />
+        <receiver android:name=".receivers.ActivityActionCompleteReceiver" >
+            <intent-filter>
+                <action android:name="ACTIVITY_ACTION" >
+                </action>
+            </intent-filter>
+        </receiver>
 
         <!--Error page-->
         <activity
-            android:name="com.finappl.activities.JimBrokeItActivity"
+            android:name=".activities.JimBrokeItActivity"
             android:label="Error Page"/>
     </application>
 </manifest>

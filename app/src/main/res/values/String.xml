@@ -6,6 +6,8 @@
 
     <!--Notifications-->
     <string name="notifTitleSchedules">Hi XXXXX,</string>
+    <string name="notifTitleSchedTransaction">Scheduled Transaction Alert !</string>
+    <string name="notifTitleSchedTransfer">Scheduled Transfer Alert !</string>
     <string name="notifMsgSchedules">You have scheduled a YYYYY of </string>
     <string name="notifMsgSchedulesAdd">Scheduled YYYYY for WWWWW has been added automatically</string>
 </resources>

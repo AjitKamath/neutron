@@ -53,6 +53,103 @@ public class CalendarDbService extends SQLiteOpenHelper {
     private static final String WORK_TIMELINE_TABLE = Constants.DB_TABLE_WORK_TIMELINETABLE;
     private static final String NOTIFICATIONS_TABLE = Constants.DB_TABLE_NOTIFICATIONSTABLE;
 
+
+    public TransactionModel getLastTransactionOnAccountId(String accountIdStr){
+        SQLiteDatabase db = this.getWritableDatabase();
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" TRAN_ID, ");
+        sqlQuerySB.append(" CAT_NAME, ");
+        sqlQuerySB.append(" TRAN_AMT, ");
+        sqlQuerySB.append(" TRAN_TYPE, ");
+        sqlQuerySB.append(" TRAN_DATE ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE + " TRAN ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(Constants.DB_TABLE_CATEGORYTABLE + " CAT ");
+        sqlQuerySB.append(" ON CAT.CAT_ID = TRAN.CAT_ID ");
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" TRAN_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRAN.ACC_ID = '" + accountIdStr + "' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRAN_DATE = ");
+        sqlQuerySB.append(" (SELECT MAX(TRAN_DATE) FROM ");
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE + ")");
+
+        Log.i(CLASS_NAME, "Query to fetch Last Transaction made using the Account ID("+accountIdStr+") : "+sqlQuerySB);
+        Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
+
+        TransactionModel transactionModelObj = null;
+        if(cursor.moveToNext()){
+            transactionModelObj = new TransactionModel();
+            transactionModelObj.setTRAN_ID(ColumnFetcher.getInstance().loadString(cursor, "TRAN_ID"));
+            transactionModelObj.setCategory(ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME"));
+            transactionModelObj.setTRAN_AMT(ColumnFetcher.getInstance().loadDouble(cursor, "TRAN_AMT"));
+            transactionModelObj.setTRAN_TYPE(ColumnFetcher.getInstance().loadString(cursor, "TRAN_TYPE"));
+            transactionModelObj.setTRAN_DATE(ColumnFetcher.getInstance().loadString(cursor, "TRAN_DATE"));
+
+            return transactionModelObj;
+        }
+
+        return null;
+    }
+
+    public TransferModel getLastTransferOnAccountId(String accountIdStr){
+        SQLiteDatabase db = this.getWritableDatabase();
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" TRNFR_ID, ");
+        sqlQuerySB.append(" TRNFR_AMT, ");
+        sqlQuerySB.append(" TRNFR_FROM.ACC_NAME AS FROM_ACC, ");
+        sqlQuerySB.append(" TRNFR_TO.ACC_NAME AS TO_ACC, ");
+        sqlQuerySB.append(" TRNFR_DATE ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE + " TRNFR ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE + " TRNFR_FROM ");
+        sqlQuerySB.append(" ON TRNFR_FROM.ACC_ID = TRNFR.ACC_ID_FRM ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE + " TRNFR_TO ");
+        sqlQuerySB.append(" ON TRNFR_TO.ACC_ID = TRNFR.ACC_ID_TO ");
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" TRNFR_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" (TRNFR_FROM.ACC_ID = '"+accountIdStr+"' ");
+        sqlQuerySB.append(" OR ");
+        sqlQuerySB.append(" TRNFR_TO.ACC_ID = '"+accountIdStr+"' )");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRNFR_DATE = ");
+        sqlQuerySB.append(" (SELECT MAX(TRNFR_DATE) FROM ");
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE + ")");
+
+                Log.i(CLASS_NAME, "Query to fetch Last Transfer made using the Account ID(" + accountIdStr + ") : " + sqlQuerySB);
+        Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
+
+        TransferModel transferModelObj = null;
+        if(cursor.moveToNext()){
+            transferModelObj = new TransferModel();
+            transferModelObj.setTRNFR_ID(ColumnFetcher.getInstance().loadString(cursor, "TRNFR_ID"));
+            transferModelObj.setFromAccName(ColumnFetcher.getInstance().loadString(cursor, "FROM_ACC"));
+            transferModelObj.setToAccName(ColumnFetcher.getInstance().loadString(cursor, "TO_ACC"));
+            transferModelObj.setTRNFR_AMT(ColumnFetcher.getInstance().loadDouble(cursor, "TRNFR_AMT"));
+            transferModelObj.setTRNFR_DATE(ColumnFetcher.getInstance().loadString(cursor, "TRNFR_DATE"));
+
+            return transferModelObj;
+        }
+
+        return null;
+    }
+
     public List<ScheduledTransferModel> getSchedTransfersListAfterCancelledNotifsOnDate(List<ScheduledTransferModel> scheduledTransferModelObjList,
                                                                                         String userIdStr, String todayStr) {
         if(scheduledTransferModelObjList == null || (scheduledTransferModelObjList != null && scheduledTransferModelObjList.isEmpty())){
@@ -93,13 +190,15 @@ public class CalendarDbService extends SQLiteOpenHelper {
         }
 
         List<ScheduledTransferModel> filteredSchTransfersObjList = new ArrayList<>();
+        List<String> alreadyNotifiedNotifsIdList = new ArrayList<>();
         while (cursor.moveToNext()){
             String thisEventIdStr = ColumnFetcher.getInstance().loadString(cursor, "CNCL_NOTIF_EVNT_ID");
+            alreadyNotifiedNotifsIdList.add(thisEventIdStr);
+        }
 
-            for(ScheduledTransferModel iterSchTransferModelList : scheduledTransferModelObjList){
-                if(!thisEventIdStr.equals(iterSchTransferModelList.getSCH_TRNFR_ID())){
-                    filteredSchTransfersObjList.add(iterSchTransferModelList);
-                }
+        for(ScheduledTransferModel iterSchTransferModelList : scheduledTransferModelObjList){
+            if(!alreadyNotifiedNotifsIdList.contains(iterSchTransferModelList.getSCH_TRNFR_ID())) {
+                filteredSchTransfersObjList.add(iterSchTransferModelList);
             }
         }
 
@@ -147,13 +246,15 @@ public class CalendarDbService extends SQLiteOpenHelper {
         }
 
         List<ScheduledTransactionModel> filteredSchTransObjList = new ArrayList<>();
+        List<String> alreadyNotifiedNotifsIdList = new ArrayList<>();
         while (cursor.moveToNext()){
             String thisEventIdStr = ColumnFetcher.getInstance().loadString(cursor, "CNCL_NOTIF_EVNT_ID");
+            alreadyNotifiedNotifsIdList.add(thisEventIdStr);
+        }
 
-            for(ScheduledTransactionModel iterSchTransactionModelList : schedTransactionModelObjList){
-                if(!thisEventIdStr.equals(iterSchTransactionModelList.getSCH_TRAN_ID())){
-                    filteredSchTransObjList.add(iterSchTransactionModelList);
-                }
+        for(ScheduledTransactionModel iterSchTransactionModelList : schedTransactionModelObjList){
+            if(!alreadyNotifiedNotifsIdList.contains(iterSchTransactionModelList.getSCH_TRAN_ID())) {
+                filteredSchTransObjList.add(iterSchTransactionModelList);
             }
         }
 
@@ -1017,6 +1118,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" ACC.ACC_NAME, ");
         sqlQuerySB.append(" ACC.ACC_ID, ");
+        sqlQuerySB.append(" ACC.ACC_IS_DEFAULT, ");
 
         sqlQuerySB.append(" (( SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
@@ -1108,7 +1210,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
-        String accountIdStr, accountNameStr, currecyStr;
+        String accountIdStr, accountNameStr, currecyStr, accountIsDefaultStr;
         Double accountTotal;
         AccountsModel accountsModel = null;
         while (cursor.moveToNext()){
@@ -1116,12 +1218,14 @@ public class CalendarDbService extends SQLiteOpenHelper {
             accountNameStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME");
             accountTotal = ColumnFetcher.getInstance().loadDouble(cursor, "ACC_TOTAL");
             currecyStr = ColumnFetcher.getInstance().loadString(cursor, "CUR_NAME");
+            accountIsDefaultStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_IS_DEFAULT");
 
             accountsModel = new AccountsModel();
             accountsModel.setACC_ID(accountIdStr);
             accountsModel.setACC_NAME(accountNameStr);
             accountsModel.setACC_TOTAL(accountTotal);
             accountsModel.setCurrency(currecyStr);
+            accountsModel.setACC_IS_DEFAULT(accountIsDefaultStr);
             accountsList.add(accountsModel);
         }
         cursor.close();

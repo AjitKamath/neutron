@@ -11,7 +11,6 @@ public class UsersModel implements Serializable {
 	private String PASS;
 	private String EMAIL;
 	private String NAME;
-	private String NOTIF_TIME;
 	private Date DOB;
 	private String TELEPHONE;
 	private String CUR_ID;
@@ -32,6 +31,11 @@ public class UsersModel implements Serializable {
 	private String SAL_FREQ;
 	private Date workCreatDtm;
 	private Date workModDtm;
+
+	private String SET_NOTIF_ACTIVE;
+	private String SET_NOTIF_TIME;
+	private String SET_NOTIF_BUZZ;
+	private String SET_SND_ACTIVE;
 
 	//constructors
 	public UsersModel(String nAME, String eMAIL, Date dOB,
@@ -234,11 +238,35 @@ public class UsersModel implements Serializable {
 		this.workModDtm = workModDtm;
 	}
 
-	public String getNOTIF_TIME() {
-		return NOTIF_TIME;
+	public String getSET_NOTIF_ACTIVE() {
+		return SET_NOTIF_ACTIVE;
 	}
 
-	public void setNOTIF_TIME(String NOTIF_TIME) {
-		this.NOTIF_TIME = NOTIF_TIME;
+	public void setSET_NOTIF_ACTIVE(String SET_NOTIF_ACTIVE) {
+		this.SET_NOTIF_ACTIVE = SET_NOTIF_ACTIVE;
+	}
+
+	public String getSET_NOTIF_TIME() {
+		return SET_NOTIF_TIME;
+	}
+
+	public void setSET_NOTIF_TIME(String SET_NOTIF_TIME) {
+		this.SET_NOTIF_TIME = SET_NOTIF_TIME;
+	}
+
+	public String getSET_NOTIF_BUZZ() {
+		return SET_NOTIF_BUZZ;
+	}
+
+	public void setSET_NOTIF_BUZZ(String SET_NOTIF_BUZZ) {
+		this.SET_NOTIF_BUZZ = SET_NOTIF_BUZZ;
+	}
+
+	public String getSET_SND_ACTIVE() {
+		return SET_SND_ACTIVE;
+	}
+
+	public void setSET_SND_ACTIVE(String SET_SND_ACTIVE) {
+		this.SET_SND_ACTIVE = SET_SND_ACTIVE;
 	}
 }

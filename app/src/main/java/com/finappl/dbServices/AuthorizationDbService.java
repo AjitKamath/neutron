@@ -129,7 +129,6 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         values.put("DOB", sdf.format(userModelObj.getDOB()));
         values.put("CNTRY_ID", userModelObj.getCNTRY_ID());
         values.put("TELEPHONE", userModelObj.getTELEPHONE());
-        values.put("NOTIF_TIME", Constants.DB_DEFAULT_NOTIF_TIME);
         values.put("CUR_ID", userModelObj.getCUR_ID());
         values.put("DEV_ID", userModelObj.getDEV_ID());
         values.put("USER_IS_DEL", Constants.DB_NONAFFIRMATIVE);
@@ -266,10 +265,8 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" USER.USER_ID, ");
         sqlQuerySB.append(" NAME, ");
-        sqlQuerySB.append(" NAME, ");
         sqlQuerySB.append(" EMAIL, ");
         sqlQuerySB.append(" DOB, ");
-        sqlQuerySB.append(" NOTIF_TIME, ");
         sqlQuerySB.append(" CNTRY.CNTRY_ID, ");
         sqlQuerySB.append(" CNTRY.CNTRY_NAME AS countryName, ");
         sqlQuerySB.append(" TELEPHONE, ");
@@ -283,7 +280,11 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SALARY, ");
         sqlQuerySB.append(" SAL_FREQ, ");
         sqlQuerySB.append(" WORK.MOD_DTM AS workCreatDtm, ");
-        sqlQuerySB.append(" WORK.MOD_DTM AS workModDtm ");
+        sqlQuerySB.append(" WORK.MOD_DTM AS workModDtm, ");
+        sqlQuerySB.append(" SET_NOTIF_ACTIVE, ");
+        sqlQuerySB.append(" SET_NOTIF_TIME, ");
+        sqlQuerySB.append(" SET_NOTIF_BUZZ, ");
+        sqlQuerySB.append(" SET_SND_ACTIVE ");
 
         sqlQuerySB.append(" FROM ");
         sqlQuerySB.append(USERS_TABLE+ " USER ");
@@ -297,6 +298,16 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(CURRENCY_TABLE+" CUR ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CUR.CUR_ID = USER.CUR_ID ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS+" NOTIF ");
+        sqlQuerySB.append(" ON ");
+        sqlQuerySB.append(" NOTIF.USER_ID = USER.USER_ID ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SOUNDS+" SND ");
+        sqlQuerySB.append(" ON ");
+        sqlQuerySB.append(" SND.USER_ID = USER.USER_ID ");
 
         sqlQuerySB.append(" LEFT OUTER JOIN ");
         sqlQuerySB.append(WORK_TIMELINE_TABLE+" WORK ");
@@ -316,7 +327,6 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             usersModelObject.setNAME(ColumnFetcher.getInstance().loadString(cursor, "NAME"));
             usersModelObject.setEMAIL(ColumnFetcher.getInstance().loadString(cursor, "EMAIL"));
             usersModelObject.setDOB(ColumnFetcher.getInstance().loadDate(cursor, "DOB"));
-            usersModelObject.setNOTIF_TIME(ColumnFetcher.getInstance().loadString(cursor, "NOTIF_TIME"));
             usersModelObject.setCNTRY_ID(ColumnFetcher.getInstance().loadString(cursor, "CNTRY_ID"));
             usersModelObject.setCountryName(ColumnFetcher.getInstance().loadString(cursor, "countryName"));
             usersModelObject.setTELEPHONE(ColumnFetcher.getInstance().loadString(cursor, "TELEPHONE"));
@@ -331,6 +341,10 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             usersModelObject.setSAL_FREQ(ColumnFetcher.getInstance().loadString(cursor, "SAL_FREQ"));
             usersModelObject.setWorkCreatDtm(ColumnFetcher.getInstance().loadDateTime(cursor, "workCreatDtm"));
             usersModelObject.setWorkModDtm(ColumnFetcher.getInstance().loadDateTime(cursor, "workModDtm"));
+            usersModelObject.setSET_NOTIF_TIME(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_TIME"));
+            usersModelObject.setSET_NOTIF_ACTIVE(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_ACTIVE"));
+            usersModelObject.setSET_NOTIF_BUZZ(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_BUZZ"));
+            usersModelObject.setSET_SND_ACTIVE(ColumnFetcher.getInstance().loadString(cursor, "SET_SND_ACTIVE"));
 
             userModelMap.put(cursor.getPosition(), usersModelObject);
         }

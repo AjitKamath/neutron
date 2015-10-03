@@ -1,47 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/calendarTransactionsPopperLLId"
     android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:alpha="@android:integer/config_longAnimTime"
     android:gravity="center"
-    android:alpha="@android:integer/config_mediumAnimTime"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_marginLeft="2dp"
-        android:background="@drawable/oval_buttons_text_view"
-        android:id="@+id/transactionPopperNewTVId"
-        android:layout_width="110dp"
-        android:layout_height="30dp"
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transactionIndicator"
+        android:elevation="@dimen/layout_header_elevation"
+        android:orientation="vertical">
+
+        <!--<LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/transaction_new_white" />
+
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:text="Transaction"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </LinearLayout>-->
+
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/viewpager"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="280dp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/ring_darkblue_in_darkblue" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/ring_white_in_blue" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/ring_white_in_blue" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:text="NEW"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_button_big_text_size"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/oval_buttons_text_view"
-        android:id="@+id/transactionPopperQuickTVId"
-        android:layout_width="110dp"
-        android:layout_height="30dp"
-        android:gravity="center"
-        android:text="QUICK"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_button_big_text_size"/>
+        <LinearLayout
+            android:id="@+id/transactionPopperNewLVId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <LinearLayout
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/circle_calendar_transaction_indicator"
+                android:gravity="center">
 
-    <TextView
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/oval_buttons_text_view"
-        android:id="@+id/transactionPopperSchedTVId"
-        android:layout_width="110dp"
-        android:layout_height="30dp"
-        android:gravity="center"
-        android:text="SCHEDULE"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_button_big_text_size"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/new_transaction_white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New"
+                    android:textColor="@color/transactionIndicator"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add a new Expense/Income"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="10sp"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/transactionPopperQuickLVId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/circle_calendar_transaction_indicator"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/quick_transaction_new" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quick"
+                    android:textColor="@color/transactionIndicator"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quickly add a new Transaction"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="10sp"
+                    android:textStyle="italic" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/transactionPopperSchedLVId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/circle_calendar_transaction_indicator"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/scheduled_transaction_white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Schedule"
+                    android:textColor="@color/transactionIndicator"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Schedule a future Transaction"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="10sp"
+                    android:textStyle="italic" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>

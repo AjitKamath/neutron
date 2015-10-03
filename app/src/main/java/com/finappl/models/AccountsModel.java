@@ -1,8 +1,9 @@
 package com.finappl.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AccountsModel {
+public class AccountsModel implements Serializable {
 
     private String ACC_ID;
     private String USER_ID;

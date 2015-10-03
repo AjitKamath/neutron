@@ -51,7 +51,6 @@ public class NotificationDbService extends SQLiteOpenHelper {
         return db.insert(NOTIFICATIONS_TABLE, null, values);
     }
 
-
     @Override
 	public void onCreate(SQLiteDatabase db) {
 
