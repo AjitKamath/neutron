@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="320dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/card_background_selector"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
     android:padding="10dp">
@@ -35,14 +34,14 @@
 
                     <TextView
                         android:id="@+id/summaryPopperTypTVId"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
+                        android:layout_width="7dp"
+                        android:layout_height="7dp"
                         android:background="@drawable/circle_income_text_view"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:maxLength="1"
                         android:textColor="@color/white"
-                        android:textSize="15sp"/>
+                        android:textSize="10sp"/>
 
                     <TextView
                         android:visibility="gone"
@@ -107,7 +106,7 @@
                     android:id="@+id/summaryPopperAccTVId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="18dp"
+                    android:paddingLeft="12dp"
                     android:maxLength="25"
                     android:gravity="center_vertical"
                     android:text="MMMMM"

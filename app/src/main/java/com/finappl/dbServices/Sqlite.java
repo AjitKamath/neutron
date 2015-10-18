@@ -530,7 +530,7 @@ public class Sqlite extends SQLiteOpenHelper{
 		sqlQuerySB.append(" ACC_NAME TEXT NOT NULL, ");
 		sqlQuerySB.append(" ACC_IS_DEFAULT TEXT NOT NULL, ");
         //sqlQuerySB.append(" BUDGET_ID TEXT, ");
-        sqlQuerySB.append(" ACC_TOTAL TEXT, ");			//TODO: This column is no longer required. Get rid of this
+        sqlQuerySB.append(" ACC_TOTAL TEXT, ");			//This column is only to save the intial amount
         sqlQuerySB.append(" ACC_NOTE TEXT, ");
 		sqlQuerySB.append(" ACC_IS_DEL TEXT NOT NULL, ");
 		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");

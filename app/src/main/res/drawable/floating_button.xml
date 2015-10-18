@@ -106,7 +106,7 @@
             </item>
             <item>
                 <shape android:shape="oval">
-                    <solid android:color="@color/finappleThemeDark" />
+                    <solid android:color="@color/secondaryButton" />
                 </shape>
             </item>
         </ripple>

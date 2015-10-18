@@ -41,8 +41,67 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
 
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" ACC_NAME, ");
-        sqlQuerySB.append(" ACC_TOTAL, ");
-        sqlQuerySB.append(" ACC_NOTE ");
+        sqlQuerySB.append(" ACC_NOTE, ");
+
+        sqlQuerySB.append(" (SELECT ");
+        sqlQuerySB.append(" IFNULL(SUM(ACC_TOTAL), '0')  ");
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE);
+        sqlQuerySB.append(" WHERE  ");
+        sqlQuerySB.append(" ACC_ID = '"+accountIdStr+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" ACC_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"') ");
+
+        sqlQuerySB.append(" + ");
+
+        sqlQuerySB.append(" (( SELECT ");
+        sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0')  ");
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(TRANSACTION_TABLE);
+        sqlQuerySB.append(" WHERE  ");
+        sqlQuerySB.append(" TRAN_TYPE = 'INCOME'  ");
+        sqlQuerySB.append(" AND  ");
+        sqlQuerySB.append(" ACC_ID = '"+accountIdStr+"'  ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRAN_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"') ");
+
+        sqlQuerySB.append(" + ");
+
+        sqlQuerySB.append(" (SELECT ");
+        sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE);
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" ACC_ID_TO = '"+accountIdStr+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRNFR_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"')) ");
+
+        sqlQuerySB.append(" - ");
+
+        sqlQuerySB.append(" ((SELECT ");
+        sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(TRANSACTION_TABLE);
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" TRAN_TYPE = 'EXPENSE' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" ACC_ID = '"+accountIdStr+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRAN_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"') ");
+
+        sqlQuerySB.append(" + ");
+
+        sqlQuerySB.append(" (SELECT ");
+        sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE);
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" ACC_ID_FRM = '"+accountIdStr+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRNFR_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"')) ");
+
+        sqlQuerySB.append(" AS ");
+        sqlQuerySB.append(" ACC_TOTAL ");
 
         sqlQuerySB.append(" FROM ");
         sqlQuerySB.append(ACCOUNT_TABLE);

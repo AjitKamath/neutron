@@ -417,7 +417,7 @@ public class NotificationsService extends Service {
                 Log.i(CLASS_NAME, "Scheduled Transfer ID : "+iterSchedTranfersList.getSCH_TRNFR_ID());
 
                 //if the transfer is auto, auto add it and notify the user
-                if("ADD".equalsIgnoreCase(iterSchedTranfersList.getSCH_TRNFR_AUTO())){
+                if("AUTO_ADD".equalsIgnoreCase(iterSchedTranfersList.getSCH_TRNFR_AUTO())){
                     Log.i(CLASS_NAME, "Scheduled Transfer is - "+iterSchedTranfersList.getSCH_TRNFR_AUTO());
                     Log.i(CLASS_NAME, "Automatically adding a transfer starts");
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");

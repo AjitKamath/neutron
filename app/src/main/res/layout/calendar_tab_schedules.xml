@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:elevation="@dimen/layout_header_elevation"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/calendarSchedulesTabLLId"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/calendarTransHeaderOrMsgTVId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="No Scheduled Transactions/Transfers"
+            android:textColor="@color/DarkGray" />
+
+        <ListView
+            android:id="@+id/schedulesLVId"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white"
+            android:divider="@null"
+            android:dividerHeight="8dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="5dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>

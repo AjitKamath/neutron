@@ -15,16 +15,16 @@
         android:padding="2dp">
 
         <LinearLayout
-            android:padding="10dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:id="@+id/calendarActionsTransactionLLId"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:onClick="showTransactionPopper"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -61,30 +61,38 @@
                         android:textSize="10sp"
                         android:textStyle="italic" />
                 </LinearLayout>
-
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:id="@+id/calendarActionsTransferLLId"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:gravity="center_vertical|right"
-                android:onClick="showTransferPopper"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_vertical|left"
                 android:orientation="horizontal">
 
+                <LinearLayout
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/ring_transfer"
+                    android:gravity="center">
 
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/transfer_new_grey" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:gravity="center_vertical|right"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical|left"
                         android:text="Transfer"
                         android:textColor="@color/transferIndicator"
                         android:textSize="18dp" />
@@ -99,64 +107,53 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@drawable/ring_transfer"
-                    android:gravity="center">
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/transfer_new_grey" />
-                </LinearLayout>
+            </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ring_report"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/report_grey" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="25dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
-                android:onClick="showTransactionPopper"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@drawable/ring_transaction"
-                    android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reports"
+                    android:textColor="@color/report"
+                    android:textSize="18dp" />
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/report_grey" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Reports"
-                        android:textColor="@color/transactionIndicator"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Track your Activities in detail"
-                        android:textColor="@color/tertiaryText"
-                        android:textSize="10sp"
-                        android:textStyle="italic" />
-                </LinearLayout>
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Track your Activities in detail"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="10sp"
+                    android:textStyle="italic" />
             </LinearLayout>
+
         </LinearLayout>
 
 

@@ -61,7 +61,7 @@ public class SummaryPopperListAdapter extends BaseAdapter {
             mHolder.summaryPopperAccTV = (TextView) convertView.findViewById(R.id.summaryPopperAccTVId);
             mHolder.summaryPopperTimeTV = (TextView) convertView.findViewById(R.id.summaryPopperTimeTVId);
 
-            convertView.setTag(mHolder);
+            convertView.setTag(layoutResourceId, mHolder);
         } else {
             mHolder = (ViewHolder) convertView.getTag();
         }
@@ -77,6 +77,7 @@ public class SummaryPopperListAdapter extends BaseAdapter {
         if(item instanceof TransactionModel){
             TransactionModel tranItem = (TransactionModel) item;
 
+            mHolder.summaryPopperTileLL.setTag(tranItem);
             mHolder.summaryPopperTypTV.setBackgroundResource(R.drawable.circle_calendar_transaction_indicator);
             mHolder.summaryPopperNameTV.setVisibility(View.VISIBLE);
             mHolder.summaryPopperTransferLL.setVisibility(View.GONE);
@@ -97,7 +98,7 @@ public class SummaryPopperListAdapter extends BaseAdapter {
 
             try{
                 SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                SimpleDateFormat sdfRight = new SimpleDateFormat("hh:mm a");
+                SimpleDateFormat sdfRight = new SimpleDateFormat("h:mm a");
 
                 if(tranItem.getMOD_DTM() != null && !tranItem.getMOD_DTM().isEmpty()) {
                     mHolder.summaryPopperTimeTV.setText(sdfRight.format(sdfWrong.parse(tranItem.getMOD_DTM())));
@@ -113,6 +114,7 @@ public class SummaryPopperListAdapter extends BaseAdapter {
         else if(item instanceof TransferModel){
             TransferModel trfrItem = (TransferModel) item;
 
+            mHolder.summaryPopperTileLL.setTag(trfrItem);
             mHolder.summaryPopperTypTV.setBackgroundResource(R.drawable.circle_calendar_transfer_indicator);
             mHolder.summaryPopperNameTV.setVisibility(View.GONE);
             mHolder.summaryPopperTransferLL.setVisibility(View.VISIBLE);
@@ -127,7 +129,7 @@ public class SummaryPopperListAdapter extends BaseAdapter {
 
             try{
                 SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                SimpleDateFormat sdfRight = new SimpleDateFormat("hh:mm a");
+                SimpleDateFormat sdfRight = new SimpleDateFormat("h:mm a");
 
                 if(trfrItem.getMOD_DTM() != null && !trfrItem.getMOD_DTM().isEmpty()) {
                     mHolder.summaryPopperTimeTV.setText(sdfRight.format(sdfWrong.parse(trfrItem.getMOD_DTM())));

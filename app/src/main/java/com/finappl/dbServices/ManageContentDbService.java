@@ -140,7 +140,20 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" ACC.ACC_NOTE, ");
 		sqlQuerySB.append(" ACC.USER_ID, ");
 
-		sqlQuerySB.append(" (( SELECT  ");
+		sqlQuerySB.append(" (SELECT ");
+		sqlQuerySB.append(" IFNULL(SUM(ACC_TOTAL), '0')  ");
+		sqlQuerySB.append(" FROM ");
+		sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE);
+		sqlQuerySB.append(" WHERE  ");
+		sqlQuerySB.append(" ACC_ID = ACC.ACC_ID ");
+		sqlQuerySB.append(" AND ");
+		sqlQuerySB.append(" ACC_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"' ");
+		sqlQuerySB.append(" AND ");
+		sqlQuerySB.append(" USER_ID  =  '"+userId+"' ) ");
+
+		sqlQuerySB.append(" + ");
+
+		sqlQuerySB.append(" (( SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0')  ");
 		sqlQuerySB.append(" FROM ");
 		sqlQuerySB.append(TRANSACTION_TABLE);

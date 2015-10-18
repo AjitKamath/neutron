@@ -86,7 +86,7 @@
     <color name="Wheat">#F5DEB3</color>
     <color name="SandyBrown">#F4A460</color>
     <color name="Azure">#F0FFFF</color>
-    <color name="Honeydew">#F0FFF0</color>
+    <color name="Honeydew">#435843</color>
     <color name="AliceBlue">#F0F8FF</color>
     <color name="Khaki">#F0E68C</color>
     <color name="LightCoral">#F08080</color>
@@ -214,6 +214,7 @@
     <color name="schedTransactionIndicator">#90caf9</color>
     <color name="transferIndicator">#ffc107</color>
     <color name="schedTransferIndicator">#ffd54f</color>
+    <color name="report">#009688</color>
 
     <!-- week colors -->
     <color name="weekdays">#000000</color>
@@ -223,7 +224,7 @@
     <color name="today">#FF3200</color>
 
     <!--finapple color-->
-    <color name="finappleTheme">#2196F3</color>
+    <color name="finappleTheme">#536dfe</color>
     <color name="finappleThemeLight">#64B5F6</color>
     <color name="finappleThemeDark">#3F51B5</color>
     <color name="finappleThemeLightViolet">#E1BEE7</color>
@@ -253,6 +254,20 @@
     <color name="primaryButton">#228B22</color>
     <color name="secondaryButton">#FF6347</color>
 
+    <color name="circleDivider">#FF3200</color>
+
     <!--Card-->
-    <color name="cardBackground">#E0E0E0</color>
+    <color name="cardBackground">#424242</color>
+    <color name="windowBackground">#303030</color>
+    <color name="secondary_text_material_light">#30eb14</color>
+
+    <color name="primary">#FF5722</color>
+    <color name="primary_dark">#E64A19</color>
+    <color name="primary_light">#FFCCBC</color>
+    <color name="accent">#536DFE</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+
 </resources>

@@ -3,6 +3,8 @@ package com.finappl.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.provider.CallLog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.SummaryModel;
 import com.finappl.utils.FinappleUtility;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +29,7 @@ import java.util.Objects;
  * Created by ajit on 17/1/15.
  */
 public class ConsolidatedSummarySectionAdapter extends BaseAdapter {
-
+    private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
     private int layoutResourceId;
     private SummaryModel dataList;

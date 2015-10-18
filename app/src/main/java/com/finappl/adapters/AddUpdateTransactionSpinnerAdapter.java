@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,29 +21,29 @@ import com.finappl.utils.FinappleUtility;
 
 import java.util.List;
 
-public class AddUpdateTransactionSpinnerAdapter extends ArrayAdapter<SpinnerModel>{
+public class AddUpdateTransactionSpinnerAdapter extends BaseAdapter{
 
-    private Activity context;
+    private Context context;
     private List<SpinnerModel> dataList;
     private List<Integer> colorList;
     private int resourceId;
 
-    LayoutInflater inflater;
+    private LayoutInflater inflater;
 
-    public AddUpdateTransactionSpinnerAdapter(Activity context, int resourceId, List<SpinnerModel> dataList){
-        super(context, resourceId, dataList);
+    public AddUpdateTransactionSpinnerAdapter(Context context, int resourceId, List<SpinnerModel> dataList){
+        super();
         this.context = context;
         this.dataList = dataList;
         this.resourceId = resourceId;
 
         //get random colors in a list
         colorList = FinappleUtility.getInstance().getUnRandomizedColorList(dataList.size());
-
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     // This funtion called for each row ( Called data.size() times )
-    public View getCustomView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         if (row == null){
             row = inflater.inflate(resourceId, parent, false);
@@ -72,12 +73,17 @@ public class AddUpdateTransactionSpinnerAdapter extends ArrayAdapter<SpinnerMode
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
+    public int getCount() {
+        return dataList.size();
     }
 
     @Override
-    public View getDropDownView(int position, View convertView,ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
+    public Object getItem(int position) {
+        return dataList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
     }
 }

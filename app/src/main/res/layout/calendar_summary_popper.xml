@@ -110,7 +110,6 @@
         android:layout_width="fill_parent"
         android:layout_height="215dp"
         android:padding="5dp"
-        android:background="@color/cardBackground"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -118,8 +117,8 @@
             android:id="@+id/summaryPopperLVId"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:divider="@null"
-            android:dividerHeight="5dp" />
+            android:divider="@color/tertiaryText"
+            android:dividerHeight="0.5dp" />
     </LinearLayout>
 
     <LinearLayout

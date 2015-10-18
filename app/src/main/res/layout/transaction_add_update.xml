@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addUpdateTransactionRLId"
     android:layout_width="fill_parent"
+    android:background="@color/white"
     android:layout_height="fill_parent"
     android:layout_gravity="center_vertical"
-    android:background="@color/cardBackground"
     android:gravity="right"
     android:orientation="vertical"
     tools:context=".ExpensePageView">
@@ -74,7 +74,7 @@
                 android:gravity="center"
                 android:maxLength="9"
                 android:onClick="showDatePicker"
-                android:text="September"
+                android:text="SEPTEMBER"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_header_title_size" />
 
@@ -98,8 +98,7 @@
         android:id="@+id/addUpdatePageSVId"
         android:layout_width="fill_parent"
         android:layout_height="492dp"
-        android:layout_below="@+id/addUpdateTranHeaderLLId"
-        android:background="@color/cardBackground">
+        android:layout_below="@+id/addUpdateTranHeaderLLId">
 
         <LinearLayout
             android:id="@+id/addUpdateTransactionPageLLId"
@@ -144,19 +143,20 @@
                             android:layout_width="fill_parent"
                             android:layout_height="35dp"
                             android:background="@drawable/edit_text_border"
-                            android:hint="title"
+                            android:hint="TITLE"
                             android:inputType="textCapWords"
                             android:maxLength="25"
+                            android:textColorHint="@color/gray"
+                            android:gravity="center"
                             android:maxLines="1"
-                            android:paddingLeft="15dp"
                             android:textColor="@color/Black"
-                            android:textSize="20sp"
+                            android:textSize="15sp"
                             android:textStyle="italic"></EditText>
 
                         <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="5dp"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -166,16 +166,17 @@
                                 android:gravity="center" />
 
                             <EditText
-
+                                android:textColorHint="@color/gray"
+                                android:gravity="center"
                                 android:id="@+id/addUpdateTranAmtETId"
                                 android:layout_width="match_parent"
                                 android:layout_height="35dp"
                                 android:background="@drawable/edit_text_border"
-                                android:hint="amount"
+                                android:hint="AMOUNT"
+                                android:paddingLeft="-40dp"
                                 android:inputType="numberDecimal"
-                                android:paddingLeft="15dp"
                                 android:textColor="@color/Black"
-                                android:textSize="20sp"
+                                android:textSize="15sp"
                                 android:textStyle="italic" />
 
 
@@ -188,7 +189,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="25dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -221,7 +222,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="35dp"
                             android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="5dp" />
 
                     </LinearLayout>
 
@@ -230,7 +231,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="25dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -255,7 +256,6 @@
                             android:id="@+id/addUpdateTranExpIncRadioGrpId"
                             android:layout_width="wrap_content"
                             android:layout_height="35dp"
-                            android:layout_marginTop="5dp"
                             android:orientation="horizontal">
 
                             <RadioButton
@@ -301,7 +301,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="25dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -326,22 +326,22 @@
                             android:id="@+id/addUpdateSpntOnSpnId"
                             android:layout_width="fill_parent"
                             android:layout_height="35dp"
-                            android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_marginTop="5dp" />
+                            android:layout_gravity="center_horizontal|center_vertical" />
 
                         <EditText
                             android:id="@+id/addUpdateNoteETId"
                             android:layout_width="fill_parent"
                             android:layout_height="35dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="5dp"
                             android:background="@drawable/edit_text_border"
-                            android:hint="notes"
+                            android:hint="NOTES"
                             android:inputType="textCapWords|textMultiLine"
                             android:maxLength="50"
-                            android:paddingLeft="15dp"
+                            android:textColorHint="@color/gray"
+                            android:gravity="center"
                             android:textAlignment="center"
                             android:textColor="@android:color/black"
-                            android:textSize="20sp"
+                            android:textSize="15sp"
                             android:textStyle="italic" />
 
                     </LinearLayout>

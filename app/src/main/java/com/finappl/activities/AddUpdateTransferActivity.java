@@ -114,7 +114,6 @@ public class AddUpdateTransferActivity extends Activity {
         if(transferModelObj.getFromAccName() != null){
             addUpdTrnfrFromAccSpn.setSelection(getSpinnerItemIndex(accList, transferModelObj.getFromAccName()));
             addUpdTrnfrDoneTV.setText("update");
-            addUpdateDoneUpdateImg.setImageDrawable(addUpdateDoneUpdateImg.getResources().getDrawable(R.drawable.update));
         }
         //this means the user is in this page for a fresh new transfer...so select default as selected
         else{
@@ -239,9 +238,8 @@ public class AddUpdateTransferActivity extends Activity {
     }
 
 	//on click of done/update default_button
-	public void onDoneUpdate(View view)
-	{
-        if(!"".equalsIgnoreCase(addNewTransfer())) {
+	public void onDoneUpdate(View view){
+        if(!addNewTransfer().isEmpty()) {
             Intent intent = new Intent(AddUpdateTransferActivity.this, CalendarActivity.class);
             startActivity(intent);
         }

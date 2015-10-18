@@ -30,14 +30,18 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
     private ArrayList<Object> mData = new ArrayList<Object>();
     private List<Integer> itemTypeList = new ArrayList<>();
     private int contentLayoutId;
-    private MonthLegend monthLegendObj;
     private Context mContext;
     private LayoutInflater inflater;
 
-    public CalendarSchedulesSectionListAdapter(Context context, int contentLayoutId, MonthLegend monthLegendObj) {
+    private List<ScheduledTransactionModel> scheduledTransactionModelList;
+    private List<ScheduledTransferModel> scheduledTransferModelList;
+
+    public CalendarSchedulesSectionListAdapter(Context context, int contentLayoutId, List<ScheduledTransactionModel> scheduledTransactionModelList
+    , List<ScheduledTransferModel> scheduledTransferModelList) {
         super();
         this.contentLayoutId = contentLayoutId;
-        this.monthLegendObj = monthLegendObj;
+        this.scheduledTransactionModelList = scheduledTransactionModelList;
+        this.scheduledTransferModelList = scheduledTransferModelList;
         this.mContext = context;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -50,13 +54,6 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
     }
 
     private void buildSectionList() {
-        if(monthLegendObj == null){
-            return;
-        }
-
-        List<ScheduledTransactionModel> scheduledTransactionModelList = monthLegendObj.getScheduledTransactionModelList();
-        List<ScheduledTransferModel> scheduledTransferModelList = monthLegendObj.getScheduledTransferModelList();
-
         //for transactions
         if(scheduledTransactionModelList != null && !scheduledTransactionModelList.isEmpty()) {
             for (ScheduledTransactionModel iterList : scheduledTransactionModelList) {
@@ -126,10 +123,10 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
                     break;
             }
 
-            convertView.setTag(mHolder);
+            convertView.setTag(contentLayoutId, mHolder);
 
         } else {
-            mHolder = (ViewHolder) convertView.getTag();
+            mHolder = (ViewHolder) convertView.getTag(contentLayoutId);
         }
 
         switch(type) {
@@ -144,6 +141,8 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
     private void makeContentItem(int position, ViewHolder mHolder) {
         if(mData.get(position)instanceof ScheduledTransactionModel){
             ScheduledTransactionModel scheduledTransactionModelObj = (ScheduledTransactionModel)mData.get(position);
+
+            mHolder.calendarSchedulesLL.setTag(scheduledTransactionModelObj);
 
             mHolder.calendarScheduleTransactionLL.setVisibility(View.VISIBLE);
             mHolder.calendarScheduleTransferLL.setVisibility(View.GONE);
@@ -166,7 +165,9 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
         else if(mData.get(position)instanceof ScheduledTransferModel){
             ScheduledTransferModel scheduledTransferModelObj = (ScheduledTransferModel)mData.get(position);
 
-            mHolder.calendarScheduleTransactionLL.setVisibility(View.GONE);
+            mHolder.calendarSchedulesLL.setTag(scheduledTransferModelObj);
+
+                    mHolder.calendarScheduleTransactionLL.setVisibility(View.GONE);
             mHolder.calendarScheduleTransferLL.setVisibility(View.VISIBLE);
 
             //for tattoo

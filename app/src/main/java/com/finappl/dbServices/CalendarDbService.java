@@ -344,6 +344,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" TRFR.TRNFR_AMT, ");
         sqlQuerySB.append(" TRFR.TRNFR_ID, ");
+        sqlQuerySB.append(" TRFR.TRNFR_DATE, ");
         sqlQuerySB.append(" TRFR.MOD_DTM, ");
         sqlQuerySB.append(" TRFR.CREAT_DTM ");
 
@@ -389,6 +390,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
             transferModelObj.setTRNFR_AMT(ColumnFetcher.getInstance().loadDouble(cursor, "TRNFR_AMT"));
             transferModelObj.setCREAT_DTM(ColumnFetcher.getInstance().loadString(cursor, "CREAT_DTM"));
             transferModelObj.setMOD_DTM(ColumnFetcher.getInstance().loadString(cursor, "MOD_DTM"));
+            transferModelObj.setTRNFR_DATE(ColumnFetcher.getInstance().loadString(cursor, "TRNFR_DATE"));
+            transferModelObj.setTRNFR_ID(ColumnFetcher.getInstance().loadString(cursor, "TRNFR_ID"));
 
             transfersList.add(transferModelObj);
         }
@@ -790,8 +793,13 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SCH_TRNFR_FREQ, ");
         sqlQuerySB.append(" SCH_TRNFR_AUTO, ");
         sqlQuerySB.append(" SCH_TRNFR_AMT, ");
+        sqlQuerySB.append(" SCH_TRNFR_ACC_ID_FRM, ");
+        sqlQuerySB.append(" SCH_TRNFR_ACC_ID_TO, ");
+        sqlQuerySB.append(" SCH_TRNFR_NOTE, ");
         sqlQuerySB.append(" ACC_FRM.ACC_NAME AS FRM_ACC, ");
-        sqlQuerySB.append(" ACC_TO.ACC_NAME AS TO_ACC ");
+        sqlQuerySB.append(" ACC_TO.ACC_NAME AS TO_ACC, ");
+        sqlQuerySB.append(" SCH.CREAT_DTM, ");
+        sqlQuerySB.append(" SCH.MOD_DTM ");
 
         sqlQuerySB.append(" FROM ");
         sqlQuerySB.append(SCHEDULED_TRANSFER_TABLE+ " SCH ");
@@ -824,8 +832,13 @@ public class CalendarDbService extends SQLiteOpenHelper {
             String schTransferFreqStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_FREQ");
             String schTransferAutoStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_AUTO");
             Double schTransferAmt = ColumnFetcher.getInstance().loadDouble(cursor, "SCH_TRNFR_AMT");
+            String schTransferFrmAccIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_ACC_ID_FRM");
+            String schTransferToAccIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_ACC_ID_TO");
             String schTransferFrmAccStr = ColumnFetcher.getInstance().loadString(cursor, "FRM_ACC");
             String schTransferToAccStr = ColumnFetcher.getInstance().loadString(cursor, "TO_ACC");
+            String schTransferCreateDtmStr = ColumnFetcher.getInstance().loadString(cursor, "CREAT_DTM");
+            String schTransferModDtmStr = ColumnFetcher.getInstance().loadString(cursor, "MOD_DTM");
+            String schTransferNoteStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_NOTE");
 
             scheduledTransferModelObj = new ScheduledTransferModel();
             scheduledTransferModelObj.setSCH_TRNFR_ID(schTransferIdStr);
@@ -833,8 +846,13 @@ public class CalendarDbService extends SQLiteOpenHelper {
             scheduledTransferModelObj.setSCH_TRNFR_FREQ(schTransferFreqStr);
             scheduledTransferModelObj.setSCH_TRNFR_AUTO(schTransferAutoStr);
             scheduledTransferModelObj.setSCH_TRNFR_AMT(schTransferAmt);
+            scheduledTransferModelObj.setSCH_TRNFR_ACC_ID_FRM(schTransferFrmAccIdStr);
+            scheduledTransferModelObj.setSCH_TRNFR_ACC_ID_TO(schTransferToAccIdStr);
             scheduledTransferModelObj.setFromAccountStr(schTransferFrmAccStr);
             scheduledTransferModelObj.setToAccountStr(schTransferToAccStr);
+            scheduledTransferModelObj.setSCH_TRNFR_NOTE(schTransferNoteStr);
+            scheduledTransferModelObj.setCREAT_DTM(schTransferCreateDtmStr);
+            scheduledTransferModelObj.setMOD_DTM(schTransferModDtmStr);
 
             String schTransfersDateStrArr[] = schTransfersDateStr.split("-");
 
@@ -951,15 +969,28 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SCH_TRAN_FREQ, ");
         sqlQuerySB.append(" SCH_TRAN_AUTO, ");
         sqlQuerySB.append(" SCH_TRAN_TYPE, ");
+        sqlQuerySB.append(" SCH_TRAN_NOTE, ");
         sqlQuerySB.append(" SCH_TRAN_AMT, ");
-        sqlQuerySB.append(" CAT.CAT_NAME ");
+        sqlQuerySB.append(" CAT.CAT_NAME, ");
+        sqlQuerySB.append(" ACC.ACC_NAME, ");
+        sqlQuerySB.append(" SPNT.SPNT_ON_NAME, ");
+        sqlQuerySB.append(" SCH.CREAT_DTM, ");
+        sqlQuerySB.append(" SCH.MOD_DTM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(SCHEDULED_TRANSACTION_TABLE+ " SCH ");
+        sqlQuerySB.append(Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE+ " SCH ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(CATEGORY_TABLE+" CAT ");
+        sqlQuerySB.append(Constants.DB_TABLE_CATEGORYTABLE+" CAT ");
         sqlQuerySB.append(" ON CAT.CAT_ID = SCH.SCH_TRAN_CAT_ID ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE+" ACC ");
+        sqlQuerySB.append(" ON ACC.ACC_ID = SCH.SCH_TRAN_ACC_ID ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(Constants.DB_TABLE_SPENTONTABLE+" SPNT ");
+        sqlQuerySB.append(" ON SPNT.SPNT_ON_ID = SCH.SCH_TRAN_SPNT_ON_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" SCH_TRAN_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
@@ -979,26 +1010,36 @@ public class CalendarDbService extends SQLiteOpenHelper {
             String schTranNameStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_NAME");
             String schTranCatIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_CAT_ID");
             String schTranSpntOnIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_SPNT_ON_ID");
+            String schTranSpntOnNameStr = ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_NAME");
             String schTranAccIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_ACC_ID");
+            String schTranAccNameStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME");
             String schTransactionDateStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_DATE");
             String schTranFreqStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_FREQ");
             String schTranAutoStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_AUTO");
             String schTranCatStr = ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME");
             Double schTranAmt = ColumnFetcher.getInstance().loadDouble(cursor, "SCH_TRAN_AMT");
             String schTranTypeStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_TYPE");
+            String schTranCreateDtmStr = ColumnFetcher.getInstance().loadString(cursor, "CREAT_DTM");
+            String schTranModDtmStr = ColumnFetcher.getInstance().loadString(cursor, "MOD_DTM");
+            String schTranNoteStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_NOTE");
 
             scheduledTransactionModelObj = new ScheduledTransactionModel();
             scheduledTransactionModelObj.setSCH_TRAN_ID(schTranIdStr);
             scheduledTransactionModelObj.setSCH_TRAN_NAME(schTranNameStr);
             scheduledTransactionModelObj.setSCH_TRAN_CAT_ID(schTranCatIdStr);
             scheduledTransactionModelObj.setSCH_TRAN_SPNT_ON_ID(schTranSpntOnIdStr);
+            scheduledTransactionModelObj.setSpentOnNameStr(schTranSpntOnNameStr);
             scheduledTransactionModelObj.setSCH_TRAN_ACC_ID(schTranAccIdStr);
+            scheduledTransactionModelObj.setAccountNameStr(schTranAccNameStr);
             scheduledTransactionModelObj.setSCH_TRAN_DATE(schTransactionDateStr);
             scheduledTransactionModelObj.setSCH_TRAN_FREQ(schTranFreqStr);
             scheduledTransactionModelObj.setSCH_TRAN_AUTO(schTranAutoStr);
             scheduledTransactionModelObj.setCategoryNameStr(schTranCatStr);
             scheduledTransactionModelObj.setSCH_TRAN_AMT(schTranAmt);
             scheduledTransactionModelObj.setSCH_TRAN_TYPE(schTranTypeStr);
+            scheduledTransactionModelObj.setCREAT_DTM(schTranCreateDtmStr);
+            scheduledTransactionModelObj.setMOD_DTM(schTranModDtmStr);
+            scheduledTransactionModelObj.setSCH_TRAN_NOTE(schTranNoteStr);
 
             String schTransactionDateStrArr[] = schTransactionDateStr.split("-");
 

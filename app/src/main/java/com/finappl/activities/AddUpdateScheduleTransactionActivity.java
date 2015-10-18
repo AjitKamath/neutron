@@ -307,8 +307,6 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
 
             Long result = scheduledTransactionsDbService.createNewScheduledTransaction(scheduledTransactionModelObj);
             if(result != -1){
-                showToast("New Scheduled Transaction Created");
-
                 //notify the notification service by calling the receiver
                 Intent notifIntent = new Intent();
                 notifIntent.setAction("ACTIVITY_ACTION");
@@ -318,6 +316,8 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
                 Intent intent = new Intent(this, CalendarActivity.class);
                 startActivity(intent);
                 finish();
+
+                showToast("New Scheduled Transaction Created");
             }
             else{
                 showToast("Error !! Could not create a new Scheduled Transaction");
