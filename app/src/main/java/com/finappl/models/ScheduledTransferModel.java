@@ -22,6 +22,8 @@ public class ScheduledTransferModel implements Serializable {
     private String fromAccountStr;
     private String toAccountStr;
 
+    private String status;
+
     public String getSCH_TRNFR_ID() {
         return SCH_TRNFR_ID;
     }
@@ -132,5 +134,13 @@ public class ScheduledTransferModel implements Serializable {
 
     public void setToAccountStr(String toAccountStr) {
         this.toAccountStr = toAccountStr;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -18,6 +18,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -63,6 +64,8 @@ public class AddUpdateTransferActivity extends Activity {
     //buttons
     private ImageView addUpdateDoneUpdateImg;
     private TextView addUpdTrnfrDoneTV;
+
+    private ImageButton addUpdateTrnsfrPageFabIB;
 
     //transactionModel
     private TransferModel transferModelObj;
@@ -113,11 +116,13 @@ public class AddUpdateTransferActivity extends Activity {
         //select spinner by default
         if(transferModelObj.getFromAccName() != null){
             addUpdTrnfrFromAccSpn.setSelection(getSpinnerItemIndex(accList, transferModelObj.getFromAccName()));
-            addUpdTrnfrDoneTV.setText("update");
+            addUpdateTrnsfrPageFabIB.setTag("UPDATE");
+            addUpdateTrnsfrPageFabIB.setImageResource(R.drawable.save_white_small);
         }
         //this means the user is in this page for a fresh new transfer...so select default as selected
         else{
             addUpdTrnfrFromAccSpn.setSelection(getSpinnerItemIndex(accList, Constants.DEFAULTS_ACCOUNTS_SELECT));
+            addUpdateTrnsfrPageFabIB.setTag("ADD");
         }
 
         //select spinner by default
@@ -189,11 +194,10 @@ public class AddUpdateTransferActivity extends Activity {
         addUpdTrnfrFromAccSpn = (Spinner) this.findViewById(R.id.addUpdTrnfrFromAccSpnId);
         addUpdTrnfrToAccSpn = (Spinner) this.findViewById(R.id.addUpdTrnfrToAccSpnId);
 
+        addUpdateTrnsfrPageFabIB = (ImageButton) this.findViewById(R.id.addUpdatePageFabIBId);
+
         //text watcher
         addUpdTrnfrAmtET.addTextChangedListener(fieldTextWatcher);
-
-        //buttons
-        addUpdTrnfrDoneTV = (TextView) this.findViewById(R.id.addUpdTrnfrDoneTVId);
     }
 
     public TransferModel getInputs(){
@@ -210,7 +214,9 @@ public class AddUpdateTransferActivity extends Activity {
 
         String tranAmtStr = addUpdTrnfrAmtET.getText().toString();
         String frmAccIdStr = addUpdTrnfrFromAccSpn.getSelectedView().getTag().toString();
+        String frmAccNameStr = ((SpinnerModel) addUpdTrnfrFromAccSpn.getSelectedItem()).getItemName();
         String toAccIdStr = addUpdTrnfrToAccSpn.getSelectedView().getTag().toString();
+        String toAccNameStr = ((SpinnerModel) addUpdTrnfrToAccSpn.getSelectedItem()).getItemName();
         String noteStr = addUpdTrnfrNoteET.getText().toString();
 
         //validations
@@ -227,15 +233,61 @@ public class AddUpdateTransferActivity extends Activity {
 
         TransferModel transferModel = new TransferModel();
 
-        transferModel.setTRNFR_DATE(dayStr+"-"+monthStr+"-"+yearStr);
+        transferModel.setTRNFR_DATE(dayStr + "-" + monthStr + "-" + yearStr);
         transferModel.setTRNFR_AMT(Double.parseDouble(tranAmtStr));
         transferModel.setACC_ID_FRM(frmAccIdStr);
+        transferModel.setFromAccName(frmAccNameStr);
         transferModel.setACC_ID_TO(toAccIdStr);
+        transferModel.setToAccName(toAccNameStr);
         transferModel.setTRNFR_NOTE(noteStr);
         transferModel.setTRNFR_ID(transferModelObj.getTRNFR_ID());
 
         return transferModel;
     }
+
+    public void onDone(View view){
+        //get inputs
+        TransferModel transferModel = getInputs();
+
+        //add user id
+        transferModel.setUSER_ID(loggedInUserObj.getUSER_ID());
+
+        //its an old transfer..so update
+        if("UPDATE".equalsIgnoreCase(String.valueOf(addUpdateTrnsfrPageFabIB.getTag()))){
+            //get the transfer id from intent and set it in the transfer object
+            transferModel.setTRNFR_ID(transferModelObj.getTRNFR_ID());
+
+            long result = addUpdateTransferDbService.updateOldTransfer(transferModel);
+
+            if(result == 0) {
+                showToast("Failed to update Transfer !");
+            } else if(result == 1){
+                showToast("Transfer updated");
+            }
+            else{
+                showToast("Unknown error !");
+            }
+        }
+        else if("ADD".equalsIgnoreCase(String.valueOf(addUpdateTrnsfrPageFabIB.getTag()))){
+            long result = addUpdateTransferDbService.addNewTransfer(transferModel);
+
+            if(result == -1) {
+                showToast("Failed to create a new Transfer !");
+            }
+            else{
+                showToast("New Transfer created");
+            }
+        }
+        else{
+            Log.e(CLASS_NAME, "Expected SAVE/UPDATE as tag for the FAB. But found something else. This is an error case.");
+        }
+
+        Intent intent = new Intent(this, CalendarActivity.class);
+        intent.putExtra("CALENDAR_ACTIVITY_ACTION", transferModel);
+        startActivity(intent);
+        finish();
+    }
+
 
 	//on click of done/update default_button
 	public void onDoneUpdate(View view){

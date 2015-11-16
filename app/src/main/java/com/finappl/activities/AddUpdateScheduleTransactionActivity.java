@@ -180,6 +180,16 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
     }
 
     private void popullateUiWhenUpdate(){
+        try{
+            SimpleDateFormat  rightSdf= new SimpleDateFormat("d MMM ''yy");
+            SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
+
+            schedTranAddUpdDateTV.setText(rightSdf.format(wrongSdf.parse(scheduledTransactionModelObj.getSCH_TRAN_DATE())));
+        }
+        catch(ParseException e){
+            Log.e(CLASS_NAME, "Error !!"+e);
+        }
+
         schedTranAddUpdNameET.setText(scheduledTransactionModelObj.getSCH_TRAN_NAME());
         schedTranAddUpdAmtET.setText(String.valueOf(scheduledTransactionModelObj.getSCH_TRAN_AMT()));
 
@@ -189,27 +199,27 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
 
         //expense type radio
         if("EXPENSE".equalsIgnoreCase(scheduledTransactionModelObj.getSCH_TRAN_TYPE())){
-            schedTranAddUpdExpRadio.setSelected(true);
+            schedTranAddUpdExpRadio.setChecked(true);
         }
         else{
-            schedTranAddUpdIncRadio.setSelected(true);
+            schedTranAddUpdIncRadio.setChecked(true);
         }
 
         //schedule type radio
         if("ONCE".equalsIgnoreCase(scheduledTransactionModelObj.getSCH_TRAN_FREQ())){
-            schedTranOnceAddRadio.setSelected(true);
+            schedTranOnceAddRadio.setChecked(true);
         }
         else if("DAILY".equalsIgnoreCase(scheduledTransactionModelObj.getSCH_TRAN_FREQ())){
-            schedTranDailyAddRadio.setSelected(true);
+            schedTranDailyAddRadio.setChecked(true);
         }
         else if("WEEKLY".equalsIgnoreCase(scheduledTransactionModelObj.getSCH_TRAN_FREQ())){
-            schedTranWeeklyAddRadio.setSelected(true);
+            schedTranWeeklyAddRadio.setChecked(true);
         }
         if("MONTHLY".equalsIgnoreCase(scheduledTransactionModelObj.getSCH_TRAN_FREQ())){
-            schedTranMonthlyAddRadio.setSelected(true);
+            schedTranMonthlyAddRadio.setChecked(true);
         }
         else{
-            schedTranYearlyAddRadio.setSelected(true);
+            schedTranYearlyAddRadio.setChecked(true);
         }
 
         //notes
@@ -299,11 +309,22 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
 
         if(scheduledTransactionModelObj.getSCH_TRAN_ID() != null && !scheduledTransactionModelObj.getSCH_TRAN_ID().isEmpty()){
             Log.i(CLASS_NAME, "Schedule Transaction Id is found... This means user is trying to update the Scheduled Transaction");
-            //TODO: update yet to be implemented
+
+            int result = scheduledTransactionsDbService.updateOldScheduledTransaction(scheduledTransactionModelObj);
+
+            if(result == 0){
+                showToast("Error !! Could not update the Scheduled Transaction");
+                return;
+            }
+
+            //navigate back to calendar screen
+            Intent intent = new Intent(this, CalendarActivity.class);
+            startActivity(intent);
+            finish();
+            showToast("Scheduled transaction has been updated");
         }
         else{
             Log.i(CLASS_NAME, "Schedule Transaction Id is not found... This means user is trying to create a new Scheduled Transaction");
-
 
             Long result = scheduledTransactionsDbService.createNewScheduledTransaction(scheduledTransactionModelObj);
             if(result != -1){
@@ -318,8 +339,7 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
                 finish();
 
                 showToast("New Scheduled Transaction Created");
-            }
-            else{
+            } else {
                 showToast("Error !! Could not create a new Scheduled Transaction");
             }
         }

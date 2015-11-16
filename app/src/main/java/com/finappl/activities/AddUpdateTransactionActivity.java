@@ -18,6 +18,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -60,6 +61,7 @@ public class AddUpdateTransactionActivity extends Activity {
     private Spinner addUpdateCatSpn, addUpdateAccSpn, addUpdateSpntOnSpn;
     private RadioGroup addUpdateTranExpIncRadioGrp;
     private RadioButton addUpdateTranIncRadio, addUpdateTranExpRadio;
+    private ImageButton addUpdatePageFabIB;
 
     //transactionModel
     private TransactionModel transactionModelObj;
@@ -106,7 +108,8 @@ public class AddUpdateTransactionActivity extends Activity {
         if(transactionModelObj.getTRAN_NAME() != null){
             addUpdateTranNameET.setText(transactionModelObj.getTRAN_NAME());
 
-            doneDiscardTV.setText("Update");
+            addUpdatePageFabIB.setImageResource(R.drawable.save_white_small);
+            addUpdatePageFabIB.setTag("UPDATE");
         }
         //this means the user is in this page for a fresh new transaction...so give him focus on transaction name on arrival
         else{
@@ -235,7 +238,9 @@ public class AddUpdateTransactionActivity extends Activity {
         addUpdateTranExpIncRadioGrp = (RadioGroup) this.findViewById(R.id.addUpdateTranExpIncRadioGrpId);
         addUpdateSpntOnSpn = (Spinner) this.findViewById(R.id.addUpdateSpntOnSpnId);
         addUpdateNoteET = (EditText) this.findViewById(R.id.addUpdateNoteETId);
-        doneDiscardTV = (TextView) findViewById(R.id.addUpdateDoneTVId);
+        doneDiscardTV = (TextView) this.findViewById(R.id.addUpdateDoneTVId);
+
+        addUpdatePageFabIB = (ImageButton) this.findViewById(R.id.addUpdatePageFabIBId);
 
         //focus listener for title and amt
         addUpdateTranNameET.addTextChangedListener(fieldTextWatcher);
@@ -257,9 +262,12 @@ public class AddUpdateTransactionActivity extends Activity {
         String tranNameStr = addUpdateTranNameET.getText().toString();
         String tranAmtStr = addUpdateTranAmtET.getText().toString();
         String catIdStr = addUpdateCatSpn.getSelectedView().getTag().toString();
+        String categoryNameStr = ((SpinnerModel)addUpdateCatSpn.getSelectedItem()).getItemName();
         String accIdStr = addUpdateAccSpn.getSelectedView().getTag().toString();
+        String accNameStr = ((SpinnerModel)addUpdateAccSpn.getSelectedItem()).getItemName();
         String tranTypeStr = this.findViewById(addUpdateTranExpIncRadioGrp.getCheckedRadioButtonId()).getTag().toString();
         String spntOnIdStr = addUpdateSpntOnSpn.getSelectedView().getTag().toString();
+        String spntOnNameStr = ((SpinnerModel)addUpdateSpntOnSpn.getSelectedItem()).getItemName();
         String noteStr = addUpdateNoteET.getText().toString();
 
         //validations
@@ -282,13 +290,16 @@ public class AddUpdateTransactionActivity extends Activity {
 
         TransactionModel transactionModel = new TransactionModel();
 
-        transactionModel.setTRAN_DATE(dayStr+"-"+monthStr+"-"+yearStr);
+        transactionModel.setTRAN_DATE(dayStr + "-" + monthStr + "-" + yearStr);
         transactionModel.setTRAN_NAME(tranNameStr);
         transactionModel.setTRAN_AMT(Double.parseDouble(tranAmtStr));
         transactionModel.setCAT_ID(catIdStr);
+        transactionModel.setCategory(categoryNameStr);
         transactionModel.setTRAN_TYPE(tranTypeStr);
         transactionModel.setACC_ID(accIdStr);
+        transactionModel.setAccount(accNameStr);
         transactionModel.setSPNT_ON_ID(spntOnIdStr);
+        transactionModel.setSpentOn(spntOnNameStr);
         transactionModel.setTRAN_NOTE(noteStr);
 
         return transactionModel;
@@ -310,6 +321,49 @@ public class AddUpdateTransactionActivity extends Activity {
 
         //calling the same activity
         startActivity(getIntent());
+        finish();
+    }
+
+    public void onDone(View view){
+        //get inputs
+        TransactionModel transactionModel = getInputs();
+
+        //add user id
+        transactionModel.setUSER_ID(loggedInUserObj.getUSER_ID());
+
+        //its an old expense..so update
+        if("UPDATE".equalsIgnoreCase(String.valueOf(addUpdatePageFabIB.getTag()))){
+            //get the transaction id from intent and set it in the transaction object
+            transactionModel.setTRAN_ID(transactionModelObj.getTRAN_ID());
+
+            long result = addUpdateTransactionsDbService.updateOldTransaction(transactionModel);
+
+            if(result == 0) {
+                showToast("Failed to update Transaction/Account !");
+            } else if(result == 1){
+                showToast("Transaction updated");
+            }
+            else{
+                showToast("Unknown error !");
+            }
+        }
+        else if("ADD".equalsIgnoreCase(String.valueOf(addUpdatePageFabIB.getTag()))){
+            long result = addUpdateTransactionsDbService.addNewTransaction(transactionModel);
+
+            if(result == -1) {
+                showToast("Failed to create a new Transaction !");
+            }
+            else{
+                showToast("New Transaction created");
+            }
+        }
+        else{
+            Log.e(CLASS_NAME, "Expected SAVE/UPDATE as tag for the FAB. But found something else. This is an error case.");
+        }
+
+        Intent intent = new Intent(this, CalendarActivity.class);
+        intent.putExtra("CALENDAR_ACTIVITY_ACTION", transactionModel);
+        startActivity(intent);
         finish();
     }
 

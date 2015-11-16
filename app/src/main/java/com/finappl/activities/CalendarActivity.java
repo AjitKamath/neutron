@@ -177,9 +177,187 @@ public class CalendarActivity extends AppCompatActivity {
         //TODO: this might not be required in production
         setUpServices();
 
+        //Set up poppers if we navigated to this page from sme other activities.
+        setUpActionPoppers();
+
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
         setFont((ViewGroup) this.findViewById(R.id.calendarPageRLId), robotoCondensedLightFont);
+    }
+
+    private void setUpActionPoppers() {
+        if(getIntent().getExtras() == null){
+            Log.i(CLASS_NAME, "No Extras in the intent.. So no intended Action Poppers");
+            return;
+        }
+        else if(getIntent().getExtras().get("CALENDAR_ACTIVITY_ACTION") == null){
+            Log.i(CLASS_NAME, "Could not Find CALENDAR_ACTIVITY_ACTIONS in the intent... There seems to be no intended Action Poppers.");
+            return;
+        }
+
+        Object actionObject = getIntent().getExtras().get("CALENDAR_ACTIVITY_ACTION");
+
+        //if action was a new Transaction added/old transaction being updated
+        if(actionObject instanceof TransactionModel){
+            showTransactionAddedUpdatedPopper((TransactionModel) actionObject);
+        }
+        //if action was a new Transfer added/old Transfer being updated
+        else if(actionObject instanceof TransferModel){
+            showTransferAddedUpdatedPopper((TransferModel) actionObject);
+        }
+
+
+    }
+
+    private void showTransferAddedUpdatedPopper(final TransferModel transferModelObj){
+        dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.calendar_transfer_added_popper);
+
+        dialog.show();
+
+        TextView calendarTransferAddedPopperTitleTV = (TextView) dialog.findViewById(R.id.calendarTransferAddedPopperTitleTVId);
+        TextView calendarTransferAddedPopperAmountTV = (TextView) dialog.findViewById(R.id.calendarTransferAddedPopperAmountTVId);
+        TextView calendarTransferAddedPopperFromAccountTV = (TextView) dialog.findViewById(R.id.calendarTransferAddedPopperFromAccountTVId);
+        TextView calendarTransferAddedPopperToAccountTV = (TextView) dialog.findViewById(R.id.calendarTransferAddedPopperToAccountTVId);
+        ImageView calendarTransferAddedPopperDeleteIV = (ImageView) dialog.findViewById(R.id.calendarTransactionAddedPopperDeleteIVId);
+        ImageView calendarTransferAddedPopperEditIV = (ImageView) dialog.findViewById(R.id.calendarTransactionAddedPopperEditIVId);
+        LinearLayout calendarTransferAddedPopperOkLL = (LinearLayout) dialog.findViewById(R.id.calendarTransactionAddedPopperOkLLId);
+        LinearLayout calendarTransferAddedPopperAddLL = (LinearLayout) dialog.findViewById(R.id.calendarTransactionAddedPopperAddLLId);
+
+        //if the transfer was updated..the action object would contain TRNFR_ID
+        if(transferModelObj.getTRNFR_ID() != null){
+            calendarTransferAddedPopperTitleTV.setText("Transfer has been Updated !");
+        }
+        //if the transfer was newly created
+        else{
+            calendarTransferAddedPopperTitleTV.setText("Transfer is Complete !");
+        }
+
+        //amount
+        //TODO: Approximatization is needed
+        calendarTransferAddedPopperAmountTV.setText(String.valueOf(transferModelObj.getTRNFR_AMT()));
+
+        //from & to account
+        calendarTransferAddedPopperFromAccountTV.setText(transferModelObj.getFromAccName());
+        calendarTransferAddedPopperToAccountTV.setText(transferModelObj.getToAccName());
+
+        calendarTransferAddedPopperDeleteIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                showToast("Delete, Yet to be implemented");
+            }
+        });
+
+        calendarTransferAddedPopperEditIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(CalendarActivity.this, AddUpdateTransferActivity.class);
+                intent.putExtra("TRANSFER_OBJ", transferModelObj);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        calendarTransferAddedPopperOkLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        calendarTransferAddedPopperAddLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                startActivity(toAddUpdateTransfer());
+                finish();
+            }
+        });
+
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        setFont((ViewGroup)dialog.findViewById(R.id.calendarTransferAddedPopperLLId), robotoCondensedLightFont);
+    }
+
+    private void showTransactionAddedUpdatedPopper(final TransactionModel transactionModelObj){
+        dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.calendar_transaction_added_popper);
+
+        dialog.show();
+
+        TextView calendarTransactionAddedPopperTitleTV = (TextView) dialog.findViewById(R.id.calendarTransactionAddedPopperTitleTVId);
+        TextView calendarTransactionAddedPopperAmountTV = (TextView) dialog.findViewById(R.id.calendarTransactionAddedPopperAmountTVId);
+        TextView calendarTransactionAddedPopperCategoryTV = (TextView) dialog.findViewById(R.id.calendarTransactionAddedPopperCategoryTVId);
+        ImageView calendarTransactionAddedPopperDeleteIV = (ImageView) dialog.findViewById(R.id.calendarTransactionAddedPopperDeleteIVId);
+        ImageView calendarTransactionAddedPopperEditIV = (ImageView) dialog.findViewById(R.id.calendarTransactionAddedPopperEditIVId);
+        LinearLayout calendarTransactionAddedPopperOkLL = (LinearLayout) dialog.findViewById(R.id.calendarTransactionAddedPopperOkLLId);
+        LinearLayout calendarTransactionAddedPopperAddLL = (LinearLayout) dialog.findViewById(R.id.calendarTransactionAddedPopperAddLLId);
+
+        //if the transaction was updated..the action object would contain TRAN_ID
+        if(transactionModelObj.getTRAN_ID() != null){
+            calendarTransactionAddedPopperTitleTV.setText("Transaction Updated !");
+        }
+        //if the transaction was newly created
+        else{
+            calendarTransactionAddedPopperTitleTV.setText("New Transaction Added !");
+        }
+
+        //amount
+        //TODO: Approximatization is needed
+        if("EXPENSE".equalsIgnoreCase(transactionModelObj.getTRAN_TYPE())){
+            calendarTransactionAddedPopperAmountTV.setText("-"+transactionModelObj.getTRAN_AMT());
+            calendarTransactionAddedPopperAmountTV.setTextColor(mContext.getResources().getColor(R.color.finappleCurrencyNegColor));
+        }
+        else{
+            calendarTransactionAddedPopperAmountTV.setText(String.valueOf(transactionModelObj.getTRAN_AMT()));
+            calendarTransactionAddedPopperAmountTV.setTextColor(mContext.getResources().getColor(R.color.finappleCurrencyPosColor));
+        }
+
+        //category
+        calendarTransactionAddedPopperCategoryTV.setText(transactionModelObj.getCategory());
+
+        calendarTransactionAddedPopperDeleteIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                showToast("Delete, yet to be implemented");
+            }
+        });
+
+        calendarTransactionAddedPopperEditIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(CalendarActivity.this, AddUpdateTransactionActivity.class);
+                intent.putExtra("TRANSACTION_OBJ", transactionModelObj);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        calendarTransactionAddedPopperOkLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        calendarTransactionAddedPopperAddLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                startActivity(toAddUpdateTransaction());
+                finish();
+            }
+        });
+
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        setFont((ViewGroup)dialog.findViewById(R.id.calendarTransactionAddedPopperLLId), robotoCondensedLightFont);
     }
 
     private void setUpFab() {
@@ -597,19 +775,20 @@ public class CalendarActivity extends AppCompatActivity {
         schedTransactionPopperEditIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: yeto to implement
-                //toEditTransfer(transferObj);
                 if(dialog != null) {
                     dialog.dismiss();
                 }
+                toEditScheduledTransaction(scheduledTransactionModelObj);
             }
         });
 
         //texts
         TextView schedTransactionPopperDateTV, schedTransactionPopperAmountTV, schedTransactionPopperFreqTV, schedTransactionPopperAutoTV, schedTransactionPopperNameTV
                 ,schedTransactionPopperCategoryTV, schedTransactionPopperAccountTV, schedTransactionPopperSpentOnTV, schedTransactionPopperNotesTV, schedTransactionPopperCreateDateTV
-                ,schedTransactionPopperUpdateDateTV;
-        LinearLayout schedTransactionPopperUpdateDateLV;
+                ,schedTransactionPopperUpdateDateTV, schedTransactionPopperStatusTV;
+        LinearLayout schedTransactionPopperUpdateDateLV, schedTransactionPopperStatusLV;
+        ImageView schedTransactionPopperStatusIV;
+
         schedTransactionPopperDateTV = (TextView) dialog.findViewById(R.id.schedTransactionPopperDateTVId);
         schedTransactionPopperAmountTV = (TextView) dialog.findViewById(R.id.schedTransactionPopperAmountTVId);
         schedTransactionPopperFreqTV = (TextView) dialog.findViewById(R.id.schedTransactionPopperFreqTVId);
@@ -622,6 +801,9 @@ public class CalendarActivity extends AppCompatActivity {
         schedTransactionPopperCreateDateTV = (TextView) dialog.findViewById(R.id.schedTransactionPopperCreateDateTVId);
         schedTransactionPopperUpdateDateTV = (TextView) dialog.findViewById(R.id.schedTransactionPopperUpdateDateTVId);
         schedTransactionPopperUpdateDateLV = (LinearLayout) dialog.findViewById(R.id.schedTransactionPopperUpdateDateLVId);
+        schedTransactionPopperStatusLV = (LinearLayout) dialog.findViewById(R.id.schedTransactionPopperStatusLVId);
+        schedTransactionPopperStatusTV = (TextView) dialog.findViewById(R.id.schedTransactionPopperStatusTVId);
+        schedTransactionPopperStatusIV = (ImageView) dialog.findViewById(R.id.schedTransactionPopperStatusIVId);
 
         SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat sdfWrong1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -658,6 +840,26 @@ public class CalendarActivity extends AppCompatActivity {
             return;
         }
 
+        if(scheduledTransactionModelObj.getStatus() != null && !scheduledTransactionModelObj.getStatus().isEmpty()){
+            schedTransactionPopperStatusLV.setVisibility(View.VISIBLE);
+            schedTransactionPopperEditIV.setVisibility(View.GONE);
+
+            if("CANCEL".equalsIgnoreCase(scheduledTransactionModelObj.getStatus())){
+                schedTransactionPopperStatusIV.setBackgroundResource(R.drawable.cross_white_small);
+                schedTransactionPopperStatusTV.setTextColor(getResources().getColor(R.color.red));
+                schedTransactionPopperStatusTV.setText("Cancelled");
+            }
+            else if("AUTO_ADD".equalsIgnoreCase(scheduledTransactionModelObj.getStatus()) || "ADD".equalsIgnoreCase(scheduledTransactionModelObj.getStatus())){
+                schedTransactionPopperStatusIV.setBackgroundResource(R.drawable.tick_white_small);
+                schedTransactionPopperStatusTV.setTextColor(getResources().getColor(R.color.finappleTheme));
+                schedTransactionPopperStatusTV.setText("Added");
+            }
+        }
+        else{
+            schedTransactionPopperStatusLV.setVisibility(View.GONE);
+            schedTransactionPopperEditIV.setVisibility(View.VISIBLE);
+        }
+
         schedTransactionPopperFreqTV.setText("REPEATS " + scheduledTransactionModelObj.getSCH_TRAN_FREQ());
 
         if("AUTO_ADD".equalsIgnoreCase(scheduledTransactionModelObj.getSCH_TRAN_AUTO())){
@@ -682,6 +884,20 @@ public class CalendarActivity extends AppCompatActivity {
         setFont((ViewGroup)dialog.findViewById(R.id.schedTransactionPopperLLId), robotoCondensedLightFont);
     }
 
+    private void toEditScheduledTransaction(ScheduledTransactionModel scheduledTransactionModelObj) {
+        Intent intent = new Intent(this, AddUpdateScheduleTransactionActivity.class);
+        intent.putExtra("SCHEDULED_TRANSACTION_OBJ", scheduledTransactionModelObj);
+        startActivity(intent);
+        finish();
+    }
+
+    private void toEditScheduledTransfer(ScheduledTransferModel scheduledTransferModelObj) {
+        Intent intent = new Intent(this, AddUpdateScheduleTransferActivity.class);
+        intent.putExtra("SCHEDULED_TRANSFER_OBJ", scheduledTransferModelObj);
+        startActivity(intent);
+        finish();
+    }
+
     private void showScheduledTransferDetailsPopper(final ScheduledTransferModel scheduledTransferModelObj) {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -703,18 +919,20 @@ public class CalendarActivity extends AppCompatActivity {
         schedTransferPopperEditIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: yeto to implement
-                //toEditTransfer(transferObj);
                 if(dialog != null) {
                     dialog.dismiss();
                 }
+                toEditScheduledTransfer(scheduledTransferModelObj);
             }
         });
 
         //texts
         TextView schedTransferPopperDateTV, schedTransferPopperAmountTV, schedTransferPopperFreqTV, schedTransferPopperAutoTV, schedTransferPopperFromAccTV
-                ,schedTransferPopperToAccTV, schedTransferPopperNotesTV, schedTransferPopperCreateDateTV, schedTransferPopperUpdateDateTV;
-        LinearLayout schedTransferPopperUpdateDateLV;
+                , schedTransferPopperToAccTV, schedTransferPopperNotesTV, schedTransferPopperCreateDateTV, schedTransferPopperUpdateDateTV
+                , schedTransferPopperStatusTV;
+        LinearLayout schedTransferPopperUpdateDateLV, schedTransferPopperStatusLV;
+        ImageView schedTransferPopperStatusIV;
+
         schedTransferPopperDateTV = (TextView) dialog.findViewById(R.id.schedTransferPopperDateTVId);
         schedTransferPopperAmountTV = (TextView) dialog.findViewById(R.id.schedTransferPopperAmountTVId);
         schedTransferPopperFreqTV = (TextView) dialog.findViewById(R.id.schedTransferPopperFreqTVId);
@@ -725,6 +943,9 @@ public class CalendarActivity extends AppCompatActivity {
         schedTransferPopperCreateDateTV = (TextView) dialog.findViewById(R.id.schedTransferPopperCreateDateTVId);
         schedTransferPopperUpdateDateTV = (TextView) dialog.findViewById(R.id.schedTransferPopperUpdateDateTVId);
         schedTransferPopperUpdateDateLV = (LinearLayout) dialog.findViewById(R.id.schedTransferPopperUpdateDateLVId);
+        schedTransferPopperStatusLV = (LinearLayout) dialog.findViewById(R.id.schedTransferPopperStatusLVId);
+        schedTransferPopperStatusIV = (ImageView) dialog.findViewById(R.id.schedTransferPopperStatusIVId);
+        schedTransferPopperStatusTV = (TextView) dialog.findViewById(R.id.schedTransferPopperStatusTVId);
 
         SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat sdfWrong1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -744,6 +965,26 @@ public class CalendarActivity extends AppCompatActivity {
         catch(ParseException pe){
             Log.e(CLASS_NAME, "Error ! "+pe);
             return;
+        }
+
+        if(scheduledTransferModelObj.getStatus() != null && !scheduledTransferModelObj.getStatus().isEmpty()){
+            schedTransferPopperStatusLV.setVisibility(View.VISIBLE);
+            schedTransferPopperEditIV.setVisibility(View.GONE);
+
+            if("CANCEL".equalsIgnoreCase(scheduledTransferModelObj.getStatus())){
+                schedTransferPopperStatusIV.setBackgroundResource(R.drawable.cross_white_small);
+                schedTransferPopperStatusTV.setTextColor(getResources().getColor(R.color.red));
+                schedTransferPopperStatusTV.setText("Cancelled");
+            }
+            else if("AUTO_ADD".equalsIgnoreCase(scheduledTransferModelObj.getStatus()) || "ADD".equalsIgnoreCase(scheduledTransferModelObj.getStatus())){
+                schedTransferPopperStatusIV.setBackgroundResource(R.drawable.tick_white_small);
+                schedTransferPopperStatusTV.setTextColor(getResources().getColor(R.color.finappleTheme));
+                schedTransferPopperStatusTV.setText("Added");
+            }
+        }
+        else{
+            schedTransferPopperStatusLV.setVisibility(View.GONE);
+            schedTransferPopperEditIV.setVisibility(View.VISIBLE);
         }
 
         //TODO: Approximatization required

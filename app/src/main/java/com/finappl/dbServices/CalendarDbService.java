@@ -379,7 +379,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRFR.MOD_DTM, TRFR.CREAT_DTM ");
         sqlQuerySB.append(" DESC ");
 
-        Log.i(CLASS_NAME, "query to get transfers : "+sqlQuerySB);
+        Log.i(CLASS_NAME, "query to get transfers : " + sqlQuerySB);
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
         while (cursor.moveToNext()){
@@ -596,7 +596,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //consolidation of repeated same category transactions
                 if(consolidatedTransactionModelMap.containsKey(catNameStr)){
                     consolidatedTransactionModel = consolidatedTransactionModelMap.get(catNameStr);
-                    consolidatedTransactionModel.setCount(consolidatedTransactionModel.getCount()+1);
+                    consolidatedTransactionModel.setCount(consolidatedTransactionModel.getCount() + 1);
 
                     if(tranTypeStr.equalsIgnoreCase("EXPENSE")){
                         consolidatedTransactionModel.setTotal(consolidatedTransactionModel.getTotal() - amt);
@@ -854,6 +854,27 @@ public class CalendarDbService extends SQLiteOpenHelper {
             scheduledTransferModelObj.setCREAT_DTM(schTransferCreateDtmStr);
             scheduledTransferModelObj.setMOD_DTM(schTransferModDtmStr);
 
+            //check if this scheduled transfer is already added
+            sqlQuerySB.setLength(0);
+            sqlQuerySB.append(" SELECT ");
+            sqlQuerySB.append(" CNCL_NOTIF_RSN ");
+
+            sqlQuerySB.append(" FROM ");
+            sqlQuerySB.append(Constants.DB_TABLE_NOTIFICATIONSTABLE);
+
+            sqlQuerySB.append(" WHERE ");
+            sqlQuerySB.append(" CNCL_NOTIF_EVNT_ID = '"+schTransferIdStr+"' ");
+            sqlQuerySB.append(" AND ");
+            sqlQuerySB.append(" USER_ID = '"+userId+"' ");
+
+            Cursor cursor2 = db.rawQuery(sqlQuerySB.toString(), null);
+
+            while (cursor2.moveToNext()) {
+                String reasonStr = ColumnFetcher.getInstance().loadString(cursor2, "CNCL_NOTIF_RSN");
+                scheduledTransferModelObj.setStatus(reasonStr);
+            }
+            //check if this scheduled transfer is already added ends--
+
             String schTransfersDateStrArr[] = schTransfersDateStr.split("-");
 
             for(int i=1; i<=lastDayOfMonth; i++){
@@ -1040,6 +1061,27 @@ public class CalendarDbService extends SQLiteOpenHelper {
             scheduledTransactionModelObj.setCREAT_DTM(schTranCreateDtmStr);
             scheduledTransactionModelObj.setMOD_DTM(schTranModDtmStr);
             scheduledTransactionModelObj.setSCH_TRAN_NOTE(schTranNoteStr);
+
+            //check if this scheduled transaction is already added
+            sqlQuerySB.setLength(0);
+            sqlQuerySB.append(" SELECT ");
+            sqlQuerySB.append(" CNCL_NOTIF_RSN ");
+
+            sqlQuerySB.append(" FROM ");
+            sqlQuerySB.append(Constants.DB_TABLE_NOTIFICATIONSTABLE);
+
+            sqlQuerySB.append(" WHERE ");
+            sqlQuerySB.append(" CNCL_NOTIF_EVNT_ID = '"+schTranIdStr+"' ");
+            sqlQuerySB.append(" AND ");
+            sqlQuerySB.append(" USER_ID = '"+userId+"' ");
+
+            Cursor cursor2 = db.rawQuery(sqlQuerySB.toString(), null);
+
+            while (cursor2.moveToNext()) {
+                String reasonStr = ColumnFetcher.getInstance().loadString(cursor2, "CNCL_NOTIF_RSN");
+                scheduledTransactionModelObj.setStatus(reasonStr);
+            }
+            //check if this scheduled transaction is already added ends--
 
             String schTransactionDateStrArr[] = schTransactionDateStr.split("-");
 

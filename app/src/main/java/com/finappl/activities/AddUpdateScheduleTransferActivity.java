@@ -168,6 +168,16 @@ public class AddUpdateScheduleTransferActivity extends Activity {
     }
 
     private void popullateUiWhenUpdate(){
+        try{
+            SimpleDateFormat  rightSdf= new SimpleDateFormat("d MMM ''yy");
+            SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
+
+            schedTransferAddUpdDateTV.setText(rightSdf.format(wrongSdf.parse(scheduledTransferModelObj.getSCH_TRNFR_DATE())));
+        }
+        catch(ParseException e){
+            Log.e(CLASS_NAME, "Error !!"+e);
+        }
+
         schedTransferAddUpdAmtET.setText(String.valueOf(scheduledTransferModelObj.getSCH_TRNFR_AMT()));
 
         schedTransferAddUpdAccFromSpn.setSelection(getSpinnerItemIndex(accountList, scheduledTransferModelObj.getFromAccountStr()));
@@ -175,19 +185,19 @@ public class AddUpdateScheduleTransferActivity extends Activity {
 
         //schedule type radio
         if("ONCE".equalsIgnoreCase(scheduledTransferModelObj.getSCH_TRNFR_FREQ())){
-            schedTransferOnceAddRadio.setSelected(true);
+            schedTransferOnceAddRadio.setChecked(true);
         }
         else if("DAILY".equalsIgnoreCase(scheduledTransferModelObj.getSCH_TRNFR_FREQ())){
-            schedTransferDailyAddRadio.setSelected(true);
+            schedTransferDailyAddRadio.setChecked(true);
         }
         else if("WEEKLY".equalsIgnoreCase(scheduledTransferModelObj.getSCH_TRNFR_FREQ())){
-            schedTransferWeeklyAddRadio.setSelected(true);
+            schedTransferWeeklyAddRadio.setChecked(true);
         }
         if("MONTHLY".equalsIgnoreCase(scheduledTransferModelObj.getSCH_TRNFR_FREQ())){
-            schedTransferMonthlyAddRadio.setSelected(true);
+            schedTransferMonthlyAddRadio.setChecked(true);
         }
         else{
-            schedTransferYearlyAddRadio.setSelected(true);
+            schedTransferYearlyAddRadio.setChecked(true);
         }
 
         //notes
@@ -278,7 +288,19 @@ public class AddUpdateScheduleTransferActivity extends Activity {
 
         if(scheduledTransferModelObj.getSCH_TRNFR_ID() != null && !scheduledTransferModelObj.getSCH_TRNFR_ID().isEmpty()){
             Log.i(CLASS_NAME, "Schedule Transfer Id is found... This means user is trying to update the Scheduled Transfer");
-            //TODO: update yet to be implemented
+
+            int result = scheduledTransfersDbService.updateOldScheduledTransfer(scheduledTransferModelObj);
+
+            if(result == 0){
+                showToast("Error !! Couldn't update the Scheduled Transfer");
+                return;
+            }
+
+            //navigate back to calendar screen
+            Intent intent = new Intent(this, CalendarActivity.class);
+            startActivity(intent);
+            finish();
+            showToast("Scheduled Transfer has been updated");
         } else {
             Log.i(CLASS_NAME, "Schedule Transfer Id is not found... This means user is trying to create a new Scheduled Transfer");
 

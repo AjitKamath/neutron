@@ -52,6 +52,8 @@
         <item name="android:imageButtonStyle">@anim/raise</item>
         <item name="android:stateListAnimator">@anim/fab_state_list_animator</item>
         <item name="android:layout_width">50dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:layout_height">50dp</item>
     </style>
 

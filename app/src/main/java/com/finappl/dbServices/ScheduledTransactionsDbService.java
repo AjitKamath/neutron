@@ -19,20 +19,6 @@ public class ScheduledTransactionsDbService extends SQLiteOpenHelper {
 
     private final String CLASS_NAME = this.getClass().getName();
 
-    //db tables
-    private static final String USERS_TABLE = Constants.DB_TABLE_USERSTABLE;
-    private static final String ACCOUNT_TABLE = Constants.DB_TABLE_ACCOUNTTABLE;
-    private static final String CATEGORY_TABLE = Constants.DB_TABLE_CATEGORYTABLE;
-    private static final String SPENT_ON_TABLE = Constants.DB_TABLE_SPENTONTABLE;
-    private static final String TRANSACTION_TABLE = Constants.DB_TABLE_TRANSACTIONTABLE;
-    private static final String SCHEDULED_TRANSACTIONS_TABLE = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-    private static final String SCHEDULED_TRANSFER_TABLE = Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE;
-    private static final String BUDGET_TABLE = Constants.DB_TABLE_BUDGETTABLE;
-    private static final String TRANSFERS_TABLE = Constants.DB_TABLE_TRANSFERSTABLE;
-    private static final String CURRENCY_TABLE = Constants.DB_TABLE_CURRENCYTABLE;
-    private static final String COUNTRY_TABLE = Constants.DB_TABLE_COUNTRYTABLE;
-    private static final String WORK_TIMELINE_TABLE = Constants.DB_TABLE_WORK_TIMELINETABLE;
-
 	private static final String DATABASE_NAME = Constants.DB_NAME;
 	private static final int DATABASE_VERSION = Constants.DB_VERSION;
 
@@ -59,7 +45,30 @@ public class ScheduledTransactionsDbService extends SQLiteOpenHelper {
         values.put("CREAT_DTM", sdf.format(new Date()));
 
         // inserting a new row
-        return db.insert(SCHEDULED_TRANSACTIONS_TABLE, null, values);
+        return db.insert(Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, null, values);
+    }
+
+    //this method updates a old transaction based on the users input
+    public int updateOldScheduledTransaction(ScheduledTransactionModel scheduledTransactionModelObj) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        values.put("SCH_TRAN_CAT_ID", scheduledTransactionModelObj.getSCH_TRAN_CAT_ID());
+        values.put("SCH_TRAN_SPNT_ON_ID", scheduledTransactionModelObj.getSCH_TRAN_SPNT_ON_ID());
+        values.put("SCH_TRAN_ACC_ID", scheduledTransactionModelObj.getSCH_TRAN_ACC_ID());
+        values.put("SCH_TRAN_NAME", scheduledTransactionModelObj.getSCH_TRAN_NAME());
+        values.put("SCH_TRAN_DATE", scheduledTransactionModelObj.getSCH_TRAN_DATE());
+        values.put("SCH_TRAN_FREQ", scheduledTransactionModelObj.getSCH_TRAN_FREQ());
+        values.put("SCH_TRAN_TYPE", scheduledTransactionModelObj.getSCH_TRAN_TYPE());
+        values.put("SCH_TRAN_AMT", String.valueOf(scheduledTransactionModelObj.getSCH_TRAN_AMT()));
+        values.put("SCH_TRAN_NOTE", scheduledTransactionModelObj.getSCH_TRAN_NOTE());
+        values.put("SCH_TRAN_AUTO", scheduledTransactionModelObj.getSCH_TRAN_AUTO());
+        values.put("MOD_DTM", sdf.format(new Date()));
+
+        // update a old row
+        return db.update(Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, values,	"SCH_TRAN_ID = '" + scheduledTransactionModelObj.getSCH_TRAN_ID() + "'", null);
     }
 
     //Gets the Scheduled Transaction using the Scheduled Transaction Id & User Id and returns back the ScheduledTransactionModel object
@@ -81,18 +90,18 @@ public class ScheduledTransactionsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SPNT.SPNT_ON_NAME ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(SCHEDULED_TRANSACTIONS_TABLE + " SCH ");
+        sqlQuerySB.append(Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE + " SCH ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(CATEGORY_TABLE+" CAT ");
+        sqlQuerySB.append(Constants.DB_TABLE_CATEGORYTABLE+" CAT ");
         sqlQuerySB.append(" ON CAT.CAT_ID = SCH.SCH_TRAN_CAT_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(ACCOUNT_TABLE+" ACC ");
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE+" ACC ");
         sqlQuerySB.append(" ON ACC.ACC_ID = SCH.SCH_TRAN_ACC_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(SPENT_ON_TABLE+" SPNT ");
+        sqlQuerySB.append(Constants.DB_TABLE_SPENTONTABLE+" SPNT ");
         sqlQuerySB.append(" ON SPNT.SPNT_ON_ID = SCH.SCH_TRAN_SPNT_ON_ID ");
 
         sqlQuerySB.append(" WHERE ");

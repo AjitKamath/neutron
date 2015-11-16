@@ -2,6 +2,7 @@ package com.finappl.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,13 +154,16 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
             mHolder.calendarScheduleFreqTattooTV.setText(scheduledTransactionModelObj.getSCH_TRAN_FREQ());
 
             //for amount
-            if(scheduledTransactionModelObj.getSCH_TRAN_AMT() >= 0){
+            if("EXPENSE".equalsIgnoreCase(scheduledTransactionModelObj.getSCH_TRAN_TYPE())){
+                mHolder.calendarScheduleAmtTV.setText("-"+String.valueOf(scheduledTransactionModelObj.getSCH_TRAN_AMT()));
+                mHolder.calendarScheduleAmtTV.setTextColor(mHolder.calendarScheduleAmtTV.getResources().getColor(R.color.finappleCurrencyNegColor));
+            }
+            else if("INCOME".equalsIgnoreCase(scheduledTransactionModelObj.getSCH_TRAN_TYPE())){
                 mHolder.calendarScheduleAmtTV.setText(String.valueOf(scheduledTransactionModelObj.getSCH_TRAN_AMT()));
                 mHolder.calendarScheduleAmtTV.setTextColor(mHolder.calendarScheduleAmtTV.getResources().getColor(R.color.finappleCurrencyPosColor));
             }
             else{
-                mHolder.calendarScheduleAmtTV.setText(String.valueOf(scheduledTransactionModelObj.getSCH_TRAN_AMT() * -1));   //to remove the '-' sign
-                mHolder.calendarScheduleAmtTV.setTextColor(mHolder.calendarScheduleAmtTV.getResources().getColor(R.color.finappleCurrencyNegColor));
+                Log.e(CLASS_NAME, "Expected Scheduled Transfer Type to be Income/Expense... found neither");
             }
         }
         else if(mData.get(position)instanceof ScheduledTransferModel){
@@ -175,14 +179,7 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
             mHolder.calendarScheduleFreqTattooTV.setText(scheduledTransferModelObj.getSCH_TRNFR_FREQ());
 
             //for amount
-            if(scheduledTransferModelObj.getSCH_TRNFR_AMT() >= 0){
-                mHolder.calendarScheduleAmtTV.setText(String.valueOf(scheduledTransferModelObj.getSCH_TRNFR_AMT()));
-                mHolder.calendarScheduleAmtTV.setTextColor(mHolder.calendarScheduleAmtTV.getResources().getColor(R.color.finappleCurrencyPosColor));
-            }
-            else{
-                mHolder.calendarScheduleAmtTV.setText(String.valueOf(scheduledTransferModelObj.getSCH_TRNFR_AMT() * -1));   //to remove the '-' sign
-                mHolder.calendarScheduleAmtTV.setTextColor(mHolder.calendarScheduleAmtTV.getResources().getColor(R.color.finappleCurrencyNegColor));
-            }
+            mHolder.calendarScheduleAmtTV.setText(String.valueOf(scheduledTransferModelObj.getSCH_TRNFR_AMT()));
 
             mHolder.calendarScheduleTransactionLL.setVisibility(View.GONE);
             mHolder.calendarScheduleTransferLL.setVisibility(View.VISIBLE);
