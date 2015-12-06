@@ -268,6 +268,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
 
         CalendarBudgetsAdapter calendarBudgetsAdapter = new CalendarBudgetsAdapter(mContext, R.layout.calendar_budgets_list_view, budgetsList);
         budgetsLV.setAdapter(calendarBudgetsAdapter);
+        budgetsLV.setOnItemClickListener(listViewClickListener);
 
         //if there are budgets for this day/week/month/year
         if (calendarBudgetsAdapter != null & calendarBudgetsAdapter.getCount() != 0) {
@@ -358,36 +359,12 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         listViewClickListener = new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(CLASS_NAME, "MASTER !! you click hath " + view.getId() + ". You shalt go to the view transaction pageth");
+            Log.i(CLASS_NAME, "MASTER !! you click hath " + view.getId() + ". You shalt go to the view transaction pageth");
 
-                Object listItemObject = view.getTag();
-
-                if (listViewItemClickListener != null) {
-                    listViewItemClickListener.onListItemClick(listItemObject);
-                }
-
-
-                /*if(listItemObject instanceof ConsolidatedTransactionModel){
-                    showTransactionsPopper((ConsolidatedTransactionModel) listItemObject);
-                }
-                else if(listItemObject instanceof ConsolidatedTransferModel){
-                    showTransfersPopper((ConsolidatedTransferModel) listItemObject);
-                }
-                else if(listItemObject instanceof AccountsModel){
-                    showAccountPopper((AccountsModel) listItemObject);
-                }
-                else if(listItemObject instanceof TransactionModel){
-                    showTransactionDetailsPopper((TransactionModel) listItemObject);
-                }
-                else if(listItemObject instanceof TransferModel){
-                    showTransferDetailsPopper((TransferModel) listItemObject);
-                }
-                else if(listItemObject instanceof ScheduledTransactionModel){
-                    showScheduledTransactionDetailsPopper((ScheduledTransactionModel) listItemObject);
-                }
-                else if(listItemObject instanceof ScheduledTransferModel){
-                    showScheduledTransferDetailsPopper((ScheduledTransferModel) listItemObject);
-                }*/
+            Object listItemObject = view.getTag();
+            if (listViewItemClickListener != null) {
+                listViewItemClickListener.onListItemClick(listItemObject);
+            }
             }
         };
     }

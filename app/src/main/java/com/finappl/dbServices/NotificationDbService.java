@@ -45,7 +45,7 @@ public class NotificationDbService extends SQLiteOpenHelper {
         values.put("CNCL_NOTIF_TYPE", notificationModelObj.getCNCL_NOTIF_TYPE());
         values.put("CNCL_NOTIF_EVNT_ID", notificationModelObj.getCNCL_NOTIF_EVNT_ID());
         values.put("CNCL_NOTIF_RSN", notificationModelObj.getCNCL_NOTIF_RSN());
-        values.put("CNCL_NOTIF_DATE", sdf.format(new Date()));
+        values.put("CNCL_NOTIF_DATE", notificationModelObj.getCNCL_NOTIF_DATE());
         values.put("CREAT_DTM", sdf.format(new Date()));
 
         return db.insert(NOTIFICATIONS_TABLE, null, values);

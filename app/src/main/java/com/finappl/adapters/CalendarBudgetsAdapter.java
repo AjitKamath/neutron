@@ -76,16 +76,16 @@ public class CalendarBudgetsAdapter extends BaseAdapter {
         BudgetModel budgetItem = dataList.get(position);
 
         //decide color based on ACC_TOTAL
-        String monthExpTotalStr = String.valueOf(budgetItem.getMonthExpenseTotal());
+        String monthExpTotalStr = String.valueOf(budgetItem.getBudgetRangeTotal());
 
-        //set dim red background if the total month expense exceeds the budget set
-        if(budgetItem.getMonthExpenseTotal() > budgetItem.getBUDGET_AMT()){
+        //set dim red background if the total range total exceeds the budget set
+        if(budgetItem.getBudgetRangeTotal() > budgetItem.getBUDGET_AMT()){
             mHolder.calendarBdgTotalSpntTV.setTextColor(mHolder.calendarBdgTotalSpntTV.getResources().getColor(R.color.negativeButtonColor));
         }
 
         //TODO: Approximatization required
 
-        mHolder.budgetLL.setTag(budgetItem.getBUDGET_ID());
+        mHolder.budgetLL.setTag(budgetItem);
 
         //set color of calendarBdgTypeTV according to the budget type
         if("DAILY".equalsIgnoreCase(budgetItem.getBUDGET_TYPE())){

@@ -103,14 +103,14 @@ public class NotificationsService extends Service {
             if("SCHEDULED_TRANSFER".equalsIgnoreCase(notificationActionModelObj.getNotificationTypeStr())) {
                 Log.i(CLASS_NAME, "The Notifications was for 'SCHEDULED_TRANSFER'");
                 ScheduledTransferModel scheduledTransferModelObj = (ScheduledTransferModel) notificationActionModelObj.getNotificationObject();
-                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransferModelObj.getSCH_TRNFR_DATE());
+                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransferModelObj.getScheduledDateStr());
                 notificationModelObj.setCNCL_NOTIF_TYPE("SCHEDULED_TRANSFER");
                 notificationModelObj.setCNCL_NOTIF_EVNT_ID(scheduledTransferModelObj.getSCH_TRNFR_ID());
             }
             else if("SCHEDULED_TRANSACTION".equalsIgnoreCase(notificationActionModelObj.getNotificationTypeStr())){
                 Log.i(CLASS_NAME, "The Notifications was for 'SCHEDULED_TRANSACTION'");
                 ScheduledTransactionModel scheduledTransactionModelObj = (ScheduledTransactionModel) notificationActionModelObj.getNotificationObject();
-                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransactionModelObj.getSCH_TRAN_DATE());
+                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransactionModelObj.getScheduledDateStr());
                 notificationModelObj.setCNCL_NOTIF_TYPE("SCHEDULED_TRANSACTION");
                 notificationModelObj.setCNCL_NOTIF_EVNT_ID(scheduledTransactionModelObj.getSCH_TRAN_ID());
             }
@@ -325,7 +325,7 @@ public class NotificationsService extends Service {
             Log.i(CLASS_NAME, "There are no Scheduled Transactions for the date("+todayStr+")");
             //remove those schedules who have been either addded already or rejected by the user.
             Log.i(CLASS_NAME, "Found " + schedTransactionModelObjList.size() + " Scheduled Transactions...but need to filter out those which are already added/cancelled");
-            todaysNotificationsObj.setTodaysSchedTransactionsList(calendarDbService.getSchedTransactionsListAfterCancelledNotifsOnDate(schedTransactionModelObjList
+            todaysNotificationsObj.setTodaysSchedTransactionsList(calendarDbService.getSchedTransactionsListAfterCancelAddDelNotifsOnDate(schedTransactionModelObjList
                     , loggedInUserObj.getUSER_ID(), todayStr));
             Log.i(CLASS_NAME, "After filtering already added or cancelled , found " + schedTransactionModelObjList.size() + " scheduled transactions");
             Log.i(CLASS_NAME, "Finished building notifications for Scheduled Transactions");
@@ -337,7 +337,7 @@ public class NotificationsService extends Service {
             Log.i(CLASS_NAME, "There are no Scheduled Transfers for the date("+todayStr+")");
             //remove those schedules who have been either addded already or rejected by the user.
             Log.i(CLASS_NAME, "Found " + scheduledTransferModelObjList.size() + " Scheduled Transfers...but need to filter out those which are already added/cancelled");
-            todaysNotificationsObj.setTodaysSchedTransfersList(calendarDbService.getSchedTransfersListAfterCancelledNotifsOnDate(scheduledTransferModelObjList
+            todaysNotificationsObj.setTodaysSchedTransfersList(calendarDbService.getSchedTransfersListAfterCancelAddDelNotifsOnDate(scheduledTransferModelObjList
                     , loggedInUserObj.getUSER_ID(), todayStr));
             Log.i(CLASS_NAME, "After filtering already added or cancelled , found " + scheduledTransferModelObjList.size() + " scheduled transfers");
             Log.i(CLASS_NAME, "Finished building notifications for Scheduled Transfers");
@@ -371,7 +371,7 @@ public class NotificationsService extends Service {
                     transactionModelObj.setTRAN_NAME(iterSchedTransactionsList.getSCH_TRAN_NAME());
                     transactionModelObj.setTRAN_TYPE(iterSchedTransactionsList.getSCH_TRAN_TYPE());
                     transactionModelObj.setTRAN_NOTE(iterSchedTransactionsList.getSCH_TRAN_NOTE());
-                    transactionModelObj.setTRAN_DATE(sdf.format(new Date()));
+                    transactionModelObj.setTRAN_DATE(iterSchedTransactionsList.getScheduledDateStr());
 
                     if((new AddUpdateTransactionsDbService(getApplicationContext())).addNewTransaction(transactionModelObj) != -1){
                         Log.i(CLASS_NAME, "Building a notification just to notify the user of the automatically added scheduled transaction");
@@ -428,7 +428,7 @@ public class NotificationsService extends Service {
                     transferModelObj.setACC_ID_TO(iterSchedTranfersList.getSCH_TRNFR_ACC_ID_TO());
                     transferModelObj.setTRNFR_AMT(iterSchedTranfersList.getSCH_TRNFR_AMT());
                     transferModelObj.setTRNFR_NOTE(iterSchedTranfersList.getSCH_TRNFR_NOTE());
-                    transferModelObj.setTRNFR_DATE(sdf.format(new Date()));
+                    transferModelObj.setTRNFR_DATE(iterSchedTranfersList.getScheduledDateStr());
 
 
                     if((new AddUpdateTransfersDbService(getApplicationContext())).addNewTransfer(transferModelObj) != -1){

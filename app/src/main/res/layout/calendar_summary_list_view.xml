@@ -11,8 +11,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,8 +25,8 @@
 
                 <TextView
                     android:id="@+id/consolTranTypTVId"
-                    android:layout_width="7dp"
-                    android:layout_height="7dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_gravity="center"
                     android:background="@drawable/circle_calendar_transaction_indicator"
                     android:gravity="center"
@@ -68,16 +66,13 @@
                         android:textColor="@color/text"
                         android:textSize="12dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="bottom|left"
-                        android:maxLength="15"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:text="TO"
-                        android:textColor="@color/text"
-                        android:textSize="12dp" />
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/arrow_blue" />
 
                     <TextView
                         android:id="@+id/consolTrfrToAccTVId"

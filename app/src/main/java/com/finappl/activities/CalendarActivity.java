@@ -53,6 +53,7 @@ import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
 import com.finappl.models.AccountsModel;
 import com.finappl.models.ActivityModel;
+import com.finappl.models.BudgetModel;
 import com.finappl.models.ConsolidatedTransactionModel;
 import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
@@ -64,6 +65,7 @@ import com.finappl.models.TransferModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -136,6 +138,12 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendar);
 
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        setFont((ViewGroup) this.findViewById(R.id.calendarPageRLId), robotoCondensedLightFont);
+    }
+
+    private void initActivity(){
         //this is to ensure the tables are in the db...actually calls the Sqlite class constructor..importance of this line is known only when the db is deleted and the app is run
         Log.i(CLASS_NAME, "Initializing the application database starts");
         controller.getWritableDatabase();
@@ -179,10 +187,6 @@ public class CalendarActivity extends AppCompatActivity {
 
         //Set up poppers if we navigated to this page from sme other activities.
         setUpActionPoppers();
-
-        //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) this.findViewById(R.id.calendarPageRLId), robotoCondensedLightFont);
     }
 
     private void setUpActionPoppers() {
@@ -718,7 +722,7 @@ public class CalendarActivity extends AppCompatActivity {
                 TransactionModel transactionModelObj = new TransactionModel();
 
                 transactionModelObj.setUSER_ID(loggedInUserObj.getUSER_ID());
-                transactionModelObj.setTRAN_DATE(selectedDateStr);
+                transactionModelObj.setTRAN_DATE(cleanUpDate(selectedDateStr));
                 transactionModelObj.setTRAN_AMT(amount);
                 transactionModelObj.setTRAN_NAME(Constants.DEFAULT_QUICK_TRANSACTION_NAME);
 
@@ -736,12 +740,7 @@ public class CalendarActivity extends AppCompatActivity {
 
                     dialog.dismiss();
 
-                    //refresh the calendar to fetch updates after quick transaction
-                    Intent intent = new Intent(mContext, CalendarActivity.class);
-                    intent.putExtra("SELECTED_DATE", selectedDateStr);
-                    mContext.startActivity(intent);
-
-                    //setGridCellAdapterToDate(Integer.parseInt(selectedDateStrArr[0]), Integer.parseInt(selectedDateStrArr[1]), Integer.parseInt(selectedDateStrArr[2]));
+                    refreshActivity();
                 } else {
                     showToast("Error !! Could not create Transaction");
                     Log.e(CLASS_NAME, "ERROR !! Could not create Quick Transaction");
@@ -769,7 +768,7 @@ public class CalendarActivity extends AppCompatActivity {
         schedTransactionPopperDeleteIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMessagePopper(v);
+                showScheduleMessagePopper(scheduledTransactionModelObj);
             }
         });
         schedTransactionPopperEditIV.setOnClickListener(new View.OnClickListener() {
@@ -854,10 +853,20 @@ public class CalendarActivity extends AppCompatActivity {
                 schedTransactionPopperStatusTV.setTextColor(getResources().getColor(R.color.finappleTheme));
                 schedTransactionPopperStatusTV.setText("Added");
             }
+            else if("SCHEDULED".equalsIgnoreCase(scheduledTransactionModelObj.getStatus())){
+                schedTransactionPopperStatusIV.setBackgroundResource(R.drawable.scheduled_transaction_white);
+                schedTransactionPopperStatusTV.setTextColor(getResources().getColor(R.color.orrange));
+                schedTransactionPopperStatusTV.setText("Scheduled");
+
+                //enable editing when its scheduled
+                schedTransactionPopperEditIV.setVisibility(View.VISIBLE);
+            }
         }
         else{
-            schedTransactionPopperStatusLV.setVisibility(View.GONE);
-            schedTransactionPopperEditIV.setVisibility(View.VISIBLE);
+            Log.e(CLASS_NAME, "Expecting Scheduled Transaction status to be AUTO_ADD/ADD/CANCEL/SCHEDULED..but found none.");
+            schedTransactionPopperStatusIV.setBackgroundResource(R.drawable.info_white);
+            schedTransactionPopperStatusTV.setTextColor(getResources().getColor(R.color.red));
+            schedTransactionPopperStatusTV.setText("Unavailable");
         }
 
         schedTransactionPopperFreqTV.setText("REPEATS " + scheduledTransactionModelObj.getSCH_TRAN_FREQ());
@@ -913,7 +922,7 @@ public class CalendarActivity extends AppCompatActivity {
         schedTransferPopperDeleteIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMessagePopper(v);
+                showScheduleMessagePopper(scheduledTransferModelObj);
             }
         });
         schedTransferPopperEditIV.setOnClickListener(new View.OnClickListener() {
@@ -981,10 +990,20 @@ public class CalendarActivity extends AppCompatActivity {
                 schedTransferPopperStatusTV.setTextColor(getResources().getColor(R.color.finappleTheme));
                 schedTransferPopperStatusTV.setText("Added");
             }
+            else if("SCHEDULED".equalsIgnoreCase(scheduledTransferModelObj.getStatus())){
+                schedTransferPopperStatusIV.setBackgroundResource(R.drawable.scheduled_transaction_white);
+                schedTransferPopperStatusTV.setTextColor(getResources().getColor(R.color.orrange));
+                schedTransferPopperStatusTV.setText("Scheduled");
+
+                //enable editing when its scheduled
+                schedTransferPopperEditIV.setVisibility(View.VISIBLE);
+            }
         }
         else{
-            schedTransferPopperStatusLV.setVisibility(View.GONE);
-            schedTransferPopperEditIV.setVisibility(View.VISIBLE);
+            Log.e(CLASS_NAME, "Expecting Scheduled Transaction status to be AUTO_ADD/ADD/CANCEL/SCHEDULED..but found none.");
+            schedTransferPopperStatusIV.setBackgroundResource(R.drawable.info_white);
+            schedTransferPopperStatusTV.setTextColor(getResources().getColor(R.color.red));
+            schedTransferPopperStatusTV.setText("Unavailable");
         }
 
         //TODO: Approximatization required
@@ -1029,16 +1048,16 @@ public class CalendarActivity extends AppCompatActivity {
         transferDtlPopperDelIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMessagePopper(v);
+                showMessagePopper(transferObj);
             }
         });
         tranferDtlPopperEditIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toEditTransfer(transferObj);
                 if(anotherDialog != null) {
                     anotherDialog.dismiss();
                 }
+                toEditTransfer(transferObj);
             }
         });
 
@@ -1115,20 +1134,14 @@ public class CalendarActivity extends AppCompatActivity {
         tranDtlPopperDelIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMessagePopper(v);
+                showMessagePopper(transactionModelObj);
             }
         });
         tranDtlPopperEditIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                killPopper();
                 toEditTransaction(transactionModelObj);
-                if(anotherDialog != null){
-                    anotherDialog.dismiss();
-                }
-
-                if(dialog != null){
-                    dialog.dismiss();
-                }
             }
         });
 
@@ -1160,7 +1173,7 @@ public class CalendarActivity extends AppCompatActivity {
             tranDtlPopperAmtTV.setText(String.valueOf("-"+transactionModelObj.getTRAN_AMT()));
         }
 
-        SimpleDateFormat badFormat1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        SimpleDateFormat badFormat1 = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         SimpleDateFormat badFormat2 = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat goodFormat1 = new SimpleDateFormat("d MMM ''yy, h:mm a");
         SimpleDateFormat goodFormat2 = new SimpleDateFormat("d MMM ''yy");
@@ -1176,12 +1189,12 @@ public class CalendarActivity extends AppCompatActivity {
             tranDtlPopperTranDateTV.setText(goodFormat2.format(badFormat2.parseObject(transactionModelObj.getTRAN_DATE())));
             tranDtlPopperCreateTV.setText(goodFormat1.format(badFormat1.parseObject(transactionModelObj.getCREAT_DTM())));
 
-            if(transactionModelObj.getMOD_DTM() != null && !"".equalsIgnoreCase(transactionModelObj.getMOD_DTM())){
+            if(transactionModelObj.getMOD_DTM() != null && !transactionModelObj.getMOD_DTM().isEmpty()){
                 tranDtlPopperUpdtdTV.setText(goodFormat2.format(badFormat2.parseObject(transactionModelObj.getMOD_DTM())));
             }
         }
         catch(ParseException pe){
-            Log.e(CLASS_NAME, "Error in date parsing..:"+pe);
+            Log.e(CLASS_NAME, "Error in date parsing..1:"+pe);
             return;
         }
 
@@ -1213,18 +1226,14 @@ public class CalendarActivity extends AppCompatActivity {
         mContext.startActivity(intent);
     }
 
-    private void deleteItem(Object tag){
-        Log.i(CLASS_NAME, "Its 12:02 Am and you are still sober if this log prints the deleteItem id:" + (String) tag);
-
-        /*if(viewTransactionsDbService.deleteTransaction(tag.toString()) != 0){
-            showToast("Transaction deleted !");
-        }
-        else{
-            showToast("Could not delete the transaction");
-        }*/
+    private void refreshActivity(){
+        Log.i(CLASS_NAME, "Selected Date : "+selectedDateStr);
+        Intent intent = new Intent(mContext, CalendarActivity.class);
+        intent.putExtra("SELECTED_DATE", cleanUpDate(selectedDateStr));
+        mContext.startActivity(intent);
     }
 
-    public void showMessagePopper(View view){
+    public void showMessagePopper(Object object){
         // Create custom message popper object
         messageDialog = new Dialog(mContext);
         messageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1237,18 +1246,18 @@ public class CalendarActivity extends AppCompatActivity {
         msgPoprPosLL = (LinearLayout) messageDialog.findViewById(R.id.msgPoprPosLLId);
         msgPoprNegLL = (LinearLayout) messageDialog.findViewById(R.id.msgPoprNegLLId);
 
-        //set listeners for the buttons
-        msgPoprPosLL.setOnClickListener(linearLayoutClickListener);
-        msgPoprNegLL.setOnClickListener(linearLayoutClickListener);
-
         //validation
-        if(view.getTag() == null){
+        if(object == null){
             Log.e(CLASS_NAME, "ERROR !! Tag is null");
             return;
         }
 
         //set positive buttons tag as tran id for deleting
-        msgPoprPosLL.setTag(view.getTag());
+        msgPoprPosLL.setTag(object);
+
+        //set listeners for the buttons
+        msgPoprPosLL.setOnClickListener(linearLayoutClickListener);
+        msgPoprNegLL.setOnClickListener(linearLayoutClickListener);
 
         //texts
         TextView msgPoprNegTV, msgPoprPosTV, msgPoprMsgTV;
@@ -1256,17 +1265,11 @@ public class CalendarActivity extends AppCompatActivity {
         msgPoprPosTV = (TextView) messageDialog.findViewById(R.id.msgPoprPosTVId);
         msgPoprMsgTV = (TextView) messageDialog.findViewById(R.id.msgPoprMsgTVId);
 
-        if(view.getTag().toString().contains("TRAN")){
+        if(object instanceof  TransactionModel){
             msgPoprMsgTV.setText("Delete this Transaction ?");
         }
-        else if(view.getTag().toString().contains("TRNSFR")){
+        else if(object instanceof  TransferModel){
             msgPoprMsgTV.setText("Delete this Transfer ?");
-        }
-        else if(view.getTag().toString().contains("SCH_TRAN")){
-            msgPoprMsgTV.setText("Delete this Scheduled Transaction ?");
-        }
-        else if(view.getTag().toString().contains("SCH_TRNFR")){
-            msgPoprMsgTV.setText("Delete this Scheduled Transfer ?");
         }
         else{
             msgPoprMsgTV.setText("Error !!");
@@ -1277,6 +1280,162 @@ public class CalendarActivity extends AppCompatActivity {
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
         setFont((ViewGroup) messageDialog.findViewById(R.id.msgPoprLLId), robotoCondensedLightFont);
+    }
+
+    public void showScheduleMessagePopper(Object object){
+        // Create custom message popper object
+        messageDialog = new Dialog(mContext);
+        messageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        messageDialog.setContentView(R.layout.message_popper_schedules);
+
+        messageDialog.show();
+
+        //buttons
+        LinearLayout msgPoprSchedNegLL, msgPoprSchedSuperNegLL;
+        msgPoprSchedNegLL = (LinearLayout) messageDialog.findViewById(R.id.msgPoprSchedNegLLId);
+        msgPoprSchedSuperNegLL = (LinearLayout) messageDialog.findViewById(R.id.msgPoprSchedSuperNegLLId);
+
+        //validation
+        if(object == null){
+            Log.e(CLASS_NAME, "ERROR !! Tag is null");
+            return;
+        }
+
+        //set positive buttons tag as tran id for deleting
+        msgPoprSchedNegLL.setTag(object);
+        msgPoprSchedSuperNegLL.setTag(object);
+
+        //set listeners for the buttons
+        msgPoprSchedNegLL.setOnClickListener(linearLayoutClickListener);
+        msgPoprSchedSuperNegLL.setOnClickListener(linearLayoutClickListener);
+
+        //texts
+        TextView msgPoprSchedMsgTV;
+        msgPoprSchedMsgTV = (TextView) messageDialog.findViewById(R.id.msgPoprSchedMsgTVId);
+
+        if(object instanceof  ScheduledTransactionModel){
+            msgPoprSchedMsgTV.setText("You can either Delete this Transaction or remove all the Schedules ahead");
+        }
+        else if(object instanceof  ScheduledTransferModel){
+            msgPoprSchedMsgTV.setText("You can either Delete this Transfer or remove all the Schedules ahead");
+        }
+        else{
+            msgPoprSchedMsgTV.setText("Error !!");
+            Log.e(CLASS_NAME, "Boy !! let me tell you something. Man-Man. I'm expecting either a Scheduled Transaction id, Scheduled transfer id. Nothing else. NOT JUNK !!!!");
+            return;
+        }
+
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        setFont((ViewGroup) messageDialog.findViewById(R.id.msgPoprSchedLLId), robotoCondensedLightFont);
+    }
+
+    private void showBudgetPopper(final BudgetModel budgetModelObj){
+        dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.calendar_budget_popper);
+
+        dialog.show();
+
+        //commons
+        TextView budgetPopperTotalAmountTV = (TextView) dialog.findViewById(R.id.budgetPopperTotalAmountTVId);
+        TextView budgetPopperBudgetAmountTV = (TextView) dialog.findViewById(R.id.budgetPopperBudgetAmountTVId);
+        TextView budgetPopperRangeTV = (TextView) dialog.findViewById(R.id.budgetPopperRangeTVId);
+        TextView budgetPopperNameTV = (TextView) dialog.findViewById(R.id.budgetPopperNameTVId);
+        TextView budgetPopperTypeHeadingTV = (TextView) dialog.findViewById(R.id.budgetPopperTypeHeadingTVId);
+        TextView budgetPopperTypeValueTV = (TextView) dialog.findViewById(R.id.budgetPopperTypeValueTVId);
+        TextView budgetPopperNotesTV = (TextView) dialog.findViewById(R.id.budgetPopperNotesTVId);
+        TextView budgetPopperCreateDateTV = (TextView) dialog.findViewById(R.id.budgetPopperCreateDateTVId);
+        TextView budgetPopperUpdateDateTV = (TextView) dialog.findViewById(R.id.budgetPopperUpdateDateTVId);
+
+        LinearLayout budgetUpdateDateLV = (LinearLayout) dialog.findViewById(R.id.budgetUpdateDateLVId);
+
+        ImageView budgetPopperEditIV = (ImageView) dialog.findViewById(R.id.budgetPopperEditIVId);
+        ImageView budgetPopperDeleteIV = (ImageView) dialog.findViewById(R.id.budgetPopperDeleteIVId);
+
+        budgetPopperEditIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dialog != null){
+                    dialog.dismiss();
+                }
+                toEditBudget(budgetModelObj);
+
+                //TODO: Edit Budget is Yet to be implemented
+            }
+        });
+
+        budgetPopperDeleteIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dialog != null){
+                    dialog.dismiss();
+                }
+                //TODO: Delete Budget is Yet to be implemented
+            }
+        });
+
+        //TODO: Approximatization is required
+        budgetPopperTotalAmountTV.setText(String.valueOf(budgetModelObj.getBudgetRangeTotal()));
+        budgetPopperBudgetAmountTV.setText(String.valueOf(budgetModelObj.getBUDGET_AMT()));
+
+        if(budgetModelObj.getBudgetRangeTotal() > budgetModelObj.getBUDGET_AMT()){
+            budgetPopperTotalAmountTV.setTextColor(getResources().getColor(R.color.finappleCurrencyNegColor));
+        }
+        else{budgetPopperTotalAmountTV.setTextColor(getResources().getColor(R.color.finappleCurrencyPosColor));
+            budgetPopperTotalAmountTV.setTextColor(getResources().getColor(R.color.finappleCurrencyPosColor));
+        }
+
+        budgetPopperRangeTV.setText(budgetModelObj.getBUDGET_TYPE().toUpperCase());
+        budgetPopperNameTV.setText(budgetModelObj.getBUDGET_NAME());
+        budgetPopperTypeHeadingTV.setText(budgetModelObj.getBUDGET_GRP_TYPE().toUpperCase());
+
+        if("CATEGORY".equalsIgnoreCase(budgetModelObj.getBUDGET_GRP_TYPE())){
+            budgetPopperTypeValueTV.setText(budgetModelObj.getCategoryNameStr());
+        }
+        else if("ACCOUNT".equalsIgnoreCase(budgetModelObj.getBUDGET_GRP_TYPE())){
+            budgetPopperTypeValueTV.setText(budgetModelObj.getAccountNameStr());
+        }
+        else if("SPENT ON".equalsIgnoreCase(budgetModelObj.getBUDGET_GRP_TYPE())){
+            budgetPopperTypeValueTV.setText(budgetModelObj.getSpentOnNameStr());
+        }
+        else{
+            Log.e(CLASS_NAME, "Stupidity Error !! Expecting CATEGORY/ACCOUNT/SPENT ON but found none of them");
+            return;
+        }
+
+        budgetPopperNotesTV.setText(budgetModelObj.getBUDGET_NOTE());
+
+        //convert dd-MM-yyyy into dd MMM 'yy
+        SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
+
+        try{
+            budgetPopperCreateDateTV.setText(rightSdf.format(wrongSdf.parse(budgetModelObj.getCREAT_DTM())));
+
+            if(budgetModelObj.getMOD_DTM() != null && !budgetModelObj.getMOD_DTM().isEmpty()){
+                budgetPopperUpdateDateTV.setText(rightSdf.format(wrongSdf.parse(budgetModelObj.getMOD_DTM())));
+                budgetUpdateDateLV.setVisibility(View.VISIBLE);
+            }
+            else{
+                budgetUpdateDateLV.setVisibility(View.GONE);
+            }
+        }
+        catch(ParseException pe){
+            Log.e(CLASS_NAME, "Date Parse Exception:"+pe);
+            return;
+        }
+
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        setFont((ViewGroup) dialog.findViewById(R.id.budgetPopperLLId), robotoCondensedLightFont);
+    }
+
+    private void toEditBudget(BudgetModel budgetModelObj) {
+        Intent intent = new Intent(this, AddUpdateBudgetActivity.class);
+        intent.putExtra("BUDGET_OBJ", budgetModelObj);
+        startActivity(intent);
+        finish();
     }
 
     private void showAccountPopper(final AccountsModel accountsModelObj){
@@ -1362,6 +1521,7 @@ public class CalendarActivity extends AppCompatActivity {
             }
             catch(ParseException ex){
                 Log.e(CLASS_NAME, "Date parsing is sick of your wrong date formats...correction required !!"+ex);
+                return;
             }
         }
 
@@ -1483,6 +1643,9 @@ public class CalendarActivity extends AppCompatActivity {
                                 }
                                 else if (listItemObject instanceof AccountsModel) {
                                     showAccountPopper((AccountsModel) listItemObject);
+                                }
+                                else if (listItemObject instanceof BudgetModel) {
+                                    showBudgetPopper((BudgetModel) listItemObject);
                                 }
                                 else if (listItemObject instanceof ScheduledTransactionModel) {
                                     showScheduledTransactionDetailsPopper((ScheduledTransactionModel) listItemObject);
@@ -1705,6 +1868,14 @@ public class CalendarActivity extends AppCompatActivity {
         calendarMonthTV.setText(Constants.MONTHS_ARRAY[month]);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        setVisible(true);
+
+        initActivity();
+    }
+
     //pass month as jan-1 feb-2
     //TODO: Convert this into ViewPager
     private void setGridCellAdapterToDate(int day, int month, int year) {
@@ -1900,37 +2071,87 @@ public class CalendarActivity extends AppCompatActivity {
                         intent.putExtra("SCHEDULED_TRANSFER_OBJ", scheduledTransferModelObj);
                         break;
 
-                    default:intent = new Intent(mContext, JimBrokeItActivity.class); break;
-                }
+                    case R.id.msgPoprPosLLId:
+                        killPopper();
+                        Object object = v.getTag();
 
-                if(intent != null){
-                    mContext.startActivity(intent);
-                }
-            }
-        };
-    }
-
-    //--------------------------------Linear Layout click listener--------------------------------------------------
-    private LinearLayout.OnClickListener linearLayoutMsgClickListener;
-    {
-        linearLayoutMsgClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(CLASS_NAME, "Linear Layout Click is working !! There's hope :) by the way you clicked:"+ v.getId());
-
-                Intent intent = null;
-
-                switch(v.getId()){
-                    case R.id.msgPoprPosLLId :
-                        deleteItem(v.getTag());
+                        if(object instanceof TransactionModel){
+                            if(calendarDbService.deleteTransaction(((TransactionModel) object).getTRAN_ID())){
+                                refreshActivity();
+                                showToast("Transaction deleted !");
+                            }
+                            else{
+                                showToast("Could not Delete the Transaction");
+                            }
+                        }
+                        else if(object instanceof TransferModel) {
+                            if(calendarDbService.deleteTransfer(((TransferModel) object).getTRNFR_ID())){
+                                refreshActivity();
+                                showToast("Transfer deleted !");
+                            }
+                            else{
+                                showToast("Could not Delete the Transfer");
+                            }
+                        }
                         break;
-                    case R.id.msgPoprNegLLId :      break;
+
+                    case R.id.msgPoprSchedNegLLId:
+                        killMessagePopper();
+                        Object obj = v.getTag();
+
+                        if(obj instanceof ScheduledTransactionModel) {
+                            ScheduledTransactionModel scheduledTransactionModelObject = (ScheduledTransactionModel) obj;
+
+                            if(calendarDbService.deleteOneSched(scheduledTransactionModelObject)){
+                                refreshActivity();
+                                showToast("Scheduled Transaction deleted !");
+                            }
+                            else{
+                                showToast("Could not Delete the Scheduled Transaction");
+                            }
+                        }
+                        else if(obj instanceof ScheduledTransferModel) {
+                            ScheduledTransferModel scheduledTransferModelObject = (ScheduledTransferModel) obj;
+
+                            if(calendarDbService.deleteOneSched(scheduledTransferModelObject)){
+                                refreshActivity();
+                                showToast("Scheduled Transfer deleted !");
+                            }
+                            else{
+                                showToast("Could not Delete the Scheduled Transfer");
+                            }
+                        }
+                        break;
+
+                    case R.id.msgPoprSchedSuperNegLLId:
+                        killMessagePopper();
+                        Object obj2 = v.getTag();
+
+                        if(obj2 instanceof ScheduledTransactionModel) {
+                            ScheduledTransactionModel scheduledTransactionModelObject = (ScheduledTransactionModel) obj2;
+
+                            if(calendarDbService.deleteAllSched(scheduledTransactionModelObject)){
+                                refreshActivity();
+                                showToast("Scheduled Transaction deleted !");
+                            }
+                            else{
+                                showToast("Could not Delete the Scheduled Transaction");
+                            }
+                        }
+                        else if(obj2 instanceof ScheduledTransferModel) {
+                            ScheduledTransferModel scheduledTransferModelObject = (ScheduledTransferModel) obj2;
+
+                            if(calendarDbService.deleteAllSched(scheduledTransferModelObject)){
+                                refreshActivity();
+                                showToast("Scheduled Transfer deleted !");
+                            }
+                            else{
+                                showToast("Could not Delete the Scheduled Transfer");
+                            }
+                        }
+                        break;
 
                     default:intent = new Intent(mContext, JimBrokeItActivity.class); break;
-                }
-
-                if(messageDialog != null){
-                    messageDialog.dismiss();
                 }
 
                 if(intent != null){
@@ -1939,7 +2160,6 @@ public class CalendarActivity extends AppCompatActivity {
             }
         };
     }
-    //--------------------------------Linear Layout ends--------------------------------------------------
 
     public void goToSettings(View view){
         if(checkAndCollapseFab()){
@@ -2033,6 +2253,20 @@ public class CalendarActivity extends AppCompatActivity {
         if (dialog != null) {
             dialog.dismiss();
         }
+
+        if (anotherDialog != null) {
+            anotherDialog.dismiss();
+        }
+
+        if (messageDialog != null) {
+            messageDialog.dismiss();
+        }
+    }
+
+    private void killMessagePopper() {
+        if (messageDialog != null) {
+            messageDialog.dismiss();
+        }
     }
 
     private void showQuickTransferPopper() {
@@ -2083,7 +2317,7 @@ public class CalendarActivity extends AppCompatActivity {
                 transferModelObj.setACC_ID_FRM(String.valueOf(quickTransferAccFrmSpn.getSelectedView().getTag()));
                 transferModelObj.setACC_ID_TO(String.valueOf(quickTransferAccToSpn.getSelectedView().getTag()));
                 transferModelObj.setTRNFR_AMT(amount);
-                transferModelObj.setTRNFR_DATE(selectedDateStr);
+                transferModelObj.setTRNFR_DATE(cleanUpDate(selectedDateStr));
                 transferModelObj.setUSER_ID(loggedInUserObj.getUSER_ID());
 
                 //stop the user if the from and to accounts are same
@@ -2106,12 +2340,7 @@ public class CalendarActivity extends AppCompatActivity {
 
                     dialog.dismiss();
 
-                    //refresh the calendar to fetch updates after quick transaction
-                    Intent intent = new Intent(mContext, CalendarActivity.class);
-                    intent.putExtra("SELECTED_DATE", selectedDateStr);
-                    mContext.startActivity(intent);
-
-                    //setGridCellAdapterToDate(Integer.parseInt(selectedDateStrArr[0]), Integer.parseInt(selectedDateStrArr[1]), Integer.parseInt(selectedDateStrArr[2]));
+                    refreshActivity();
                 }
             }
         });

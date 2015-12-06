@@ -27,6 +27,7 @@ public class ScheduledTransactionModel implements Serializable {
     private String spentOnNameStr;
 
     private String status;
+    private String scheduledDateStr;
 
     public String getSCH_TRAN_CAT_ID() {
         return SCH_TRAN_CAT_ID;
@@ -178,5 +179,13 @@ public class ScheduledTransactionModel implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getScheduledDateStr() {
+        return scheduledDateStr;
+    }
+
+    public void setScheduledDateStr(String scheduledDateStr) {
+        this.scheduledDateStr = scheduledDateStr;
     }
 }

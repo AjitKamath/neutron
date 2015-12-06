@@ -10,8 +10,8 @@
 
     <TextView
         android:id="@+id/calendarScheduleFreqTattooTVId"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:maxLength="1"
@@ -43,15 +43,13 @@
                 android:textSize="13sp"
                 android:text="MMMMMMMMMM"/>
 
-            <TextView
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:textSize="10sp"
-                android:textColor="@color/orrange"
-                android:text="TO"/>
+            <ImageView
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/arrow_blue"/>
 
             <TextView
                 android:id="@+id/calendarScheduleTransferToTVId"

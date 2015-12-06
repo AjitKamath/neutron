@@ -1,9 +1,11 @@
 package com.finappl.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ajit on 4/4/15.
  */
-public class BudgetModel extends UsersModel {
+public class BudgetModel implements Serializable{
     private String BUDGET_ID;
     private String USER_ID;
     private String BUDGET_NAME;
@@ -16,25 +18,10 @@ public class BudgetModel extends UsersModel {
     private String MOD_DTM;
     private String BUDGET_GRP_TYPE;
 
-    private Double monthExpenseTotal;
+    private Double budgetRangeTotal;
     private String accountNameStr;
     private String categoryNameStr;
     private String spentOnNameStr;
-
-    public BudgetModel(String BUDGET_ID, String BUDGET_NAME, String BUDGET_GRP_ID, String BUDGET_GRP_TYPE, String BUDGET_TYPE, Double BUDGET_AMT,
-                       String BUDGET_NOTE,
-                       Double monthExpenseTotal) {
-        this.BUDGET_ID = BUDGET_ID;
-        this.BUDGET_NAME = BUDGET_NAME;
-        this.BUDGET_GRP_ID = BUDGET_GRP_ID;
-        this.BUDGET_TYPE = BUDGET_TYPE;
-        this.BUDGET_AMT = BUDGET_AMT;
-        this.BUDGET_GRP_TYPE = BUDGET_GRP_TYPE;
-        this.BUDGET_NOTE = BUDGET_NOTE;
-        this.monthExpenseTotal = monthExpenseTotal;
-    }
-
-    public BudgetModel() {}
 
     public String getBUDGET_ID() {
         return BUDGET_ID;
@@ -120,12 +107,12 @@ public class BudgetModel extends UsersModel {
         return BUDGET_GRP_TYPE;
     }
 
-    public Double getMonthExpenseTotal() {
-        return monthExpenseTotal;
+    public Double getBudgetRangeTotal() {
+        return budgetRangeTotal;
     }
 
-    public void setMonthExpenseTotal(Double monthExpenseTotal) {
-        this.monthExpenseTotal = monthExpenseTotal;
+    public void setBudgetRangeTotal(Double budgetRangeTotal) {
+        this.budgetRangeTotal = budgetRangeTotal;
     }
 
     public void setBUDGET_GRP_TYPE(String BUDGET_GRP_TYPE) {

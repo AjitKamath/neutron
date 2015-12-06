@@ -96,13 +96,13 @@ public class NotificationsHandlerActivity extends Activity {
             //if the notification was for transactions
             if(intent.getExtras().get("SCH_TRANSACTION") != null){
                 ScheduledTransactionModel scheduledTransactionModelObj = (ScheduledTransactionModel)intent.getExtras().get("SCH_TRANSACTION");
-                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransactionModelObj.getSCH_TRAN_DATE());
+                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransactionModelObj.getScheduledDateStr());
                 notificationModelObj.setCNCL_NOTIF_TYPE("TRANSACTION");
                 notificationModelObj.setCNCL_NOTIF_EVNT_ID(scheduledTransactionModelObj.getSCH_TRAN_ID());
             }
             else if(intent.getExtras().get("SCH_TRANSFER") != null){
                 ScheduledTransferModel scheduledTransferModelObj = (ScheduledTransferModel)intent.getExtras().get("SCH_TRANSFER");
-                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransferModelObj.getSCH_TRNFR_DATE());
+                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransferModelObj.getScheduledDateStr());
                 notificationModelObj.setCNCL_NOTIF_TYPE("TRANSFER");
                 notificationModelObj.setCNCL_NOTIF_EVNT_ID(scheduledTransferModelObj.getSCH_TRNFR_ID());
             }

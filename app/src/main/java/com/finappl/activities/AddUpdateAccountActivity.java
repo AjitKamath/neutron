@@ -58,6 +58,8 @@ public class AddUpdateAccountActivity extends Activity {
     //User
     private UsersModel loggedInUserObj;
 
+    private AccountsModel accountsModelObj = null;
+
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +83,6 @@ public class AddUpdateAccountActivity extends Activity {
     }
 
     private void getAccountFromIntent() {
-        AccountsModel accountsModelObj = null;
-
         if(getIntent().getExtras() != null && getIntent().getExtras().get("ACCOUNT_OBJ") != null){
             accountsModelObj = (AccountsModel) getIntent().getExtras().get("ACCOUNT_OBJ");
         }
@@ -119,11 +119,11 @@ public class AddUpdateAccountActivity extends Activity {
             accAmt = "0";
         }
 
-        AccountsModel accObj =  new AccountsModel();
-        accObj.setACC_NAME(addAccAccNameET.getText().toString());
-        accObj.setInitialAmount(Double.parseDouble(accAmt));
-        accObj.setACC_NOTE(addAccNoteET.getText().toString());
-        return accObj;
+        accountsModelObj.setACC_NAME(String.valueOf(addAccAccNameET.getText()));
+        accountsModelObj.setInitialAmount(Double.parseDouble(accAmt));
+        accountsModelObj.setACC_NOTE(addAccNoteET.getText().toString());
+
+        return accountsModelObj;
     }
 
     public void onDoneUpdate(View view){
@@ -137,8 +137,9 @@ public class AddUpdateAccountActivity extends Activity {
         //pass the user id as well
         accObj.setUSER_ID(loggedInUserObj.getUSER_ID());
 
+        accObj.setACC_ID(accountsModelObj.getACC_ID());
 
-        if("SAVE".equalsIgnoreCase(addAccDoneTV.getText().toString())){
+        if ("SAVE".equalsIgnoreCase(String.valueOf(addAccDoneTV.getText()))){
             long result = addUpdateAccDbService.addNewAccount(accObj);
 
             if(result == -2){
@@ -158,7 +159,19 @@ public class AddUpdateAccountActivity extends Activity {
             }
         }
         else{
-            //TODO: update for add account yet to be implemented
+            long result = addUpdateAccDbService.updateOldAccount(accObj);
+
+            if(result == 0){
+                showToast("Could not Update the Account !");
+                return;
+            }
+            else{
+                Intent intent = new Intent(this, CalendarActivity.class);
+                startActivity(intent);
+                finish();
+
+                showToast("Account Updated !");
+            }
         }
     }
 

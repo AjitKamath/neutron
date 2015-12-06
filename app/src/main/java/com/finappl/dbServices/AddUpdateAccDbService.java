@@ -25,16 +25,6 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = Constants.DB_VERSION;
 	private static AddUpdateAccDbService sInstance = null;
 
-	//db tables
-    private static final String USERS_TABLE = Constants.DB_TABLE_USERSTABLE;
-    private static final String ACCOUNT_TABLE = Constants.DB_TABLE_ACCOUNTTABLE;
-    private static final String CATEGORY_TABLE = Constants.DB_TABLE_CATEGORYTABLE;
-    private static final String SPENT_ON_TABLE = Constants.DB_TABLE_SPENTONTABLE;
-    private static final String TRANSACTION_TABLE = Constants.DB_TABLE_TRANSACTIONTABLE;
-    private static final String SCHEDULED_TRANSACTION_TABLE = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-    private static final String BUDGET_TABLE = Constants.DB_TABLE_BUDGETTABLE;
-    private static final String CATEGORY_TAGS_TABLE = Constants.DB_TABLE_CATEGORYTAGSTABLE;
-
     public AccountsModel getAccountDetailsOnAccountId(String accountIdStr) {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
@@ -57,7 +47,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" (( SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0')  ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(TRANSACTION_TABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE);
         sqlQuerySB.append(" WHERE  ");
         sqlQuerySB.append(" TRAN_TYPE = 'INCOME'  ");
         sqlQuerySB.append(" AND  ");
@@ -81,7 +71,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" ((SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(TRANSACTION_TABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN_TYPE = 'EXPENSE' ");
         sqlQuerySB.append(" AND ");
@@ -104,7 +94,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" ACC_TOTAL ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(ACCOUNT_TABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_ID  = '" + accountIdStr + "' ");
@@ -117,14 +107,28 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         if(cursor.moveToNext()) {
             accountsModelObj = new AccountsModel();
             accountsModelObj.setACC_NAME(ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME"));
-            accountsModelObj.setACC_NOTE(ColumnFetcher.getInstance().loadString(cursor, "ACC_NOTES"));
+            accountsModelObj.setACC_NOTE(ColumnFetcher.getInstance().loadString(cursor, "ACC_NOTE"));
             accountsModelObj.setACC_TOTAL(ColumnFetcher.getInstance().loadDouble(cursor, "ACC_TOTAL"));
+            accountsModelObj.setACC_ID(accountIdStr);
 
             return accountsModelObj;
         }
 
         Log.e(CLASS_NAME, "If this is printed, Something went wrong while fetching Account details from db");
         return null;
+    }
+
+    public int updateOldAccount(AccountsModel accObj) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        ContentValues values = new ContentValues();
+        values.put("ACC_NAME", accObj.getACC_NAME());
+        values.put("ACC_NOTE", accObj.getACC_NOTE());
+        values.put("MOD_DTM", sdf.format(new Date()));
+
+        // Updating an old Row
+        return db.update(Constants.DB_TABLE_ACCOUNTTABLE, values,	"ACC_ID = '" + accObj.getACC_ID() + "'", null);
     }
 
 	public long addNewAccount(AccountsModel accObject){
@@ -135,7 +139,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(ACCOUNT_TABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_NAME ");
@@ -171,7 +175,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         values.put("CREAT_DTM", DateTimeUtil.getInstance().dateDateToDbDateString(new Date()));
 
         // Inserting a new Row in account table
-        long result =  db.insert(ACCOUNT_TABLE, null, values);
+        long result =  db.insert(Constants.DB_TABLE_ACCOUNTTABLE, null, values);
 
         //if result is not -1 insertion failed
         if(result == -1){
@@ -206,7 +210,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         long result2 = 0;
         try {
             // Inserting a new Row
-            result2 =  db.insertOrThrow(TRANSACTION_TABLE, null, values);
+            result2 =  db.insertOrThrow(Constants.DB_TABLE_TRANSACTIONTABLE, null, values);
         }
         catch(Exception e){
             Log.e(CLASS_NAME, "Error while adding transaction after creating account:"+e);
@@ -240,5 +244,4 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
         //unnecessary
     }
-
 }
