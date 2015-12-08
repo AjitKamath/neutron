@@ -54,10 +54,13 @@
                 android:orientation="horizontal"
                 android:gravity="center">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/india" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="INR"
+                    android:textSize="20sp"
+                    android:textColor="@color/finappleCurrencyCodeColor"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/budgetPopperTotalAmountTVId"
@@ -66,7 +69,7 @@
                     android:layout_marginLeft="2dp"
                     android:text="358.65K+"
                     android:textColor="@color/finappleCurrencyPosColor"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -75,12 +78,15 @@
                     android:layout_marginRight="5dp"
                     android:text="/"
                     android:textColor="@color/tertiaryText"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/india" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="INR"
+                    android:textSize="20sp"
+                    android:textColor="@color/finappleCurrencyCodeColor"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/budgetPopperBudgetAmountTVId"
@@ -89,7 +95,7 @@
                     android:layout_marginLeft="2dp"
                     android:text="358.65K+"
                     android:textColor="@color/finappleCurrencyPosColor"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
 

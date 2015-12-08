@@ -144,13 +144,14 @@
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/summaryPopperCurImageId"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/india"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:text="INR"
+                android:textSize="25sp"
+                android:textColor="@color/finappleCurrencyCodeColorLight"
                 android:gravity="center" />
 
             <TextView

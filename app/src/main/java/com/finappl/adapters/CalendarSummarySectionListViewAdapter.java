@@ -28,7 +28,7 @@ import java.util.Objects;
 /**
  * Created by ajit on 17/1/15.
  */
-public class ConsolidatedSummarySectionAdapter extends BaseAdapter {
+public class CalendarSummarySectionListViewAdapter extends BaseAdapter {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
     private int layoutResourceId;
@@ -36,7 +36,7 @@ public class ConsolidatedSummarySectionAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<Object> itemsList = new ArrayList<>();
 
-    public ConsolidatedSummarySectionAdapter(Context mContext, int layoutResourceId, SummaryModel data) {
+    public CalendarSummarySectionListViewAdapter(Context mContext, int layoutResourceId, SummaryModel data) {
         super();
         this.layoutResourceId = layoutResourceId;
         this.mContext = mContext;
@@ -128,6 +128,11 @@ public class ConsolidatedSummarySectionAdapter extends BaseAdapter {
         }
 
         //TODO: Approximatization required
+
+        //this is to offset the last item to allow its content to be viewed by scrolling
+        if(position == itemsList.size()-1){
+            mHolder.consolSummaryLL.setPadding(0, 0, 0, FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 65));
+        }
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");

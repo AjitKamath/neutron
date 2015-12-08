@@ -12,6 +12,7 @@ import com.finappl.models.CurrencyModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.ColumnFetcher;
 import com.finappl.utils.Constants;
+import com.finappl.utils.EncryptionUtil;
 import com.finappl.utils.IdGenerator;
 
 import java.text.SimpleDateFormat;
@@ -25,21 +26,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
 
     private final String CLASS_NAME = this.getClass().getName();
 
-    //db tables
-    private static final String USERS_TABLE = Constants.DB_TABLE_USERSTABLE;
-    private static final String ACCOUNT_TABLE = Constants.DB_TABLE_ACCOUNTTABLE;
-    private static final String CATEGORY_TABLE = Constants.DB_TABLE_CATEGORYTABLE;
-    private static final String SPENT_ON_TABLE = Constants.DB_TABLE_SPENTONTABLE;
-    private static final String TRANSACTION_TABLE = Constants.DB_TABLE_TRANSACTIONTABLE;
-    private static final String SCHEDULED_TRANSACTIONS_TABLE = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-    private static final String SCHEDULED_TRANSFER_TABLE = Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE;
-    private static final String BUDGET_TABLE = Constants.DB_TABLE_BUDGETTABLE;
-    private static final String TRANSFERS_TABLE = Constants.DB_TABLE_TRANSFERSTABLE;
-    private static final String CURRENCY_TABLE = Constants.DB_TABLE_CURRENCYTABLE;
-    private static final String COUNTRY_TABLE = Constants.DB_TABLE_COUNTRYTABLE;
-    private static final String WORK_TIMELINE_TABLE = Constants.DB_TABLE_WORK_TIMELINETABLE;
-
-	private static final String DATABASE_NAME = Constants.DB_NAME;
+    private static final String DATABASE_NAME = Constants.DB_NAME;
 	private static final int DATABASE_VERSION = Constants.DB_VERSION;
 
     public List<CountryModel> getAllCountry(){
@@ -55,16 +42,16 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" CUR_NAME AS curNameStr ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(COUNTRY_TABLE+ " CNTRY ");
+        sqlQuerySB.append(Constants.DB_TABLE_COUNTRYTABLE+ " CNTRY ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(CURRENCY_TABLE+" CUR ");
+        sqlQuerySB.append(Constants.DB_TABLE_CURRENCYTABLE+" CUR ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CNTRY.CUR_ID = CUR.CUR_ID ");
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-        CountryModel countryModelObj = null;
-        List<CountryModel> countryModelList = new ArrayList<CountryModel>();
+        CountryModel countryModelObj;
+        List<CountryModel> countryModelList = new ArrayList<>();
 
         while (cursor.moveToNext()){
             countryModelObj = new CountryModel();
@@ -91,11 +78,11 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" CUR_SYMB ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(CURRENCY_TABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_CURRENCYTABLE);
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
         CurrencyModel currencyModelObj = null;
-        List<CurrencyModel> currencyModelList = new ArrayList<CurrencyModel>();
+        List<CurrencyModel> currencyModelList = new ArrayList<>();
 
         while (cursor.moveToNext()){
             currencyModelObj = new CurrencyModel();
@@ -110,118 +97,129 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
     }
 
     public long addNewUser(UsersModel userModelObj){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
 
-        //logout all users first
-        values.put("USER_IS_DEL", Constants.DB_AFFIRMATIVE);
-        db.update(USERS_TABLE, values,	"USER_IS_DEL = '" + Constants.DB_NONAFFIRMATIVE + "'", null);
+            //logout all users first
+            values.put("USER_IS_DEL", Constants.DB_AFFIRMATIVE);
+            db.update(Constants.DB_TABLE_USERSTABLE, values, "USER_IS_DEL = '" + Constants.DB_NONAFFIRMATIVE + "'", null);
 
-        values.clear();
+            values.clear();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-        values.put("USER_ID", userModelObj.getUSER_ID());
-        values.put("NAME", userModelObj.getNAME());
-        values.put("PASS", userModelObj.getPASS());
-        values.put("EMAIL", userModelObj.getEMAIL());
-        values.put("DOB", sdf.format(userModelObj.getDOB()));
-        values.put("CNTRY_ID", userModelObj.getCNTRY_ID());
-        values.put("TELEPHONE", userModelObj.getTELEPHONE());
-        values.put("CUR_ID", userModelObj.getCUR_ID());
-        values.put("DEV_ID", userModelObj.getDEV_ID());
-        values.put("USER_IS_DEL", Constants.DB_NONAFFIRMATIVE);
-        values.put("CREAT_DTM", sdf1.format(new Date()));
+            values.put("USER_ID", userModelObj.getUSER_ID());
+            values.put("NAME", userModelObj.getNAME());
+            values.put("PASS", EncryptionUtil.encrypt(userModelObj.getPASS()));
+            values.put("EMAIL", userModelObj.getEMAIL());
+            values.put("DOB", sdf.format(userModelObj.getDOB()));
+            values.put("CNTRY_ID", userModelObj.getCNTRY_ID());
+            values.put("TELEPHONE", userModelObj.getTELEPHONE());
+            values.put("CUR_ID", userModelObj.getCUR_ID());
+            values.put("DEV_ID", userModelObj.getDEV_ID());
+            values.put("USER_IS_DEL", Constants.DB_NONAFFIRMATIVE);
+            values.put("CREAT_DTM", sdf1.format(new Date()));
 
-        // Inserting a new Row in USERS_TABLE
-        long result = db.insert(USERS_TABLE, null, values);
+            // Inserting a new Row in USERS_TABLE
+            long result = db.insert(Constants.DB_TABLE_USERSTABLE, null, values);
 
-        if(result == -1){
-            Log.e(CLASS_NAME, "Something went wrong while registering the user");
+            if (result == -1) {
+                Log.e(CLASS_NAME, "Something went wrong while registering the user");
+                return result;
+            }
+
+            //inserting a new row into SETTINGS_NOTIFICATIONS table
+            values.clear();
+            values.put("SET_NOTIF_ID", IdGenerator.getInstance().generateUniqueId("SET_NOTIF"));
+            values.put("SET_NOTIF_ACTIVE", Constants.DB_AFFIRMATIVE);
+            values.put("SET_NOTIF_TIME", Constants.DB_DEFAULT_NOTIF_TIME);
+            values.put("SET_NOTIF_BUZZ", Constants.DB_NONAFFIRMATIVE);
+            values.put("USER_ID", userModelObj.getUSER_ID());
+            values.put("CREAT_DTM", sdf1.format(new Date()));
+
+            result = db.insert(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS, null, values);
+
+            if (result == -1) {
+                Log.e(CLASS_NAME, "Something went wrong while registering the user");
+                return result;
+            }
+
+            //inserting a new row into SETTINGS_SOUNDS table
+            values.clear();
+            values.put("SET_SND_ID", IdGenerator.getInstance().generateUniqueId("SET_SND"));
+            values.put("SET_SND_ACTIVE", Constants.DB_AFFIRMATIVE);
+            values.put("USER_ID", userModelObj.getUSER_ID());
+            values.put("CREAT_DTM", sdf1.format(new Date()));
+
+            result = db.insert(Constants.DB_TABLE_SETTINGS_SOUNDS, null, values);
+
+            if (result == -1) {
+                Log.e(CLASS_NAME, "Something went wrong while registering the user");
+                return result;
+            }
+
+            //inserting a new row into SETTINGS_SECURITY table
+            values.clear();
+            values.put("SET_SEC_ID", IdGenerator.getInstance().generateUniqueId("SET_SEC"));
+            values.put("SET_SEC_ACTIVE", Constants.DB_NONAFFIRMATIVE);
+            values.put("USER_ID", userModelObj.getUSER_ID());
+            values.put("CREAT_DTM", sdf1.format(new Date()));
+
+            result = db.insert(Constants.DB_TABLE_SETTINGS_SECURITY, null, values);
+
             return result;
         }
-
-        //inserting a new row into SETTINGS_NOTIFICATIONS table
-        values.clear();
-        values.put("SET_NOTIF_ID", IdGenerator.getInstance().generateUniqueId("SET_NOTIF"));
-        values.put("SET_NOTIF_ACTIVE", Constants.DB_AFFIRMATIVE);
-        values.put("SET_NOTIF_TIME", Constants.DB_DEFAULT_NOTIF_TIME);
-        values.put("SET_NOTIF_BUZZ", Constants.DB_NONAFFIRMATIVE);
-        values.put("USER_ID", userModelObj.getUSER_ID());
-        values.put("CREAT_DTM", sdf1.format(new Date()));
-
-        result = db.insert(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS, null, values);
-
-        if(result == -1){
-            Log.e(CLASS_NAME, "Something went wrong while registering the user");
-            return result;
+        catch(Exception e){
+            Log.i(CLASS_NAME, "ERROR !! While adding a new User");
         }
-
-        //inserting a new row into SETTINGS_SOUNDS table
-        values.clear();
-        values.put("SET_SND_ID", IdGenerator.getInstance().generateUniqueId("SET_SND"));
-        values.put("SET_SND_ACTIVE", Constants.DB_AFFIRMATIVE);
-        values.put("USER_ID", userModelObj.getUSER_ID());
-        values.put("CREAT_DTM", sdf1.format(new Date()));
-
-        result = db.insert(Constants.DB_TABLE_SETTINGS_SOUNDS, null, values);
-
-        if(result == -1){
-            Log.e(CLASS_NAME, "Something went wrong while registering the user");
-            return result;
-        }
-
-        //inserting a new row into SETTINGS_SECURITY table
-        values.clear();
-        values.put("SET_SEC_ID", IdGenerator.getInstance().generateUniqueId("SET_SEC"));
-        values.put("SET_SEC_ACTIVE", Constants.DB_NONAFFIRMATIVE);
-        values.put("USER_ID", userModelObj.getUSER_ID());
-        values.put("CREAT_DTM", sdf1.format(new Date()));
-
-        result = db.insert(Constants.DB_TABLE_SETTINGS_SECURITY, null, values);
-
-        return result;
+        return -1;
     }
 
     public boolean isAuthenticUser(UsersModel usersModelObj) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
 
-        StringBuilder sqlQuerySB = new StringBuilder(50);
+            StringBuilder sqlQuerySB = new StringBuilder(50);
 
-        sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" COUNT(USER_ID) AS COUNT ");
+            sqlQuerySB.append(" SELECT ");
+            sqlQuerySB.append(" COUNT(USER_ID) AS COUNT ");
 
-        sqlQuerySB.append(" FROM ");
+            sqlQuerySB.append(" FROM ");
 
-        sqlQuerySB.append(USERS_TABLE);
+            sqlQuerySB.append(Constants.DB_TABLE_USERSTABLE);
 
-        sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" USER_ID = '" + usersModelObj.getUSER_ID() + "' ");
+            sqlQuerySB.append(" WHERE ");
+            sqlQuerySB.append(" USER_ID = '" + usersModelObj.getUSER_ID() + "' ");
 
-        sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" PASS = '"+usersModelObj.getPASS()+"' ");
+            sqlQuerySB.append(" AND ");
+            sqlQuerySB.append(" PASS = '" + EncryptionUtil.encrypt(usersModelObj.getPASS()) + "' ");
 
-        sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" USER_IS_DEL = '"+Constants.DB_AFFIRMATIVE+"' ");
+            sqlQuerySB.append(" AND ");
+            sqlQuerySB.append(" USER_IS_DEL = '" + Constants.DB_AFFIRMATIVE + "' ");
 
-        Log.i(CLASS_NAME, "Query to know if user is authentic  :" + sqlQuerySB);
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+            Log.i(CLASS_NAME, "Query to know if user is authentic  :" + sqlQuerySB);
+            Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
-        while (cursor.moveToNext()){
-            if(ColumnFetcher.getInstance().loadInt(cursor, "COUNT") > 0){
-                Log.i(CLASS_NAME, "Aaahhh... the master !! How can i serve you Mr. User. Use finappl all you want to use");
+            while (cursor.moveToNext()) {
+                if (ColumnFetcher.getInstance().loadInt(cursor, "COUNT") > 0) {
+                    Log.i(CLASS_NAME, "Aaahhh... the master !! How can i serve you Mr. User. Use finappl all you want to use");
 
-                ContentValues values = new ContentValues();
-                values.put("USER_IS_DEL", Constants.DB_NONAFFIRMATIVE);
+                    ContentValues values = new ContentValues();
+                    values.put("USER_IS_DEL", Constants.DB_NONAFFIRMATIVE);
 
-                // Updating an old Row
-                db.update(USERS_TABLE, values,	"USER_ID = '" + usersModelObj.getUSER_ID() + "'", null);
+                    // Updating an old Row
+                    db.update(Constants.DB_TABLE_USERSTABLE, values, "USER_ID = '" + usersModelObj.getUSER_ID() + "'", null);
 
-                return true;
+                    return true;
+                }
             }
+            cursor.close();
         }
-        cursor.close();
+        catch(Exception e){
+            Log.e(CLASS_NAME, "ERROR !! While authenticating the user");
+        }
 
         Log.i(CLASS_NAME, "Enemy at the gates trying to breach !!!! Code Red. Code Red.");
         return false;
@@ -237,7 +235,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
 
         sqlQuerySB.append(" FROM ");
 
-        sqlQuerySB.append(USERS_TABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_USERSTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER_ID = '" + usernameStr + "' ");
@@ -287,15 +285,15 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SET_SND_ACTIVE ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(USERS_TABLE+ " USER ");
+        sqlQuerySB.append(Constants.DB_TABLE_USERSTABLE+ " USER ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(COUNTRY_TABLE+" CNTRY ");
+        sqlQuerySB.append(Constants.DB_TABLE_COUNTRYTABLE+" CNTRY ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CNTRY.CNTRY_ID = USER.CNTRY_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(CURRENCY_TABLE+" CUR ");
+        sqlQuerySB.append(Constants.DB_TABLE_CURRENCYTABLE+" CUR ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CUR.CUR_ID = USER.CUR_ID ");
 
@@ -310,7 +308,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SND.USER_ID = USER.USER_ID ");
 
         sqlQuerySB.append(" LEFT OUTER JOIN ");
-        sqlQuerySB.append(WORK_TIMELINE_TABLE+" WORK ");
+        sqlQuerySB.append(Constants.DB_TABLE_WORK_TIMELINETABLE+" WORK ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" WORK.USER_ID = USER.USER_ID ");
 
@@ -318,8 +316,8 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" USER.USER_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-        UsersModel usersModelObject = null;
-        Map<Integer, UsersModel> userModelMap = new HashMap<Integer, UsersModel>();
+        UsersModel usersModelObject;
+        Map<Integer, UsersModel> userModelMap = new HashMap<>();
 
         while (cursor.moveToNext()){
             usersModelObject = new UsersModel();
@@ -365,7 +363,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" MAX(MOD_DTM) ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(USERS_TABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_USERSTABLE);
 
         Log.i(CLASS_NAME, "Query to fetch last used username  :"+sqlQuerySB);
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
@@ -379,7 +377,6 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         return "";
     }
 
-
     @Override
 	public void onCreate(SQLiteDatabase db) {
 
@@ -392,6 +389,5 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
-		
 	}
 }

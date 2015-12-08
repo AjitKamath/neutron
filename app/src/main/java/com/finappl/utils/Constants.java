@@ -75,8 +75,8 @@ public class Constants extends Activity {
     public static final String DB_TABLE_SETTINGS_SECURITY = "SETTINGS_SECURITY";
 
     //defaults & their id's
-    public static final String DEFAULTS_CATEGORIES = "Food-CAT_1-expense,Fuel-CAT_2-expense,Medicine-CAT_3-expense,Shopping-CAT_4-expense,Accommodation-CAT_5-expense," +
-                "Other-CAT_6-expense,Salary-CAT_7-income,Interest-CAT_8-income,Entertainment-CAT_9-expense,Lost-CAT_10-expense,Stationary-CAT_11-expense,Cellphone-CAT_12-expense";
+    public static final String DEFAULTS_CATEGORIES = "Food/Drinks-CAT_1-expense,Fuel/Gas-CAT_2-expense,Health/Medicare-CAT_3-expense,Shopping-CAT_4-expense,Accommodation/Hotel-CAT_5-expense," +
+                "Other-CAT_6-expense,Salary-CAT_7-income,Interest-CAT_8-income,Entertainment-CAT_9-expense,Lost-CAT_10-expense,Stationary-CAT_11-expense,Cellphone-CAT_12-expense,Logistics-CAT_13-expense,Education/Learning-CAT_14-expense,Investments-CAT_15-expense,Lend/Borrow-CAT_16-expense";
     public static final String DEFAULTS_CATEGORIES_SELECT = "Other";
 
     public static final String DEFAULTS_SPENTON = "Self-SPNT_1,Family-SPNT_2,Friends-SPNT_3,Business-SPNT_4";

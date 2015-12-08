@@ -29,8 +29,9 @@
 
                 <TextView
                     android:id="@+id/accountPopperTitleTVId"
-                    android:layout_width="260dp"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="50dp"
                     android:gravity="center"
                     android:maxLength="25"
                     android:text="Mmmmmmmmmm"
@@ -39,9 +40,16 @@
 
                 <ImageView
                     android:id="@+id/accountPopperEditIVId"
+                    android:layout_marginRight="5dp"
                     android:layout_width="@dimen/image_header_size"
                     android:layout_height="@dimen/image_header_size"
                     android:background="@drawable/edit_white" />
+
+                <ImageView
+                    android:id="@+id/accountPopperDelIVId"
+                    android:layout_width="@dimen/image_header_size"
+                    android:layout_height="@dimen/image_header_size"
+                    android:background="@drawable/delete_white" />
 
             </LinearLayout>
 
@@ -61,10 +69,13 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/india" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="INR"
+                android:textSize="30sp"
+                android:textColor="@color/finappleCurrencyCodeColor"
+                android:gravity="center" />
 
             <TextView
                 android:id="@+id/accountPopperBalanceTVId"
@@ -141,10 +152,13 @@
                             android:gravity="center_vertical|right"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:background="@drawable/india" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="INR"
+                                android:textSize="14sp"
+                                android:textColor="@color/finappleCurrencyCodeColor"
+                                android:gravity="center" />
 
                             <TextView
                                 android:id="@+id/accountPopperTransactionAmtTVId"
@@ -152,14 +166,14 @@
                                 android:layout_height="wrap_content"
                                 android:text="-999.99M"
                                 android:textColor="@color/finappleCurrencyNegColor"
-                                android:textSize="15sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="+"
                                 android:textColor="@color/finappleCurrencyApproxColor"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 
@@ -225,7 +239,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="190dp"
+                            android:layout_width="185dp"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:orientation="vertical">
@@ -273,10 +287,13 @@
                                 android:paddingTop="3dp"
                                 android:orientation="horizontal">
 
-                                <ImageView
-                                    android:layout_width="15dp"
-                                    android:layout_height="15dp"
-                                    android:background="@drawable/india" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="INR"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/finappleCurrencyCodeColor"
+                                    android:gravity="center" />
 
                                 <TextView
                                     android:id="@+id/accountPopperTransferAmtTVId"
@@ -284,14 +301,15 @@
                                     android:layout_height="wrap_content"
                                     android:text="999.99M"
                                     android:textColor="@color/finappleCurrencyPosColor"
-                                    android:textSize="15sp" />
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="+"
+                                    android:gravity="center"
                                     android:textColor="@color/finappleCurrencyApproxColor"
-                                    android:textSize="10sp" />
+                                    android:textSize="8sp" />
 
                             </LinearLayout>
 

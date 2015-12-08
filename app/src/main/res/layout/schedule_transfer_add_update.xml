@@ -103,14 +103,15 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
-                                android:background="@drawable/india"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="INR"
+                                android:textSize="20sp"
+                                android:textColor="@color/finappleCurrencyCodeColor"
                                 android:gravity="center" />
 
                             <EditText
-
                                 android:id="@+id/schedTransferAddUpdAmtETId"
                                 android:layout_width="match_parent"
                                 android:layout_height="35dp"

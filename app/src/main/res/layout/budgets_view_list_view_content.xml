@@ -37,7 +37,7 @@
 
                 <TextView
                     android:id="@+id/budgetsViewListNameTVId"
-                    android:layout_width="245dp"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|left"
                     android:layout_marginLeft="2dp"
@@ -46,11 +46,15 @@
                     android:textColor="@color/finappleThemeDark"
                     android:textSize="20sp"/>
 
-                <ImageView
-                    android:layout_gravity="center"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:background="@drawable/india"/>
+                <TextView
+                    android:id="@+id/viewTransferCurIVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:text="INR"
+                    android:textSize="13sp"
+                    android:textColor="@color/finappleCurrencyCodeColor"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/budgetsViewListAmtTVId"
@@ -60,7 +64,7 @@
                     android:maxLength="7"
                     android:text="999.99M"
                     android:textColor="@color/finappleCurrencyPosColor"
-                    android:textSize="17sp"/>
+                    android:textSize="13sp"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -69,7 +73,7 @@
                     android:maxLength="1"
                     android:text="+"
                     android:textColor="@color/tertiaryText"
-                    android:textSize="15sp"/>
+                    android:textSize="13sp"/>
 
 
             </LinearLayout>

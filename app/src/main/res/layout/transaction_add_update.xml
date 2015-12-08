@@ -159,10 +159,13 @@
                             android:layout_marginTop="5dp"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="35dp"
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="35dp"
-                                android:background="@drawable/india"
+                                android:text="INR"
+                                android:layout_marginRight="2dp"
+                                android:textSize="35sp"
+                                android:textColor="@color/finappleCurrencyCodeColor"
                                 android:gravity="center" />
 
                             <EditText
@@ -170,7 +173,7 @@
                                 android:gravity="center"
                                 android:id="@+id/addUpdateTranAmtETId"
                                 android:layout_width="match_parent"
-                                android:layout_height="35dp"
+                                android:layout_height="match_parent"
                                 android:background="@drawable/edit_text_border"
                                 android:hint="AMOUNT"
                                 android:paddingLeft="-40dp"

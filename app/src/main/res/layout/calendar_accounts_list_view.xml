@@ -35,18 +35,15 @@
         android:gravity="center_vertical|right"
         android:orientation="horizontal">
 
-        <!--<View
-            android:layout_width="0.5dp"
-            android:layout_height="15dp"
-            android:background="@color/finappleTheme" />-->
-
-        <ImageView
-            android:layout_marginLeft="5dp"
+        <TextView
             android:id="@+id/accountsCurrIVId"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:background="@drawable/india"
-            android:gravity="center"/>
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:text="INR"
+            android:textSize="16sp"
+            android:textColor="@color/finappleCurrencyCodeColor"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/accountsTotalTVId"
@@ -57,7 +54,7 @@
             android:maxLength="7"
             android:text="999.99M"
             android:textColor="@color/finappleCurrencyPosColor"
-            android:textSize="16dp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/accountsApproxTVId"

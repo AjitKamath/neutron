@@ -1324,6 +1324,11 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return db.delete(Constants.DB_TABLE_TRANSFERSTABLE, "TRNFR_ID = '" + transferIdStr+"'", null) > 0;
     }
 
+    public boolean deleteBudget(String budgetIdStr){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(Constants.DB_TABLE_BUDGETTABLE, "BUDGET_ID = '" + budgetIdStr+"'", null) > 0;
+    }
+
     //---------------------method to get all accounts--------------------------//
     public List<AccountsModel> getAllAccounts(String userId){
         List<AccountsModel> accountsList = new ArrayList<AccountsModel>();

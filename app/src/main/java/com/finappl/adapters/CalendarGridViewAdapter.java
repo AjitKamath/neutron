@@ -26,7 +26,7 @@ import java.util.Map;
  * Created by ajit on 8/1/15.
  */
 // Inner Class
-public class CalendarGridAdpter extends BaseAdapter {
+public class CalendarGridViewAdapter extends BaseAdapter {
     private final String CLASS_NAME = this.getClass().getName();
 
     private final Context _context;
@@ -51,7 +51,7 @@ public class CalendarGridAdpter extends BaseAdapter {
     private Map<String, MonthLegend> monthLegendDataMap;
 
     // Days in Current Month
-    public CalendarGridAdpter(Context context, Map<String, MonthLegend> monthLegendMap, int day, int month, int year) {
+    public CalendarGridViewAdapter(Context context, Map<String, MonthLegend> monthLegendMap, int day, int month, int year) {
         super();
         this._context = context;
         this.list = new ArrayList<>();

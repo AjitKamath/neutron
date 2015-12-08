@@ -14,6 +14,7 @@ import com.finappl.R;
 import com.finappl.models.MonthLegend;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
+import com.finappl.utils.FinappleUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * Created by ajit on 17/1/15.
  */
-public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
+public class CalendarSchedulesSectionListViewAdapter extends BaseAdapter {
 
     private final String CLASS_NAME = this.getClass().getName();
 
@@ -37,8 +38,8 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
     private List<ScheduledTransactionModel> scheduledTransactionModelList;
     private List<ScheduledTransferModel> scheduledTransferModelList;
 
-    public CalendarSchedulesSectionListAdapter(Context context, int contentLayoutId, List<ScheduledTransactionModel> scheduledTransactionModelList
-    , List<ScheduledTransferModel> scheduledTransferModelList) {
+    public CalendarSchedulesSectionListViewAdapter(Context context, int contentLayoutId, List<ScheduledTransactionModel> scheduledTransactionModelList
+            , List<ScheduledTransferModel> scheduledTransferModelList) {
         super();
         this.contentLayoutId = contentLayoutId;
         this.scheduledTransactionModelList = scheduledTransactionModelList;
@@ -186,6 +187,11 @@ public class CalendarSchedulesSectionListAdapter extends BaseAdapter {
 
             mHolder.calendarScheduleTransferFromTV.setText(scheduledTransferModelObj.getFromAccountStr());
             mHolder.calendarScheduleTransferToTV.setText(scheduledTransferModelObj.getToAccountStr());
+        }
+
+        //this is to offset the last item to allow its content to be viewed by scrolling
+        if(position == mData.size()-1){
+            mHolder.calendarSchedulesLL.setPadding(0, 0, 0, FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 65));
         }
 
         //set font for all the text view

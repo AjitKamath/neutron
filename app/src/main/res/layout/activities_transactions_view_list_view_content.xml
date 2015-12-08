@@ -81,11 +81,15 @@
                 android:gravity="center_vertical|left"
                 android:orientation="horizontal">
 
-                <ImageView
+                <TextView
                     android:id="@+id/viewTransactTileCurIVId"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:background="@drawable/india"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:text="INR"
+                    android:textSize="20sp"
+                    android:textColor="@color/finappleCurrencyCodeColor"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/viewTransactTileAmtTVId"
@@ -95,7 +99,7 @@
                     android:maxLength="7"
                     android:text="999.99M"
                     android:textColor="@color/finappleCurrencyPosColor"
-                    android:textSize="22sp"/>
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/viewTransactTileAmtApproxTVId"

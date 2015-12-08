@@ -240,6 +240,8 @@
     <color name="finappleCurrencyPosColor">#4CAF50</color>
     <color name="finappleCurrencyDividerColor">#000000</color>
     <color name="finappleLimitCrossColor">#FFEFD5</color>
+    <color name="finappleCurrencyCodeColor">#000000</color>
+    <color name="finappleCurrencyCodeColorLight">#FFFFFF</color>
 
     <!--Budget View Heading Colors -->
     <color name="budgetsViewHeadingCategory">#FF0000</color>

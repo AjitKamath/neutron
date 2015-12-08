@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by ajit on 17/1/15.
  */
-public class CalendarAccountsAdapter extends BaseAdapter {
+public class CalendarAccountsListViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private int layoutResourceId;
@@ -27,7 +27,7 @@ public class CalendarAccountsAdapter extends BaseAdapter {
     private List<Integer> colorList;
     private LayoutInflater inflater;
 
-    public CalendarAccountsAdapter(Context mContext, int layoutResourceId, List<AccountsModel> data) {
+    public CalendarAccountsListViewAdapter(Context mContext, int layoutResourceId, List<AccountsModel> data) {
         super();
 
         this.layoutResourceId = layoutResourceId;
@@ -75,6 +75,11 @@ public class CalendarAccountsAdapter extends BaseAdapter {
         }
 
         //TODO: Approximatization required
+
+        //this is to offset the last item to allow its content to be viewed by scrolling
+        if(position == dataList.size()-1){
+            mHolder.summayAccountsLL.setPadding(0, 0, 0, FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 65));
+        }
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");

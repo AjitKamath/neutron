@@ -9,13 +9,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:icon="@drawable/appicon"
+        android:icon="@drawable/launcher"
         android:label="@string/app_name"
         android:theme="@style/FinappleTheme"
         tools:ignore="NewApi">
         <activity
             android:name=".activities.CalendarActivity"
-            android:label="Finapple"
+            android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

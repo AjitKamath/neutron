@@ -14,7 +14,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -43,7 +42,7 @@ import android.widget.Toast;
 import com.finappl.R;
 import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
 import com.finappl.adapters.CalendarTabsViewPagerAdapter;
-import com.finappl.adapters.CalendarGridAdpter;
+import com.finappl.adapters.CalendarGridViewAdapter;
 import com.finappl.adapters.CalendarTransactionsOptionsPopperViewPagerAdapter;
 import com.finappl.adapters.SummaryPopperListAdapter;
 import com.finappl.dbServices.AddUpdateTransactionsDbService;
@@ -65,7 +64,6 @@ import com.finappl.models.TransferModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,7 +85,7 @@ public class CalendarActivity extends AppCompatActivity {
     private TextView yearTV,  calendarMonthTV;
 
     //calendar
-    private CalendarGridAdpter adapter;// adapter instance
+    private CalendarGridViewAdapter adapter;// adapter instance
     private GridView calendarView;
     private Calendar _calendar;
     private String selectedDateStr = sdf.format(new Date());
@@ -187,6 +185,9 @@ public class CalendarActivity extends AppCompatActivity {
 
         //Set up poppers if we navigated to this page from sme other activities.
         setUpActionPoppers();
+
+        //close fab if its open
+        checkAndCollapseFab();
     }
 
     private void setUpActionPoppers() {
@@ -1271,9 +1272,15 @@ public class CalendarActivity extends AppCompatActivity {
         else if(object instanceof  TransferModel){
             msgPoprMsgTV.setText("Delete this Transfer ?");
         }
+        else if(object instanceof BudgetModel){
+            msgPoprMsgTV.setText("Delete this Budget ?");
+        }
+        else if(object instanceof AccountsModel){
+            msgPoprMsgTV.setText("Delete this Account ?");
+        }
         else{
             msgPoprMsgTV.setText("Error !!");
-            Log.e(CLASS_NAME, "Boy !! let me tell you something. Man-Man. I'm expecting either a transaction ID, Transfer ID, Scheduled Transaction id, Scheduled transfer id. Nothing else. NOT JUNK !!!!");
+            Log.e(CLASS_NAME, "Boy !! let me tell you something. ManToMan. I'm expecting either a Transfer/Transaction/Budget/Account Model Object. Nothing else. NOT JUNK !!!!");
             return;
         }
 
@@ -1360,18 +1367,13 @@ public class CalendarActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
                 toEditBudget(budgetModelObj);
-
-                //TODO: Edit Budget is Yet to be implemented
             }
         });
 
         budgetPopperDeleteIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(dialog != null){
-                    dialog.dismiss();
-                }
-                //TODO: Delete Budget is Yet to be implemented
+                showMessagePopper(budgetModelObj);
             }
         });
 
@@ -1448,6 +1450,7 @@ public class CalendarActivity extends AppCompatActivity {
         //commons
         TextView accountPopperTitleTV = (TextView) dialog.findViewById(R.id.accountPopperTitleTVId);
         ImageView accountPopperEditIV = (ImageView) dialog.findViewById(R.id.accountPopperEditIVId);
+        ImageView accountPopperDelIV = (ImageView) dialog.findViewById(R.id.accountPopperDelIVId);
         TextView accountPopperBalanceTV = (TextView) dialog.findViewById(R.id.accountPopperBalanceTVId);
         View accountPopperDividerView = (View) dialog.findViewById(R.id.accountPopperDividerViewId);
         View accountPopperDividerTwoView = (View) dialog.findViewById(R.id.accountPopperDividerTwoViewId);
@@ -1543,8 +1546,16 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
+        accountPopperDelIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMessagePopper(accountsModelObj);
+            }
+        });
+
         if("Y".equalsIgnoreCase(accountsModelObj.getACC_IS_DEFAULT())){
             accountPopperEditIV.setVisibility(View.GONE);
+            accountPopperDelIV.setVisibility(View.GONE);
         }
 
         //set font for all the text view
@@ -1889,7 +1900,7 @@ public class CalendarActivity extends AppCompatActivity {
         fetchMonthLegend();
         setUpTabs();
 
-        adapter = new CalendarGridAdpter(this, monthLegendMap, day, month+1, year);
+        adapter = new CalendarGridViewAdapter(this, monthLegendMap, day, month+1, year);
         adapter.notifyDataSetChanged();
         calendarView.setAdapter(adapter);
 
@@ -1929,7 +1940,7 @@ public class CalendarActivity extends AppCompatActivity {
                     return;
                 }
 
-                selectedDateStr = CalendarGridAdpter.list.get(position);
+                selectedDateStr = CalendarGridViewAdapter.list.get(position);
                 String selectedDateStrArr[] = selectedDateStr.split("-");
                 int selectedDate = Integer.parseInt(selectedDateStrArr[0]);
                 int selectedYear = Integer.parseInt(selectedDateStrArr[2]);
@@ -1949,12 +1960,12 @@ public class CalendarActivity extends AppCompatActivity {
                     //user has selected the past month
                     if (position < 7) {
                         Log.i(CLASS_NAME, "oh..its a PAST");
-                        setGridCellAdapterToDate(selectedDate, CalendarGridAdpter.preMonth, selectedYear);
+                        setGridCellAdapterToDate(selectedDate, CalendarGridViewAdapter.preMonth, selectedYear);
                     }
                     //user has selected the future month
                     else if (position > 27) {
                         Log.i(CLASS_NAME, "wow..the FUTURE !!");
-                        setGridCellAdapterToDate(selectedDate, CalendarGridAdpter.nexMonth, selectedYear);
+                        setGridCellAdapterToDate(selectedDate, CalendarGridViewAdapter.nexMonth, selectedYear);
                     }
                 } else {
                     Log.i(CLASS_NAME, "Wandering in the same month and wondering why i'm even looking at this log !!");
@@ -2093,6 +2104,22 @@ public class CalendarActivity extends AppCompatActivity {
                                 showToast("Could not Delete the Transfer");
                             }
                         }
+                        else if(object instanceof BudgetModel) {
+                            if(calendarDbService.deleteBudget(((BudgetModel) object).getBUDGET_ID())){
+                                refreshActivity();
+                                showToast("Budget deleted !");
+                            }
+                            else{
+                                showToast("Could not Delete the Budget");
+                            }
+                        }
+                        else if(object instanceof AccountsModel) {
+                            //TODO: Yet to impelment the Account Delete feature
+                        }
+                        break;
+
+                    case R.id.msgPoprNegLLId:
+                        killMessagePopper();
                         break;
 
                     case R.id.msgPoprSchedNegLLId:

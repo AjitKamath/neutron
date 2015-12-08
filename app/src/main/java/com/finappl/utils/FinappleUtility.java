@@ -1,5 +1,6 @@
 package com.finappl.utils;
 
+import android.content.res.Resources;
 import android.os.Environment;
 import android.util.Log;
 
@@ -51,6 +52,11 @@ public class FinappleUtility{
         Collections.shuffle(colorList, new Random(seed));
 
         return colorList;
+    }
+
+    public int getDpAsPixels(Resources res, int dp){
+        float scale = res.getDisplayMetrics().density;
+        return (int) (dp*scale + 0.5f);
     }
 
     public List<Integer> getUnRandomizedColorList(Integer resourcesCount){

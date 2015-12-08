@@ -13,20 +13,21 @@ import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.models.BudgetModel;
+import com.finappl.utils.FinappleUtility;
 
 import java.util.List;
 
 /**
  * Created by ajit on 5/4/15.
  */
-public class CalendarBudgetsAdapter extends BaseAdapter {
+public class CalendarBudgetsListViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private int layoutResourceId;
     private List<BudgetModel> dataList;
     private LayoutInflater inflater;
 
-    public CalendarBudgetsAdapter(Context mContext, int layoutResourceId, List<BudgetModel> data) {
+    public CalendarBudgetsListViewAdapter(Context mContext, int layoutResourceId, List<BudgetModel> data) {
         super();
 
         this.layoutResourceId = layoutResourceId;
@@ -110,6 +111,13 @@ public class CalendarBudgetsAdapter extends BaseAdapter {
 
         mHolder.calendarBdgTotalSpntTV.setText(monthExpTotalStr);
         mHolder.calendarBdgCapTV.setText(String.valueOf(budgetItem.getBUDGET_AMT()));
+
+        //TODO: Approximatization required
+
+        //this is to offset the last item to allow its content to be viewed by scrolling
+        if(position == dataList.size()-1){
+            mHolder.budgetLL.setPadding(0, 0, 0, FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 65));
+        }
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");

@@ -45,17 +45,15 @@
         android:gravity="center_vertical|right"
         android:orientation="horizontal">
 
-        <!--<View
-            android:layout_width="0.5dp"
-            android:layout_height="15dp"
-            android:background="@color/finappleTheme" />-->
-
-        <ImageView
+        <TextView
             android:id="@+id/calendarBdgCurIVId"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:background="@drawable/india"
-            android:gravity="center"/>
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:text="INR"
+            android:textSize="12sp"
+            android:textColor="@color/finappleCurrencyCodeColor"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/calendarBdgTotalSpntTVId"
@@ -65,7 +63,7 @@
             android:maxLength="8"
             android:text="-999.99K"
             android:textColor="@color/finappleCurrencyPosColor"
-            android:textSize="12dp"/>
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/calendarBdgApprxTVId"
@@ -96,7 +94,7 @@
             android:maxLength="7"
             android:text="999.99K"
             android:textColor="@color/finappleCurrencyPosColor"
-            android:textSize="12dp"/>
+            android:textSize="12sp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -104,7 +102,7 @@
             android:maxLength="1"
             android:text="@string/approx"
             android:textColor="@color/finappleCurrencyApproxColor"
-            android:textSize="10dp"/>
+            android:textSize="10sp"/>
 
     </LinearLayout>
 

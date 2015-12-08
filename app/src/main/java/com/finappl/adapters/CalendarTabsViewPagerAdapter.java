@@ -1,36 +1,19 @@
 package com.finappl.adapters;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.AddUpdateAccountActivity;
-import com.finappl.activities.AddUpdateScheduleTransactionActivity;
-import com.finappl.activities.AddUpdateScheduleTransferActivity;
-import com.finappl.activities.AddUpdateTransactionActivity;
-import com.finappl.activities.AddUpdateTransferActivity;
 import com.finappl.activities.CalendarActivity;
-import com.finappl.activities.JimBrokeItActivity;
 import com.finappl.dbServices.AddUpdateTransactionsDbService;
 import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
@@ -43,16 +26,9 @@ import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
-import com.finappl.models.SpinnerModel;
 import com.finappl.models.SummaryModel;
-import com.finappl.models.TransactionModel;
-import com.finappl.models.TransferModel;
 import com.finappl.models.UsersModel;
-import com.finappl.utils.Constants;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -211,8 +187,8 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        ConsolidatedSummarySectionAdapter consolAdapter =
-                new ConsolidatedSummarySectionAdapter(mContext, R.layout.calendar_summary_list_view, monthLegendMap.get(selectedDateStr).getSummaryModel());
+        CalendarSummarySectionListViewAdapter consolAdapter =
+                new CalendarSummarySectionListViewAdapter(mContext, R.layout.calendar_summary_list_view, monthLegendMap.get(selectedDateStr).getSummaryModel());
         consolTranLV.setAdapter(consolAdapter);
         consolTranLV.setOnItemClickListener(listViewClickListener);
 
@@ -239,7 +215,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        CalendarAccountsAdapter accAdapter = new CalendarAccountsAdapter(mContext, R.layout.calendar_accounts_list_view, accountsList);
+        CalendarAccountsListViewAdapter accAdapter = new CalendarAccountsListViewAdapter(mContext, R.layout.calendar_accounts_list_view, accountsList);
         accountsLV.setAdapter(accAdapter);
         accountsLV.setOnItemClickListener(listViewClickListener);
 
@@ -266,7 +242,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        CalendarBudgetsAdapter calendarBudgetsAdapter = new CalendarBudgetsAdapter(mContext, R.layout.calendar_budgets_list_view, budgetsList);
+        CalendarBudgetsListViewAdapter calendarBudgetsAdapter = new CalendarBudgetsListViewAdapter(mContext, R.layout.calendar_budgets_list_view, budgetsList);
         budgetsLV.setAdapter(calendarBudgetsAdapter);
         budgetsLV.setOnItemClickListener(listViewClickListener);
 
@@ -284,8 +260,8 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         TextView calendarTransHeaderOrMsgTV = (TextView) layout.findViewById(R.id.calendarTransHeaderOrMsgTVId);
         ListView schedulesLV = (ListView) layout.findViewById(R.id.schedulesLVId);
 
-        CalendarSchedulesSectionListAdapter schedulesListAdapter =
-                new CalendarSchedulesSectionListAdapter(mContext, R.layout.calendar_schedules_list_view, scheduledTransactionModelList,
+        CalendarSchedulesSectionListViewAdapter schedulesListAdapter =
+                new CalendarSchedulesSectionListViewAdapter(mContext, R.layout.calendar_schedules_list_view, scheduledTransactionModelList,
                         scheduledTransferModelList);
         schedulesLV.setAdapter(schedulesListAdapter);
         schedulesListAdapter.notifyDataSetChanged();

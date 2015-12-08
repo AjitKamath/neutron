@@ -88,6 +88,7 @@ public class AddUpdateAccountActivity extends Activity {
         }
 
         if(accountsModelObj == null){
+            accountsModelObj = new AccountsModel();
             Log.i(CLASS_NAME, "Account Details is null in intent... User is here to create a new Account");
             return;
         }
