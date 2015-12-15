@@ -143,7 +143,7 @@ public class Sqlite extends SQLiteOpenHelper{
         sqlQuerySB.append(" (SET_SEC_ID TEXT PRIMARY KEY, ");	            //pk
         sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");          		    //fk1
         sqlQuerySB.append(" SET_SEC_ACTIVE TEXT NOT NULL, ");
-        sqlQuerySB.append(" SET_SEC_KEY TEXT, ");
+		sqlQuerySB.append(" SET_SEC_PIN, ");
         sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
         sqlQuerySB.append(" MOD_DTM DATETIME, ");
 

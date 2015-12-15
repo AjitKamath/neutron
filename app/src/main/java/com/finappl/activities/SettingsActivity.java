@@ -5,14 +5,21 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
+import android.opengl.Visibility;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,6 +40,7 @@ import com.finappl.models.SettingsNotificationModel;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
+import com.finappl.utils.EncryptionUtil;
 
 import java.sql.Time;
 import java.text.ParseException;
@@ -43,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressLint("NewApi")
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends LockerActivity {
     private final String CLASS_NAME = this.getClass().getName();
 
     private Context mContext = this;
@@ -57,6 +65,11 @@ public class SettingsActivity extends Activity {
 
     //User
     private UsersModel loggedInUserObj;
+
+    private EditText lockPoprPinET, lockPoprNewPinET, lockPoprRPinET;
+    private LinearLayout lockPoprNewPinLL;
+
+    private String oldPinStr="", newPinStr="", rPinStr="";
 
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
@@ -75,27 +88,19 @@ public class SettingsActivity extends Activity {
 
         setUpSecurity();
 
-        //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(this.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) this.findViewById(R.id.settingsParentRLId), robotoCondensedLightFont);
+        setFont((ViewGroup) this.findViewById(R.id.settingsParentRLId));
     }
 
     public void toManageContent(View view){
-        Intent intent = new Intent(this, ManageContentActivity.class);
-        startActivity(intent);
-        finish();
+        navigateTo(ManageContentActivity.class, null, null);
     }
 
     public void onHomeClick(View view){
-        Intent intent = new Intent(this, CalendarActivity.class);
-        startActivity(intent);
-        finish();
+        navigateTo(CalendarActivity.class, null, null);
     }
 
     public void onBudget(View view){
-        Intent intent = new Intent(this, BudgetsViewActivity.class);
-        startActivity(intent);
-        finish();
+        navigateTo(BudgetsViewActivity.class, null, null);
     }
 
     public void showPopper(View view){
@@ -190,8 +195,7 @@ public class SettingsActivity extends Activity {
         });
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup)dialog.findViewById(R.id.settingsProfilePersonalPoprLLId), robotoCondensedLightFont);
+        setFont((ViewGroup)dialog.findViewById(R.id.settingsProfilePersonalPoprLLId));
     }
 
     public void logoutUser(View view){
@@ -218,8 +222,7 @@ public class SettingsActivity extends Activity {
         msgPoprMsgTV.setText("Logout "+mContext.getResources().getString(R.string.app_name_main)+" ?");
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) dialog.findViewById(R.id.msgPoprLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) dialog.findViewById(R.id.msgPoprLLId));
     }
 
     private Integer getSpinnerItemIndex(List<SpinnerModel> spnList, String itemStr){
@@ -264,65 +267,6 @@ public class SettingsActivity extends Activity {
         return null;
     }
 
-    public void showChangeSecurityPinPopper(View view){
-        dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.settings_security_popper);
-
-        dialog.show();
-
-        final TextView settingsSecurityMsgTV = (TextView) dialog.findViewById(R.id.settingsSecurityMsgTVId);
-        final EditText settingsSecurityKeyET = (EditText) dialog.findViewById(R.id.settingsSecurityKeyETId);
-        final TextView settingsSecurityPopperActionTV = (TextView) dialog.findViewById(R.id.settingsSecurityPopperActionTVId);
-
-        if(settingsDbService.getUserSecurityKeyOnUserId(loggedInUserObj.getUSER_ID()).isEmpty()){
-            settingsSecurityMsgTV.setText("Set Your PIN");
-            settingsSecurityPopperActionTV.setText("SAVE");
-        }
-        else{
-            settingsSecurityMsgTV.setText("Enter Your PIN");
-            settingsSecurityPopperActionTV.setText("OK");
-        }
-
-        settingsSecurityPopperActionTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if("SAVE".equalsIgnoreCase(String.valueOf(settingsSecurityPopperActionTV.getText()))){
-                    if(String.valueOf(settingsSecurityKeyET.getText()).trim().isEmpty()){
-                        showToast("Enter PIN");
-                    }
-                    else{
-                        settingsDbService.saveSecurityKeyUserId(loggedInUserObj.getUSER_ID(), String.valueOf(settingsSecurityKeyET.getText()));
-                        dialog.dismiss();
-                        showToast("PIN saved");
-                    }
-                }
-                else{
-                    if(String.valueOf(settingsSecurityKeyET.getText()).trim().isEmpty()){
-                        showToast("Enter your PIN");
-                    }
-                    else if(settingsDbService.authenticateOnUserIdAndKey(loggedInUserObj.getUSER_ID(), String.valueOf(settingsSecurityKeyET.getText()))){
-                        if(settingsDbService.getUserSecurityKeyOnUserId(loggedInUserObj.getUSER_ID()).equals(String.valueOf(settingsSecurityKeyET.getText()))){
-                            settingsSecurityMsgTV.setText("Enter Your New PIN");
-                            settingsSecurityPopperActionTV.setText("SAVE");
-                            settingsSecurityKeyET.setText("");
-                        }
-                        else{
-                            showToast("Incorrect PIN");
-                            dialog.dismiss();
-                        }
-                    }
-                }
-            }
-        });
-
-
-
-        //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) dialog.findViewById(R.id.settingsSecurityPopperLLId), robotoCondensedLightFont);
-    }
-
     public void showNotificationsPopper(View view){
         // Create custom message popper object
         dialog = new Dialog(this);
@@ -364,8 +308,7 @@ public class SettingsActivity extends Activity {
         settingsNotifsPopperSaveTV.setOnClickListener(notifPoppeButtonClickListener);
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) dialog.findViewById(R.id.settingsNotifsPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) dialog.findViewById(R.id.settingsNotifsPopperLLId));
     }
 
     public void setUpNotifications(){
@@ -436,24 +379,125 @@ public class SettingsActivity extends Activity {
         }
     }
 
-    public void enableDisableSecurity(View view){
-        LinearLayout settingsSecurityTickLL = (LinearLayout) this.findViewById(R.id.settingsSecurityTickLLId);
-        ImageView settingsSecurityTickIV = (ImageView) this.findViewById(R.id.settingsSecurityTickIVId);
+    private void killPoppers(){
+        if(dialog != null){
+            dialog.dismiss();
+        }
+    }
 
-        if("ENABLED".equalsIgnoreCase(String.valueOf(settingsSecurityTickLL.getTag()))){
-            showToast("Security disabled");
-            settingsSecurityTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_unchecked);
-            settingsSecurityTickLL.setTag("DISABLED");
-            settingsSecurityTickIV.setBackgroundResource(R.drawable.tick_grey);
-            settingsDbService.enableDisableSecurityOnUserId(loggedInUserObj.getUSER_ID(), false);
+    public void enableDisableSecPopper(View view){
+        // Create custom message popper object
+        dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.lock_popper);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        oldPinStr = "";
+        newPinStr = "";
+        rPinStr = "";
+
+        TextView lockPoprOneTV, lockPoprTwoTV, lockPoprThreeTV, lockPoprFourTV, lockPoprFiveTV, lockPoprSixTV, lockPoprSevenTV, lockPoprEightTV, lockPoprNineTV, lockPoprZeroTV;
+        LinearLayout lockPoprDeleteLL, lockPoprSubmitLL;
+
+        lockPoprPinET = (EditText) dialog.findViewById(R.id.lockPoprPinETId);
+        lockPoprNewPinET = (EditText) dialog.findViewById(R.id.lockPoprNewPinETId);
+        lockPoprRPinET = (EditText) dialog.findViewById(R.id.lockPoprRPinETId);
+
+        lockPoprOneTV = (TextView) dialog.findViewById(R.id.lockPoprOneTVId);
+        lockPoprTwoTV = (TextView) dialog.findViewById(R.id.lockPoprTwoTVId);
+        lockPoprThreeTV = (TextView) dialog.findViewById(R.id.lockPoprThreeTVId);
+        lockPoprFourTV = (TextView) dialog.findViewById(R.id.lockPoprfourTVId);
+        lockPoprFiveTV = (TextView) dialog.findViewById(R.id.lockPoprFiveTVId);
+        lockPoprSixTV = (TextView) dialog.findViewById(R.id.lockPoprSixTVId);
+        lockPoprSevenTV = (TextView) dialog.findViewById(R.id.lockPoprSevenTVId);
+        lockPoprEightTV = (TextView) dialog.findViewById(R.id.lockPoprEightTVId);
+        lockPoprNineTV = (TextView) dialog.findViewById(R.id.lockPoprNineTVId);
+        lockPoprZeroTV = (TextView) dialog.findViewById(R.id.lockPoprZeroTVId);
+
+        lockPoprNewPinLL = (LinearLayout) dialog.findViewById(R.id.lockPoprNewPinLLId);
+        lockPoprDeleteLL = (LinearLayout) dialog.findViewById(R.id.lockPoprDeleteLLId);
+        lockPoprSubmitLL = (LinearLayout) dialog.findViewById(R.id.lockPoprSubmitLLId);
+
+        lockPoprOneTV.setOnClickListener(textViewClickListener);
+        lockPoprTwoTV.setOnClickListener(textViewClickListener);
+        lockPoprThreeTV.setOnClickListener(textViewClickListener);
+        lockPoprFourTV.setOnClickListener(textViewClickListener);
+        lockPoprFiveTV.setOnClickListener(textViewClickListener);
+        lockPoprSixTV.setOnClickListener(textViewClickListener);
+        lockPoprSevenTV.setOnClickListener(textViewClickListener);
+        lockPoprEightTV.setOnClickListener(textViewClickListener);
+        lockPoprNineTV.setOnClickListener(textViewClickListener);
+        lockPoprZeroTV.setOnClickListener(textViewClickListener);
+
+        lockPoprDeleteLL.setOnClickListener(linearLayoutClickListenerForTick);
+        lockPoprSubmitLL.setOnClickListener(linearLayoutClickListenerForTick);
+
+        if(loggedInUserObj.getSET_SEC_PIN() == null || (loggedInUserObj.getSET_SEC_PIN() != null && loggedInUserObj.getSET_SEC_PIN().isEmpty())){
+            lockPoprPinET.setVisibility(View.GONE);
+            lockPoprNewPinLL.setVisibility(View.VISIBLE);
         }
         else{
-            showToast("Security enabled");
-            settingsSecurityTickLL.setBackgroundResource(R.drawable.circle_tick_super_inner_checked);
-            settingsSecurityTickLL.setTag("ENABLED");
-            settingsSecurityTickIV.setBackgroundResource(R.drawable.tick_white);
-            settingsDbService.enableDisableSecurityOnUserId(loggedInUserObj.getUSER_ID(), true);
+            lockPoprPinET.setVisibility(View.VISIBLE);
+            lockPoprNewPinLL.setVisibility(View.GONE);
         }
+
+        dialog.show();
+
+        setFont((ViewGroup) dialog.findViewById(R.id.lockPoprLLId));
+    }
+
+    public void changePinPopper(View view){
+        // Create custom message popper object
+        dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.lock_popper);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        oldPinStr = "";
+        newPinStr = "";
+        rPinStr = "";
+
+        TextView lockPoprOneTV, lockPoprTwoTV, lockPoprThreeTV, lockPoprFourTV, lockPoprFiveTV, lockPoprSixTV, lockPoprSevenTV, lockPoprEightTV, lockPoprNineTV, lockPoprZeroTV;
+        LinearLayout lockPoprDeleteLL, lockPoprSubmitLL;
+
+        lockPoprPinET = (EditText) dialog.findViewById(R.id.lockPoprPinETId);
+        lockPoprNewPinET = (EditText) dialog.findViewById(R.id.lockPoprNewPinETId);
+        lockPoprRPinET = (EditText) dialog.findViewById(R.id.lockPoprRPinETId);
+
+        lockPoprOneTV = (TextView) dialog.findViewById(R.id.lockPoprOneTVId);
+        lockPoprTwoTV = (TextView) dialog.findViewById(R.id.lockPoprTwoTVId);
+        lockPoprThreeTV = (TextView) dialog.findViewById(R.id.lockPoprThreeTVId);
+        lockPoprFourTV = (TextView) dialog.findViewById(R.id.lockPoprfourTVId);
+        lockPoprFiveTV = (TextView) dialog.findViewById(R.id.lockPoprFiveTVId);
+        lockPoprSixTV = (TextView) dialog.findViewById(R.id.lockPoprSixTVId);
+        lockPoprSevenTV = (TextView) dialog.findViewById(R.id.lockPoprSevenTVId);
+        lockPoprEightTV = (TextView) dialog.findViewById(R.id.lockPoprEightTVId);
+        lockPoprNineTV = (TextView) dialog.findViewById(R.id.lockPoprNineTVId);
+        lockPoprZeroTV = (TextView) dialog.findViewById(R.id.lockPoprZeroTVId);
+
+        lockPoprNewPinLL = (LinearLayout) dialog.findViewById(R.id.lockPoprNewPinLLId);
+        lockPoprDeleteLL = (LinearLayout) dialog.findViewById(R.id.lockPoprDeleteLLId);
+        lockPoprSubmitLL = (LinearLayout) dialog.findViewById(R.id.lockPoprSubmitLLId);
+
+        lockPoprOneTV.setOnClickListener(textViewClickListener);
+        lockPoprTwoTV.setOnClickListener(textViewClickListener);
+        lockPoprThreeTV.setOnClickListener(textViewClickListener);
+        lockPoprFourTV.setOnClickListener(textViewClickListener);
+        lockPoprFiveTV.setOnClickListener(textViewClickListener);
+        lockPoprSixTV.setOnClickListener(textViewClickListener);
+        lockPoprSevenTV.setOnClickListener(textViewClickListener);
+        lockPoprEightTV.setOnClickListener(textViewClickListener);
+        lockPoprNineTV.setOnClickListener(textViewClickListener);
+        lockPoprZeroTV.setOnClickListener(textViewClickListener);
+
+        lockPoprDeleteLL.setOnClickListener(linearLayoutClickListenerForChangePin);
+        lockPoprSubmitLL.setOnClickListener(linearLayoutClickListenerForChangePin);
+
+        lockPoprNewPinLL.setVisibility(View.VISIBLE);
+
+        dialog.show();
+
+        setFont((ViewGroup) dialog.findViewById(R.id.lockPoprLLId));
     }
 
     public void enableDisableWidget(View view){
@@ -670,26 +714,248 @@ public class SettingsActivity extends Activity {
         return null;
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, CalendarActivity.class);
-        startActivity(intent);
-        finish();
+    private TextView.OnClickListener textViewClickListener;
+    {
+        textViewClickListener = new TextView.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(lockPoprPinET.isFocused()){
+                    oldPinStr += String.valueOf(v.getTag());
+                    lockPoprPinET.setText(lockPoprPinET.getText()+"*");
+                }
+                else if(lockPoprNewPinET.isFocused()){
+                    newPinStr += String.valueOf(v.getTag());
+                    lockPoprNewPinET.setText(lockPoprNewPinET.getText()+"*");
+                }
+                else if(lockPoprRPinET.isFocused()){
+                    rPinStr += String.valueOf(v.getTag());
+                    lockPoprRPinET.setText(lockPoprRPinET.getText()+"*");
+                }
+            }
+        };
     }
 
-    //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group, Typeface font) {
-        int count = group.getChildCount();
-        View v;
+    private LinearLayout.OnClickListener linearLayoutClickListenerForChangePin;
+    {
+        linearLayoutClickListenerForChangePin = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        for(int i = 0; i < count; i++) {
-            v = group.getChildAt(i);
-            if(v instanceof TextView) {
-                ((TextView) v).setTypeface(font);
+                switch(v.getId()) {
+                    case R.id.lockPoprDeleteLLId:
+                        if (lockPoprPinET.isFocused()) {
+                            String inputStr = String.valueOf(lockPoprPinET.getText());
+
+                            if(!inputStr.isEmpty()) {
+                                inputStr = inputStr.substring(0, inputStr.length()-1);
+                                lockPoprPinET.setText(inputStr);
+
+                                oldPinStr = oldPinStr.substring(0, oldPinStr.length()-1);
+                            }
+                        }
+                        else if (lockPoprNewPinET.isFocused()) {
+                            String inputStr = String.valueOf(lockPoprNewPinET.getText());
+
+                            if(!inputStr.isEmpty()) {
+                                inputStr = inputStr.substring(0, inputStr.length()-1);
+                                lockPoprNewPinET.setText(inputStr);
+
+                                newPinStr = newPinStr.substring(0, newPinStr.length()-1);
+                            }
+                        }
+                        else if (lockPoprRPinET.isFocused()) {
+                            String inputStr = String.valueOf(lockPoprRPinET.getText());
+
+                            if(!inputStr.isEmpty()) {
+                                inputStr = inputStr.substring(0, inputStr.length()-1);
+                                lockPoprRPinET.setText(inputStr);
+
+                                rPinStr = rPinStr.substring(0, rPinStr.length()-1);
+                            }
+                        }
+                        break;
+
+                    case R.id.lockPoprSubmitLLId:
+                        //When User wants to change the existing PIN
+                        if(View.VISIBLE == lockPoprNewPinLL.getVisibility() && View.VISIBLE == lockPoprPinET.getVisibility()) {
+                            try {
+                                if (oldPinStr.isEmpty()) {
+                                    showToast("Enter Current PIN");
+                                } else if (newPinStr.isEmpty()) {
+                                    showToast("New PIN cannot be empty");
+                                } else if (rPinStr.isEmpty()) {
+                                    showToast("Repeat PIN cannot be empty");
+                                } else if (!newPinStr.equals(rPinStr)) {
+                                    showToast("New PIN & Repeat PIN should match");
+                                } else if (!EncryptionUtil.encrypt(oldPinStr).equals(loggedInUserObj.getSET_SEC_PIN())) {
+                                    showToast("Incorrect PIN");
+
+                                    lockPoprPinET.setText("");
+                                    oldPinStr = "";
+
+                                } else {
+                                    settingsDbService.saveSecurityKeyUserId(loggedInUserObj.getUSER_ID(), EncryptionUtil.encrypt(newPinStr));
+                                    killPoppers();
+                                    setUpSecurity();
+
+                                    //update Sec PIN in loggedInUserObj
+                                    loggedInUserObj = getUser();
+
+                                    showToast("New PIN Saved");
+                                }
+                            } catch (Exception e) {
+                                Log.e(CLASS_NAME, "Error !! While Encryption ");
+                            }
+                        }
+                        //When User wants to save the PIN for the first time
+                        else if(View.VISIBLE == lockPoprNewPinLL.getVisibility() && View.GONE == lockPoprPinET.getVisibility()) {
+                            try {
+                                if (newPinStr.isEmpty()) {
+                                    showToast("New PIN cannot be empty");
+                                }
+                                else if (rPinStr.isEmpty()) {
+                                    showToast("Repeat PIN cannot be empty");
+                                }
+                                else if (!newPinStr.equals(rPinStr)) {
+                                    showToast("New PIN & Repeat PIN should match");
+                                }
+                                else {
+                                    settingsDbService.saveSecurityKeyUserId(loggedInUserObj.getUSER_ID(), EncryptionUtil.encrypt(newPinStr));
+                                    killPoppers();
+                                    setUpSecurity();
+
+                                    //update Sec PIN in loggedInUserObj
+                                    loggedInUserObj = getUser();
+
+                                    showToast("PIN Saved");
+                                }
+                            } catch (Exception e) {
+                                Log.e(CLASS_NAME, "Error !! While Encryption ");
+                            }
+                        }
+                        break;
+
+                    default: showToast("Error !!");
+                }
             }
-            else if(v instanceof ViewGroup) {
-                setFont((ViewGroup) v, font);
+        };
+    }
+
+    private LinearLayout.OnClickListener linearLayoutClickListenerForTick;
+    {
+        linearLayoutClickListenerForTick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                switch(v.getId()) {
+                    case R.id.lockPoprDeleteLLId:
+                        if (lockPoprPinET.isFocused()) {
+                            String inputStr = String.valueOf(lockPoprPinET.getText());
+
+                            if(!inputStr.isEmpty()) {
+                                inputStr = inputStr.substring(0, inputStr.length()-1);
+                                lockPoprPinET.setText(inputStr);
+
+                                oldPinStr = oldPinStr.substring(0, oldPinStr.length()-1);
+                            }
+                        }
+                        else if (lockPoprNewPinET.isFocused()) {
+                            String inputStr = String.valueOf(lockPoprNewPinET.getText());
+
+                            if(!inputStr.isEmpty()) {
+                                inputStr = inputStr.substring(0, inputStr.length()-1);
+                                lockPoprNewPinET.setText(inputStr);
+
+                                newPinStr = newPinStr.substring(0, newPinStr.length()-1);
+                            }
+                        }
+                        else if (lockPoprRPinET.isFocused()) {
+                            String inputStr = String.valueOf(lockPoprRPinET.getText());
+
+                            if(!inputStr.isEmpty()) {
+                                inputStr = inputStr.substring(0, inputStr.length()-1);
+                                lockPoprRPinET.setText(inputStr);
+
+                                rPinStr = rPinStr.substring(0, rPinStr.length()-1);
+                            }
+                        }
+                        break;
+
+                    case R.id.lockPoprSubmitLLId:
+                        //When User wants to save the PIN for the first time & Enable/Disable security
+                         if(View.VISIBLE == lockPoprNewPinLL.getVisibility() && View.GONE == lockPoprPinET.getVisibility()) {
+                            try {
+                                if (newPinStr.isEmpty()) {
+                                    showToast("New PIN cannot be empty");
+                                }
+                                else if (rPinStr.isEmpty()) {
+                                    showToast("Repeat PIN cannot be empty");
+                                }
+                                else if (!newPinStr.equals(rPinStr)) {
+                                    showToast("New PIN & Repeat PIN should match");
+                                }
+                                else {
+                                    settingsDbService.saveSecurityKeyUserId(loggedInUserObj.getUSER_ID(), EncryptionUtil.encrypt(newPinStr));
+                                    settingsDbService.enableDisableSecurityOnUserId(loggedInUserObj.getUSER_ID(), true);
+                                    killPoppers();
+                                    setUpSecurity();
+
+                                    //update Sec PIN in loggedInUserObj
+                                    loggedInUserObj = getUser();
+
+                                    showToast("PIN Saved & Security is Enabled");
+                                }
+                            } catch (Exception e) {
+                                Log.e(CLASS_NAME, "Error !! While Encryption ");
+                            }
+                        }
+                        else if(View.GONE == lockPoprNewPinLL.getVisibility() && View.VISIBLE == lockPoprPinET.getVisibility()) {
+                            try {
+                                if (oldPinStr.isEmpty()) {
+                                    showToast("Enter PIN");
+                                }
+                                else if (!EncryptionUtil.encrypt(oldPinStr).equals(loggedInUserObj.getSET_SEC_PIN())) {
+                                    showToast("Incorrect PIN");
+
+                                    lockPoprPinET.setText("");
+                                    oldPinStr = "";
+                                }
+                                else {
+                                    boolean secIsEnabled = false;
+                                    if("Y".equalsIgnoreCase(loggedInUserObj.getSET_SEC_ACTIVE())){
+                                        secIsEnabled = true;
+                                    }
+
+                                    settingsDbService.enableDisableSecurityOnUserId(loggedInUserObj.getUSER_ID(), !secIsEnabled);
+                                    killPoppers();
+                                    setUpSecurity();
+
+                                    //update Sec PIN in loggedInUserObj
+                                    loggedInUserObj = getUser();
+
+                                    if("Y".equalsIgnoreCase(loggedInUserObj.getSET_SEC_ACTIVE())){
+                                        showToast("Security is Enabled");
+                                    }
+                                    else{
+                                        showToast("Security is Disabled");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Log.e(CLASS_NAME, "Error !! While Encryption ");
+                            }
+                        }
+
+                        break;
+
+                    default: showToast("Error !!");
+                }
             }
-        }
+        };
+    }
+
+    @Override
+    public void onBackPressed() {
+        navigateTo(CalendarActivity.class, null, null);
     }
 }

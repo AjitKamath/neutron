@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="250dp"
+    android:id="@+id/lockPoprLLId"
+    android:padding="1dp"
+    android:layout_gravity="center"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:padding="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/lockPoprPinETId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="5dp"
+            android:hint="PIN"
+            android:textColorHint="@color/White"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
+            android:editable="false"
+            android:maxLength="4" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/lockPoprNewPinLLId">
+
+            <EditText
+                android:id="@+id/lockPoprNewPinETId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginBottom="5dp"
+                android:hint="New PIN"
+                android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
+                android:editable="false"
+                android:textColorHint="@color/White"
+                android:maxLength="4" />
+
+            <EditText
+                android:id="@+id/lockPoprRPinETId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginBottom="5dp"
+                android:hint="Repeat PIN"
+                android:textColorHint="@color/White"
+                android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
+                android:editable="false"
+                android:maxLength="4" />
+
+        </LinearLayout>
+
+        <GridLayout
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="5">
+
+            <LinearLayout
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprOneTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="1"
+                    android:text="1"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_height="80dp"
+                android:layout_width="1dp"/>
+
+            <LinearLayout
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprTwoTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="2"
+                    android:text="2"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_height="80dp"
+                android:layout_width="1dp" />
+
+            <LinearLayout
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprThreeTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="3"
+                    android:text="3"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="1dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprfourTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="4"
+                    android:text="4"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_height="80dp"
+                android:layout_width="1dp" />
+
+            <LinearLayout
+                android:layout_marginTop="1dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprFiveTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="5"
+                    android:text="5"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_height="80dp"
+                android:layout_width="1dp" />
+
+            <LinearLayout
+                android:layout_marginTop="1dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprSixTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="6"
+                    android:text="6"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="1dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprSevenTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="7"
+                    android:text="7"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_height="80dp"
+                android:layout_width="1dp" />
+
+            <LinearLayout
+                android:layout_marginTop="1dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprEightTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="8"
+                    android:text="8"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_height="80dp"
+                android:layout_width="1dp" />
+
+            <LinearLayout
+                android:layout_marginTop="1dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprNineTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="9"
+                    android:text="9"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lockPoprDeleteLLId"
+                android:layout_marginTop="1dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:background="@color/finappleTheme">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/cross_white_small"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_height="80dp"
+                android:layout_width="1dp" />
+
+            <LinearLayout
+                android:layout_marginTop="1dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@color/finappleTheme">
+
+                <TextView
+                    android:id="@+id/lockPoprZeroTVId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:tag="0"
+                    android:text="0"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_height="80dp"
+                android:layout_width="1dp" />
+
+            <LinearLayout
+                android:id="@+id/lockPoprSubmitLLId"
+                android:layout_marginTop="1dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:background="@color/finappleTheme">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/tick_white_small"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+        </GridLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -4,10 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -41,8 +43,8 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
-import com.finappl.adapters.CalendarTabsViewPagerAdapter;
 import com.finappl.adapters.CalendarGridViewAdapter;
+import com.finappl.adapters.CalendarTabsViewPagerAdapter;
 import com.finappl.adapters.CalendarTransactionsOptionsPopperViewPagerAdapter;
 import com.finappl.adapters.SummaryPopperListAdapter;
 import com.finappl.dbServices.AddUpdateTransactionsDbService;
@@ -75,7 +77,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @SuppressLint("NewApi")
-public class CalendarActivity extends AppCompatActivity {
+public class CalendarActivity extends LockerActivity {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext = this;
 
@@ -124,7 +126,7 @@ public class CalendarActivity extends AppCompatActivity {
     //FAB ends
 
     //popup
-    private Dialog dialog, anotherDialog, messageDialog;
+    private Dialog dialog, anotherDialog, messageDialog, anotherMessageDialog;
 
     //view pager
     private List<Integer> viewPagerTabsList;
@@ -136,9 +138,10 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendar);
 
+        initActivity();
+
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) this.findViewById(R.id.calendarPageRLId), robotoCondensedLightFont);
+        setFont((ViewGroup) this.findViewById(R.id.calendarPageRLId));
     }
 
     private void initActivity(){
@@ -259,10 +262,7 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                Intent intent = new Intent(CalendarActivity.this, AddUpdateTransferActivity.class);
-                intent.putExtra("TRANSFER_OBJ", transferModelObj);
-                startActivity(intent);
-                finish();
+                navigateTo(AddUpdateTransferActivity.class, "TRANSFER_OBJ", transferModelObj);
             }
         });
 
@@ -283,8 +283,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup)dialog.findViewById(R.id.calendarTransferAddedPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup)dialog.findViewById(R.id.calendarTransferAddedPopperLLId));
     }
 
     private void showTransactionAddedUpdatedPopper(final TransactionModel transactionModelObj){
@@ -337,10 +336,7 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                Intent intent = new Intent(CalendarActivity.this, AddUpdateTransactionActivity.class);
-                intent.putExtra("TRANSACTION_OBJ", transactionModelObj);
-                startActivity(intent);
-                finish();
+                navigateTo(AddUpdateTransactionActivity.class, "TRANSACTION_OBJ", transactionModelObj);
             }
         });
 
@@ -361,8 +357,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup)dialog.findViewById(R.id.calendarTransactionAddedPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup)dialog.findViewById(R.id.calendarTransactionAddedPopperLLId));
     }
 
     private void setUpFab() {
@@ -593,8 +588,7 @@ public class CalendarActivity extends AppCompatActivity {
         summaryPopperLV.setOnItemClickListener(listViewClickListener);
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont(summaryPopperLL, robotoCondensedLightFont);
+        setFont(summaryPopperLL);
     }
 
     public void showTransferPopper(View view){
@@ -614,8 +608,7 @@ public class CalendarActivity extends AppCompatActivity {
         transferPopperSchedLV.setOnClickListener(linearLayoutClickListener);
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) dialog.findViewById(R.id.calendarTransfersPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) dialog.findViewById(R.id.calendarTransfersPopperLLId));
     }
 
     private void prepareDialog(int layout){
@@ -662,8 +655,7 @@ public class CalendarActivity extends AppCompatActivity {
         transactionPopperSchedLV.setOnClickListener(linearLayoutClickListener);
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) dialog.findViewById(R.id.calendarTransactionsPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) dialog.findViewById(R.id.calendarTransactionsPopperLLId));
     }
 
     public void showQuickTransactionPopper(){
@@ -750,8 +742,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) dialog.findViewById(R.id.quickTransactionPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) dialog.findViewById(R.id.quickTransactionPopperLLId));
     }
 
     private void showScheduledTransactionDetailsPopper(final ScheduledTransactionModel scheduledTransactionModelObj) {
@@ -890,22 +881,15 @@ public class CalendarActivity extends AppCompatActivity {
         schedTransactionPopperNotesTV.setText(scheduledTransactionModelObj.getSCH_TRAN_NOTE());
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup)dialog.findViewById(R.id.schedTransactionPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup)dialog.findViewById(R.id.schedTransactionPopperLLId));
     }
 
     private void toEditScheduledTransaction(ScheduledTransactionModel scheduledTransactionModelObj) {
-        Intent intent = new Intent(this, AddUpdateScheduleTransactionActivity.class);
-        intent.putExtra("SCHEDULED_TRANSACTION_OBJ", scheduledTransactionModelObj);
-        startActivity(intent);
-        finish();
+        navigateTo(AddUpdateScheduleTransactionActivity.class, "SCHEDULED_TRANSACTION_OBJ", scheduledTransactionModelObj);
     }
 
     private void toEditScheduledTransfer(ScheduledTransferModel scheduledTransferModelObj) {
-        Intent intent = new Intent(this, AddUpdateScheduleTransferActivity.class);
-        intent.putExtra("SCHEDULED_TRANSFER_OBJ", scheduledTransferModelObj);
-        startActivity(intent);
-        finish();
+        navigateTo(AddUpdateScheduleTransferActivity.class, "SCHEDULED_TRANSFER_OBJ", scheduledTransferModelObj);
     }
 
     private void showScheduledTransferDetailsPopper(final ScheduledTransferModel scheduledTransferModelObj) {
@@ -1030,8 +1014,7 @@ public class CalendarActivity extends AppCompatActivity {
         schedTransferPopperNotesTV.setText(scheduledTransferModelObj.getSCH_TRNFR_NOTE());
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup)dialog.findViewById(R.id.schedTransferPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup)dialog.findViewById(R.id.schedTransferPopperLLId));
     }
 
     private void showTransferDetailsPopper(final TransferModel transferObj) {
@@ -1111,8 +1094,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup)anotherDialog.findViewById(R.id.transferDtlPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup)anotherDialog.findViewById(R.id.transferDtlPopperLLId));
     }
 
     private void showTransactionDetailsPopper(final TransactionModel transactionModelObj){
@@ -1211,20 +1193,15 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup)anotherDialog.findViewById(R.id.tranDtlPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup)anotherDialog.findViewById(R.id.tranDtlPopperLLId));
     }
 
     private void toEditTransaction(TransactionModel transactionModelObj) {
-        Intent intent = new Intent(mContext, AddUpdateTransactionActivity.class);
-        intent.putExtra("TRANSACTION_OBJ", transactionModelObj);
-        mContext.startActivity(intent);
+        navigateTo(AddUpdateTransactionActivity.class, "TRANSACTION_OBJ", transactionModelObj);
     }
 
     private void toEditTransfer(TransferModel transferModelObj) {
-        Intent intent = new Intent(mContext, AddUpdateTransferActivity.class);
-        intent.putExtra("TRANSFER_OBJ", transferModelObj);
-        mContext.startActivity(intent);
+        navigateTo(AddUpdateTransferActivity.class, "TRANSFER_OBJ", transferModelObj);
     }
 
     private void refreshActivity(){
@@ -1232,6 +1209,36 @@ public class CalendarActivity extends AppCompatActivity {
         Intent intent = new Intent(mContext, CalendarActivity.class);
         intent.putExtra("SELECTED_DATE", cleanUpDate(selectedDateStr));
         mContext.startActivity(intent);
+    }
+
+    public void showAccountDeletePopper(AccountsModel accountsModelObj){
+        // Create custom message popper object
+        anotherMessageDialog = new Dialog(mContext);
+        anotherMessageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        anotherMessageDialog.setContentView(R.layout.message_popper_account);
+
+        anotherMessageDialog.show();
+
+        //buttons
+        LinearLayout msgPoprAccPosLL, msgPoprAccNegLL;
+        msgPoprAccPosLL = (LinearLayout) anotherMessageDialog.findViewById(R.id.msgPoprAccPosLLId);
+        msgPoprAccNegLL = (LinearLayout) anotherMessageDialog.findViewById(R.id.msgPoprAccNegLLId);
+
+        //validation
+        if(accountsModelObj == null){
+            Log.e(CLASS_NAME, "ERROR !! Tag is null");
+            return;
+        }
+
+        //set positive buttons tag as tran id for deleting
+        msgPoprAccPosLL.setTag(accountsModelObj);
+
+        //set listeners for the buttons
+        msgPoprAccPosLL.setOnClickListener(linearLayoutClickListener);
+        msgPoprAccNegLL.setOnClickListener(linearLayoutClickListener);
+
+        //set font for all the text view
+        setFont((ViewGroup) anotherMessageDialog.findViewById(R.id.msgPoprAccLLId));
     }
 
     public void showMessagePopper(Object object){
@@ -1285,15 +1292,14 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) messageDialog.findViewById(R.id.msgPoprLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) messageDialog.findViewById(R.id.msgPoprLLId));
     }
 
     public void showScheduleMessagePopper(Object object){
         // Create custom message popper object
         messageDialog = new Dialog(mContext);
         messageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        messageDialog.setContentView(R.layout.message_popper_schedules);
+        messageDialog.setContentView(R.layout.message_popper_schedule);
 
         messageDialog.show();
 
@@ -1333,8 +1339,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) messageDialog.findViewById(R.id.msgPoprSchedLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) messageDialog.findViewById(R.id.msgPoprSchedLLId));
     }
 
     private void showBudgetPopper(final BudgetModel budgetModelObj){
@@ -1429,22 +1434,17 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) dialog.findViewById(R.id.budgetPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) dialog.findViewById(R.id.budgetPopperLLId));
     }
 
     private void toEditBudget(BudgetModel budgetModelObj) {
-        Intent intent = new Intent(this, AddUpdateBudgetActivity.class);
-        intent.putExtra("BUDGET_OBJ", budgetModelObj);
-        startActivity(intent);
-        finish();
+        navigateTo(AddUpdateBudgetActivity.class, "BUDGET_OBJ", budgetModelObj);
     }
 
     private void showAccountPopper(final AccountsModel accountsModelObj){
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_account_popper);
-
         dialog.show();
 
         //commons
@@ -1540,9 +1540,7 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                Intent intent = new Intent(mContext, AddUpdateAccountActivity.class);
-                intent.putExtra("ACCOUNT_OBJ", accountsModelObj);
-                mContext.startActivity(intent);
+                navigateTo(AddUpdateAccountActivity.class, "ACCOUNT_OBJ", accountsModelObj);
             }
         });
 
@@ -1559,8 +1557,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) dialog.findViewById(R.id.accountPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) dialog.findViewById(R.id.accountPopperLLId));
     }
 
     private void showTransfersPopper(ConsolidatedTransferModel consolidatedTransferModelObj){
@@ -1623,8 +1620,7 @@ public class CalendarActivity extends AppCompatActivity {
         summaryPopperLV.setOnItemClickListener(listViewClickListener);
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) summaryPopperLL, robotoCondensedLightFont);
+        setFont((ViewGroup) summaryPopperLL);
     }
 
     private void fetchMonthLegend(){
@@ -1879,13 +1875,13 @@ public class CalendarActivity extends AppCompatActivity {
         calendarMonthTV.setText(Constants.MONTHS_ARRAY[month]);
     }
 
-    @Override
+    /*@Override
     public void onResume(){
         super.onResume();
         setVisible(true);
 
         initActivity();
-    }
+    }*/
 
     //pass month as jan-1 feb-2
     //TODO: Convert this into ViewPager
@@ -1985,8 +1981,6 @@ public class CalendarActivity extends AppCompatActivity {
                         }
 
                         //go to view transaction activity
-                        Intent intent = new Intent(CalendarActivity.this, ViewActivitiesActivity.class);
-
                         ActivityModel activityModel = new ActivityModel();
                         activityModel.setFromDateStr(selectedDateStr);
                         activityModel.setToDateStr(selectedDateStr);
@@ -1996,10 +1990,7 @@ public class CalendarActivity extends AppCompatActivity {
                         if (transactIndicatorView.getVisibility() != View.VISIBLE && transferIndicatorView.getVisibility() == View.VISIBLE) {
                             activityModel.setWhichActivityStr("TRANSFER");
                         }
-                        intent.putExtra("ACTIVITY_OBJ", activityModel);
-
-                        startActivity(intent);
-                        finish();
+                        navigateTo(ViewActivitiesActivity.class, "ACTIVITY_OBJ", activityModel);
                     } else if (dateCellColor == R.drawable.circle_calendar_no_tap) {
                         Log.i(CLASS_NAME, "Oooo.. New Date Cell..O Magic wand..turn this cell into blue !!");
 
@@ -2114,7 +2105,7 @@ public class CalendarActivity extends AppCompatActivity {
                             }
                         }
                         else if(object instanceof AccountsModel) {
-                            //TODO: Yet to impelment the Account Delete feature
+                            showAccountDeletePopper((AccountsModel) object);
                         }
                         break;
 
@@ -2178,6 +2169,23 @@ public class CalendarActivity extends AppCompatActivity {
                         }
                         break;
 
+                    case R.id.msgPoprAccPosLLId:
+                        killPopper();
+                        AccountsModel accountsModelObj = (AccountsModel)v.getTag();
+
+                        if(calendarDbService.deleteAccount(accountsModelObj)) {
+                            refreshActivity();
+                            showToast("Account deleted !");
+                        }
+                        else{
+                            showToast("Could not Delete the Account");
+                        }
+                        break;
+
+                    case R.id.msgPoprAccNegLLId:
+                        killAccountMessagePopper();
+                        break;
+
                     default:intent = new Intent(mContext, JimBrokeItActivity.class); break;
                 }
 
@@ -2209,9 +2217,7 @@ public class CalendarActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                Intent intent = new Intent(mContext, SettingsActivity.class);
-                startActivity(intent);
-                finish();
+                navigateTo(SettingsActivity.class, null, null);
             }
 
             @Override
@@ -2288,12 +2294,28 @@ public class CalendarActivity extends AppCompatActivity {
         if (messageDialog != null) {
             messageDialog.dismiss();
         }
+
+        if (anotherMessageDialog != null) {
+            anotherMessageDialog.dismiss();
+        }
     }
 
     private void killMessagePopper() {
         if (messageDialog != null) {
             messageDialog.dismiss();
         }
+    }
+
+    private void killAccountMessagePopper() {
+        if (anotherMessageDialog != null) {
+            anotherMessageDialog.dismiss();
+        }
+
+        if (messageDialog != null) {
+            messageDialog.dismiss();
+        }
+
+
     }
 
     private void showQuickTransferPopper() {
@@ -2373,8 +2395,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) dialog.findViewById(R.id.quickTransferPopperLLId), robotoCondensedLightFont);
+        setFont((ViewGroup) dialog.findViewById(R.id.quickTransferPopperLLId));
     }
 
     //---------------------------------------Date Picker-------------------------------------------------
@@ -2456,21 +2477,5 @@ public class CalendarActivity extends AppCompatActivity {
                 }
             }
         };
-    }
-
-    //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group, Typeface font) {
-        int count = group.getChildCount();
-        View v;
-
-        for(int i = 0; i < count; i++) {
-            v = group.getChildAt(i);
-            if(v instanceof TextView) {
-                ((TextView) v).setTypeface(font);
-            }
-            else if(v instanceof ViewGroup) {
-                setFont((ViewGroup) v, font);
-            }
-        }
     }
 }

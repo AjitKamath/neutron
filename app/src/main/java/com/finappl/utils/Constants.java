@@ -10,7 +10,7 @@ public class Constants extends Activity {
     public static final String DB_NAME = "FINAPPL.db";
 
     //DB version
-    public static final int DB_VERSION = 17;
+    public static final int DB_VERSION = 18;
 
     //DB Properties
     public static final String USERNAME = "Ajit";

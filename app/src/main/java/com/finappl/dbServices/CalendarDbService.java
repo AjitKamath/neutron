@@ -1321,12 +1321,34 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
     public boolean deleteTransfer(String transferIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(Constants.DB_TABLE_TRANSFERSTABLE, "TRNFR_ID = '" + transferIdStr+"'", null) > 0;
+        return db.delete(Constants.DB_TABLE_TRANSFERSTABLE, "TRNFR_ID = '" + transferIdStr + "'", null) > 0;
     }
 
     public boolean deleteBudget(String budgetIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(Constants.DB_TABLE_BUDGETTABLE, "BUDGET_ID = '" + budgetIdStr+"'", null) > 0;
+        return db.delete(Constants.DB_TABLE_BUDGETTABLE, "BUDGET_ID = '" + budgetIdStr + "'", null) > 0;
+    }
+
+    public boolean deleteAccount(AccountsModel accountsModelObj){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //delete transactions which are using this account
+        db.delete(Constants.DB_TABLE_TRANSACTIONTABLE, "ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null);
+
+        //delete scheduled transactions which are using this account
+        db.delete(Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, "SCH_TRAN_ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null);
+
+        //delete transfers which are using this account (either from or to)
+        db.delete(Constants.DB_TABLE_TRANSFERSTABLE, "ACC_ID_FRM = '" + accountsModelObj.getACC_ID()+"' OR ACC_ID_TO = '" + accountsModelObj.getACC_ID()+"'", null);
+
+        //delete scheduled transfers which are using this account (either from or to)
+        db.delete(Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE, "SCH_TRNFR_ACC_ID_FRM = '" + accountsModelObj.getACC_ID()+"' OR SCH_TRNFR_ACC_ID_TO = '" + accountsModelObj.getACC_ID()+"'", null);
+
+        //delete budgets which are using this account
+        db.delete(Constants.DB_TABLE_BUDGETTABLE, "BUDGET_GRP_ID = '" + accountsModelObj.getACC_ID()+"'", null);
+
+        //delete the account
+        return db.delete(Constants.DB_TABLE_ACCOUNTTABLE, "ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null) > 0;
     }
 
     //---------------------method to get all accounts--------------------------//

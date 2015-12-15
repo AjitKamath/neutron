@@ -37,6 +37,9 @@ public class UsersModel implements Serializable {
 	private String SET_NOTIF_BUZZ;
 	private String SET_SND_ACTIVE;
 
+	private String SET_SEC_ACTIVE;
+	private String SET_SEC_PIN;
+
 	//constructors
 	public UsersModel(String nAME, String eMAIL, Date dOB,
 			String cUR_ID, String cNTRY_ID, Date cREATE_DTM) {
@@ -268,5 +271,21 @@ public class UsersModel implements Serializable {
 
 	public void setSET_SND_ACTIVE(String SET_SND_ACTIVE) {
 		this.SET_SND_ACTIVE = SET_SND_ACTIVE;
+	}
+
+	public String getSET_SEC_ACTIVE() {
+		return SET_SEC_ACTIVE;
+	}
+
+	public void setSET_SEC_ACTIVE(String SET_SEC_ACTIVE) {
+		this.SET_SEC_ACTIVE = SET_SEC_ACTIVE;
+	}
+
+	public String getSET_SEC_PIN() {
+		return SET_SEC_PIN;
+	}
+
+	public void setSET_SEC_PIN(String SET_SEC_PIN) {
+		this.SET_SEC_PIN = SET_SEC_PIN;
 	}
 }

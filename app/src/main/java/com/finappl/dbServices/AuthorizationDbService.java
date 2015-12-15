@@ -163,6 +163,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             //inserting a new row into SETTINGS_SECURITY table
             values.clear();
             values.put("SET_SEC_ID", IdGenerator.getInstance().generateUniqueId("SET_SEC"));
+            //values.put("SET_SEC_ACTIVE", Constants.DB_AFFIRMATIVE);
             values.put("SET_SEC_ACTIVE", Constants.DB_NONAFFIRMATIVE);
             values.put("USER_ID", userModelObj.getUSER_ID());
             values.put("CREAT_DTM", sdf1.format(new Date()));
@@ -282,7 +283,9 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SET_NOTIF_ACTIVE, ");
         sqlQuerySB.append(" SET_NOTIF_TIME, ");
         sqlQuerySB.append(" SET_NOTIF_BUZZ, ");
-        sqlQuerySB.append(" SET_SND_ACTIVE ");
+        sqlQuerySB.append(" SET_SND_ACTIVE, ");
+        sqlQuerySB.append(" SET_SEC_ACTIVE, ");
+        sqlQuerySB.append(" SET_SEC_PIN ");
 
         sqlQuerySB.append(" FROM ");
         sqlQuerySB.append(Constants.DB_TABLE_USERSTABLE+ " USER ");
@@ -306,6 +309,11 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SOUNDS+" SND ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" SND.USER_ID = USER.USER_ID ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SECURITY+" SEC ");
+        sqlQuerySB.append(" ON ");
+        sqlQuerySB.append(" SEC.USER_ID = USER.USER_ID ");
 
         sqlQuerySB.append(" LEFT OUTER JOIN ");
         sqlQuerySB.append(Constants.DB_TABLE_WORK_TIMELINETABLE+" WORK ");
@@ -343,6 +351,8 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             usersModelObject.setSET_NOTIF_ACTIVE(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_ACTIVE"));
             usersModelObject.setSET_NOTIF_BUZZ(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_BUZZ"));
             usersModelObject.setSET_SND_ACTIVE(ColumnFetcher.getInstance().loadString(cursor, "SET_SND_ACTIVE"));
+            usersModelObject.setSET_SEC_ACTIVE(ColumnFetcher.getInstance().loadString(cursor, "SET_SEC_ACTIVE"));
+            usersModelObject.setSET_SEC_PIN(ColumnFetcher.getInstance().loadString(cursor, "SET_SEC_PIN"));
 
             userModelMap.put(cursor.getPosition(), usersModelObject);
         }

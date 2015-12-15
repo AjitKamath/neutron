@@ -293,7 +293,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put("SET_SEC_KEY", keyStr);
+        values.put("SET_SEC_PIN", keyStr);
 
         // Updating an old Row
         db.update(Constants.DB_TABLE_SETTINGS_SECURITY, values,	"USER_ID = '" + userIdStr + "'", null);

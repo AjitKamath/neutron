@@ -88,7 +88,7 @@ public class LoginActivity extends Activity {
         }
 
         //TODO: this must be removed during production
-        FinappleUtility.getInstance().pullDbFromDeepSystem();
+        //FinappleUtility.getInstance().pullDbFromDeepSystem();
 
         Intent intent = new Intent(this, CalendarActivity.class);
         startActivity(intent);

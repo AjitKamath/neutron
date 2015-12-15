@@ -716,13 +716,14 @@
                         android:padding="5dp">
 
                         <ImageView
+                            android:onClick="changePinPopper"
                             android:layout_marginRight="5dp"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/lock" />
 
                         <TextView
-                            android:onClick="showChangeSecurityPinPopper"
+                            android:onClick="changePinPopper"
                             android:layout_width="250dp"
                             android:layout_height="wrap_content"
                             android:paddingLeft="5dp"
@@ -734,7 +735,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="fill_parent"
                             android:gravity="center"
-                            android:onClick="enableDisableSecurity">
+                            android:onClick="enableDisableSecPopper">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
