@@ -37,7 +37,7 @@ public class LockerActivity extends Activity {
 	private final String CLASS_NAME = this.getClass().getName();
     private final String PREFERENCE_LOCK = "PREF_LOCK";
 
-    private Dialog dialog;
+    private Dialog lockDialog;
     private Context mContext = this;
 
     //Database
@@ -92,39 +92,36 @@ public class LockerActivity extends Activity {
     }
 
     public void showLockerPopper(){
-        // Create custom message popper object
-        if(dialog != null){
-            return;
-        }
+        killPoppers();
 
-        dialog = new Dialog(mContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.lock_popper);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        lockDialog = new Dialog(mContext);
+        lockDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        lockDialog.setContentView(R.layout.lock_popper);
+        lockDialog.setCanceledOnTouchOutside(false);
+        lockDialog.setCancelable(false);
+        lockDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         oldPinStr = "";
 
         TextView lockPoprOneTV, lockPoprTwoTV, lockPoprThreeTV, lockPoprFourTV, lockPoprFiveTV, lockPoprSixTV, lockPoprSevenTV, lockPoprEightTV, lockPoprNineTV, lockPoprZeroTV;
         LinearLayout lockPoprDeleteLL, lockPoprSubmitLL;
 
-        lockPoprPinET = (EditText) dialog.findViewById(R.id.lockPoprPinETId);
+        lockPoprPinET = (EditText) lockDialog.findViewById(R.id.lockPoprPinETId);
 
-        lockPoprOneTV = (TextView) dialog.findViewById(R.id.lockPoprOneTVId);
-        lockPoprTwoTV = (TextView) dialog.findViewById(R.id.lockPoprTwoTVId);
-        lockPoprThreeTV = (TextView) dialog.findViewById(R.id.lockPoprThreeTVId);
-        lockPoprFourTV = (TextView) dialog.findViewById(R.id.lockPoprfourTVId);
-        lockPoprFiveTV = (TextView) dialog.findViewById(R.id.lockPoprFiveTVId);
-        lockPoprSixTV = (TextView) dialog.findViewById(R.id.lockPoprSixTVId);
-        lockPoprSevenTV = (TextView) dialog.findViewById(R.id.lockPoprSevenTVId);
-        lockPoprEightTV = (TextView) dialog.findViewById(R.id.lockPoprEightTVId);
-        lockPoprNineTV = (TextView) dialog.findViewById(R.id.lockPoprNineTVId);
-        lockPoprZeroTV = (TextView) dialog.findViewById(R.id.lockPoprZeroTVId);
+        lockPoprOneTV = (TextView) lockDialog.findViewById(R.id.lockPoprOneTVId);
+        lockPoprTwoTV = (TextView) lockDialog.findViewById(R.id.lockPoprTwoTVId);
+        lockPoprThreeTV = (TextView) lockDialog.findViewById(R.id.lockPoprThreeTVId);
+        lockPoprFourTV = (TextView) lockDialog.findViewById(R.id.lockPoprfourTVId);
+        lockPoprFiveTV = (TextView) lockDialog.findViewById(R.id.lockPoprFiveTVId);
+        lockPoprSixTV = (TextView) lockDialog.findViewById(R.id.lockPoprSixTVId);
+        lockPoprSevenTV = (TextView) lockDialog.findViewById(R.id.lockPoprSevenTVId);
+        lockPoprEightTV = (TextView) lockDialog.findViewById(R.id.lockPoprEightTVId);
+        lockPoprNineTV = (TextView) lockDialog.findViewById(R.id.lockPoprNineTVId);
+        lockPoprZeroTV = (TextView) lockDialog.findViewById(R.id.lockPoprZeroTVId);
 
-        LinearLayout lockPoprNewPinLL = (LinearLayout) dialog.findViewById(R.id.lockPoprNewPinLLId);
-        lockPoprDeleteLL = (LinearLayout) dialog.findViewById(R.id.lockPoprDeleteLLId);
-        lockPoprSubmitLL = (LinearLayout) dialog.findViewById(R.id.lockPoprSubmitLLId);
+        LinearLayout lockPoprNewPinLL = (LinearLayout) lockDialog.findViewById(R.id.lockPoprNewPinLLId);
+        lockPoprDeleteLL = (LinearLayout) lockDialog.findViewById(R.id.lockPoprDeleteLLId);
+        lockPoprSubmitLL = (LinearLayout) lockDialog.findViewById(R.id.lockPoprSubmitLLId);
 
         lockPoprOneTV.setOnClickListener(textViewClickListener);
         lockPoprTwoTV.setOnClickListener(textViewClickListener);
@@ -142,10 +139,10 @@ public class LockerActivity extends Activity {
 
         lockPoprNewPinLL.setVisibility(View.GONE);
 
-        dialog.show();
+        lockDialog.show();
 
         //set font for all the text view
-        setFont((ViewGroup) dialog.findViewById(R.id.lockPoprLLId));
+        setFont((ViewGroup) lockDialog.findViewById(R.id.lockPoprLLId));
     }
 
     public void lockApp(boolean lockApp){
@@ -191,8 +188,8 @@ public class LockerActivity extends Activity {
     }
 
     private void killPoppers(){
-        if(dialog != null){
-            dialog.dismiss();
+        if(lockDialog != null){
+            lockDialog.dismiss();
         }
     }
 

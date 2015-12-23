@@ -3,11 +3,14 @@ package com.finappl.activities;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -24,11 +27,15 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -84,7 +91,8 @@ public class CalendarActivity extends LockerActivity {
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
     //header
-    private TextView yearTV,  calendarMonthTV;
+    private TextView yearTV,  calendarMonthTV, calendarTodayTV;
+    private LinearLayout calendarHeaderMonthYearLL;
 
     //calendar
     private CalendarGridViewAdapter adapter;// adapter instance
@@ -221,6 +229,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_transfer_added_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         dialog.show();
 
@@ -290,6 +299,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_transaction_added_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         dialog.show();
 
@@ -536,6 +546,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_summary_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         dialog.show();
 
@@ -615,7 +626,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext, R.style.PauseDialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(layout);
-
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         Window window = dialog.getWindow();
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
@@ -662,6 +673,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_quick_transaction_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         //ui
         final EditText quickTransactionAmtET;
@@ -749,6 +761,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_scheduled_transaction_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         dialog.show();
 
@@ -896,6 +909,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_scheduled_transfer_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         dialog.show();
 
@@ -1346,6 +1360,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_budget_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         dialog.show();
 
@@ -1445,6 +1460,8 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_account_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
+
         dialog.show();
 
         //commons
@@ -1564,6 +1581,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_summary_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         dialog.show();
 
@@ -1852,6 +1870,8 @@ public class CalendarActivity extends LockerActivity {
         //header
         yearTV = (TextView) this.findViewById(R.id.calendarFullYearId);
         calendarMonthTV = (TextView) this.findViewById(R.id.calendarMonthId);
+        calendarTodayTV = (TextView) this.findViewById(R.id.calendarTodayTVId);
+        calendarHeaderMonthYearLL = (LinearLayout) this.findViewById(R.id.calendarHeaderMonthYearLLId);
 
         //calendar
         calendarView = (GridView) this.findViewById(R.id.calendarPageCalendarGVId);
@@ -1883,6 +1903,11 @@ public class CalendarActivity extends LockerActivity {
         initActivity();
     }*/
 
+    public void onTodayClick(View view){
+        selectedDateStr = sdf.format(new Date());
+        initActivity();
+    }
+
     //pass month as jan-1 feb-2
     //TODO: Convert this into ViewPager
     private void setGridCellAdapterToDate(int day, int month, int year) {
@@ -1891,7 +1916,6 @@ public class CalendarActivity extends LockerActivity {
         year = _calendar.get(Calendar.YEAR);
         day = _calendar.get(Calendar.DAY_OF_MONTH);
 
-        setUpHeader();
         //get the latest super real time monthLegend
         fetchMonthLegend();
         setUpTabs();
@@ -1910,6 +1934,16 @@ public class CalendarActivity extends LockerActivity {
         }
 
         selectedDateStr = tempDayStr + "-" + tempMonthStr + "-" + year;
+
+        //if its not the current month...show a button on header to go to today
+        SimpleDateFormat sdf = new SimpleDateFormat("MM");
+        if(!tempMonthStr.equals(sdf.format(new Date()))){
+            calendarHeaderMonthYearLL.animate().setDuration(500).translationX(-130);
+
+        } else{
+            calendarHeaderMonthYearLL.animate().setDuration(500).translationX(0);
+        }
+        setUpHeader();
     }
 
     private String cleanUpDate(String dateStr){
@@ -1942,7 +1976,7 @@ public class CalendarActivity extends LockerActivity {
                 int selectedYear = Integer.parseInt(selectedDateStrArr[2]);
 
                 //update header
-                setUpHeader();
+                //();
 
                 GridLayout calendarGridDayContentGL = (GridLayout) view.findViewById(R.id.calendarGridDayContentGL);
 
@@ -2298,6 +2332,8 @@ public class CalendarActivity extends LockerActivity {
         if (anotherMessageDialog != null) {
             anotherMessageDialog.dismiss();
         }
+
+        isNavigation = true;
     }
 
     private void killMessagePopper() {
@@ -2322,6 +2358,7 @@ public class CalendarActivity extends LockerActivity {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_quick_transfer_popper);
+        dialog.setOnDismissListener(dialogsDismissListener);
 
         //ui
         final EditText quickTransferAmtET;
@@ -2440,7 +2477,7 @@ public class CalendarActivity extends LockerActivity {
                 setGridCellAdapterToDate(day, month, year);
 
                 //update the header
-                setUpHeader();
+                //setUpHeader();
             }
         };
     }
@@ -2457,6 +2494,17 @@ public class CalendarActivity extends LockerActivity {
                 child.setEnabled(enable);
             }
         }
+    }
+
+    private Dialog.OnDismissListener dialogsDismissListener;
+    {
+        dialogsDismissListener = new Dialog.OnDismissListener(){
+
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                isNavigation = true;
+            }
+        };
     }
 
     //this is for the list which is in the popup...the scope is in the activity itself
