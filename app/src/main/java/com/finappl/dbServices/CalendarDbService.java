@@ -27,9 +27,11 @@ import org.apache.http.cookie.params.CookieSpecPNames;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -704,6 +706,36 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
     public Map<String, MonthLegend> getMonthLegendOnDate(String dateStr, String userId){
         Map<String, MonthLegend> monthLegendMap = new HashMap<>();
+
+        //TODO:Fetch current month, prev month & next month data
+        /*String selectedDateStrArr[] = dateStr.split("-");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+        String monthAndYear = sdf.format(new Date());
+        String monthAndYearArr[] = monthAndYear.split("-");
+
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.set(Integer.parseInt(selectedDateStrArr[2]), Integer.parseInt(selectedDateStrArr[1]) - 1, Integer.parseInt(selectedDateStrArr[0]));
+
+        cal.roll(Calendar.MONTH, monthIndexSet.get(position));
+
+        int month = cal.get(Calendar.MONTH) + 1;
+
+        boolean isDifferentYear = false;
+        if (Integer.parseInt(selectedDateStrArr[1]) == 12 && month == 1) {
+            isDifferentYear = true;
+        } else if (Integer.parseInt(selectedDateStrArr[1]) == 1 && month == 12) {
+            isDifferentYear = true;
+        }
+
+        if (isDifferentYear && month >= 1 && monthIndexSet.get(position) > 0) {
+            cal.roll(Calendar.YEAR, 1);
+        } else if (isDifferentYear && month <= 12 && monthIndexSet.get(position) < 0) {
+            cal.roll(Calendar.YEAR, -1);
+        }
+
+        int year = cal.get(Calendar.YEAR);
+        int day = cal.get(Calendar.DAY_OF_MONTH);*/
 
         //get consolidated transactions for the monh
         monthLegendMap = getConsolidatedTransactions(monthLegendMap, dateStr, userId);

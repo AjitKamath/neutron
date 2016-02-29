@@ -3,40 +3,30 @@ package com.finappl.activities;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.view.animation.TranslateAnimation;
-import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -50,7 +40,7 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
-import com.finappl.adapters.CalendarGridViewAdapter;
+import com.finappl.adapters.CalendarMonthsViewPagerAdapter;
 import com.finappl.adapters.CalendarTabsViewPagerAdapter;
 import com.finappl.adapters.CalendarTransactionsOptionsPopperViewPagerAdapter;
 import com.finappl.adapters.SummaryPopperListAdapter;
@@ -60,8 +50,8 @@ import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
 import com.finappl.models.AccountsModel;
-import com.finappl.models.ActivityModel;
 import com.finappl.models.BudgetModel;
+import com.finappl.models.CalendarPageModel;
 import com.finappl.models.ConsolidatedTransactionModel;
 import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
@@ -79,6 +69,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -89,19 +80,20 @@ public class CalendarActivity extends LockerActivity {
     private Context mContext = this;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    private SimpleDateFormat sdf1 = new SimpleDateFormat("MM-yyyy");
 
     //header
     private TextView yearTV,  calendarMonthTV, calendarTodayTV;
     private LinearLayout calendarHeaderMonthYearLL;
 
     //calendar
-    private CalendarGridViewAdapter adapter;// adapter instance
     private GridView calendarView;
     private Calendar _calendar;
     private String selectedDateStr = sdf.format(new Date());
+    private String currentFocusedMonthStr = sdf1.format(new Date());
 
     //Swipe Multi Views
-    private ViewPager viewPager;
+    private ViewPager viewPager, viewPagerMonths;
 
     //month legend
     private Map<String, MonthLegend> monthLegendMap = new HashMap<String, MonthLegend>();
@@ -137,8 +129,29 @@ public class CalendarActivity extends LockerActivity {
     private Dialog dialog, anotherDialog, messageDialog, anotherMessageDialog;
 
     //view pager
-    private List<Integer> viewPagerTabsList;
+    private List<Integer> viewPagerTabsList, viewPagerMonthsList;
     private CalendarTabsViewPagerAdapter calendarTabsViewPagerAdapter;
+    private CalendarMonthsViewPagerAdapter calendarMonthsViewPagerAdapter;
+
+
+
+
+
+
+
+    //----------------------------------
+    private static final int PAGE_LEFT = 0;
+    private static final int PAGE_MIDDLE = 1;
+    private static final int PAGE_RIGHT = 2;
+
+
+    private LayoutInflater mInflater;
+    private int mSelectedPageIndex = 999;
+    private int oldScreenIndex;
+
+    // we save each page in a model
+    private CalendarPageModel[] mPageModel = new CalendarPageModel[3];
+    //-----------------------------------
 
     @SuppressLint("NewApi")
     @Override
@@ -185,7 +198,11 @@ public class CalendarActivity extends LockerActivity {
         initUIComponents();
 
         //set up calendar
-        setGridCellAdapterToDate(Integer.parseInt(selectedDateStrArr[0]), Integer.parseInt(selectedDateStrArr[1]), Integer.parseInt(selectedDateStrArr[2]));
+        currentFocusedMonthStr = selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
+        //setUpCalendar();
+        initPageModel();
+
+        setUpCalendar();
 
         //set up FAB
         setUpFab();
@@ -199,6 +216,13 @@ public class CalendarActivity extends LockerActivity {
 
         //close fab if its open
         checkAndCollapseFab();
+    }
+
+    private void initPageModel() {
+        for (int i = 0; i < mPageModel.length; i++) {
+            // initing the pagemodel with indexes of -1, 0 and 1
+            mPageModel[i] = new CalendarPageModel(i - 1);
+        }
     }
 
     private void setUpActionPoppers() {
@@ -1647,7 +1671,7 @@ public class CalendarActivity extends LockerActivity {
 
     private void setUpTabs() {
         viewPagerTabsList = new ArrayList<>();
-        viewPagerTabsList.add(R.layout.calendar_tab_summary);
+        viewPagerMonthsList.add(R.layout.calendar_tab_summary);
         viewPagerTabsList.add(R.layout.calendar_tab_accounts);
         viewPagerTabsList.add(R.layout.calendar_tab_budgets);
         viewPagerTabsList.add(R.layout.calendar_tab_schedules);
@@ -1711,8 +1735,110 @@ public class CalendarActivity extends LockerActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if(checkAndCollapseFab()){
+                if (checkAndCollapseFab()) {
                     return;
+                }
+            }
+        });
+    }
+
+    private void setUpCalendar() {
+        setUpHeader();
+        fetchMonthLegend();
+
+        calendarMonthsViewPagerAdapter = new CalendarMonthsViewPagerAdapter(mContext, selectedDateStr, currentFocusedMonthStr, loggedInUserObj, monthLegendMap,
+                new GridViewItemClickListener() {
+                    @Override
+                    public void onGridViewItemClick(Object position) {
+                        Log.i(CLASS_NAME, "");
+
+                        selectedDateStr = calendarMonthsViewPagerAdapter.selectedDateStr;
+                        if(calendarMonthsViewPagerAdapter.doMonthChange) {
+                            if((Integer)position < 7){
+                                viewPagerMonths.setCurrentItem(viewPagerMonths.getCurrentItem()-1, false);
+                            }
+                            else{
+                                viewPagerMonths.setCurrentItem(viewPagerMonths.getCurrentItem()+1, false);
+                            }
+                        }
+                    }
+                });
+        viewPagerMonths.setAdapter(calendarMonthsViewPagerAdapter);
+        viewPagerMonths.setCurrentItem(calendarMonthsViewPagerAdapter.getCount() / 2, false);
+        calendarMonthsViewPagerAdapter.notifyDataSetChanged();
+        oldScreenIndex = viewPagerMonths.getCurrentItem();
+
+        viewPagerMonths.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mSelectedPageIndex = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    currentFocusedMonthStr = calendarMonthsViewPagerAdapter.currentFocusedMonthStr;
+                    String dateMonthStrArr[] = currentFocusedMonthStr.split("-");
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+                    String monthAndYear = sdf.format(new Date());
+                    String monthAndYearArr[] = monthAndYear.split("-");
+
+                    Calendar cal = Calendar.getInstance(Locale.getDefault());
+                    cal.set(Integer.parseInt(dateMonthStrArr[1]), Integer.parseInt(dateMonthStrArr[0]) - 1, 1);
+
+                    //if the user has reached to the beginning of the limited loaded months
+                    if (mSelectedPageIndex == 0) {
+                        cal.add(Calendar.MONTH, -1);
+
+                        int month = cal.get(Calendar.MONTH) + 1;
+                        int year = cal.get(Calendar.YEAR);
+
+                        currentFocusedMonthStr = "";
+                        if (month < 10) {
+                            currentFocusedMonthStr = "0";
+                        }
+                        currentFocusedMonthStr += month + "-" + year;
+                        setUpCalendar();
+                        return;
+                    }
+                    //if the user has reached to the end of the limited loaded months
+                    else if (mSelectedPageIndex == calendarMonthsViewPagerAdapter.getCount() - 1) {
+                        cal.add(Calendar.MONTH, +1);
+
+                        int month = cal.get(Calendar.MONTH) + 1;
+                        int year = cal.get(Calendar.YEAR);
+
+                        currentFocusedMonthStr = "";
+                        if (month < 10) {
+                            currentFocusedMonthStr = "0";
+                        }
+                        currentFocusedMonthStr += month + "-" + year;
+                        setUpCalendar();
+                        return;
+                    }
+                    //for all the left/right swipes in the limited loaded months
+                    else if(mSelectedPageIndex != 999 && mSelectedPageIndex != oldScreenIndex) {
+                        cal.add(Calendar.MONTH, mSelectedPageIndex-oldScreenIndex);
+
+                        int month = cal.get(Calendar.MONTH) + 1;
+                        int year = cal.get(Calendar.YEAR);
+
+                        currentFocusedMonthStr = "";
+                        if (month < 10) {
+                            currentFocusedMonthStr = "0";
+                        }
+                        currentFocusedMonthStr += month + "-" + year;
+
+                        oldScreenIndex = mSelectedPageIndex;
+                        calendarMonthsViewPagerAdapter.currentFocusedMonthStr = currentFocusedMonthStr;
+                        setUpHeader();
+                    }
                 }
             }
         });
@@ -1764,10 +1890,6 @@ public class CalendarActivity extends LockerActivity {
             default:
                 showToast("Tab Error !!");
         }
-    }
-
-    public interface ListViewItemClickListener {
-        public abstract void onListItemClick(Object position);
     }
 
     public void onTabSelect(View view) {
@@ -1873,35 +1995,16 @@ public class CalendarActivity extends LockerActivity {
         calendarTodayTV = (TextView) this.findViewById(R.id.calendarTodayTVId);
         calendarHeaderMonthYearLL = (LinearLayout) this.findViewById(R.id.calendarHeaderMonthYearLLId);
 
-        //calendar
-        calendarView = (GridView) this.findViewById(R.id.calendarPageCalendarGVId);
-        setCalendarDateClickListener();
-
         //view pager
         viewPager = (ViewPager) this.findViewById(R.id.calendarTabsVPId);
+        viewPagerMonths = (ViewPager) this.findViewById(R.id.calendarDatesVPId);
     }
 
     private void setUpHeader() {
-        //convert the selectedDateStr which's in raw format dd-(MM-1)-yyyy-TYPE to dd MMM yy and WEEK
-        String tempSelectedDateStrArr[] = selectedDateStr.split("-");
-        Calendar cal = Calendar.getInstance();
-        cal.set(Integer.parseInt(tempSelectedDateStrArr[2]), Integer.parseInt(tempSelectedDateStrArr[1]) - 1, Integer.parseInt(tempSelectedDateStrArr[0]));
-
-        String yearStr = String.valueOf(cal.get(cal.YEAR));
-        int month = cal.get(cal.MONTH);
-
-        //set year
-        yearTV.setText(yearStr);
-        calendarMonthTV.setText(Constants.MONTHS_ARRAY[month]);
+        String tempSelectedDateStrArr[] = currentFocusedMonthStr.split("-");
+        calendarMonthTV.setText(Constants.MONTHS_ARRAY[Integer.parseInt(tempSelectedDateStrArr[0])-1]);
+        yearTV.setText(tempSelectedDateStrArr[1]);
     }
-
-    /*@Override
-    public void onResume(){
-        super.onResume();
-        setVisible(true);
-
-        initActivity();
-    }*/
 
     public void onTodayClick(View view){
         selectedDateStr = sdf.format(new Date());
@@ -1920,9 +2023,9 @@ public class CalendarActivity extends LockerActivity {
         fetchMonthLegend();
         setUpTabs();
 
-        adapter = new CalendarGridViewAdapter(this, monthLegendMap, day, month+1, year);
-        adapter.notifyDataSetChanged();
-        calendarView.setAdapter(adapter);
+        //adapter = new CalendarGridViewAdapter(this, monthLegendMap, day, month+1, year);
+        /*adapter.notifyDataSetChanged();
+        calendarView.setAdapter(adapter);*/
 
         String tempMonthStr = String.valueOf(month+1);
         String tempDayStr= String.valueOf(day);
@@ -1962,7 +2065,7 @@ public class CalendarActivity extends LockerActivity {
         return dateStr;
     }
 
-    private void setCalendarDateClickListener(){
+    /*private void setCalendarDateClickListener(){
         calendarView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -1990,12 +2093,18 @@ public class CalendarActivity extends LockerActivity {
                     //user has selected the past month
                     if (position < 7) {
                         Log.i(CLASS_NAME, "oh..its a PAST");
-                        setGridCellAdapterToDate(selectedDate, CalendarGridViewAdapter.preMonth, selectedYear);
+                        *//*setGridCellAdapterToDate(selectedDate, CalendarGridViewAdapter.preMonth, selectedYear);*//*
+                        fetchMonthLegend();
+                        selectedDateStr = selectedDate+"-"+CalendarGridViewAdapter.preMonth+"-"+selectedYear;
+                        setUpCalendar();
                     }
                     //user has selected the future month
                     else if (position > 27) {
                         Log.i(CLASS_NAME, "wow..the FUTURE !!");
-                        setGridCellAdapterToDate(selectedDate, CalendarGridViewAdapter.nexMonth, selectedYear);
+                       *//* setGridCellAdapterToDate(selectedDate, CalendarGridViewAdapter.nexMonth, selectedYear);*//*
+                        selectedDateStr = selectedDate+"-"+CalendarGridViewAdapter.nexMonth+"-"+selectedYear;
+                        fetchMonthLegend();
+                        setUpCalendar();
                     }
                 } else {
                     Log.i(CLASS_NAME, "Wandering in the same month and wondering why i'm even looking at this log !!");
@@ -2049,7 +2158,7 @@ public class CalendarActivity extends LockerActivity {
                 }
             }
         });
-    }
+    }*/
 
     private Intent toAddUpdateTransaction() {
         TransactionModel tranObj = new TransactionModel();
@@ -2526,4 +2635,15 @@ public class CalendarActivity extends LockerActivity {
             }
         };
     }
+
+
+    //abstracts
+    public interface ListViewItemClickListener {
+        public abstract void onListItemClick(Object position);
+    }
+
+    public interface GridViewItemClickListener {
+        public abstract void onGridViewItemClick(Object position);
+    }
+
 }
