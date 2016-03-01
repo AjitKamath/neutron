@@ -16,6 +16,73 @@ public class DateTimeUtil {
 	
 	private static DateTimeUtil instance = null;
 
+	public String[] getStartAndEndMonthDates(String dateStr, int range){
+		String dateStrArr[] = dateStr.split("-");
+		
+		if(dateStrArr.length != 3){
+			Log.e(CLASS_NAME, "ERROR in date format !! expecting dd-MM-yyyy but found : "+dateStr);
+			return null;
+		}
+		
+		Integer month = Integer.parseInt(dateStrArr[1])-1;
+		Integer year = Integer.parseInt(dateStrArr[2]);
+		
+		//get Start Date
+		Calendar cal = Calendar.getInstance();
+    		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+    		cal.clear(Calendar.MINUTE);
+	    	cal.clear(Calendar.SECOND);
+	    	cal.clear(Calendar.MILLISECOND);
+	    	
+	    	cal.set(Calendar.DAY_OF_MONTH, 1);
+	    	cal.set(Calendar.MONTH, month);
+	    	cal.set(Calendar.YEAR, year);
+	    	
+	    	cal.add(Calendar.MONTH, -range);
+	    	String startDayStr = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+	    	String startMonthStr = String.valueOf(cal.get(Calendar.MONTH)+1);
+	    	String startYearStr = String.valueOf(cal.get(Calendar.YEAR));
+	    	//get Start Date ends
+    	
+    		//get End Date
+		cal = Calendar.getInstance();
+	    	cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+	    	cal.clear(Calendar.MINUTE);
+	    	cal.clear(Calendar.SECOND);
+	    	cal.clear(Calendar.MILLISECOND);
+	    	
+	    	cal.set(Calendar.DAY_OF_MONTH, 1);
+	    	cal.set(Calendar.MONTH, month);
+	    	cal.set(Calendar.YEAR, year);
+	    	
+	    	cal.add(Calendar.MONTH, +range+1);
+	    	cal.add(Calendar.DAY_OF_MONTH, -1);
+	    	String endDayStr = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+	    	String endMonthStr = String.valueOf(cal.get(Calendar.MONTH)+1);
+	    	String endYearStr = String.valueOf(cal.get(Calendar.YEAR));
+	    	//get End Date ends
+    	
+	    	if(startDayStr.length() != 2){
+	    		startDayStr = "0"+startDayStr;
+	    	}
+	    	
+	    	if(startMonthStr.length() != 2){
+	    		startMonthStr = "0"+startMonthStr;
+	    	}
+	    	
+	    	if(endDayStr.length() != 2){
+	    		endDayStr = "0"+endDayStr;
+	    	}
+	    	
+	    	if(endMonthStr.length() != 2){
+	    		endMonthStr = "0"+endMonthStr;
+	    	}
+	    	
+	    	String startDateStr =  startDayStr+"-"+startMonthStr+"-"+startYearStr;
+	    	String endDateStr = endDayStr+"-"+endMonthStr+"-"+endYearStr;
+	    	return new String[]{startDateStr, endDateStr};
+	}
+	
 	public boolean isDateAfterOrEquals(String checkDateStr, String withDateStr){
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
