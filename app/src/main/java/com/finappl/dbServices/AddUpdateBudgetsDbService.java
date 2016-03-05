@@ -15,21 +15,18 @@ import com.finappl.utils.IdGenerator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
+import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_TABLE_BUDGETTABLE;
+import static com.finappl.utils.Constants.DB_VERSION;
+
 public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
 
     private final String CLASS_NAME = this.getClass().getName();
 
-    //db tables
-    private static final String USERS_TABLE = Constants.DB_TABLE_USERSTABLE;
-    private static final String ACCOUNT_TABLE = Constants.DB_TABLE_ACCOUNTTABLE;
-    private static final String CATEGORY_TABLE = Constants.DB_TABLE_CATEGORYTABLE;
-    private static final String SPENT_ON_TABLE = Constants.DB_TABLE_SPENTONTABLE;
-    private static final String TRANSACTION_TABLE = Constants.DB_TABLE_TRANSACTIONTABLE;
-    private static final String SCHEDULED_TRANSACTIONS_TABLE = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-    private static final String BUDGET_TABLE = Constants.DB_TABLE_BUDGETTABLE;
-
-	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
     //	method to update an already created budget.. returns 0 for fail, 1 for success
     public long updateOldBudget(BudgetModel budgetModel){
@@ -41,7 +38,7 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(BUDGET_TABLE);
+        sqlQuerySB.append(DB_TABLE_BUDGETTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER_ID = '"+budgetModel.getUSER_ID()+"' ");
@@ -65,7 +62,6 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         }
 
         ContentValues values = new ContentValues();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         values.put("BUDGET_NAME", budgetModel.getBUDGET_NAME());
         values.put("BUDGET_GRP_ID", budgetModel.getBUDGET_GRP_ID());
@@ -73,10 +69,10 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         values.put("BUDGET_TYPE", budgetModel.getBUDGET_TYPE());
         values.put("BUDGET_AMT", budgetModel.getBUDGET_AMT());
         values.put("BUDGET_NOTE", budgetModel.getBUDGET_NOTE());
-        values.put("MOD_DTM", sdf.format(new Date()));
+        values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Updating an old Row
-        return db.update(BUDGET_TABLE, values,	"BUDGET_ID = '" + budgetModel.getBUDGET_ID() + "'", null);
+        return db.update(DB_TABLE_BUDGETTABLE, values,	"BUDGET_ID = '" + budgetModel.getBUDGET_ID() + "'", null);
     }
 
     //	method to add a new budget..returns -1 on fail to add new budget. 1 on success
@@ -89,7 +85,7 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(BUDGET_TABLE);
+        sqlQuerySB.append(DB_TABLE_BUDGETTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER_ID = '"+budgetModel.getUSER_ID()+"' ");
@@ -113,7 +109,6 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         }
 
         ContentValues values = new ContentValues();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         values.put("BUDGET_ID", IdGenerator.getInstance().generateUniqueId("BUD"));
 		values.put("USER_ID", budgetModel.getUSER_ID());
@@ -124,11 +119,10 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
 		values.put("BUDGET_IS_DEL", Constants.DB_NONAFFIRMATIVE);
 		values.put("BUDGET_AMT", budgetModel.getBUDGET_AMT());
 		values.put("BUDGET_NOTE", budgetModel.getBUDGET_NOTE());
-		values.put("CREAT_DTM", sdf.format(new Date()));
-		values.put("MOD_DTM", "");
+		values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
 		// Inserting a new Row
-		long result =  db.insert(BUDGET_TABLE, null, values);
+		long result =  db.insert(DB_TABLE_BUDGETTABLE, null, values);
 
         //do not continue if insert failed
         if(result == -1){
@@ -138,13 +132,11 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
     }
 
     @Override
-	public void onCreate(SQLiteDatabase db) {
-
-	}
+	public void onCreate(SQLiteDatabase db) {}
 
 	//constructors
 	public AddUpdateBudgetsDbService(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override

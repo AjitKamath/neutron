@@ -96,19 +96,13 @@ public class SummaryPopperListAdapter extends BaseAdapter {
 
             //TODO:APPROXIMATIZATION
 
-            try{
-                SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                SimpleDateFormat sdfRight = new SimpleDateFormat("h:mm a");
+            SimpleDateFormat sdfRight = new SimpleDateFormat("h:mm a");
 
-                if(tranItem.getMOD_DTM() != null && !tranItem.getMOD_DTM().isEmpty()) {
-                    mHolder.summaryPopperTimeTV.setText(sdfRight.format(sdfWrong.parse(tranItem.getMOD_DTM())));
-                }
-                else{
-                    mHolder.summaryPopperTimeTV.setText(sdfRight.format(sdfWrong.parse(tranItem.getCREAT_DTM())));
-                }
+            if(tranItem.getMOD_DTM() != null) {
+                mHolder.summaryPopperTimeTV.setText(sdfRight.format(tranItem.getMOD_DTM()));
             }
-            catch(ParseException pe){
-                Log.e(CLASS_NAME, "Date Parse Exception : "+pe);
+            else{
+                mHolder.summaryPopperTimeTV.setText(sdfRight.format(tranItem.getCREAT_DTM()));
             }
         }
         else if(item instanceof TransferModel){
@@ -127,19 +121,13 @@ public class SummaryPopperListAdapter extends BaseAdapter {
 
             //TODO:APPROXIMATIZATION
 
-            try{
-                SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                SimpleDateFormat sdfRight = new SimpleDateFormat("h:mm a");
+            SimpleDateFormat sdfRight = new SimpleDateFormat("h:mm a");
 
-                if(trfrItem.getMOD_DTM() != null && !trfrItem.getMOD_DTM().isEmpty()) {
-                    mHolder.summaryPopperTimeTV.setText(sdfRight.format(sdfWrong.parse(trfrItem.getMOD_DTM())));
-                }
-                else{
-                    mHolder.summaryPopperTimeTV.setText(sdfRight.format(sdfWrong.parse(trfrItem.getCREAT_DTM())));
-                }
+            if(trfrItem.getMOD_DTM() != null) {
+                mHolder.summaryPopperTimeTV.setText(sdfRight.format(trfrItem.getMOD_DTM()));
             }
-            catch(ParseException pe){
-                Log.e(CLASS_NAME, "Date Parse Exception : "+pe);
+            else{
+                mHolder.summaryPopperTimeTV.setText(sdfRight.format(trfrItem.getCREAT_DTM()));
             }
         }
 

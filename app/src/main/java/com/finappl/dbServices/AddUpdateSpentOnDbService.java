@@ -13,26 +13,24 @@ import com.finappl.utils.Constants;
 import com.finappl.utils.DateTimeUtil;
 import com.finappl.utils.IdGenerator;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
+import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
+import static com.finappl.utils.Constants.DB_VERSION;
 
 
 public class AddUpdateSpentOnDbService extends SQLiteOpenHelper {
 
 	private final String CLASS_NAME = this.getClass().getName();
 
-	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
 	private static AddUpdateSpentOnDbService sInstance = null;
 
-	//db tables
-    private static final String USERS_TABLE = Constants.DB_TABLE_USERSTABLE;
-    private static final String ACCOUNT_TABLE = Constants.DB_TABLE_ACCOUNTTABLE;
-    private static final String CATEGORY_TABLE = Constants.DB_TABLE_CATEGORYTABLE;
-    private static final String SPENT_ON_TABLE = Constants.DB_TABLE_SPENTONTABLE;
-    private static final String TRANSACTION_TABLE = Constants.DB_TABLE_TRANSACTIONTABLE;
-    private static final String SCHEDULED_TRANSACTION_TABLE = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-    private static final String BUDGET_TABLE = Constants.DB_TABLE_BUDGETTABLE;
-    private static final String CATEGORY_TAGS_TABLE = Constants.DB_TABLE_CATEGORYTAGSTABLE;
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
 	public long addNewSpentOn(SpentOnModel spntOnObject){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -42,7 +40,7 @@ public class AddUpdateSpentOnDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(SPENT_ON_TABLE);
+        sqlQuerySB.append(DB_TABLE_SPENTONTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" SPNT_ON_NAME ");
@@ -56,8 +54,7 @@ public class AddUpdateSpentOnDbService extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
         int count = 0;
-        while (cursor.moveToNext())
-        {
+        while (cursor.moveToNext()){
             //	get account count
             count = ColumnFetcher.getInstance().loadInt(cursor, "COUNT");
         }
@@ -76,10 +73,10 @@ public class AddUpdateSpentOnDbService extends SQLiteOpenHelper {
         values.put("SPNT_ON_IS_DEFAULT", Constants.DB_NONAFFIRMATIVE);
         values.put("SPNT_ON_NOTE", spntOnObject.getSPNT_ON_NOTE());
         values.put("SPNT_ON_IS_DEL", Constants.DB_NONAFFIRMATIVE);
-        values.put("CREAT_DTM", DateTimeUtil.getInstance().dateDateToDbDateString(new Date()));
+        values.put("CREAT_DTM", simpleDateFormat.format(new Date()));
 
         // Inserting a new Row in spent on table
-        long result =  db.insert(SPENT_ON_TABLE, null, values);
+        long result =  db.insert(DB_TABLE_SPENTONTABLE, null, values);
 
         //if result is not -1 insertion failed
         if(result == -1){
@@ -96,26 +93,22 @@ public class AddUpdateSpentOnDbService extends SQLiteOpenHelper {
     }
 
 	// get class instance
-	public static AddUpdateSpentOnDbService getInstance(Context context)
-	{
+	public static AddUpdateSpentOnDbService getInstance(Context context){
 		// Use the application context, which will ensure that you
 		// don't accidentally leak an Activity's context.
-		if (sInstance == null)
-		{
+		if (sInstance == null){
 			sInstance = new AddUpdateSpentOnDbService(context.getApplicationContext());
 		}
 		return sInstance;
 	}
 
 	// constructors
-	public AddUpdateSpentOnDbService(Context context)
-	{
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	public AddUpdateSpentOnDbService(Context context){
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
         //unnecessary
     }
-
 }

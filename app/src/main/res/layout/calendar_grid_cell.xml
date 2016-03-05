@@ -41,32 +41,32 @@
 
             <TextView
                 android:id="@+id/calendarCellSchTransactionIndicatorTVId"
-                android:layout_width="6dp"
-                android:layout_height="6dp"
+                android:layout_width="4dp"
+                android:layout_height="4dp"
                 android:background="@drawable/circle_calendar_schedule_transaction_indicator"
                 android:visibility="visible" />
 
             <TextView
                 android:id="@+id/calendarCellTransactionIndicatorTVId"
-                android:layout_width="6dp"
-                android:layout_height="6dp"
-                android:layout_marginLeft="1dp"
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginLeft="2dp"
                 android:background="@drawable/circle_calendar_transaction_indicator"
                 android:visibility="visible" />
 
             <TextView
                 android:id="@+id/calendarCellSchTransferIndicatorTVId"
-                android:layout_width="6dp"
-                android:layout_height="6dp"
-                android:layout_marginLeft="1dp"
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginLeft="2dp"
                 android:background="@drawable/circle_calendar_schedule_transfer_indicator"
                 android:visibility="visible" />
 
             <TextView
                 android:id="@+id/calendarCellTransferIndicatorTVId"
-                android:layout_width="6dp"
-                android:layout_height="6dp"
-                android:layout_marginLeft="1dp"
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginLeft="2dp"
                 android:background="@drawable/circle_calendar_transfer_indicator"
                 android:visibility="visible" />
         </LinearLayout>

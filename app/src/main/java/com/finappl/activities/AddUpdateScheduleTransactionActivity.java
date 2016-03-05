@@ -34,6 +34,7 @@ import com.finappl.dbServices.ScheduledTransactionsDbService;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.DateTimeUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -156,8 +157,7 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
                 //popullate UI with the returned data
                 popullateUiWhenUpdate();
             }
-            else if(scheduledTransactionModelObj != null && scheduledTransactionModelObj.getSCH_TRAN_DATE() != null
-                    && !scheduledTransactionModelObj.getSCH_TRAN_DATE().isEmpty()){
+            else if(scheduledTransactionModelObj != null && scheduledTransactionModelObj.getSCH_TRAN_DATE() != null){
                 Log.e(CLASS_NAME, "Could not find SCH_TRAN_DATE in SCHEDULED_TRANSACTION_OBJ in the intent... This means user is trying to create a new Scheduled Transaction");
                 popullateUiWhenNew();
             }
@@ -168,27 +168,13 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
     }
 
     private void popullateUiWhenNew() {
-        try{
-            SimpleDateFormat  rightSdf= new SimpleDateFormat("d MMM ''yy");
-            SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
-
-            schedTranAddUpdDateTV.setText(rightSdf.format(wrongSdf.parse(scheduledTransactionModelObj.getSCH_TRAN_DATE())));
-        }
-        catch(ParseException e){
-            Log.e(CLASS_NAME, "Error !!"+e);
-        }
+        SimpleDateFormat rightSdf= new SimpleDateFormat("d MMM ''yy");
+        schedTranAddUpdDateTV.setText(rightSdf.format(scheduledTransactionModelObj.getSCH_TRAN_DATE()));
     }
 
     private void popullateUiWhenUpdate(){
-        try{
-            SimpleDateFormat  rightSdf= new SimpleDateFormat("d MMM ''yy");
-            SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
-
-            schedTranAddUpdDateTV.setText(rightSdf.format(wrongSdf.parse(scheduledTransactionModelObj.getSCH_TRAN_DATE())));
-        }
-        catch(ParseException e){
-            Log.e(CLASS_NAME, "Error !!"+e);
-        }
+        SimpleDateFormat rightSdf= new SimpleDateFormat("d MMM ''yy");
+        schedTranAddUpdDateTV.setText(rightSdf.format(scheduledTransactionModelObj.getSCH_TRAN_DATE()));
 
         schedTranAddUpdNameET.setText(scheduledTransactionModelObj.getSCH_TRAN_NAME());
         schedTranAddUpdAmtET.setText(String.valueOf(scheduledTransactionModelObj.getSCH_TRAN_AMT()));
@@ -279,7 +265,7 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
             amountStr = "0";
         }
 
-        scheduledTransactionModelObj.setSCH_TRAN_DATE(dateStr);
+        scheduledTransactionModelObj.setSCH_TRAN_DATE(DateTimeUtil.cleanUpDate(dateStr));
 
         scheduledTransactionModelObj.setSCH_TRAN_NAME(String.valueOf(schedTranAddUpdNameET.getText()));
         scheduledTransactionModelObj.setSCH_TRAN_AMT(Double.parseDouble(amountStr));
@@ -362,7 +348,7 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
         }
 
         ScheduledTransactionModel scheduledTransactionModelObj = new ScheduledTransactionModel();
-        scheduledTransactionModelObj.setSCH_TRAN_DATE(dateStr);
+        scheduledTransactionModelObj.setSCH_TRAN_DATE(DateTimeUtil.cleanUpDate(dateStr));
 
         startActivity(getIntent());
         finish();

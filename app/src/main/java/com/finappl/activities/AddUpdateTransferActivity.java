@@ -16,6 +16,7 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.webkit.JavascriptInterface;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -36,8 +37,13 @@ import com.finappl.models.TransferModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.finappl.utils.Constants.*;
 
 public class AddUpdateTransferActivity extends Activity {
 	
@@ -158,7 +164,9 @@ public class AddUpdateTransferActivity extends Activity {
     }
 
     private void setUpHeader() {
-        String[] dateStrArr = transferModelObj.getTRNFR_DATE().split("-");
+        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        String dateStr = sdf.format(transferModelObj.getTRNFR_DATE());
+        String[] dateStrArr = dateStr.split("-");
         int date = Integer.parseInt(dateStrArr[0]);
 
         addUpdtrnfrDayTV.setText(String.valueOf(date));
@@ -233,7 +241,17 @@ public class AddUpdateTransferActivity extends Activity {
 
         TransferModel transferModel = new TransferModel();
 
-        transferModel.setTRNFR_DATE(dayStr + "-" + monthStr + "-" + yearStr);
+        String dateStr = dayStr + "-" + monthStr + "-" + yearStr;
+        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+
+        try{
+            transferModel.setTRNFR_DATE(sdf.parse(dateStr));
+        }
+        catch (ParseException e){
+            Log.e(CLASS_NAME, "Error !!"+e);
+            return null;
+        }
+
         transferModel.setTRNFR_AMT(Double.parseDouble(tranAmtStr));
         transferModel.setACC_ID_FRM(frmAccIdStr);
         transferModel.setFromAccName(frmAccNameStr);
@@ -291,7 +309,7 @@ public class AddUpdateTransferActivity extends Activity {
 
 	//on click of done/update default_button
 	public void onDoneUpdate(View view){
-        if(!addNewTransfer().isEmpty()) {
+        if(addNewTransfer() != null) {
             Intent intent = new Intent(AddUpdateTransferActivity.this, CalendarActivity.class);
             startActivity(intent);
         }
@@ -308,7 +326,7 @@ public class AddUpdateTransferActivity extends Activity {
         finish();
     }
 
-    public String addNewTransfer(){
+    public Date addNewTransfer(){
         //get inputs
         TransferModel transferModel = getInputs();
 
@@ -317,11 +335,11 @@ public class AddUpdateTransferActivity extends Activity {
 
         if(transferModel == null){
             showToast("Enter Amount !");
-            return "";
+            return null;
         }
         else if(transferModel.getACC_ID_FRM().equalsIgnoreCase(transferModel.getACC_ID_TO())){
             showToast("Transfer cannot be done between same Accounts !");
-            return "";
+            return null;
         }
 
         //get done or update from default_button
@@ -542,7 +560,9 @@ public class AddUpdateTransferActivity extends Activity {
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == 999) {
-            String selectedDateStrArr[] = transferModelObj.getTRNFR_DATE().split("-");
+            SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+
+            String selectedDateStrArr[] = sdf.format(transferModelObj.getTRNFR_DATE()).split("-");
 
             return new DatePickerDialog(this, myDateListener, Integer.parseInt(selectedDateStrArr[2]), Integer.parseInt(selectedDateStrArr[1])-1,
                         Integer.parseInt(selectedDateStrArr[0]));
@@ -576,7 +596,16 @@ public class AddUpdateTransferActivity extends Activity {
                 }
 
                 //update object
-                transferModelObj.setTRNFR_DATE(dateStr+"-"+monthStr+"-"+year);
+                String tempDateStr = dateStr+"-"+monthStr+"-"+year;
+                SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+
+                try{
+                    transferModelObj.setTRNFR_DATE(sdf.parse(tempDateStr));
+                }
+                catch (ParseException e){
+                    Log.e(CLASS_NAME, "Error !! : "+e);
+                    return;
+                }
 
                 //update the header
                 setUpHeader();

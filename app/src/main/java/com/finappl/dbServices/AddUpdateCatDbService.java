@@ -14,27 +14,26 @@ import com.finappl.utils.Constants;
 import com.finappl.utils.DateTimeUtil;
 import com.finappl.utils.IdGenerator;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
+import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTAGSTABLE;
+import static com.finappl.utils.Constants.DB_VERSION;
 
 
 public class AddUpdateCatDbService extends SQLiteOpenHelper {
 
 	private final String CLASS_NAME = this.getClass().getName();
 
-	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
 	private static AddUpdateCatDbService sInstance = null;
 
-	//db tables
-    private static final String USERS_TABLE = Constants.DB_TABLE_USERSTABLE;
-    private static final String ACCOUNT_TABLE = Constants.DB_TABLE_ACCOUNTTABLE;
-    private static final String CATEGORY_TABLE = Constants.DB_TABLE_CATEGORYTABLE;
-    private static final String SPENT_ON_TABLE = Constants.DB_TABLE_SPENTONTABLE;
-    private static final String TRANSACTION_TABLE = Constants.DB_TABLE_TRANSACTIONTABLE;
-    private static final String SCHEDULED_TRANSACTION_TABLE = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-    private static final String BUDGET_TABLE = Constants.DB_TABLE_BUDGETTABLE;
-    private static final String CATEGORY_TAGS_TABLE = Constants.DB_TABLE_CATEGORYTAGSTABLE;
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
 	public long addNewCategory(CategoryModel catObject){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -44,7 +43,7 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(CATEGORY_TABLE);
+        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" CAT_NAME ");
@@ -58,8 +57,7 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
         int count = 0;
-        while (cursor.moveToNext())
-        {
+        while (cursor.moveToNext()){
             //	get category ID
             count = ColumnFetcher.getInstance().loadInt(cursor, "COUNT");
         }
@@ -79,10 +77,10 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
         values.put("CAT_IS_DEFAULT", Constants.DB_NONAFFIRMATIVE);
         values.put("CAT_NOTE", catObject.getCAT_NOTE());
         values.put("CAT_IS_DEL", Constants.DB_NONAFFIRMATIVE);
-        values.put("CREAT_DTM", DateTimeUtil.getInstance().dateDateToDbDateString(new Date()));
+        values.put("CREAT_DTM", simpleDateFormat.format(new Date()));
 
-        // Inserting a new Row in category tab;e
-        long result =  db.insert(CATEGORY_TABLE, null, values);
+        // Inserting a new Row in category table
+        long result =  db.insert(DB_TABLE_CATEGORYTABLE, null, values);
 
         //if result is not -1 then continue inserting tags in category_tags table
         if(result == -1){
@@ -104,11 +102,11 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
             values.put("CAT_ID", catIdStr);
             values.put("CAT_TAGS", iterList.getTag());
             values.put("CAT_TAG_IS_DEL", Constants.DB_NONAFFIRMATIVE);
-            values.put("CREAT_DTM", DateTimeUtil.getInstance().dateDateToDbDateString(new Date()));
+            values.put("CREAT_DTM", simpleDateFormat.format(new Date()));
 
             Log.i(CLASS_NAME, "TAG ID:" + tagIdStr);
 
-            result =  db.insert(CATEGORY_TAGS_TABLE, null, values);
+            result =  db.insert(DB_TABLE_CATEGORYTAGSTABLE, null, values);
 
             if(result == -1){
                 Log.e(CLASS_NAME, "Error while inserting a new tag");
@@ -129,21 +127,18 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
     }
 
 	// get class instance
-	public static AddUpdateCatDbService getInstance(Context context)
-	{
+	public static AddUpdateCatDbService getInstance(Context context){
 		// Use the application context, which will ensure that you
 		// don't accidentally leak an Activity's context.
-		if (sInstance == null)
-		{
+		if (sInstance == null){
 			sInstance = new AddUpdateCatDbService(context.getApplicationContext());
 		}
 		return sInstance;
 	}
 
 	// constructors
-	public AddUpdateCatDbService(Context context)
-	{
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	public AddUpdateCatDbService(Context context){
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override

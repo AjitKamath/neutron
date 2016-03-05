@@ -11,30 +11,23 @@ import com.finappl.models.BudgetsViewModel;
 import com.finappl.utils.ColumnFetcher;
 import com.finappl.utils.Constants;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static com.finappl.utils.Constants.*;
 
 
 public class BudgetsViewDbService extends SQLiteOpenHelper {
 
 	private final String CLASS_NAME = this.getClass().getName();
 
-	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
 	private static BudgetsViewDbService sInstance = null;
 
-	//db tables
-	private static final String USERS_TABLE = Constants.DB_TABLE_USERSTABLE;
-	private static final String ACCOUNT_TABLE = Constants.DB_TABLE_ACCOUNTTABLE;
-	private static final String CATEGORY_TABLE = Constants.DB_TABLE_CATEGORYTABLE;
-	private static final String SPENT_ON_TABLE = Constants.DB_TABLE_SPENTONTABLE;
-	private static final String TRANSACTION_TABLE = Constants.DB_TABLE_TRANSACTIONTABLE;
-	private static final String SCHEDULED_TRANSACTIONS_TABLE = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-	private static final String SCHEDULED_TRANSFER_TABLE = Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE;
-	private static final String BUDGET_TABLE = Constants.DB_TABLE_BUDGETTABLE;
-	private static final String TRANSFERS_TABLE = Constants.DB_TABLE_TRANSFERSTABLE;
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+	private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
 	//method to get all the budgets_view, Daily, Weekly, Monthly, Yearly.
 	public BudgetsViewModel getAllBudgets(String userId){
@@ -55,25 +48,25 @@ public class BudgetsViewDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" CAT.CAT_NAME ");
 
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(BUDGET_TABLE+" BUD ");
+		sqlQuerySB.append(DB_TABLE_BUDGETTABLE+" BUD ");
 
 		sqlQuerySB.append(" LEFT OUTER JOIN ");
-		sqlQuerySB.append(SPENT_ON_TABLE+" SPNT ");
+		sqlQuerySB.append(DB_TABLE_SPENTONTABLE+" SPNT ");
 		sqlQuerySB.append(" ON BUD.BUDGET_GRP_ID = SPNT.SPNT_ON_ID ");
 
 		sqlQuerySB.append(" LEFT OUTER JOIN ");
-		sqlQuerySB.append(ACCOUNT_TABLE+" ACC ");
+		sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" ACC ");
 		sqlQuerySB.append(" ON BUD.BUDGET_GRP_ID = ACC.ACC_ID ");
 
 		sqlQuerySB.append(" LEFT OUTER JOIN ");
-		sqlQuerySB.append(CATEGORY_TABLE+" CAT ");
+		sqlQuerySB.append(DB_TABLE_CATEGORYTABLE+" CAT ");
 		sqlQuerySB.append(" ON BUD.BUDGET_GRP_ID = CAT.CAT_ID ");
 
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" BUD.USER_ID = '"+userId+"' ");
 
 		sqlQuerySB.append(" AND ");
-		sqlQuerySB.append(" BUD.BUDGET_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+		sqlQuerySB.append(" BUD.BUDGET_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
 
 		sqlQuerySB.append(" ORDER BY ");
 		sqlQuerySB.append(" BUD.BUDGET_TYPE, ");
@@ -181,7 +174,7 @@ public class BudgetsViewDbService extends SQLiteOpenHelper {
 	// constructors
 	public BudgetsViewDbService(Context context)
 	{
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override

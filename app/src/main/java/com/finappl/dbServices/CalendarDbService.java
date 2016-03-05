@@ -22,8 +22,6 @@ import com.finappl.utils.Constants;
 import com.finappl.utils.DateTimeUtil;
 import com.finappl.utils.IdGenerator;
 
-import org.apache.http.cookie.params.CookieSpecPNames;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,14 +33,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.finappl.utils.Constants.*;
+
 
 public class CalendarDbService extends SQLiteOpenHelper {
 
 	private final String CLASS_NAME = this.getClass().getName();
 
-	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
 	private static CalendarDbService sInstance = null;
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
     public TransactionModel getLastTransactionOnAccountId(String accountIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -56,20 +57,20 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRAN_DATE ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE + " TRAN ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE + " TRAN ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_CATEGORYTABLE + " CAT ");
+        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE + " CAT ");
         sqlQuerySB.append(" ON CAT.CAT_ID = TRAN.CAT_ID ");
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" TRAN_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" TRAN_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRAN.ACC_ID = '" + accountIdStr + "' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRAN_DATE = ");
         sqlQuerySB.append(" (SELECT MAX(TRAN_DATE) FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE + ")");
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE + ")");
 
         Log.i(CLASS_NAME, "Query to fetch Last Transaction made using the Account ID("+accountIdStr+") : "+sqlQuerySB);
         Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
@@ -77,11 +78,11 @@ public class CalendarDbService extends SQLiteOpenHelper {
         TransactionModel transactionModelObj = null;
         if(cursor.moveToNext()){
             transactionModelObj = new TransactionModel();
-            transactionModelObj.setTRAN_ID(ColumnFetcher.getInstance().loadString(cursor, "TRAN_ID"));
-            transactionModelObj.setCategory(ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME"));
-            transactionModelObj.setTRAN_AMT(ColumnFetcher.getInstance().loadDouble(cursor, "TRAN_AMT"));
-            transactionModelObj.setTRAN_TYPE(ColumnFetcher.getInstance().loadString(cursor, "TRAN_TYPE"));
-            transactionModelObj.setTRAN_DATE(ColumnFetcher.getInstance().loadString(cursor, "TRAN_DATE"));
+            transactionModelObj.setTRAN_ID(ColumnFetcher.loadString(cursor, "TRAN_ID"));
+            transactionModelObj.setCategory(ColumnFetcher.loadString(cursor, "CAT_NAME"));
+            transactionModelObj.setTRAN_AMT(ColumnFetcher.loadDouble(cursor, "TRAN_AMT"));
+            transactionModelObj.setTRAN_TYPE(ColumnFetcher.loadString(cursor, "TRAN_TYPE"));
+            transactionModelObj.setTRAN_DATE(ColumnFetcher.loadDate(cursor, "TRAN_DATE"));
 
             return transactionModelObj;
         }
@@ -101,18 +102,18 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRNFR_DATE ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE + " TRNFR ");
+        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE + " TRNFR ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE + " TRNFR_FROM ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " TRNFR_FROM ");
         sqlQuerySB.append(" ON TRNFR_FROM.ACC_ID = TRNFR.ACC_ID_FRM ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE + " TRNFR_TO ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " TRNFR_TO ");
         sqlQuerySB.append(" ON TRNFR_TO.ACC_ID = TRNFR.ACC_ID_TO ");
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" TRNFR_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" TRNFR_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" (TRNFR_FROM.ACC_ID = '"+accountIdStr+"' ");
         sqlQuerySB.append(" OR ");
@@ -120,7 +121,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRNFR_DATE = ");
         sqlQuerySB.append(" (SELECT MAX(TRNFR_DATE) FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE + ")");
+        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE + ")");
 
                 Log.i(CLASS_NAME, "Query to fetch Last Transfer made using the Account ID(" + accountIdStr + ") : " + sqlQuerySB);
         Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
@@ -128,11 +129,11 @@ public class CalendarDbService extends SQLiteOpenHelper {
         TransferModel transferModelObj = null;
         if(cursor.moveToNext()){
             transferModelObj = new TransferModel();
-            transferModelObj.setTRNFR_ID(ColumnFetcher.getInstance().loadString(cursor, "TRNFR_ID"));
-            transferModelObj.setFromAccName(ColumnFetcher.getInstance().loadString(cursor, "FROM_ACC"));
-            transferModelObj.setToAccName(ColumnFetcher.getInstance().loadString(cursor, "TO_ACC"));
-            transferModelObj.setTRNFR_AMT(ColumnFetcher.getInstance().loadDouble(cursor, "TRNFR_AMT"));
-            transferModelObj.setTRNFR_DATE(ColumnFetcher.getInstance().loadString(cursor, "TRNFR_DATE"));
+            transferModelObj.setTRNFR_ID(ColumnFetcher.loadString(cursor, "TRNFR_ID"));
+            transferModelObj.setFromAccName(ColumnFetcher.loadString(cursor, "FROM_ACC"));
+            transferModelObj.setToAccName(ColumnFetcher.loadString(cursor, "TO_ACC"));
+            transferModelObj.setTRNFR_AMT(ColumnFetcher.loadDouble(cursor, "TRNFR_AMT"));
+            transferModelObj.setTRNFR_DATE(ColumnFetcher.loadDate(cursor, "TRNFR_DATE"));
 
             return transferModelObj;
         }
@@ -153,7 +154,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" CNCL_NOTIF_EVNT_ID ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_NOTIFICATIONSTABLE);
+        sqlQuerySB.append(DB_TABLE_NOTIFICATIONSTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER_ID = '"+userIdStr+"' ");
@@ -182,7 +183,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         List<ScheduledTransferModel> filteredSchTransfersObjList = new ArrayList<>();
         List<String> alreadyNotifiedNotifsIdList = new ArrayList<>();
         while (cursor.moveToNext()){
-            String thisEventIdStr = ColumnFetcher.getInstance().loadString(cursor, "CNCL_NOTIF_EVNT_ID");
+            String thisEventIdStr = ColumnFetcher.loadString(cursor, "CNCL_NOTIF_EVNT_ID");
             alreadyNotifiedNotifsIdList.add(thisEventIdStr);
         }
 
@@ -209,7 +210,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" CNCL_NOTIF_EVNT_ID ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_NOTIFICATIONSTABLE);
+        sqlQuerySB.append(DB_TABLE_NOTIFICATIONSTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER_ID = '"+userIdStr+"' ");
@@ -238,7 +239,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         List<ScheduledTransactionModel> filteredSchTransObjList = new ArrayList<>();
         List<String> alreadyNotifiedNotifsIdList = new ArrayList<>();
         while (cursor.moveToNext()){
-            String thisEventIdStr = ColumnFetcher.getInstance().loadString(cursor, "CNCL_NOTIF_EVNT_ID");
+            String thisEventIdStr = ColumnFetcher.loadString(cursor, "CNCL_NOTIF_EVNT_ID");
             alreadyNotifiedNotifsIdList.add(thisEventIdStr);
         }
 
@@ -270,20 +271,20 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRAN.MOD_DTM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE + " TRAN ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE + " TRAN ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_CATEGORYTABLE + " CAT ");
+        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE + " CAT ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CAT.CAT_ID = TRAN.CAT_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_SPENTONTABLE + " SPNT ");
+        sqlQuerySB.append(DB_TABLE_SPENTONTABLE + " SPNT ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" SPNT.SPNT_ON_ID = TRAN.SPNT_ON_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE + " ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " ACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" ACC.ACC_ID = TRAN.ACC_ID ");
 
@@ -294,7 +295,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRAN.TRAN_DATE = '"+transObj.getTRAN_DATE()+"'");
 
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRAN.TRAN_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"'");
+        sqlQuerySB.append(" TRAN.TRAN_IS_DEL = '"+DB_NONAFFIRMATIVE+"'");
 
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRAN.USER_ID = '"+transObj.getUSER_ID()+"'");
@@ -309,17 +310,17 @@ public class CalendarDbService extends SQLiteOpenHelper {
         while (cursor.moveToNext()){
             TransactionModel transactionModelObj = new TransactionModel();
 
-            transactionModelObj.setTRAN_NAME(ColumnFetcher.getInstance().loadString(cursor, "TRAN_NAME"));
-            transactionModelObj.setCategory(ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME"));
-            transactionModelObj.setAccount(ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME"));
-            transactionModelObj.setSpentOn(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_NAME"));
-            transactionModelObj.setTRAN_AMT(ColumnFetcher.getInstance().loadDouble(cursor, "TRAN_AMT"));
-            transactionModelObj.setTRAN_DATE(ColumnFetcher.getInstance().loadString(cursor, "TRAN_DATE"));
-            transactionModelObj.setTRAN_NOTE(ColumnFetcher.getInstance().loadString(cursor, "TRAN_NOTE"));
-            transactionModelObj.setTRAN_ID(ColumnFetcher.getInstance().loadString(cursor, "TRAN_ID"));
-            transactionModelObj.setTRAN_TYPE(ColumnFetcher.getInstance().loadString(cursor, "TRAN_TYPE"));
-            transactionModelObj.setCREAT_DTM(ColumnFetcher.getInstance().loadString(cursor, "CREAT_DTM"));
-            transactionModelObj.setMOD_DTM(ColumnFetcher.getInstance().loadString(cursor, "MOD_DTM"));
+            transactionModelObj.setTRAN_NAME(ColumnFetcher.loadString(cursor, "TRAN_NAME"));
+            transactionModelObj.setCategory(ColumnFetcher.loadString(cursor, "CAT_NAME"));
+            transactionModelObj.setAccount(ColumnFetcher.loadString(cursor, "ACC_NAME"));
+            transactionModelObj.setSpentOn(ColumnFetcher.loadString(cursor, "SPNT_ON_NAME"));
+            transactionModelObj.setTRAN_AMT(ColumnFetcher.loadDouble(cursor, "TRAN_AMT"));
+            transactionModelObj.setTRAN_DATE(ColumnFetcher.loadDate(cursor, "TRAN_DATE"));
+            transactionModelObj.setTRAN_NOTE(ColumnFetcher.loadString(cursor, "TRAN_NOTE"));
+            transactionModelObj.setTRAN_ID(ColumnFetcher.loadString(cursor, "TRAN_ID"));
+            transactionModelObj.setTRAN_TYPE(ColumnFetcher.loadString(cursor, "TRAN_TYPE"));
+            transactionModelObj.setCREAT_DTM(ColumnFetcher.loadDateTime(cursor, "CREAT_DTM"));
+            transactionModelObj.setMOD_DTM(ColumnFetcher.loadDateTime(cursor, "MOD_DTM"));
 
             transactionList.add(transactionModelObj);
         }
@@ -339,15 +340,15 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRFR.CREAT_DTM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE + " TRFR ");
+        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE + " TRFR ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE + " FRM_ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " FRM_ACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" FRM_ACC.ACC_ID = TRFR.ACC_ID_FRM ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE + " TO_ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " TO_ACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" TO_ACC.ACC_ID = TRFR.ACC_ID_TO ");
 
@@ -360,7 +361,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRFR.TRNFR_DATE = '"+trfrObj.getTRNFR_DATE()+"'");
 
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRFR.TRNFR_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"'");
+        sqlQuerySB.append(" TRFR.TRNFR_IS_DEL = '"+DB_NONAFFIRMATIVE+"'");
 
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRFR.USER_ID = '"+trfrObj.getUSER_ID()+"'");
@@ -377,11 +378,11 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             transferModelObj.setFromAccName(trfrObj.getFromAccName());
             transferModelObj.setToAccName(trfrObj.getToAccName());
-            transferModelObj.setTRNFR_AMT(ColumnFetcher.getInstance().loadDouble(cursor, "TRNFR_AMT"));
-            transferModelObj.setCREAT_DTM(ColumnFetcher.getInstance().loadString(cursor, "CREAT_DTM"));
-            transferModelObj.setMOD_DTM(ColumnFetcher.getInstance().loadString(cursor, "MOD_DTM"));
-            transferModelObj.setTRNFR_DATE(ColumnFetcher.getInstance().loadString(cursor, "TRNFR_DATE"));
-            transferModelObj.setTRNFR_ID(ColumnFetcher.getInstance().loadString(cursor, "TRNFR_ID"));
+            transferModelObj.setTRNFR_AMT(ColumnFetcher.loadDouble(cursor, "TRNFR_AMT"));
+            transferModelObj.setCREAT_DTM(ColumnFetcher.loadDateTime(cursor, "CREAT_DTM"));
+            transferModelObj.setMOD_DTM(ColumnFetcher.loadDateTime(cursor, "MOD_DTM"));
+            transferModelObj.setTRNFR_DATE(ColumnFetcher.loadDate(cursor, "TRNFR_DATE"));
+            transferModelObj.setTRNFR_ID(ColumnFetcher.loadString(cursor, "TRNFR_ID"));
 
             transfersList.add(transferModelObj);
         }
@@ -389,7 +390,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
     }
 
     //method to get all the budgets_view for the particlar user
-    public List<BudgetModel> getAllBudgets(String dateStr, String userId){
+    public List<BudgetModel> getAllBudgets(Date date, String userId){
         SQLiteDatabase db = this.getWritableDatabase();
 
         StringBuilder sqlQuerySB = new StringBuilder(50);
@@ -406,10 +407,10 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" MOD_DTM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_BUDGETTABLE);
+        sqlQuerySB.append(DB_TABLE_BUDGETTABLE);
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" BUDGET_IS_DEL = '" + Constants.DB_NONAFFIRMATIVE + "' ");
+        sqlQuerySB.append(" BUDGET_IS_DEL = '" + DB_NONAFFIRMATIVE + "' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" USER_ID = '" + userId + "' ");
 
@@ -418,15 +419,15 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
         List<BudgetModel> budgetModelList = new ArrayList<BudgetModel>();
         while (cursor.moveToNext()){
-            String budIdStr = ColumnFetcher.getInstance().loadString(cursor, "BUDGET_ID");
-            String budNmeStr = ColumnFetcher.getInstance().loadString(cursor, "BUDGET_NAME");
-            String budGrpId = ColumnFetcher.getInstance().loadString(cursor, "BUDGET_GRP_ID");
-            String budGrpTyp = ColumnFetcher.getInstance().loadString(cursor, "BUDGET_GRP_TYPE");
-            String budTypeStr = ColumnFetcher.getInstance().loadString(cursor, "BUDGET_TYPE");
-            Double budAmt = ColumnFetcher.getInstance().loadDouble(cursor, "BUDGET_AMT");
-            String budNoteStr = ColumnFetcher.getInstance().loadString(cursor, "BUDGET_NOTE");
-            String creatDtmStr = ColumnFetcher.getInstance().loadString(cursor, "CREAT_DTM");
-            String modDtmStr = ColumnFetcher.getInstance().loadString(cursor, "MOD_DTM");
+            String budIdStr = ColumnFetcher.loadString(cursor, "BUDGET_ID");
+            String budNmeStr = ColumnFetcher.loadString(cursor, "BUDGET_NAME");
+            String budGrpId = ColumnFetcher.loadString(cursor, "BUDGET_GRP_ID");
+            String budGrpTyp = ColumnFetcher.loadString(cursor, "BUDGET_GRP_TYPE");
+            String budTypeStr = ColumnFetcher.loadString(cursor, "BUDGET_TYPE");
+            Double budAmt = ColumnFetcher.loadDouble(cursor, "BUDGET_AMT");
+            String budNoteStr = ColumnFetcher.loadString(cursor, "BUDGET_NOTE");
+            Date creatDtm = ColumnFetcher.loadDateTime(cursor, "CREAT_DTM");
+            Date modDtm = ColumnFetcher.loadDateTime(cursor, "MOD_DTM");
 
             budgetModelObj = new BudgetModel();
             budgetModelObj.setBUDGET_ID(budIdStr);
@@ -436,9 +437,9 @@ public class CalendarDbService extends SQLiteOpenHelper {
             budgetModelObj.setBUDGET_TYPE(budTypeStr);
             budgetModelObj.setBUDGET_NOTE(budNoteStr);
             budgetModelObj.setBUDGET_AMT(budAmt);
-            budgetModelObj.setBudgetRangeTotal(getTotalExpenseOnBudget(budgetModelObj, dateStr));
-            budgetModelObj.setCREAT_DTM(creatDtmStr);
-            budgetModelObj.setMOD_DTM(modDtmStr);
+            budgetModelObj.setBudgetRangeTotal(getTotalExpenseOnBudget(budgetModelObj, date));
+            budgetModelObj.setCREAT_DTM(creatDtm);
+            budgetModelObj.setMOD_DTM(modDtm);
 
             if("CATEGORY".equalsIgnoreCase(budGrpTyp)){
                 budgetModelObj.setCategoryNameStr(getBudgetGroupTypeNameOnBudgetGroupType(budGrpTyp, budGrpId));
@@ -466,17 +467,17 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
         if("CATEGORY".equalsIgnoreCase(budgetGroupTypeStr)){
             selectorStr = " CAT_NAME ";
-            tableStr = Constants.DB_TABLE_CATEGORYTABLE;
+            tableStr = DB_TABLE_CATEGORYTABLE;
             whereStr = " CAT_ID ";
         }
         else if("ACCOUNT".equalsIgnoreCase(budgetGroupTypeStr)){
             selectorStr = " ACC_NAME ";
-            tableStr = Constants.DB_TABLE_ACCOUNTTABLE;
+            tableStr = DB_TABLE_ACCOUNTTABLE;
             whereStr = " ACC_ID ";
         }
         else if("SPENT ON".equalsIgnoreCase(budgetGroupTypeStr)){
             selectorStr = " SPNT_ON_NAME ";
-            tableStr = Constants.DB_TABLE_SPENTONTABLE;
+            tableStr = DB_TABLE_SPENTONTABLE;
             whereStr = " SPNT_ON_ID ";
         }
 
@@ -490,12 +491,12 @@ public class CalendarDbService extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
 
         if(cursor.moveToNext()){
-            return ColumnFetcher.getInstance().loadString(cursor, selectorStr.trim());
+            return ColumnFetcher.loadString(cursor, selectorStr.trim());
         }
         return null;
     }
 
-    public Double getTotalExpenseOnBudget(BudgetModel budgetModelObj, String dateStr){
+    public Double getTotalExpenseOnBudget(BudgetModel budgetModelObj, Date date){
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -510,13 +511,15 @@ public class CalendarDbService extends SQLiteOpenHelper {
             groupConnectorStr =" AND SPNT_ON_ID = '"+budgetModelObj.getBUDGET_GRP_ID()+"' ";
         }
 
+        SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE);
+        String dateStr = sdf.format(date);
         String dateStrArr[] = dateStr.split("-");
         String dateConnectorStr = "";
         if("DAILY".equalsIgnoreCase(budgetModelObj.getBUDGET_TYPE())){
             dateConnectorStr = " AND TRAN_DATE = '"+dateStrArr[0]+"-"+dateStrArr[1]+"-"+dateStrArr[2]+"' ";
         }
         else if("WEEKLY".equalsIgnoreCase(budgetModelObj.getBUDGET_TYPE())){
-            List<String> weekDaysList = DateTimeUtil.getInstance().getAllDatesInWeekOnDate(dateStr);
+            List<String> weekDaysList = DateTimeUtil.getAllDatesInWeekOnDate(dateStr);
 
             dateConnectorStr += " AND TRAN_DATE IN (";
             for(String iterDatesList : weekDaysList){
@@ -541,7 +544,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), 0) ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN_TYPE = 'EXPENSE' ");
         sqlQuerySB.append(" AND ");
@@ -556,7 +559,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), 0) ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN_TYPE = 'INCOME' ");
         sqlQuerySB.append(" AND ");
@@ -568,22 +571,20 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" AS TOTAL ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE + " TRAN ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE + " TRAN ");
 
         //sqlQuerySB.append(" WHERE 1=1 ");
 
         Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
 
         if(cursor.moveToNext()){
-            return ColumnFetcher.getInstance().loadDouble(cursor, "TOTAL");
+            return ColumnFetcher.loadDouble(cursor, "TOTAL");
         }
 
         return 0.0;
     }
 
-    public Map<String, MonthLegend> getConsolidatedTransactions(Map<String, MonthLegend> monthLegendMap, String dateStr, String userId){
-        String dateStrArr[] = dateStr.split("-");
-
+    public Map<String, MonthLegend> getConsolidatedTransactions(Map<String, MonthLegend> monthLegendMap, String[] dateStrArr, String userId){
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -594,16 +595,18 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRAN.TRAN_DATE ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE + " TRAN ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE + " TRAN ");
         sqlQuerySB.append(" JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_CATEGORYTABLE + " CAT ");
+        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE + " CAT ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CAT.CAT_ID = TRAN.CAT_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN.TRAN_DATE ");
-        sqlQuerySB.append(" LIKE ");
-        sqlQuerySB.append(" '%"+dateStrArr[1]+"-"+dateStrArr[2]+"' ");
+        sqlQuerySB.append(" BETWEEN ");
+        sqlQuerySB.append(" '"+dateStrArr[0]+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" '"+dateStrArr[1]+"' ");
 
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRAN.USER_ID = '"+userId+"' ");
@@ -612,46 +615,74 @@ public class CalendarDbService extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
         while (cursor.moveToNext()){
-            String catNameStr = ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME");
-            Double amt = ColumnFetcher.getInstance().loadDouble(cursor, "TRAN_AMT");
-            String tranTypeStr = ColumnFetcher.getInstance().loadString(cursor, "TRAN_TYPE");
-            String tempDateStrArr[] = ColumnFetcher.getInstance().loadString(cursor, "TRAN_DATE").split("-");
+            String catNameStr = ColumnFetcher.loadString(cursor, "CAT_NAME");
+            Double amt = ColumnFetcher.loadDouble(cursor, "TRAN_AMT");
+            String tranTypeStr = ColumnFetcher.loadString(cursor, "TRAN_TYPE");
+            String tempDateStrArr[] = ColumnFetcher.loadString(cursor, "TRAN_DATE").split("-");
 
             if(tempDateStrArr[0].length() == 1){
                 tempDateStrArr[0] = "0"+tempDateStrArr[0];
             }
 
-            String tranDateStr = tempDateStrArr[0]+"-"+tempDateStrArr[1]+"-"+tempDateStrArr[2];
+            String tranDateStr = tempDateStrArr[2]+"-"+tempDateStrArr[1]+"-"+tempDateStrArr[0];
 
             MonthLegend monthLegendObj = null;
             SummaryModel summaryModel = null;
             Map<String, ConsolidatedTransactionModel> consolidatedTransactionModelMap = null;
             ConsolidatedTransactionModel consolidatedTransactionModel = null;
 
-            //if the legend map already contains an entry for this date
-            if(monthLegendMap.containsKey(tranDateStr)){
-                monthLegendObj = monthLegendMap.get(tranDateStr);
-                summaryModel = monthLegendObj.getSummaryModel();
-                consolidatedTransactionModelMap = summaryModel.getConsolidatedTransactionModelMap();
+            try{
+                SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
 
-                //consolidation of repeated same category transactions
-                if(consolidatedTransactionModelMap.containsKey(catNameStr)){
-                    consolidatedTransactionModel = consolidatedTransactionModelMap.get(catNameStr);
-                    consolidatedTransactionModel.setCount(consolidatedTransactionModel.getCount() + 1);
+                //if the legend map already contains an entry for this date
+                if(monthLegendMap.containsKey(tranDateStr)){
+                    monthLegendObj = monthLegendMap.get(tranDateStr);
+                    summaryModel = monthLegendObj.getSummaryModel();
+                    consolidatedTransactionModelMap = summaryModel.getConsolidatedTransactionModelMap();
 
-                    if(tranTypeStr.equalsIgnoreCase("EXPENSE")){
-                        consolidatedTransactionModel.setTotal(consolidatedTransactionModel.getTotal() - amt);
-                    }
-                    else if(tranTypeStr.equalsIgnoreCase("INCOME")){
-                        consolidatedTransactionModel.setTotal(consolidatedTransactionModel.getTotal() + amt);
+                    //consolidation of repeated same category transactions
+                    if(consolidatedTransactionModelMap.containsKey(catNameStr)){
+                        consolidatedTransactionModel = consolidatedTransactionModelMap.get(catNameStr);
+                        consolidatedTransactionModel.setCount(consolidatedTransactionModel.getCount() + 1);
+
+                        if(tranTypeStr.equalsIgnoreCase("EXPENSE")){
+                            consolidatedTransactionModel.setTotal(consolidatedTransactionModel.getTotal() - amt);
+                        }
+                        else if(tranTypeStr.equalsIgnoreCase("INCOME")){
+                            consolidatedTransactionModel.setTotal(consolidatedTransactionModel.getTotal() + amt);
+                        }
+                        else{
+                            Log.e(CLASS_NAME, "TRAN_TYPE in db expected to be either 'EXPENSE' or 'INCOME'..but found neither");
+                        }
                     }
                     else{
-                        Log.e(CLASS_NAME, "TRAN_TYPE in db expected to be either 'EXPENSE' or 'INCOME'..but found neither");
+                        consolidatedTransactionModel = new ConsolidatedTransactionModel();
+                        int count = 0;
+                        Double total = 0.0;
+
+                        if(tranTypeStr.equalsIgnoreCase("EXPENSE")){
+                            total -= amt;
+                        }
+                        else if(tranTypeStr.equalsIgnoreCase("INCOME")){
+                            total += amt;
+                        }
+                        else{
+                            Log.e(CLASS_NAME,"TRAN_TYPE in db expected to be either 'EXPENSE' or 'INCOME'..but found neither");
+                        }
+
+                        consolidatedTransactionModel.setCategory(catNameStr);
+                        consolidatedTransactionModel.setDate(sdf.parse(tranDateStr));
+                        consolidatedTransactionModel.setTotal(total);
+                        consolidatedTransactionModel.setCount(++count);
                     }
                 }
+                //if the legend map doesnt contains an entry for this date
                 else{
                     consolidatedTransactionModel = new ConsolidatedTransactionModel();
-                    int count = 0;
+                    monthLegendObj = new MonthLegend();
+                    summaryModel = new SummaryModel();
+                    consolidatedTransactionModelMap = new HashMap<String, ConsolidatedTransactionModel>();
+
                     Double total = 0.0;
 
                     if(tranTypeStr.equalsIgnoreCase("EXPENSE")){
@@ -664,35 +695,16 @@ public class CalendarDbService extends SQLiteOpenHelper {
                         Log.e(CLASS_NAME,"TRAN_TYPE in db expected to be either 'EXPENSE' or 'INCOME'..but found neither");
                     }
 
+
                     consolidatedTransactionModel.setCategory(catNameStr);
-                    consolidatedTransactionModel.setDate(tranDateStr);
+                    consolidatedTransactionModel.setDate(sdf.parse(tranDateStr));
                     consolidatedTransactionModel.setTotal(total);
-                    consolidatedTransactionModel.setCount(++count);
+                    consolidatedTransactionModel.setCount(1);
                 }
+
             }
-            //if the legend map doesnt contains an entry for this date
-            else{
-                consolidatedTransactionModel = new ConsolidatedTransactionModel();
-                monthLegendObj = new MonthLegend();
-                summaryModel = new SummaryModel();
-                consolidatedTransactionModelMap = new HashMap<String, ConsolidatedTransactionModel>();
-
-                Double total = 0.0;
-
-                if(tranTypeStr.equalsIgnoreCase("EXPENSE")){
-                    total -= amt;
-                }
-                else if(tranTypeStr.equalsIgnoreCase("INCOME")){
-                    total += amt;
-                }
-                else{
-                    Log.e(CLASS_NAME,"TRAN_TYPE in db expected to be either 'EXPENSE' or 'INCOME'..but found neither");
-                }
-
-                consolidatedTransactionModel.setCategory(catNameStr);
-                consolidatedTransactionModel.setDate(tranDateStr);
-                consolidatedTransactionModel.setTotal(total);
-                consolidatedTransactionModel.setCount(1);
+            catch(ParseException pe){
+                Log.e(CLASS_NAME, "Parse Error !!: "+tranDateStr+":"+pe);
             }
             consolidatedTransactionModelMap.put(catNameStr, consolidatedTransactionModel);
             summaryModel.setConsolidatedTransactionModelMap(consolidatedTransactionModelMap);
@@ -737,24 +749,25 @@ public class CalendarDbService extends SQLiteOpenHelper {
         int year = cal.get(Calendar.YEAR);
         int day = cal.get(Calendar.DAY_OF_MONTH);*/
 
+        //get start and end dates based on the passed date
+        String dateStrArr[] = DateTimeUtil.getStartAndEndMonthDates(dateStr, MONTHS_RANGE/2);
+
         //get consolidated transactions for the monh
-        monthLegendMap = getConsolidatedTransactions(monthLegendMap, dateStr, userId);
+        monthLegendMap = getConsolidatedTransactions(monthLegendMap, dateStrArr, userId);
 
         //get all the transfers for the month
-        monthLegendMap = getConsolidatedTransfers(monthLegendMap, dateStr, userId);
+        monthLegendMap = getConsolidatedTransfers(monthLegendMap, dateStrArr, userId);
 
         //get the all the scheduled transaction (daily, weekly, monthly & yearly) scheduled to be happening in this month
-        monthLegendMap = getScheduledTransactions(monthLegendMap, dateStr, userId);
+        monthLegendMap = getScheduledTransactions(monthLegendMap, dateStrArr, userId);
 
         //get the all the scheduled transfers (daily, weekly, monthly & yearly) scheduled to be happening in this month
-        monthLegendMap = getScheduledTransfers(monthLegendMap, dateStr, userId);
+        monthLegendMap = getScheduledTransfers(monthLegendMap, dateStrArr, userId);
 
         return monthLegendMap;
     }
 
-    private Map<String, MonthLegend> getConsolidatedTransfers(Map<String, MonthLegend> monthLegendMap, String dateStr, String userId) {
-        String dateStrArr[] = dateStr.split("-");
-
+    private Map<String, MonthLegend> getConsolidatedTransfers(Map<String, MonthLegend> monthLegendMap, String dateStrArr[], String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -765,25 +778,25 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRFR.TRNFR_DATE ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE + " TRFR ");
+        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE + " TRFR ");
 
         sqlQuerySB.append(" JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE + " FRM_ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " FRM_ACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" FRM_ACC.ACC_ID = TRFR.ACC_ID_FRM ");
 
         sqlQuerySB.append(" JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE + " TO_ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " TO_ACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" TO_ACC.ACC_ID = TRFR.ACC_ID_TO ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRFR.TRNFR_DATE ");
-        sqlQuerySB.append(" LIKE ");
-        sqlQuerySB.append(" '%"+dateStrArr[1]+"-"+dateStrArr[2]+"' ");
+        sqlQuerySB.append(" BETWEEN ");
+        sqlQuerySB.append(" '"+dateStrArr[0]+" AND "+dateStrArr[1]+"' ");
 
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRFR.TRNFR_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" TRFR.TRNFR_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
 
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRFR.USER_ID = '"+userId+"' ");
@@ -792,57 +805,67 @@ public class CalendarDbService extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
         while (cursor.moveToNext()){
-            String fromAccStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_FROM");
-            String toAccStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_TO");
-            Double amt = ColumnFetcher.getInstance().loadDouble(cursor, "TRNFR_AMT");
-            String tempDateStrArr[] = ColumnFetcher.getInstance().loadString(cursor, "TRNFR_DATE").split("-");
+            String fromAccStr = ColumnFetcher.loadString(cursor, "ACC_FROM");
+            String toAccStr = ColumnFetcher.loadString(cursor, "ACC_TO");
+            Double amt = ColumnFetcher.loadDouble(cursor, "TRNFR_AMT");
+            String tempDateStrArr[] = ColumnFetcher.loadString(cursor, "TRNFR_DATE").split("-");
 
             String transferCombinationStr = fromAccStr+"-"+toAccStr;
 
-            if(tempDateStrArr[0].length() == 1){
-                tempDateStrArr[0] = "0"+tempDateStrArr[0];
+            if(tempDateStrArr[1].length() == 1){
+                tempDateStrArr[1] = "0"+tempDateStrArr[1];
             }
 
-            String tranDateStr = tempDateStrArr[0]+"-"+tempDateStrArr[1]+"-"+tempDateStrArr[2];
+            if(tempDateStrArr[2].length() == 1){
+                tempDateStrArr[2] = "0"+tempDateStrArr[2];
+            }
+
+            String tranDateStr = tempDateStrArr[2]+"-"+tempDateStrArr[1]+"-"+tempDateStrArr[0];
 
             MonthLegend monthLegendObj = null;
             SummaryModel summaryModel = null;
             Map<String, ConsolidatedTransferModel> consolidatedTransferModelMap = null;
             ConsolidatedTransferModel consolidatedTransferModel = null;
 
-            //if the legend map already contains an entry for this date
-            if(monthLegendMap.containsKey(tranDateStr)){
-                monthLegendObj = monthLegendMap.get(tranDateStr);
-                summaryModel = monthLegendObj.getSummaryModel();
-                consolidatedTransferModelMap = summaryModel.getConsolidatedTransferModelMap();
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
 
-                //consolidation of repeated same transfers
-                if(consolidatedTransferModelMap.containsKey(transferCombinationStr)){
-                    consolidatedTransferModel = consolidatedTransferModelMap.get(transferCombinationStr);
-                    consolidatedTransferModel.setCount(consolidatedTransferModel.getCount() + 1);
-                    consolidatedTransferModel.setAmount(consolidatedTransferModel.getAmount() + amt);
+                //if the legend map already contains an entry for this date
+                if (monthLegendMap.containsKey(tranDateStr)) {
+                    monthLegendObj = monthLegendMap.get(tranDateStr);
+                    summaryModel = monthLegendObj.getSummaryModel();
+                    consolidatedTransferModelMap = summaryModel.getConsolidatedTransferModelMap();
+
+                    //consolidation of repeated same transfers
+                    if (consolidatedTransferModelMap.containsKey(transferCombinationStr)) {
+                        consolidatedTransferModel = consolidatedTransferModelMap.get(transferCombinationStr);
+                        consolidatedTransferModel.setCount(consolidatedTransferModel.getCount() + 1);
+                        consolidatedTransferModel.setAmount(consolidatedTransferModel.getAmount() + amt);
+                    } else {
+                        consolidatedTransferModel = new ConsolidatedTransferModel();
+                        consolidatedTransferModel.setFromAccountStr(fromAccStr);
+                        consolidatedTransferModel.setToAccountStr(toAccStr);
+                        consolidatedTransferModel.setAmount(amt);
+                        consolidatedTransferModel.setCount(1);
+                        consolidatedTransferModel.setDate(sdf.parse(tranDateStr));
+                    }
                 }
-                else{
+                //if the legend map doesnt contains an entry for this date
+                else {
                     consolidatedTransferModel = new ConsolidatedTransferModel();
+                    monthLegendObj = new MonthLegend();
+                    summaryModel = new SummaryModel();
+                    consolidatedTransferModelMap = new HashMap<>();
+
                     consolidatedTransferModel.setFromAccountStr(fromAccStr);
                     consolidatedTransferModel.setToAccountStr(toAccStr);
                     consolidatedTransferModel.setAmount(amt);
                     consolidatedTransferModel.setCount(1);
-                    consolidatedTransferModel.setDateStr(tranDateStr);
+                    consolidatedTransferModel.setDate(sdf.parse(tranDateStr));
                 }
             }
-            //if the legend map doesnt contains an entry for this date
-            else{
-                consolidatedTransferModel = new ConsolidatedTransferModel();
-                monthLegendObj = new MonthLegend();
-                summaryModel = new SummaryModel();
-                consolidatedTransferModelMap = new HashMap<>();
-
-                consolidatedTransferModel.setFromAccountStr(fromAccStr);
-                consolidatedTransferModel.setToAccountStr(toAccStr);
-                consolidatedTransferModel.setAmount(amt);
-                consolidatedTransferModel.setCount(1);
-                consolidatedTransferModel.setDateStr(tranDateStr);
+            catch(ParseException pe){
+                Log.e(CLASS_NAME, "Parse Error !! : "+tranDateStr+": "+pe);
             }
             consolidatedTransferModelMap.put(transferCombinationStr, consolidatedTransferModel);
             summaryModel.setConsolidatedTransferModelMap(consolidatedTransferModelMap);
@@ -854,7 +877,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return monthLegendMap;
     }
 
-    public Map<String, MonthLegend> getScheduledTransfers(Map<String, MonthLegend> monthLegendMap, String dateStr, String userId) {
+    public Map<String, MonthLegend> getScheduledTransfers(Map<String, MonthLegend> monthLegendMap, String dateStrArr[], String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -874,44 +897,47 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SCH.MOD_DTM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE+ " SCH ");
+        sqlQuerySB.append(DB_TABLE_SHEDULEDTRANSFERSTABLE+ " SCH ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE+" ACC_FRM ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" ACC_FRM ");
         sqlQuerySB.append(" ON ACC_FRM.ACC_ID = SCH.SCH_TRNFR_ACC_ID_FRM ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE+" ACC_TO ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" ACC_TO ");
         sqlQuerySB.append(" ON ACC_TO.ACC_ID = SCH.SCH_TRNFR_ACC_ID_TO ");
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" SCH_TRNFR_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" SCH_TRNFR_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" SCH.USER_ID = '"+userId+"' ");
+
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" SCH.SCH_TRNFR_DATE BETWEEN '"+dateStrArr[0]+"' AND '"+dateStrArr[1]+"' ");
 
         Log.i(CLASS_NAME, "Query to fetch Scheduled Transfers : " + sqlQuerySB);
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
-        String dateStrArr[] = dateStr.split("-");
-        int lastDayOfMonth = DateTimeUtil.getInstance().getLastDayOfTheMonth(dateStr);
+        List<String> allDatesInRange = DateTimeUtil.getAllDatesBetweenRange(dateStrArr);
         List<ScheduledTransferModel> scheduledTransferModelList;
         MonthLegend tempMonthLegend;
         ScheduledTransferModel scheduledTransferModelObj;
 
+        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
         while (cursor.moveToNext()){
-            String schTransferIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_ID");
-            String schTransfersDateStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_DATE");
-            String schTransferFreqStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_FREQ");
-            String schTransferAutoStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_AUTO");
-            Double schTransferAmt = ColumnFetcher.getInstance().loadDouble(cursor, "SCH_TRNFR_AMT");
-            String schTransferFrmAccIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_ACC_ID_FRM");
-            String schTransferToAccIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_ACC_ID_TO");
-            String schTransferFrmAccStr = ColumnFetcher.getInstance().loadString(cursor, "FRM_ACC");
-            String schTransferToAccStr = ColumnFetcher.getInstance().loadString(cursor, "TO_ACC");
-            String schTransferCreateDtmStr = ColumnFetcher.getInstance().loadString(cursor, "CREAT_DTM");
-            String schTransferModDtmStr = ColumnFetcher.getInstance().loadString(cursor, "MOD_DTM");
-            String schTransferNoteStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_NOTE");
-            String schUserIdStr = ColumnFetcher.getInstance().loadString(cursor, "USER_ID");
+            String schTransferIdStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_ID");
+            Date schTransfersDate = ColumnFetcher.loadDate(cursor, "SCH_TRNFR_DATE");
+            String schTransferFreqStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_FREQ");
+            String schTransferAutoStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_AUTO");
+            Double schTransferAmt = ColumnFetcher.loadDouble(cursor, "SCH_TRNFR_AMT");
+            String schTransferFrmAccIdStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_ACC_ID_FRM");
+            String schTransferToAccIdStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_ACC_ID_TO");
+            String schTransferFrmAccStr = ColumnFetcher.loadString(cursor, "FRM_ACC");
+            String schTransferToAccStr = ColumnFetcher.loadString(cursor, "TO_ACC");
+            Date schTransferCreateDtm = ColumnFetcher.loadDateTime(cursor, "CREAT_DTM");
+            Date schTransferModDtm = ColumnFetcher.loadDateTime(cursor, "MOD_DTM");
+            String schTransferNoteStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_NOTE");
+            String schUserIdStr = ColumnFetcher.loadString(cursor, "USER_ID");
 
             //check the status of the notif (added, scheduled or cancelled)
             sqlQuerySB.setLength(0);
@@ -920,7 +946,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             sqlQuerySB.append(" CNCL_NOTIF_DATE ");
 
             sqlQuerySB.append(" FROM ");
-            sqlQuerySB.append(Constants.DB_TABLE_NOTIFICATIONSTABLE);
+            sqlQuerySB.append(DB_TABLE_NOTIFICATIONSTABLE);
 
             sqlQuerySB.append(" WHERE ");
             sqlQuerySB.append(" CNCL_NOTIF_EVNT_ID = '"+schTransferIdStr+"' ");
@@ -932,53 +958,38 @@ public class CalendarDbService extends SQLiteOpenHelper {
             //this map holds the the date and reason for the action for the particular scheduled transfer
             Map<String, String> notifActionMap = new HashMap<>();
             while (cursor2.moveToNext()) {
-                String reasonStr = ColumnFetcher.getInstance().loadString(cursor2, "CNCL_NOTIF_RSN");
-                String notifActionDateStr = ColumnFetcher.getInstance().loadString(cursor2, "CNCL_NOTIF_DATE");
+                String reasonStr = ColumnFetcher.loadString(cursor2, "CNCL_NOTIF_RSN");
+                String notifActionDateStr = ColumnFetcher.loadString(cursor2, "CNCL_NOTIF_DATE");
 
                 notifActionMap.put(notifActionDateStr, reasonStr);
             }
             //check the status of the notif (added, scheduled or cancelled) ends--
 
-            String schTransfersDateStrArr[] = schTransfersDateStr.split("-");
+            String schTransfersDateStrArr[] = sdf.format(schTransfersDate).split("-");
 
-            for(int i=1; i<=lastDayOfMonth; i++){
+            for(String iterAllDatesInRangeList : allDatesInRange){
                 //this flag allows us whether to proceed with adding this date into month legend as a scheduled transfer
                 boolean isScheduledTransfer = false;
 
-                String dayStr = String.valueOf(i);
-                if(i<10){
-                    dayStr = "0" + dayStr;
-                }
+                String thisDateStr = iterAllDatesInRangeList;
+                String thisDateStrArr[] = thisDateStr.split("-");
 
-                String thisDateStr = dayStr+"-"+dateStrArr[1]+"-"+dateStrArr[2];
-
-                //to get only those scheduled transactions which are after the SCH_TRAN_DATE
-                if(schTransfersDateStrArr[1].equals(dateStrArr[1]) && schTransfersDateStrArr[2].equals(dateStrArr[2])
-                        && Integer.parseInt(dayStr) < Integer.parseInt(schTransfersDateStrArr[0])){
-                    continue;
-                }
-
-                //to avoid showing schedule transaction before todays date
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                Date thisIterDate = null;
-                Date todaysDate = null;
-
+                Date thisDate = null;
                 try{
-                    thisIterDate = sdf.parse(thisDateStr);
-                    todaysDate = sdf.parse(sdf.format(new Date()));
-
+                    thisDate = sdf.parse(thisDateStr);
+                    //to get only those scheduled transactions which are after the SCH_TRAN_DATE
+                    if(thisDate.before(schTransfersDate)){
+                        continue;
+                    }
                 }
                 catch(ParseException e){
                     Log.e(CLASS_NAME, "ERROR !!"+e);
                     return monthLegendMap;
                 }
-                if(thisIterDate.compareTo(todaysDate) < 0){
-                    continue;
-                }
 
                 scheduledTransferModelObj = new ScheduledTransferModel();
                 scheduledTransferModelObj.setSCH_TRNFR_ID(schTransferIdStr);
-                scheduledTransferModelObj.setSCH_TRNFR_DATE(schTransfersDateStr);
+                scheduledTransferModelObj.setSCH_TRNFR_DATE(schTransfersDate);
                 scheduledTransferModelObj.setSCH_TRNFR_FREQ(schTransferFreqStr);
                 scheduledTransferModelObj.setSCH_TRNFR_AUTO(schTransferAutoStr);
                 scheduledTransferModelObj.setSCH_TRNFR_AMT(schTransferAmt);
@@ -987,8 +998,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 scheduledTransferModelObj.setFromAccountStr(schTransferFrmAccStr);
                 scheduledTransferModelObj.setToAccountStr(schTransferToAccStr);
                 scheduledTransferModelObj.setSCH_TRNFR_NOTE(schTransferNoteStr);
-                scheduledTransferModelObj.setCREAT_DTM(schTransferCreateDtmStr);
-                scheduledTransferModelObj.setMOD_DTM(schTransferModDtmStr);
+                scheduledTransferModelObj.setCREAT_DTM(schTransferCreateDtm);
+                scheduledTransferModelObj.setMOD_DTM(schTransferModDtm);
                 scheduledTransferModelObj.setUSER_ID(schUserIdStr);
 
                 //if the date is present in the notifActionMap, that means there's an action for the scheduled transfer on that day(cancel). If it isn't, it means it is still scheduled.
@@ -1006,8 +1017,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
                 if("ONCE".equalsIgnoreCase(schTransferFreqStr)){
                     //to check if sch tran date & month & year (01-11-2014,02-11-2015,03-11-2016...) is same as this date's day (01-11-2014,02-11-2015,03-11-2016...)
-                    if(dayStr.equalsIgnoreCase(schTransfersDateStrArr[0]) && dateStrArr[1].equalsIgnoreCase(schTransfersDateStrArr[1])
-                            && dateStrArr[2].equalsIgnoreCase(schTransfersDateStrArr[2])){
+                    if(thisDate.equals(schTransfersDate)){
                         isScheduledTransfer = true;
                     }
                 }
@@ -1018,8 +1028,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //for weekly transfers
                 else if("WEEKLY".equalsIgnoreCase(schTransferFreqStr)){
                     //to check if the day(sun, mon) of the schedule transfer date is same as thisDateStr's day(sun, mon ..)
-                    String schTranDayOfWeekStr = DateTimeUtil.getInstance().getDayOfWeekFromDate(schTransfersDateStr);
-                    String thisDateDayOfWeeksStr = DateTimeUtil.getInstance().getDayOfWeekFromDate(thisDateStr);
+                    String schTranDayOfWeekStr = DateTimeUtil.getDayOfWeekFromDate(schTransfersDate);
+                    String thisDateDayOfWeeksStr = DateTimeUtil.getDayOfWeekFromDate(thisDate);
 
                     if(schTranDayOfWeekStr.equalsIgnoreCase(thisDateDayOfWeeksStr)){
                         isScheduledTransfer = true;
@@ -1028,7 +1038,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //for monthly transfers
                 else if("MONTHLY".equalsIgnoreCase(schTransferFreqStr)){
                     //to check if sch tran date (01,02,03...) is same as this date's day (01,02,03...)..here we're neglecting the month and year of both the dates
-                    if(dayStr.equalsIgnoreCase(schTransfersDateStrArr[0])){
+                    if(thisDateStrArr[0].equalsIgnoreCase(schTransfersDateStrArr[2])){
                         isScheduledTransfer = true;
                     }
                 }
@@ -1036,14 +1046,14 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //for yearly transfers
                 else if("YEARLY".equalsIgnoreCase(schTransferFreqStr)){
                     //to check if sch tran date & month (01-11,02-11,03-11...) is same as this date's day (01-11,02-11,03-11...)..here we're neglecting only the year
-                    if(dayStr.equalsIgnoreCase(schTransfersDateStrArr[0]) && dateStrArr[1].equalsIgnoreCase(schTransfersDateStrArr[1])){
+                    if(thisDateStrArr[0].equalsIgnoreCase(schTransfersDateStrArr[2]) && thisDateStrArr[1].equalsIgnoreCase(schTransfersDateStrArr[1])){
                         isScheduledTransfer = true;
                     }
                 }
 
                 if(isScheduledTransfer){
                     //this date is the date on which the schedule transfer is supposed to happen
-                    scheduledTransferModelObj.setScheduledDateStr(thisDateStr);
+                    scheduledTransferModelObj.setScheduledDate(thisDate);
                 }
                 else{
                     continue;
@@ -1071,7 +1081,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return monthLegendMap;
     }
 
-    public Map<String, MonthLegend> getScheduledTransactions(Map<String, MonthLegend> monthLegendMap, String dateStr, String userId) {
+    public Map<String, MonthLegend> getScheduledTransactions(Map<String, MonthLegend> monthLegendMap, String dateStrArr[], String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -1095,53 +1105,57 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SCH.MOD_DTM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE+ " SCH ");
+        sqlQuerySB.append(DB_TABLE_SCHEDULEDTRANSACTIONSTABLE + " SCH ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_CATEGORYTABLE+" CAT ");
+        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE+" CAT ");
         sqlQuerySB.append(" ON CAT.CAT_ID = SCH.SCH_TRAN_CAT_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE+" ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" ACC ");
         sqlQuerySB.append(" ON ACC.ACC_ID = SCH.SCH_TRAN_ACC_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_SPENTONTABLE+" SPNT ");
+        sqlQuerySB.append(DB_TABLE_SPENTONTABLE+" SPNT ");
         sqlQuerySB.append(" ON SPNT.SPNT_ON_ID = SCH.SCH_TRAN_SPNT_ON_ID ");
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" SCH_TRAN_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" SCH_TRAN_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" SCH.USER_ID = '" + userId + "' ");
 
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" SCH.SCH_TRAN_DATE BETWEEN '" + dateStrArr[0] + "' AND '"+dateStrArr[1]+"' ");
+
+
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
-        String dateStrArr[] = dateStr.split("-");
-        int lastDayOfMonth = DateTimeUtil.getInstance().getLastDayOfTheMonth(dateStr);
+        List<String> allDatesInRange = DateTimeUtil.getAllDatesBetweenRange(dateStrArr);
         List<ScheduledTransactionModel> scheduledTransactionModelList;
         MonthLegend tempMonthLegend;
         ScheduledTransactionModel scheduledTransactionModelObj;
 
+        SimpleDateFormat sdf2 = new SimpleDateFormat(JAVA_DATE_FORMAT);
         while (cursor.moveToNext()){
-            String schTranIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_ID");
-            String schTranNameStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_NAME");
-            String schTranCatIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_CAT_ID");
-            String schTranSpntOnIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_SPNT_ON_ID");
-            String schTranSpntOnNameStr = ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_NAME");
-            String schTranAccIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_ACC_ID");
-            String schTranAccNameStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME");
-            String schTransactionDateStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_DATE");
-            String schTranFreqStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_FREQ");
-            String schTranAutoStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_AUTO");
-            String schTranCatStr = ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME");
-            Double schTranAmt = ColumnFetcher.getInstance().loadDouble(cursor, "SCH_TRAN_AMT");
-            String schTranTypeStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_TYPE");
-            String schTranCreateDtmStr = ColumnFetcher.getInstance().loadString(cursor, "CREAT_DTM");
-            String schTranModDtmStr = ColumnFetcher.getInstance().loadString(cursor, "MOD_DTM");
-            String schTranNoteStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRAN_NOTE");
-            String schUserIdStr = ColumnFetcher.getInstance().loadString(cursor, "USER_ID");
+            String schTranIdStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_ID");
+            String schTranNameStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_NAME");
+            String schTranCatIdStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_CAT_ID");
+            String schTranSpntOnIdStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_SPNT_ON_ID");
+            String schTranSpntOnNameStr = ColumnFetcher.loadString(cursor, "SPNT_ON_NAME");
+            String schTranAccIdStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_ACC_ID");
+            String schTranAccNameStr = ColumnFetcher.loadString(cursor, "ACC_NAME");
+            Date schTransactionDate = ColumnFetcher.loadDate(cursor, "SCH_TRAN_DATE");
+            String schTranFreqStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_FREQ");
+            String schTranAutoStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_AUTO");
+            String schTranCatStr = ColumnFetcher.loadString(cursor, "CAT_NAME");
+            Double schTranAmt = ColumnFetcher.loadDouble(cursor, "SCH_TRAN_AMT");
+            String schTranTypeStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_TYPE");
+            Date schTranCreateDtm = ColumnFetcher.loadDateTime(cursor, "CREAT_DTM");
+            Date schTranModDtm = ColumnFetcher.loadDateTime(cursor, "MOD_DTM");
+            String schTranNoteStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_NOTE");
+            String schUserIdStr = ColumnFetcher.loadString(cursor, "USER_ID");
 
-            String schTransactionDateStrArr[] = schTransactionDateStr.split("-");
+            String schTransactionDateStrArr[] = sdf2.format(schTransactionDate).split("-");
 
             //check the status of the notif (added, scheduled or cancelled)
             sqlQuerySB.setLength(0);
@@ -1150,7 +1164,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             sqlQuerySB.append(" CNCL_NOTIF_DATE ");
 
             sqlQuerySB.append(" FROM ");
-            sqlQuerySB.append(Constants.DB_TABLE_NOTIFICATIONSTABLE);
+            sqlQuerySB.append(DB_TABLE_NOTIFICATIONSTABLE);
 
             sqlQuerySB.append(" WHERE ");
             sqlQuerySB.append(" CNCL_NOTIF_EVNT_ID = '"+schTranIdStr+"' ");
@@ -1162,46 +1176,30 @@ public class CalendarDbService extends SQLiteOpenHelper {
             //this map holds the the date and reason for the action for the particular scheduled transaction
             Map<String, String> notifActionMap = new HashMap<>();
             while (cursor2.moveToNext()) {
-                String reasonStr = ColumnFetcher.getInstance().loadString(cursor2, "CNCL_NOTIF_RSN");
-                String notifActionDateStr = ColumnFetcher.getInstance().loadString(cursor2, "CNCL_NOTIF_DATE");
+                String reasonStr = ColumnFetcher.loadString(cursor2, "CNCL_NOTIF_RSN");
+                String notifActionDateStr = ColumnFetcher.loadString(cursor2, "CNCL_NOTIF_DATE");
 
                 notifActionMap.put(notifActionDateStr, reasonStr);
             }
             //check the status of the notif (added, scheduled or cancelled) ends--
-
-            for(int i=1; i<=lastDayOfMonth; i++){
+            for(String iterallDatesInRangeList : allDatesInRange){
                 //this flag allows us whether to proceed with adding this date into month legend as a scheduled transaction
                 boolean isScheduledTransaction = false;
 
-                String dayStr = String.valueOf(i);
-                if(i<10){
-                    dayStr = "0" + dayStr;
-                }
+                String thisDateStr = iterallDatesInRangeList;
+                String thisDateStrArr[] = thisDateStr.split("-");
 
-                String thisDateStr = dayStr+"-"+dateStrArr[1]+"-"+dateStrArr[2];
-
-                //to get only those scheduled transactions which are after the SCH_TRAN_DATE
-                if(schTransactionDateStrArr[1].equals(dateStrArr[1]) && schTransactionDateStrArr[2].equals(dateStrArr[2])
-                        && Integer.parseInt(dayStr) < Integer.parseInt(schTransactionDateStrArr[0])){
-                    continue;
-                }
-
-                //to avoid showing schedule transaction before todays date
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                Date thisIterDate = null;
-                Date todaysDate = null;
-
+                Date thisDate = null;
                 try{
-                    thisIterDate = sdf.parse(thisDateStr);
-                    todaysDate = sdf.parse(sdf.format(new Date()));
-
+                    thisDate = sdf2.parse(thisDateStr);
+                    //to get only those scheduled transactions which are after the SCH_TRAN_DATE
+                    if(thisDate.before(schTransactionDate)){
+                        continue;
+                    }
                 }
                 catch(ParseException e){
                     Log.e(CLASS_NAME, "ERROR !!"+e);
                     return monthLegendMap;
-                }
-                if(thisIterDate.compareTo(todaysDate) < 0){
-                    continue;
                 }
 
                 scheduledTransactionModelObj = new ScheduledTransactionModel();
@@ -1212,14 +1210,14 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 scheduledTransactionModelObj.setSpentOnNameStr(schTranSpntOnNameStr);
                 scheduledTransactionModelObj.setSCH_TRAN_ACC_ID(schTranAccIdStr);
                 scheduledTransactionModelObj.setAccountNameStr(schTranAccNameStr);
-                scheduledTransactionModelObj.setSCH_TRAN_DATE(schTransactionDateStr);
+                scheduledTransactionModelObj.setSCH_TRAN_DATE(schTransactionDate);
                 scheduledTransactionModelObj.setSCH_TRAN_FREQ(schTranFreqStr);
                 scheduledTransactionModelObj.setSCH_TRAN_AUTO(schTranAutoStr);
                 scheduledTransactionModelObj.setCategoryNameStr(schTranCatStr);
                 scheduledTransactionModelObj.setSCH_TRAN_AMT(schTranAmt);
                 scheduledTransactionModelObj.setSCH_TRAN_TYPE(schTranTypeStr);
-                scheduledTransactionModelObj.setCREAT_DTM(schTranCreateDtmStr);
-                scheduledTransactionModelObj.setMOD_DTM(schTranModDtmStr);
+                scheduledTransactionModelObj.setCREAT_DTM(schTranCreateDtm);
+                scheduledTransactionModelObj.setMOD_DTM(schTranModDtm);
                 scheduledTransactionModelObj.setSCH_TRAN_NOTE(schTranNoteStr);
                 scheduledTransactionModelObj.setUSER_ID(schUserIdStr);
 
@@ -1238,8 +1236,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //For a Scheduled transaction which is scheduled to happen only once
                 if("ONCE".equalsIgnoreCase(schTranFreqStr)){
                     //to check if sch tran date & month & year (01-11-2014,02-11-2015,03-11-2016...) is same as this date's day (01-11-2014,02-11-2015,03-11-2016...)
-                    if(dayStr.equalsIgnoreCase(schTransactionDateStrArr[0]) && dateStrArr[1].equalsIgnoreCase(schTransactionDateStrArr[1])
-                            && dateStrArr[2].equalsIgnoreCase(schTransactionDateStrArr[2])){
+                    if(thisDate.equals(schTransactionDate)){
                         isScheduledTransaction = true;
                     }
                 }
@@ -1250,8 +1247,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //for weekly transactions
                 else if("WEEKLY".equalsIgnoreCase(schTranFreqStr)){
                     //to check if the day(sun, mon) of the schedule transaction date is same as thisDateStr's day(sun, mon ..)
-                    String schTranDayOfWeekStr = DateTimeUtil.getInstance().getDayOfWeekFromDate(schTransactionDateStr);
-                    String thisDateDayOfWeeksStr = DateTimeUtil.getInstance().getDayOfWeekFromDate(thisDateStr);
+                    String schTranDayOfWeekStr = DateTimeUtil.getDayOfWeekFromDate(schTransactionDate);
+                    String thisDateDayOfWeeksStr = DateTimeUtil.getDayOfWeekFromDate(thisDate);
 
                     if(schTranDayOfWeekStr.equalsIgnoreCase(thisDateDayOfWeeksStr)){
                         isScheduledTransaction = true;
@@ -1260,7 +1257,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //for monthly transactions
                 else if("MONTHLY".equalsIgnoreCase(schTranFreqStr)){
                     //to check if sch tran date (01,02,03...) is same as this date's day (01,02,03...)..here we're neglecting the month and year of both the dates
-                    if(dayStr.equalsIgnoreCase(schTransactionDateStrArr[0])){
+                    if(thisDateStrArr[0].equalsIgnoreCase(schTransactionDateStrArr[2])){
                         isScheduledTransaction = true;
                     }
                 }
@@ -1268,14 +1265,14 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //for yearly transactions
                 else if("YEARLY".equalsIgnoreCase(schTranFreqStr)){
                     //to check if sch tran date & month (01-11,02-11,03-11...) is same as this date's day (01-11,02-11,03-11...)..here we're neglecting only the year
-                    if(dayStr.equalsIgnoreCase(schTransactionDateStrArr[0]) && dateStrArr[1].equalsIgnoreCase(schTransactionDateStrArr[1])){
+                    if(thisDateStrArr[2].equalsIgnoreCase(schTransactionDateStrArr[0]) && thisDateStrArr[1].equalsIgnoreCase(schTransactionDateStrArr[1])){
                         isScheduledTransaction = true;
                     }
                 }
 
                 if(isScheduledTransaction){
                     //this date is the date on which the schedule transaction is supposed to happen
-                    scheduledTransactionModelObj.setScheduledDateStr(thisDateStr);
+                    scheduledTransactionModelObj.setScheduledDate(thisDate);
                 }
                 else{
                     continue;
@@ -1300,87 +1297,87 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
                 monthLegendMap.put(thisDateStr, tempMonthLegend);
             }
-
         }
         return monthLegendMap;
     }
 
     public boolean deleteTransaction(String transactionIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(Constants.DB_TABLE_TRANSACTIONTABLE, "TRAN_ID = '" + transactionIdStr+"'", null) > 0;
+        return db.delete(DB_TABLE_TRANSACTIONTABLE, "TRAN_ID = '" + transactionIdStr+"'", null) > 0;
     }
 
     public boolean deleteAllSched(Object object){
         SQLiteDatabase db = this.getWritableDatabase();
 
         if(object instanceof ScheduledTransactionModel){
-            return db.delete(Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, "SCH_TRAN_ID = '" + ((ScheduledTransactionModel)object).getSCH_TRAN_ID()+"'", null) > 0;
+            return db.delete(DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, "SCH_TRAN_ID = '" + ((ScheduledTransactionModel)object).getSCH_TRAN_ID()+"'", null) > 0;
         }
         else if(object instanceof ScheduledTransferModel){
-            return db.delete(Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE, "SCH_TRNFR_ID = '" + ((ScheduledTransferModel)object).getSCH_TRNFR_ID()+"'", null) > 0;
+            return db.delete(DB_TABLE_SHEDULEDTRANSFERSTABLE, "SCH_TRNFR_ID = '" + ((ScheduledTransferModel)object).getSCH_TRNFR_ID()+"'", null) > 0;
         }
         return false;
     }
 
     public boolean deleteOneSched(Object object){
         SQLiteDatabase db = this.getWritableDatabase();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         ContentValues values = new ContentValues();
 
-        values.put("CNCL_NOTIF_ID", IdGenerator.getInstance().generateUniqueId("NOTIF"));
+        values.put("CNCL_NOTIF_ID", IdGenerator.generateUniqueId("NOTIF"));
         values.put("CNCL_NOTIF_RSN", "DELETE");
-        values.put("CREAT_DTM", sdf.format(new Date()));
+        values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         if(object instanceof ScheduledTransactionModel){
             values.put("CNCL_NOTIF_TYPE", "TRANSACTION");
             values.put("CNCL_NOTIF_EVNT_ID", ((ScheduledTransactionModel)object).getSCH_TRAN_ID());
-            values.put("USER_ID", ((ScheduledTransactionModel)object).getUSER_ID());
-            values.put("CNCL_NOTIF_DATE", ((ScheduledTransactionModel)object).getScheduledDateStr());
+            values.put("USER_ID", ((ScheduledTransactionModel) object).getUSER_ID());
+            Date date = ((ScheduledTransactionModel)object).getScheduledDate();
+            values.put("CNCL_NOTIF_DATE", simpleDateFormat.format(date));
         }
         else if(object instanceof ScheduledTransferModel){
             values.put("CNCL_NOTIF_TYPE", "TRANSFER");
             values.put("CNCL_NOTIF_EVNT_ID", ((ScheduledTransferModel)object).getSCH_TRNFR_ID());
             values.put("USER_ID", ((ScheduledTransferModel)object).getUSER_ID());
-            values.put("CNCL_NOTIF_DATE", ((ScheduledTransferModel)object).getScheduledDateStr());
+            Date date = ((ScheduledTransferModel)object).getScheduledDate();
+            values.put("CNCL_NOTIF_DATE", simpleDateFormat.format(date));
         }
         else{
             return false;
         }
 
-        return db.insert(Constants.DB_TABLE_NOTIFICATIONSTABLE, null, values) > 0;
+        return db.insert(DB_TABLE_NOTIFICATIONSTABLE, null, values) > 0;
     }
 
     public boolean deleteTransfer(String transferIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(Constants.DB_TABLE_TRANSFERSTABLE, "TRNFR_ID = '" + transferIdStr + "'", null) > 0;
+        return db.delete(DB_TABLE_TRANSFERSTABLE, "TRNFR_ID = '" + transferIdStr + "'", null) > 0;
     }
 
     public boolean deleteBudget(String budgetIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(Constants.DB_TABLE_BUDGETTABLE, "BUDGET_ID = '" + budgetIdStr + "'", null) > 0;
+        return db.delete(DB_TABLE_BUDGETTABLE, "BUDGET_ID = '" + budgetIdStr + "'", null) > 0;
     }
 
     public boolean deleteAccount(AccountsModel accountsModelObj){
         SQLiteDatabase db = this.getWritableDatabase();
 
         //delete transactions which are using this account
-        db.delete(Constants.DB_TABLE_TRANSACTIONTABLE, "ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null);
+        db.delete(DB_TABLE_TRANSACTIONTABLE, "ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null);
 
         //delete scheduled transactions which are using this account
-        db.delete(Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, "SCH_TRAN_ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null);
+        db.delete(DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, "SCH_TRAN_ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null);
 
         //delete transfers which are using this account (either from or to)
-        db.delete(Constants.DB_TABLE_TRANSFERSTABLE, "ACC_ID_FRM = '" + accountsModelObj.getACC_ID()+"' OR ACC_ID_TO = '" + accountsModelObj.getACC_ID()+"'", null);
+        db.delete(DB_TABLE_TRANSFERSTABLE, "ACC_ID_FRM = '" + accountsModelObj.getACC_ID()+"' OR ACC_ID_TO = '" + accountsModelObj.getACC_ID()+"'", null);
 
         //delete scheduled transfers which are using this account (either from or to)
-        db.delete(Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE, "SCH_TRNFR_ACC_ID_FRM = '" + accountsModelObj.getACC_ID()+"' OR SCH_TRNFR_ACC_ID_TO = '" + accountsModelObj.getACC_ID()+"'", null);
+        db.delete(DB_TABLE_SHEDULEDTRANSFERSTABLE, "SCH_TRNFR_ACC_ID_FRM = '" + accountsModelObj.getACC_ID()+"' OR SCH_TRNFR_ACC_ID_TO = '" + accountsModelObj.getACC_ID()+"'", null);
 
         //delete budgets which are using this account
-        db.delete(Constants.DB_TABLE_BUDGETTABLE, "BUDGET_GRP_ID = '" + accountsModelObj.getACC_ID()+"'", null);
+        db.delete(DB_TABLE_BUDGETTABLE, "BUDGET_GRP_ID = '" + accountsModelObj.getACC_ID()+"'", null);
 
         //delete the account
-        return db.delete(Constants.DB_TABLE_ACCOUNTTABLE, "ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null) > 0;
+        return db.delete(DB_TABLE_ACCOUNTTABLE, "ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null) > 0;
     }
 
     //---------------------method to get all accounts--------------------------//
@@ -1403,7 +1400,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" (( SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN_TYPE = 'INCOME' ");
         sqlQuerySB.append(" AND ");
@@ -1411,35 +1408,35 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRAN_IS_DEL ");
         sqlQuerySB.append(" = ");
-        sqlQuerySB.append(" '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+Constants.ADMIN_USERID.trim().toUpperCase()+"')) ");
+        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"')) ");
 
         sqlQuerySB.append(" + ");
 
         sqlQuerySB.append(" (SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_ID_TO = ACC.ACC_ID ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRNFR_IS_DEL ");
         sqlQuerySB.append(" = ");
-        sqlQuerySB.append(" '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+Constants.ADMIN_USERID.trim().toUpperCase()+"') ))");
+        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"') ))");
 
         sqlQuerySB.append(" - ");
 
         sqlQuerySB.append(" ((SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN_TYPE = 'EXPENSE' ");
         sqlQuerySB.append(" AND ");
@@ -1447,43 +1444,43 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRAN_IS_DEL ");
         sqlQuerySB.append(" = ");
-        sqlQuerySB.append(" '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+Constants.ADMIN_USERID.trim().toUpperCase()+"')) ");
+        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"')) ");
 
         sqlQuerySB.append(" + ");
 
         sqlQuerySB.append(" (SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_ID_FRM = ACC.ACC_ID ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRNFR_IS_DEL ");
         sqlQuerySB.append(" = ");
-        sqlQuerySB.append(" '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+Constants.ADMIN_USERID.trim().toUpperCase()+"') ))");
+        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"') ))");
 
         sqlQuerySB.append(" AS ACC_TOTAL ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE+" ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" ACC ");
 
         sqlQuerySB.append(" LEFT JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE+" TRAN");
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE+" TRAN");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" TRAN.ACC_ID = ACC.ACC_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+Constants.ADMIN_USERID.trim().toUpperCase()+"') ");
+        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"') ");
 
         sqlQuerySB.append(" GROUP BY ACC.ACC_ID ");
         sqlQuerySB.append(" ORDER BY ACC.CREAT_DTM ");
@@ -1494,11 +1491,11 @@ public class CalendarDbService extends SQLiteOpenHelper {
         Double accountTotal;
         AccountsModel accountsModel = null;
         while (cursor.moveToNext()){
-            accountIdStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_ID");
-            accountNameStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME");
-            accountTotal = ColumnFetcher.getInstance().loadDouble(cursor, "ACC_TOTAL");
-            currecyStr = ColumnFetcher.getInstance().loadString(cursor, "CUR_NAME");
-            accountIsDefaultStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_IS_DEFAULT");
+            accountIdStr = ColumnFetcher.loadString(cursor, "ACC_ID");
+            accountNameStr = ColumnFetcher.loadString(cursor, "ACC_NAME");
+            accountTotal = ColumnFetcher.loadDouble(cursor, "ACC_TOTAL");
+            currecyStr = ColumnFetcher.loadString(cursor, "CUR_NAME");
+            accountIsDefaultStr = ColumnFetcher.loadString(cursor, "ACC_IS_DEFAULT");
 
             accountsModel = new AccountsModel();
             accountsModel.setACC_ID(accountIdStr);
@@ -1531,7 +1528,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
 	// constructors
 	public CalendarDbService(Context context){
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override

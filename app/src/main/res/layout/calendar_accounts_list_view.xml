@@ -4,57 +4,67 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
     android:background="@color/white"
-    android:orientation="horizontal">
-
-    <View
-        android:layout_marginLeft="2dp"
-        android:layout_width="3dp"
-        android:layout_height="fill_parent"
-        android:background="@drawable/capsule_vertical_positive_view"
-        android:id="@+id/accountsAmtStatViewId" />
-
-    <TextView
-        android:layout_marginLeft="2dp"
-        android:id="@+id/accountsNameTVId"
-        android:textColor="@color/black"
-        android:layout_width="235dp"
-        android:layout_gravity="center_vertical"
-        android:layout_height="wrap_content"
-        android:gravity="bottom|left"
-        android:maxLength="25"
-        android:text="MMMMMMMMM"
-        android:textSize="16dp"/>
+    android:paddingTop="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="3dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/capsule_vertical_positive_view"
+            android:id="@+id/accountsAmtStatViewId" />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/accountsNameTVId"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:maxLength="25"
+            android:gravity="center_vertical"
+            android:text="MMMMMMMMM"
+            android:textSize="16dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginTop="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="1dp"
-        android:gravity="center_vertical|right"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical|left"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/accountsCurrIVId"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:text="INR"
-            android:textSize="16sp"
-            android:textColor="@color/finappleCurrencyCodeColor"
+            android:textSize="14sp"
+            android:textColor="@color/tertiaryText"
             android:gravity="center" />
 
         <TextView
             android:id="@+id/accountsTotalTVId"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="1dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
             android:gravity="left|center"
             android:maxLength="7"
             android:text="999.99M"
             android:textColor="@color/finappleCurrencyPosColor"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/accountsApproxTVId"

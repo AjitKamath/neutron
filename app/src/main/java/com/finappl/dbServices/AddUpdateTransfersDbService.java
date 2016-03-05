@@ -18,22 +18,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
+import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSFERSTABLE;
+import static com.finappl.utils.Constants.DB_VERSION;
+
 public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
 
     private final String CLASS_NAME = this.getClass().getName();
 
-    //db tables
-    private static final String USERS_TABLE = Constants.DB_TABLE_USERSTABLE;
-    private static final String accountTable = Constants.DB_TABLE_ACCOUNTTABLE;
-    private static final String categoryTable = Constants.DB_TABLE_CATEGORYTABLE;
-    private static final String spentOnTable = Constants.DB_TABLE_SPENTONTABLE;
-    private static final String transactionTable = Constants.DB_TABLE_TRANSACTIONTABLE;
-    private static final String scheduledTransactionsTable = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-    private static final String budgetTable = Constants.DB_TABLE_BUDGETTABLE;
-    private static final String TRANSFERS_TABLE = Constants.DB_TABLE_TRANSFERSTABLE;
-
-	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
     //	method to update an already created transfer.. returns 0 for fail, 1 for success
     public int updateOldTransfer(TransferModel transferModel){
@@ -46,10 +42,10 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
         values.put("ACC_ID_TO", transferModel.getACC_ID_TO());
         values.put("TRNFR_AMT", transferModel.getTRNFR_AMT());
         values.put("TRNFR_NOTE", transferModel.getTRNFR_NOTE());
-        values.put("MOD_DTM", sdf.format(new Date()));
+        values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
 		// Updating an old Row
-		int result = db.update(TRANSFERS_TABLE, values,	"TRNFR_ID = '" + transferModel.getTRNFR_ID() + "'", null);
+		int result = db.update(DB_TABLE_TRANSFERSTABLE, values,	"TRNFR_ID = '" + transferModel.getTRNFR_ID() + "'", null);
 
         return result;
     }
@@ -67,11 +63,11 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
 		values.put("TRNFR_AMT", transferModel.getTRNFR_AMT());
 		values.put("TRNFR_IS_DEL", Constants.DB_NONAFFIRMATIVE);
 		values.put("TRNFR_NOTE", transferModel.getTRNFR_NOTE());
-		values.put("TRNFR_DATE", transferModel.getTRNFR_DATE());
-		values.put("CREAT_DTM", sdf.format(new Date()));
+		values.put("TRNFR_DATE", simpleDateFormat.format(transferModel.getTRNFR_DATE()));
+		values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
 		// Inserting a new Row
-		long result =  db.insert(TRANSFERS_TABLE, null, values);
+		long result =  db.insert(DB_TABLE_TRANSFERSTABLE, null, values);
         return result;
     }
 
@@ -84,7 +80,7 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
 
 	//constructors
 	public AddUpdateTransfersDbService(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override
@@ -92,6 +88,4 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	//getters setters
 }

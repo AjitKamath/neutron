@@ -15,34 +15,35 @@ import com.finappl.utils.IdGenerator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.finappl.utils.Constants.*;
+
 public class ScheduledTransfersDbService extends SQLiteOpenHelper {
 
     private final String CLASS_NAME = this.getClass().getName();
 
-    private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
     //this method creates a new transfer based on the users input
     public Long createNewScheduledTransfer(ScheduledTransferModel scheduledTransferModelObj) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
         values.put("SCH_TRNFR_ID", IdGenerator.getInstance().generateUniqueId("SCH_TRNFR"));
         values.put("USER_ID", scheduledTransferModelObj.getUSER_ID());
         values.put("SCH_TRNFR_ACC_ID_FRM", scheduledTransferModelObj.getSCH_TRNFR_ACC_ID_FRM());
         values.put("SCH_TRNFR_ACC_ID_TO", scheduledTransferModelObj.getSCH_TRNFR_ACC_ID_TO());
-        values.put("SCH_TRNFR_DATE", scheduledTransferModelObj.getSCH_TRNFR_DATE());
+        values.put("SCH_TRNFR_DATE", simpleDateFormat.format(scheduledTransferModelObj.getSCH_TRNFR_DATE()));
         values.put("SCH_TRNFR_FREQ", scheduledTransferModelObj.getSCH_TRNFR_FREQ());
         values.put("SCH_TRNFR_AMT", scheduledTransferModelObj.getSCH_TRNFR_AMT());
         values.put("SCH_TRNFR_NOTE", scheduledTransferModelObj.getSCH_TRNFR_NOTE());
         values.put("SCH_TRNFR_AUTO", scheduledTransferModelObj.getSCH_TRNFR_AUTO());
-        values.put("SCH_TRNFR_IS_DEL", Constants.DB_NONAFFIRMATIVE);
-        values.put("CREAT_DTM", sdf.format(new Date()));
+        values.put("SCH_TRNFR_IS_DEL", DB_NONAFFIRMATIVE);
+        values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         // inserting a new row
-        return db.insert(Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE, null, values);
+        return db.insert(DB_TABLE_SHEDULEDTRANSFERSTABLE, null, values);
     }
 
     //this method creates a update scheduled transfer based on the users input
@@ -50,19 +51,18 @@ public class ScheduledTransfersDbService extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
         values.put("SCH_TRNFR_ACC_ID_FRM", scheduledTransferModelObj.getSCH_TRNFR_ACC_ID_FRM());
         values.put("SCH_TRNFR_ACC_ID_TO", scheduledTransferModelObj.getSCH_TRNFR_ACC_ID_TO());
-        values.put("SCH_TRNFR_DATE", scheduledTransferModelObj.getSCH_TRNFR_DATE());
+        values.put("SCH_TRNFR_DATE", simpleDateFormat.format(scheduledTransferModelObj.getSCH_TRNFR_DATE()));
         values.put("SCH_TRNFR_FREQ", scheduledTransferModelObj.getSCH_TRNFR_FREQ());
         values.put("SCH_TRNFR_AMT", scheduledTransferModelObj.getSCH_TRNFR_AMT());
         values.put("SCH_TRNFR_NOTE", scheduledTransferModelObj.getSCH_TRNFR_NOTE());
         values.put("SCH_TRNFR_AUTO", scheduledTransferModelObj.getSCH_TRNFR_AUTO());
-        values.put("CREAT_DTM", sdf.format(new Date()));
+        values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         // update a old row
-        return db.update(Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE, values, "SCH_TRNFR_ID = '" + scheduledTransferModelObj.getSCH_TRNFR_ID() + "'", null);
+        return db.update(DB_TABLE_SHEDULEDTRANSFERSTABLE, values, "SCH_TRNFR_ID = '" + scheduledTransferModelObj.getSCH_TRNFR_ID() + "'", null);
     }
 
     //Gets the Scheduled Transfer using the Scheduled Transfer Id & User Id and returns back the Scheduled Transfer object
@@ -85,20 +85,20 @@ public class ScheduledTransfersDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TO_ACC.ACC_NAME AS TO_FRM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE + " SCH ");
+        sqlQuerySB.append(DB_TABLE_SHEDULEDTRANSFERSTABLE + " SCH ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE+" FRM_ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" FRM_ACC ");
         sqlQuerySB.append(" ON FRM_ACC.ACC_ID = SCH.SCH_TRNFR_ACC_ID_FRM ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE+" TO_ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" TO_ACC ");
         sqlQuerySB.append(" ON TO_ACC.ACC_ID = SCH.SCH_TRNFR_ACC_ID_TO ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" SCH.USER_ID = '"+scheduledTransferModelObj.getUSER_ID()+"' ");
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" SCH_TRNFR_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" SCH_TRNFR_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" SCH_TRNFR_ID = '"+scheduledTransferModelObj.getSCH_TRNFR_ID()+"' ");
 
@@ -106,19 +106,19 @@ public class ScheduledTransfersDbService extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
         while (cursor.moveToNext()){
-            String schTransferDateStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_DATE");
-            String schTransferFromAccNameStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_FRM");
-            String schTransferToAccNameStr = ColumnFetcher.getInstance().loadString(cursor, "TO_FRM");
+            Date schTransferDate = ColumnFetcher.loadDate(cursor, "SCH_TRNFR_DATE");
+            String schTransferFromAccNameStr = ColumnFetcher.loadString(cursor, "ACC_FRM");
+            String schTransferToAccNameStr = ColumnFetcher.loadString(cursor, "TO_FRM");
             String schTransferFromAccIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_ACC_ID_FRM");
             String schTransferToAccIdStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_ACC_ID_TO");
             String schTransferFreqStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_FREQ");
             Double schTransferAmt = ColumnFetcher.getInstance().loadDouble(cursor, "SCH_TRNFR_AMT");
             String schTransferNoteStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_NOTE");
             String schTransferAutoStr = ColumnFetcher.getInstance().loadString(cursor, "SCH_TRNFR_AUTO");
-            String schTransferCreateDtmStr = ColumnFetcher.getInstance().loadString(cursor, "CREAT_DTM");
-            String schTransferModDtmStr = ColumnFetcher.getInstance().loadString(cursor, "MOD_DTM");
+            Date schTransferCreateDtm = ColumnFetcher.getInstance().loadDate(cursor, "CREAT_DTM");
+            Date schTransferModDtm = ColumnFetcher.getInstance().loadDate(cursor, "MOD_DTM");
 
-            scheduledTransferModelObj.setSCH_TRNFR_DATE(schTransferDateStr);
+            scheduledTransferModelObj.setSCH_TRNFR_DATE(schTransferDate);
             scheduledTransferModelObj.setFromAccountStr(schTransferFromAccNameStr);
             scheduledTransferModelObj.setToAccountStr(schTransferToAccNameStr);
             scheduledTransferModelObj.setSCH_TRNFR_ACC_ID_FRM(schTransferFromAccIdStr);
@@ -127,8 +127,8 @@ public class ScheduledTransfersDbService extends SQLiteOpenHelper {
             scheduledTransferModelObj.setSCH_TRNFR_AMT(schTransferAmt);
             scheduledTransferModelObj.setSCH_TRNFR_NOTE(schTransferNoteStr);
             scheduledTransferModelObj.setSCH_TRNFR_AUTO(schTransferAutoStr);
-            scheduledTransferModelObj.setCREAT_DTM(schTransferCreateDtmStr);
-            scheduledTransferModelObj.setMOD_DTM(schTransferModDtmStr);
+            scheduledTransferModelObj.setCREAT_DTM(schTransferCreateDtm);
+            scheduledTransferModelObj.setMOD_DTM(schTransferModDtm);
 
             return scheduledTransferModelObj;
         }
@@ -144,7 +144,7 @@ public class ScheduledTransfersDbService extends SQLiteOpenHelper {
 	}
 
 	public ScheduledTransfersDbService(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override

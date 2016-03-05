@@ -7,8 +7,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.finappl.utils.Constants.*;
+
 public class ColumnFetcher{
-	private final String CLASS_NAME = this.getClass().getName();
+	private static final String CLASS_NAME = getInstance().getClass().getName();
 	
 	private static ColumnFetcher instance = null;
 	
@@ -21,63 +23,56 @@ public class ColumnFetcher{
 		return instance;
 	}
 	
-	public String loadString(Cursor cursor, String column){
+	public static String loadString(Cursor cursor, String column){
 	    if (cursor.isNull(cursor.getColumnIndex(column))){
 	        return null;
 	    }
 	    return cursor.getString(cursor.getColumnIndex(column));
 	}
 	
-	public int loadInt(Cursor cursor, String column){
+	public static int loadInt(Cursor cursor, String column){
 	    if (cursor.isNull(cursor.getColumnIndex(column))){
 	        return 0;
 	    }
 	    return cursor.getInt(cursor.getColumnIndex(column));
 	}
 
-    public Double loadDouble(Cursor cursor, String column){
+    public static Double loadDouble(Cursor cursor, String column){
         if (cursor.isNull(cursor.getColumnIndex(column))){
             return 0.0;
         }
         return cursor.getDouble(cursor.getColumnIndex(column));
     }
 	
-	public Date loadDateTime(Cursor cursor, String column){
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	public static Date loadDateTime(Cursor cursor, String column){
+		SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 		
-	    if (cursor.isNull(cursor.getColumnIndex(column))) 
-	    {
+	    if (cursor.isNull(cursor.getColumnIndex(column))){
 	        return null;
 	    }
 	    Date date = null;
-		try 
-		{
+		try{
 			date = sdf.parse(cursor.getString(cursor.getColumnIndex(column)));
 		} 
-		catch (ParseException e) 
-		{
-			Log.e(CLASS_NAME, "Error while fetching date object as string and parsing it to date object:"+e.getMessage());
+		catch (ParseException e){
+			Log.e(CLASS_NAME, "Error while fetching date object as string and parsing it to date object:"+e);
 		}
 	    
 	    return date;
 	}
 	
-	public Date loadDate(Cursor cursor, String column) 
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	public static Date loadDate(Cursor cursor, String column){
+		SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
 		
-	    if (cursor.isNull(cursor.getColumnIndex(column))) 
-	    {
+	    if (cursor.isNull(cursor.getColumnIndex(column))){
 	        return null;
 	    }
 	    Date date = null;
-		try 
-		{
+		try{
 			date = sdf.parse(cursor.getString(cursor.getColumnIndex(column)));
 		} 
-		catch (ParseException e) 
-		{
-			Log.e(CLASS_NAME, "Error while fetching date object as string and parsing it to date object:"+e.getMessage());
+		catch (ParseException e){
+			Log.e(CLASS_NAME, "Error while fetching date object as string and parsing it to date object:"+e);
 		}
 	    
 	    return date;

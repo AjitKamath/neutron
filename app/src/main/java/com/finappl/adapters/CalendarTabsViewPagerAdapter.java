@@ -29,8 +29,12 @@ import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.SummaryModel;
 import com.finappl.models.UsersModel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.finappl.utils.Constants.*;
 
 /**
  * Created by ajit on 30/9/15.
@@ -41,7 +45,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
 
     private List<Integer> layoutsList;
     private Map<String, MonthLegend> monthLegendMap;
-    private String selectedDateStr;
+    private Date selectedDate;
     private CalendarActivity.ListViewItemClickListener listViewItemClickListener;
 
     //db services
@@ -70,11 +74,12 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     public int activePageIndex = 0;
 
 
-    public CalendarTabsViewPagerAdapter(Context context, List<Integer> layoutsList, String selectedDateStr
-            , UsersModel loggedInUserObj, Map<String, MonthLegend> monthLegendMap, CalendarActivity.ListViewItemClickListener listViewItemClickListener) {
+    public CalendarTabsViewPagerAdapter(Context context, List<Integer> layoutsList, Date selectedDate
+            , UsersModel loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
+                                        CalendarActivity.ListViewItemClickListener listViewItemClickListener) {
         this.mContext = context;
         this.layoutsList = layoutsList;
-        this.selectedDateStr = selectedDateStr;
+        this.selectedDate = selectedDate;
         this.loggedInUserObj = loggedInUserObj;
         this.monthLegendMap = monthLegendMap;
         this.listViewItemClickListener = listViewItemClickListener;
@@ -95,7 +100,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         //Accounts check ends
 
         //Budgets check
-        budgetsList = calendarDbService.getAllBudgets(selectedDateStr, loggedInUserObj.getUSER_ID());
+        budgetsList = calendarDbService.getAllBudgets(selectedDate, loggedInUserObj.getUSER_ID());
         if (budgetsList != null && !budgetsList.isEmpty()) {
             hasBudgets = true;
         }
@@ -106,7 +111,8 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        MonthLegend monthLegendObj = monthLegendMap.get(selectedDateStr);
+        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        MonthLegend monthLegendObj = monthLegendMap.get(sdf.format(selectedDate));
         if (monthLegendObj == null) {
             Log.e(CLASS_NAME, "Nothing found in MonthLegend...At least Accounts must be present");
             return;
@@ -178,8 +184,10 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         TextView calendarNoTransTV = (TextView) layout.findViewById(R.id.calendarNoTransTVId);
         ListView consolTranLV = (ListView) layout.findViewById(R.id.consolTranLVId);
 
+        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+
         if (!hasSummary) {
-            Log.i(CLASS_NAME, "No summary to show on this day(" + selectedDateStr + ")");
+            Log.i(CLASS_NAME, "No summary to show on this day(" + sdf.format(selectedDate) + ")");
 
             calendarNoTransTV.setText("No Transactions/Transfers");
             calendarNoTransTV.setTextColor(mContext.getResources().getColor(R.color.DarkGray));
@@ -188,7 +196,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         }
 
         CalendarSummarySectionListViewAdapter consolAdapter =
-                new CalendarSummarySectionListViewAdapter(mContext, R.layout.calendar_summary_list_view, monthLegendMap.get(selectedDateStr).getSummaryModel());
+                new CalendarSummarySectionListViewAdapter(mContext, R.layout.calendar_summary_list_view, monthLegendMap.get(sdf.format(selectedDate)).getSummaryModel());
         consolTranLV.setAdapter(consolAdapter);
         consolTranLV.setOnItemClickListener(listViewClickListener);
 

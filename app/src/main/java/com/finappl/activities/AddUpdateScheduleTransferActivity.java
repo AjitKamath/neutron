@@ -38,6 +38,7 @@ import com.finappl.models.UsersModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -144,8 +145,7 @@ public class AddUpdateScheduleTransferActivity extends Activity {
                 //popullate UI with the returned data
                 popullateUiWhenUpdate();
             }
-            else if(scheduledTransferModelObj != null && scheduledTransferModelObj.getSCH_TRNFR_DATE() != null
-                    && !scheduledTransferModelObj.getSCH_TRNFR_DATE().isEmpty()){
+            else if(scheduledTransferModelObj != null && scheduledTransferModelObj.getSCH_TRNFR_DATE() != null){
                 Log.i(CLASS_NAME, "Could not find SCH_TRNFR_DATE in SCHEDULED_TRANSFER_OBJ in the intent... This means user is trying to create a new Scheduled Transfer");
                 popullateUiWhenNew();
             }
@@ -156,27 +156,13 @@ public class AddUpdateScheduleTransferActivity extends Activity {
     }
 
     private void popullateUiWhenNew() {
-        try{
-            SimpleDateFormat  rightSdf= new SimpleDateFormat("d MMM ''yy");
-            SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
-
-            schedTransferAddUpdDateTV.setText(rightSdf.format(wrongSdf.parse(scheduledTransferModelObj.getSCH_TRNFR_DATE())));
-        }
-        catch(ParseException e){
-            Log.e(CLASS_NAME, "Error !!"+e);
-        }
+        SimpleDateFormat rightSdf= new SimpleDateFormat("d MMM ''yy");
+        schedTransferAddUpdDateTV.setText(rightSdf.format(scheduledTransferModelObj.getSCH_TRNFR_DATE()));
     }
 
     private void popullateUiWhenUpdate(){
-        try{
-            SimpleDateFormat  rightSdf= new SimpleDateFormat("d MMM ''yy");
-            SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
-
-            schedTransferAddUpdDateTV.setText(rightSdf.format(wrongSdf.parse(scheduledTransferModelObj.getSCH_TRNFR_DATE())));
-        }
-        catch(ParseException e){
-            Log.e(CLASS_NAME, "Error !!"+e);
-        }
+        SimpleDateFormat rightSdf= new SimpleDateFormat("d MMM ''yy");
+        schedTransferAddUpdDateTV.setText(rightSdf.format(scheduledTransferModelObj.getSCH_TRNFR_DATE()));
 
         schedTransferAddUpdAmtET.setText(String.valueOf(scheduledTransferModelObj.getSCH_TRNFR_AMT()));
 
@@ -232,15 +218,13 @@ public class AddUpdateScheduleTransferActivity extends Activity {
 
     private ScheduledTransferModel getUserInputs(){
         SimpleDateFormat wrongSdf = new SimpleDateFormat("d MMM ''yy");
-        SimpleDateFormat rightSdf = new SimpleDateFormat("dd-MM-yyyy");
 
-        String dateStr = null;
-
+        Date date;
         try{
-            dateStr = rightSdf.format(wrongSdf.parse(String.valueOf(schedTransferAddUpdDateTV.getText())));
+            date = wrongSdf.parse(String.valueOf(schedTransferAddUpdDateTV.getText()));
         }
-        catch(ParseException e){
-            Log.e(CLASS_NAME, "ERROR !!"+e);
+        catch (ParseException e){
+            Log.e(CLASS_NAME, "Error in date parsing: "+e);
             return null;
         }
 
@@ -250,7 +234,7 @@ public class AddUpdateScheduleTransferActivity extends Activity {
             amountStr = "0";
         }
 
-        scheduledTransferModelObj.setSCH_TRNFR_DATE(dateStr);
+        scheduledTransferModelObj.setSCH_TRNFR_DATE(date);
 
         scheduledTransferModelObj.setSCH_TRNFR_AMT(Double.parseDouble(amountStr));
 
@@ -327,12 +311,11 @@ public class AddUpdateScheduleTransferActivity extends Activity {
         onDoneUpdate(view);
 
         SimpleDateFormat wrongSdf = new SimpleDateFormat("d MMM ''yy");
-        SimpleDateFormat rightSdf = new SimpleDateFormat("dd-MM-yyyy");
 
-        String dateStr = null;
+        Date date;
 
         try{
-            dateStr = rightSdf.format(wrongSdf.parse(String.valueOf(schedTransferAddUpdDateTV.getText())));
+            date = wrongSdf.parse(String.valueOf(schedTransferAddUpdDateTV.getText()));
         }
         catch(ParseException e){
             Log.e(CLASS_NAME, "ERROR !!"+e);
@@ -340,7 +323,7 @@ public class AddUpdateScheduleTransferActivity extends Activity {
         }
 
         ScheduledTransactionModel scheduledTransferModelObj = new ScheduledTransactionModel();
-        scheduledTransferModelObj.setSCH_TRAN_DATE(dateStr);
+        scheduledTransferModelObj.setSCH_TRAN_DATE(date);
 
         startActivity(getIntent());
         finish();

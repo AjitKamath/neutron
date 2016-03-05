@@ -1,5 +1,7 @@
 package com.finappl.models;
 
+import java.util.Date;
+
 /**
  * Created by ajit on 31/8/15.
  */
@@ -9,7 +11,7 @@ public class ConsolidatedTransferModel {
     private Double amount;
     private String fromAccountStr;
     private String toAccountStr;
-    private String dateStr;
+    private Date date;
 
     public Integer getCount() {
         return count;
@@ -43,11 +45,11 @@ public class ConsolidatedTransferModel {
         this.toAccountStr = toAccountStr;
     }
 
-    public String getDateStr() {
-        return dateStr;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDateStr(String dateStr) {
-        this.dateStr = dateStr;
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

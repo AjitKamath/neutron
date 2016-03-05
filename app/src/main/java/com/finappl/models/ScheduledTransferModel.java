@@ -1,6 +1,7 @@
 package com.finappl.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by ajit on 8/2/15.
@@ -10,20 +11,20 @@ public class ScheduledTransferModel implements Serializable {
     private String USER_ID;
     private String SCH_TRNFR_ACC_ID_FRM;
     private String SCH_TRNFR_ACC_ID_TO;
-    private String SCH_TRNFR_DATE;
+    private Date SCH_TRNFR_DATE;
     private String SCH_TRNFR_FREQ;
     private Double SCH_TRNFR_AMT;
     private String SCH_TRNFR_NOTE;
     private String SCH_TRNFR_AUTO;
     private String SCH_TRNFR_IS_DEL;
-    private String CREAT_DTM;
-    private String MOD_DTM;
+    private Date CREAT_DTM;
+    private Date MOD_DTM;
 
     private String fromAccountStr;
     private String toAccountStr;
 
     private String status;
-    private String ScheduledDateStr;
+    private Date ScheduledDate;
 
     public String getSCH_TRNFR_ID() {
         return SCH_TRNFR_ID;
@@ -57,11 +58,11 @@ public class ScheduledTransferModel implements Serializable {
         this.SCH_TRNFR_ACC_ID_TO = SCH_TRNFR_ACC_ID_TO;
     }
 
-    public String getSCH_TRNFR_DATE() {
+    public Date getSCH_TRNFR_DATE() {
         return SCH_TRNFR_DATE;
     }
 
-    public void setSCH_TRNFR_DATE(String SCH_TRNFR_DATE) {
+    public void setSCH_TRNFR_DATE(Date SCH_TRNFR_DATE) {
         this.SCH_TRNFR_DATE = SCH_TRNFR_DATE;
     }
 
@@ -105,20 +106,21 @@ public class ScheduledTransferModel implements Serializable {
         this.SCH_TRNFR_IS_DEL = SCH_TRNFR_IS_DEL;
     }
 
-    public String getCREAT_DTM() {
-        return CREAT_DTM;
-    }
-
-    public void setCREAT_DTM(String CREAT_DTM) {
-        this.CREAT_DTM = CREAT_DTM;
-    }
-
-    public String getMOD_DTM() {
+    public Date getMOD_DTM() {
         return MOD_DTM;
     }
 
-    public void setMOD_DTM(String MOD_DTM) {
+    public void setMOD_DTM(Date MOD_DTM) {
         this.MOD_DTM = MOD_DTM;
+    }
+
+    public Date getCREAT_DTM() {
+
+        return CREAT_DTM;
+    }
+
+    public void setCREAT_DTM(Date CREAT_DTM) {
+        this.CREAT_DTM = CREAT_DTM;
     }
 
     public String getFromAccountStr() {
@@ -145,11 +147,11 @@ public class ScheduledTransferModel implements Serializable {
         this.status = status;
     }
 
-    public String getScheduledDateStr() {
-        return ScheduledDateStr;
+    public Date getScheduledDate() {
+        return ScheduledDate;
     }
 
-    public void setScheduledDateStr(String scheduledDateStr) {
-        ScheduledDateStr = scheduledDateStr;
+    public void setScheduledDate(Date scheduledDate) {
+        ScheduledDate = scheduledDate;
     }
 }

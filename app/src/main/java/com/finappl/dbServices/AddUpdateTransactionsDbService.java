@@ -18,28 +18,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
+import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_TABLE_ACCOUNTTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSACTIONTABLE;
+import static com.finappl.utils.Constants.DB_VERSION;
+
 public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
 
     private final String CLASS_NAME = this.getClass().getName();
 
-    //db tables
-    private static final String usersTable = Constants.DB_TABLE_USERSTABLE;
-    private static final String accountTable = Constants.DB_TABLE_ACCOUNTTABLE;
-    private static final String categoryTable = Constants.DB_TABLE_CATEGORYTABLE;
-    private static final String spentOnTable = Constants.DB_TABLE_SPENTONTABLE;
-    private static final String transactionTable = Constants.DB_TABLE_TRANSACTIONTABLE;
-    private static final String scheduledTransactionsTable = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-    private static final String budgetTable = Constants.DB_TABLE_BUDGETTABLE;
-
-	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
     //	method to update an already created transaction.. returns 0 for fail, 1 for success
     public int updateOldTransaction(TransactionModel transactionModel){
 		SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
         values.put("CAT_ID", transactionModel.getCAT_ID());
         values.put("SPNT_ON_ID", transactionModel.getSPNT_ON_ID());
@@ -48,11 +47,11 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
         values.put("TRAN_NAME", transactionModel.getTRAN_NAME());
         values.put("TRAN_TYPE", transactionModel.getTRAN_TYPE());
         values.put("TRAN_NOTE", transactionModel.getTRAN_NOTE());
-        values.put("TRAN_DATE", transactionModel.getTRAN_DATE());
-        values.put("MOD_DTM", sdf.format(new Date()));
+        values.put("TRAN_DATE", simpleDateFormat.format(transactionModel.getTRAN_DATE()));
+        values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
 		// Updating an old Row
-		return db.update(transactionTable, values,	"TRAN_ID = '" + transactionModel.getTRAN_ID() + "'", null);
+		return db.update(DB_TABLE_TRANSACTIONTABLE, values,	"TRAN_ID = '" + transactionModel.getTRAN_ID() + "'", null);
     }
 
     //	method to add a new transaction..returns -1 on fail to add new transaction. row id on success
@@ -71,15 +70,14 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
 		values.put("TRAN_NAME", transactionModel.getTRAN_NAME());
 		values.put("TRAN_TYPE", transactionModel.getTRAN_TYPE());
 		values.put("TRAN_NOTE", transactionModel.getTRAN_NOTE());
-		values.put("TRAN_DATE", transactionModel.getTRAN_DATE());
+		values.put("TRAN_DATE", simpleDateFormat.format(transactionModel.getTRAN_DATE()));
 		values.put("TRAN_IS_DEL", Constants.DB_NONAFFIRMATIVE);
-		values.put("CREAT_DTM", sdf.format(new Date()));
-		values.put("MOD_DTM", "");
+		values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         long result = 0;
         try {
             // Inserting a new Row
-            result =  db.insertOrThrow(transactionTable, null, values);
+            result =  db.insertOrThrow(DB_TABLE_TRANSACTIONTABLE, null, values);
         }
         catch(Exception e){
             Log.e(CLASS_NAME, "Error while adding transaction:"+e);
@@ -98,7 +96,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" CAT_NAME ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(categoryTable);
+        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" CAT_IS_DEFAULT ");
@@ -139,7 +137,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SPNT_ON_NAME ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(spentOnTable);
+        sqlQuerySB.append(DB_TABLE_SPENTONTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" SPNT_ON_IS_DEFAULT = '"+Constants.DB_AFFIRMATIVE+"' ");
@@ -179,7 +177,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" ACC_NAME ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(accountTable);
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_IS_DEFAULT = '"+Constants.DB_AFFIRMATIVE+"' ");
@@ -213,7 +211,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
 
 	//constructors
 	public AddUpdateTransactionsDbService(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override
@@ -221,6 +219,4 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	//getters setters
 }

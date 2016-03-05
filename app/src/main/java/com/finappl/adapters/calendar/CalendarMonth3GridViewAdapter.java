@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
+
 /**
  * Created by ajit on 8/1/15.
  */
@@ -43,6 +45,7 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
     public static int currMonth, preMonth, nexMonth;
 
     public String dateToPreSelect;
+    public Date toSelectDate;
 
     private Map<String, MonthLegend> monthLegendDataMap;
     private LayoutInflater inflater;
@@ -52,7 +55,7 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
     public View todaysView;
 
     // Days in Current Month
-    public CalendarMonth3GridViewAdapter(Context context, Map<String, MonthLegend> monthLegendMap, int month, int year, String dateToPreselect) {
+    public CalendarMonth3GridViewAdapter(Context context, Map<String, MonthLegend> monthLegendMap, int month, int year, Date dateToPreselect) {
         super();
         this._context = context;
         this.list = new ArrayList<>();
@@ -60,7 +63,9 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
         this.month = month;
         this.year = year;
 
-        this.dateToPreSelect = dateToPreselect;
+        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        this.toSelectDate = dateToPreselect;
+        this.dateToPreSelect = sdf.format(dateToPreselect);
         this.monthLegendDataMap = monthLegendMap;
         this.inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Log.d(CLASS_NAME, "CalendarAdapter Class is called with date to pre select:" + dateToPreSelect);
@@ -269,6 +274,8 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
 
         // ACCOUNT FOR SPACING-
         String theDatsStr = list.get(position);
+
+        mHolder.calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_no_tap);
 
         if(monthLegendDataMap != null && monthLegendDataMap.containsKey(theDatsStr)) {
 

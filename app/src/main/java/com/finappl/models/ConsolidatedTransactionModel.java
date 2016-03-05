@@ -1,5 +1,7 @@
 package com.finappl.models;
 
+import java.util.Date;
+
 /**
  * Created by ajit on 17/1/15.
  */
@@ -9,14 +11,14 @@ public class ConsolidatedTransactionModel {
     private Integer count;
     private String currency;
     private Double total;
-    private String date;
+    private Date date;
     private String type;
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

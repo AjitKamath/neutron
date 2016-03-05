@@ -394,8 +394,6 @@ public class ViewActivitiesActivity extends Activity {
             tranDtlPopperAmtTV.setText(String.valueOf("-"+transObj.getTRAN_AMT()));
         }
 
-        SimpleDateFormat badFormat1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        SimpleDateFormat badFormat2 = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat goodFormat1 = new SimpleDateFormat("d MMM ''yy, h:mm a");
         SimpleDateFormat goodFormat2 = new SimpleDateFormat("d MMM ''yy");
 
@@ -406,16 +404,11 @@ public class ViewActivitiesActivity extends Activity {
         tranDtlPopperSpntOnTV.setText(transObj.getSpentOn());
         tranDtlPopperNoteTV.setText(transObj.getTRAN_NOTE());
 
-        try {
-            tranDtlPopperTranDateTV.setText(goodFormat2.format(badFormat2.parseObject(transObj.getTRAN_DATE())));
-            tranDtlPopperCreateTV.setText(goodFormat1.format(badFormat1.parseObject(transObj.getCREAT_DTM())));
+        tranDtlPopperTranDateTV.setText(goodFormat2.format(transObj.getTRAN_DATE()));
+        tranDtlPopperCreateTV.setText(goodFormat1.format(transObj.getCREAT_DTM()));
 
-            if(transObj.getMOD_DTM() != null && !"".equalsIgnoreCase(transObj.getMOD_DTM())){
-                tranDtlPopperUpdtdTV.setText(goodFormat2.format(badFormat2.parseObject(transObj.getMOD_DTM())));
-            }
-        }
-        catch(ParseException pe){
-            Log.e(CLASS_NAME, "Error in date parsing..:"+pe);
+        if(transObj.getMOD_DTM() != null){
+            tranDtlPopperUpdtdTV.setText(goodFormat2.format(transObj.getMOD_DTM()));
         }
 
         tranDtlPopperDelIV.setTag(transObj.getTRAN_ID());
@@ -493,21 +486,14 @@ public class ViewActivitiesActivity extends Activity {
         }
 
 
-        SimpleDateFormat badFormat1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        SimpleDateFormat badFormat2 = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat goodFormat1 = new SimpleDateFormat("d MMM ''yy, h:mm a");
         SimpleDateFormat goodFormat2 = new SimpleDateFormat("d MMM ''yy");
 
-        try {
-            transferDtlPopperDateTV.setText(goodFormat2.format(badFormat2.parseObject(transferObj.getTRNFR_DATE())));
-            transferDtlPopperCreateTV.setText(goodFormat1.format(badFormat1.parseObject(transferObj.getCREAT_DTM())));
+        transferDtlPopperDateTV.setText(goodFormat2.format(transferObj.getTRNFR_DATE()));
+        transferDtlPopperCreateTV.setText(goodFormat1.format(transferObj.getCREAT_DTM()));
 
-            if(transferObj.getMOD_DTM() != null && !"".equalsIgnoreCase(transferObj.getMOD_DTM())){
-                transferDtlPopperUpdtdTV.setText(goodFormat2.format(badFormat2.parseObject(transferObj.getMOD_DTM())));
-            }
-        }
-        catch(ParseException pe){
-            Log.e(CLASS_NAME, "Error in date parsing..:"+pe);
+        if(transferObj.getMOD_DTM() != null){
+            transferDtlPopperUpdtdTV.setText(goodFormat2.format(transferObj.getMOD_DTM()));
         }
 
         //set font for all the text view

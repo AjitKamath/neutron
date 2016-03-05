@@ -1,6 +1,7 @@
 package com.finappl.models;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -8,9 +9,9 @@ import java.util.Map;
  */
 public class ActivityModel implements Serializable{
 
-    private String fromDateStr;
-    private String toDateStr;
-    private String dateStr;
+    private Date fromDate;
+    private Date toDate;
+    private Date date;
     private String whichActivityStr;
     private Map<String, DayTransactionsModel> transactionsMap;
     private Map<String, DayTransfersModel> transfersMap;
@@ -24,20 +25,28 @@ public class ActivityModel implements Serializable{
         this.userId = userId;
     }
 
-    public String getFromDateStr() {
-        return fromDateStr;
+    public Date getFromDate() {
+        return fromDate;
     }
 
-    public void setFromDateStr(String fromDateStr) {
-        this.fromDateStr = fromDateStr;
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
     }
 
-    public String getToDateStr() {
-        return toDateStr;
+    public Date getToDate() {
+        return toDate;
     }
 
-    public void setToDateStr(String toDateStr) {
-        this.toDateStr = toDateStr;
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getWhichActivityStr() {
@@ -62,13 +71,5 @@ public class ActivityModel implements Serializable{
 
     public void setTransfersMap(Map<String, DayTransfersModel> transfersMap) {
         this.transfersMap = transfersMap;
-    }
-
-    public String getDateStr() {
-        return dateStr;
-    }
-
-    public void setDateStr(String dateStr) {
-        this.dateStr = dateStr;
     }
 }

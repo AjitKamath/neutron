@@ -12,7 +12,7 @@ public class NotificationModel {
     private String CNCL_NOTIF_TYPE;
     private String CNCL_NOTIF_EVNT_ID;
     private String CNCL_NOTIF_RSN;
-    private String CNCL_NOTIF_DATE;
+    private Date CNCL_NOTIF_DATE;
     private Date CREAT_DTM;
     private Date MOD_DTM;
 
@@ -56,11 +56,11 @@ public class NotificationModel {
         this.CNCL_NOTIF_RSN = CNCL_NOTIF_RSN;
     }
 
-    public String getCNCL_NOTIF_DATE() {
+    public Date getCNCL_NOTIF_DATE() {
         return CNCL_NOTIF_DATE;
     }
 
-    public void setCNCL_NOTIF_DATE(String CNCL_NOTIF_DATE) {
+    public void setCNCL_NOTIF_DATE(Date CNCL_NOTIF_DATE) {
         this.CNCL_NOTIF_DATE = CNCL_NOTIF_DATE;
     }
 

@@ -1,6 +1,7 @@
 package com.finappl.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class TransactionModel implements Serializable {
 
@@ -16,10 +17,10 @@ public class TransactionModel implements Serializable {
 	private String TRAN_NAME;
 	private String TRAN_TYPE;
 	private String TRAN_NOTE;
-	private String TRAN_DATE;
+	private Date TRAN_DATE;
 	private String TRAN_IS_DEL;
-	private String CREAT_DTM;
-	private String MOD_DTM;
+	private Date CREAT_DTM;
+	private Date MOD_DTM;
 
     private String category;
     private String spentOn;
@@ -31,17 +32,17 @@ public class TransactionModel implements Serializable {
     private SpentOnModel spentOnObj;
     private AccountsModel accountObj;
 
-    private String schCreateDate;
+    private Date schCreateDate;
 
-    public String getSchCreateDate() {
-        return schCreateDate;
-    }
+	public Date getSchCreateDate() {
+		return schCreateDate;
+	}
 
-    public void setSchCreateDate(String schCreateDate) {
-        this.schCreateDate = schCreateDate;
-    }
+	public void setSchCreateDate(Date schCreateDate) {
+		this.schCreateDate = schCreateDate;
+	}
 
-    //	constructors
+	//	constructors
 	public TransactionModel() {}
 
 
@@ -168,28 +169,36 @@ public class TransactionModel implements Serializable {
 	public void setTRAN_NOTE(String tRAN_NOTE) {
 		TRAN_NOTE = tRAN_NOTE;
 	}
-	public String getTRAN_DATE() {
+
+	public Date getTRAN_DATE() {
 		return TRAN_DATE;
 	}
-	public void setTRAN_DATE(String tRAN_DATE) {
-		TRAN_DATE = tRAN_DATE;
+
+	public void setTRAN_DATE(Date TRAN_DATE) {
+		this.TRAN_DATE = TRAN_DATE;
 	}
+
 	public String getTRAN_IS_DEL() {
 		return TRAN_IS_DEL;
 	}
-	public void setTRAN_IS_DEL(String tRAN_IS_DEL) {
-		TRAN_IS_DEL = tRAN_IS_DEL;
+
+	public void setTRAN_IS_DEL(String TRAN_IS_DEL) {
+		this.TRAN_IS_DEL = TRAN_IS_DEL;
 	}
-	public String getCREAT_DTM() {
+
+	public Date getCREAT_DTM() {
 		return CREAT_DTM;
 	}
-	public void setCREAT_DTM(String cREAT_DTM) {
-		CREAT_DTM = cREAT_DTM;
+
+	public void setCREAT_DTM(Date CREAT_DTM) {
+		this.CREAT_DTM = CREAT_DTM;
 	}
-	public String getMOD_DTM() {
+
+	public Date getMOD_DTM() {
 		return MOD_DTM;
 	}
-	public void setMOD_DTM(String mOD_DTM) {
-		MOD_DTM = mOD_DTM;
+
+	public void setMOD_DTM(Date MOD_DTM) {
+		this.MOD_DTM = MOD_DTM;
 	}
 }

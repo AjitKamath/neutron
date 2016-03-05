@@ -16,14 +16,20 @@ import com.finappl.utils.IdGenerator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
+import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_VERSION;
+
 
 public class AddUpdateAccDbService extends SQLiteOpenHelper {
 
 	private final String CLASS_NAME = this.getClass().getName();
 
-	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
 	private static AddUpdateAccDbService sInstance = null;
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
     public AccountsModel getAccountDetailsOnAccountId(String accountIdStr) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -121,11 +127,10 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
     public int updateOldAccount(AccountsModel accObj) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         ContentValues values = new ContentValues();
         values.put("ACC_NAME", accObj.getACC_NAME());
         values.put("ACC_NOTE", accObj.getACC_NOTE());
-        values.put("MOD_DTM", sdf.format(new Date()));
+        values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Updating an old Row
         return db.update(Constants.DB_TABLE_ACCOUNTTABLE, values,	"ACC_ID = '" + accObj.getACC_ID() + "'", null);
@@ -172,7 +177,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         values.put("ACC_IS_DEFAULT", Constants.DB_NONAFFIRMATIVE);
         values.put("ACC_NOTE", accObject.getACC_NOTE());
         values.put("ACC_IS_DEL", Constants.DB_NONAFFIRMATIVE);
-        values.put("CREAT_DTM", DateTimeUtil.getInstance().dateDateToDbDateString(new Date()));
+        values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Inserting a new Row in account table
         long result =  db.insert(Constants.DB_TABLE_ACCOUNTTABLE, null, values);
@@ -190,8 +195,6 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
 
         //add a transaction saying initial deposit on this particular account
         values.clear();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 
         values.put("TRAN_ID", IdGenerator.getInstance().generateUniqueId("TRAN"));
         values.put("USER_ID", accObject.getUSER_ID());
@@ -203,9 +206,9 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         values.put("TRAN_NAME", "New Account Created");
         values.put("TRAN_TYPE", "INCOME");
         values.put("TRAN_NOTE", "Auto Transaction For Initial Deposit");
-        values.put("TRAN_DATE", sdf1.format(new Date()));
+        values.put("TRAN_DATE", simpleDateFormat.format(new Date()));
         values.put("TRAN_IS_DEL", Constants.DB_NONAFFIRMATIVE);
-        values.put("CREAT_DTM", sdf.format(new Date()));
+        values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         long result2 = 0;
         try {
@@ -225,8 +228,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
     }
 
 	// get class instance
-	public static AddUpdateAccDbService getInstance(Context context)
-	{
+	public static AddUpdateAccDbService getInstance(Context context){
 		// Use the application context, which will ensure that you
 		// don't accidentally leak an Activity's context.
 		if (sInstance == null){
@@ -237,7 +239,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
 
 	// constructors
 	public AddUpdateAccDbService(Context context){
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.finappl.models;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
 public class DayTransactionsModel {
     private List<TransactionModel> dayTransactionsList;
     private Double dayTotal;
-    private String dateStr;
+    private Date date;
 
     public List<TransactionModel> getDayTransactionsList() {
         return dayTransactionsList;
@@ -26,11 +27,11 @@ public class DayTransactionsModel {
         this.dayTotal = dayTotal;
     }
 
-    public String getDateStr() {
-        return dateStr;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDateStr(String dateStr) {
-        this.dateStr = dateStr;
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

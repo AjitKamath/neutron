@@ -38,6 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.finappl.utils.Constants.*;
+
 /**
  * Created by ajit on 15/8/15.
  */
@@ -103,14 +105,14 @@ public class NotificationsService extends Service {
             if("SCHEDULED_TRANSFER".equalsIgnoreCase(notificationActionModelObj.getNotificationTypeStr())) {
                 Log.i(CLASS_NAME, "The Notifications was for 'SCHEDULED_TRANSFER'");
                 ScheduledTransferModel scheduledTransferModelObj = (ScheduledTransferModel) notificationActionModelObj.getNotificationObject();
-                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransferModelObj.getScheduledDateStr());
+                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransferModelObj.getScheduledDate());
                 notificationModelObj.setCNCL_NOTIF_TYPE("SCHEDULED_TRANSFER");
                 notificationModelObj.setCNCL_NOTIF_EVNT_ID(scheduledTransferModelObj.getSCH_TRNFR_ID());
             }
             else if("SCHEDULED_TRANSACTION".equalsIgnoreCase(notificationActionModelObj.getNotificationTypeStr())){
                 Log.i(CLASS_NAME, "The Notifications was for 'SCHEDULED_TRANSACTION'");
                 ScheduledTransactionModel scheduledTransactionModelObj = (ScheduledTransactionModel) notificationActionModelObj.getNotificationObject();
-                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransactionModelObj.getScheduledDateStr());
+                notificationModelObj.setCNCL_NOTIF_DATE(scheduledTransactionModelObj.getScheduledDate());
                 notificationModelObj.setCNCL_NOTIF_TYPE("SCHEDULED_TRANSACTION");
                 notificationModelObj.setCNCL_NOTIF_EVNT_ID(scheduledTransactionModelObj.getSCH_TRAN_ID());
             }
@@ -292,16 +294,17 @@ public class NotificationsService extends Service {
     }
 
     private TodaysNotifications getTodaysNotifications(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
         String todayStr = sdf.format(new Date());
+        String todayStrArr[] = new String[]{todayStr, todayStr};
 
 
         Map<String, MonthLegend> monthLegendMap = new HashMap<>();
 
         //get all schedules from the db
         CalendarDbService calendarDbService = new CalendarDbService(getApplicationContext());
-        monthLegendMap = calendarDbService.getScheduledTransactions(monthLegendMap, todayStr, loggedInUserObj.getUSER_ID());
-        monthLegendMap = calendarDbService.getScheduledTransfers(monthLegendMap, todayStr, loggedInUserObj.getUSER_ID());
+        monthLegendMap = calendarDbService.getScheduledTransactions(monthLegendMap, todayStrArr, loggedInUserObj.getUSER_ID());
+        monthLegendMap = calendarDbService.getScheduledTransfers(monthLegendMap, todayStrArr, loggedInUserObj.getUSER_ID());
 
         //get all the scheduled Transactions/Transfers from the month legend
         List<ScheduledTransactionModel> schedTransactionModelObjList = null;
@@ -371,7 +374,7 @@ public class NotificationsService extends Service {
                     transactionModelObj.setTRAN_NAME(iterSchedTransactionsList.getSCH_TRAN_NAME());
                     transactionModelObj.setTRAN_TYPE(iterSchedTransactionsList.getSCH_TRAN_TYPE());
                     transactionModelObj.setTRAN_NOTE(iterSchedTransactionsList.getSCH_TRAN_NOTE());
-                    transactionModelObj.setTRAN_DATE(iterSchedTransactionsList.getScheduledDateStr());
+                    transactionModelObj.setTRAN_DATE(iterSchedTransactionsList.getScheduledDate());
 
                     if((new AddUpdateTransactionsDbService(getApplicationContext())).addNewTransaction(transactionModelObj) != -1){
                         Log.i(CLASS_NAME, "Building a notification just to notify the user of the automatically added scheduled transaction");
@@ -428,7 +431,7 @@ public class NotificationsService extends Service {
                     transferModelObj.setACC_ID_TO(iterSchedTranfersList.getSCH_TRNFR_ACC_ID_TO());
                     transferModelObj.setTRNFR_AMT(iterSchedTranfersList.getSCH_TRNFR_AMT());
                     transferModelObj.setTRNFR_NOTE(iterSchedTranfersList.getSCH_TRNFR_NOTE());
-                    transferModelObj.setTRNFR_DATE(iterSchedTranfersList.getScheduledDateStr());
+                    transferModelObj.setTRNFR_DATE(iterSchedTranfersList.getScheduledDate());
 
 
                     if((new AddUpdateTransfersDbService(getApplicationContext())).addNewTransfer(transferModelObj) != -1){

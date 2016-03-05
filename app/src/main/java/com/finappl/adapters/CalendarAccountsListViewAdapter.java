@@ -78,7 +78,10 @@ public class CalendarAccountsListViewAdapter extends BaseAdapter {
 
         //this is to offset the last item to allow its content to be viewed by scrolling
         if(position == dataList.size()-1){
-            mHolder.summayAccountsLL.setPadding(0, 0, 0, FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 65));
+            mHolder.summayAccountsLL.setPadding(FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 10),
+                    FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 10),
+                    FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 10),
+                    FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 65));
         }
 
         //set font for all the text view

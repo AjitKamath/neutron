@@ -34,6 +34,7 @@ import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.UsersModel;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,6 +43,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.finappl.utils.Constants.*;
+
 /**
  * Created by ajit on 30/9/15.
  */
@@ -49,7 +52,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
 
-    public String selectedDateStr;
+    public Date selectedDate;
     private Map<String, MonthLegend> monthLegendMap;
 
     //db services
@@ -88,15 +91,15 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
     public boolean doMonthChange;
     public int currentMonthIndex;
 
-    public int maxMonths = 11;
+    public int maxMonths = MONTHS_RANGE;
 
-    private View oldMonthView;
+    public View oldMonthView;
 
-    public CalendarMonthsViewPagerAdapter(Context context, String selectedDateStr, String centralMateMonthStr,
+    public CalendarMonthsViewPagerAdapter(Context context, Date selectedDate, String centralMateMonthStr,
                                           UsersModel loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
                                           CalendarActivity.GridViewItemClickListener gridViewItemClickListener) {
         this.mContext = context;
-        this.selectedDateStr = selectedDateStr;
+        this.selectedDate = selectedDate;
         this.centralMateMonthStr = centralMateMonthStr;
         this.loggedInUserObj = loggedInUserObj;
         this.monthLegendMap = monthLegendMap;
@@ -140,16 +143,26 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
 
         GridView currGrid = (GridView) layout.findViewById(R.id.calendarPageCalendarCurrGVId);
 
+        SimpleDateFormat sdf1 = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        Date junkDate = null;
+        try{
+            junkDate = sdf1.parse("01-01-1970");
+        }
+        catch (ParseException p){
+            Log.e(CLASS_NAME, "Error in Parse Date: "+p);
+            return;
+        }
         if(position == (maxMonths/2)-1){
-            calendarMonth1GridViewAdapter = new CalendarMonth1GridViewAdapter(mContext, monthLegendMap, month, year, selectedDateStr);
+            calendarMonth1GridViewAdapter = new CalendarMonth1GridViewAdapter(mContext, monthLegendMap, month, year, junkDate);
             currGrid.setAdapter(calendarMonth1GridViewAdapter);
         }
         else if(position == (maxMonths/2)){
-            calendarMonth2GridViewAdapter = new CalendarMonth2GridViewAdapter(mContext, monthLegendMap, month, year, selectedDateStr);
+
+            calendarMonth2GridViewAdapter = new CalendarMonth2GridViewAdapter(mContext, monthLegendMap, month, year, selectedDate);
             currGrid.setAdapter(calendarMonth2GridViewAdapter);
         }
         else{
-            calendarMonth3GridViewAdapter = new CalendarMonth3GridViewAdapter(mContext, monthLegendMap, month, year, selectedDateStr);
+            calendarMonth3GridViewAdapter = new CalendarMonth3GridViewAdapter(mContext, monthLegendMap, month, year, junkDate);
             currGrid.setAdapter(calendarMonth3GridViewAdapter);
         }
         currGrid.setOnItemClickListener(gvItemClickListener);
@@ -193,10 +206,22 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
                     //get the date text color
                     TextView gridcell_date_TV = (TextView) view.findViewById(R.id.calendarDayTVId);
 
-                    String selectedDateFromCellStr = String.valueOf(calendarGridDayContentGL.getTag(R.id.calendarGridDayContentGL));
+                    SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+                    Date selectedDateFromCell = null;
+                    try{
+                        selectedDateFromCell = sdf.parse(String.valueOf(calendarGridDayContentGL.getTag(R.id.calendarGridDayContentGL)));
+                    }
+                    catch (ParseException e){
+                        Log.e(CLASS_NAME, "Parse Exception : "+e);
+                    }
+
+                    if(gridcell_date_TV.getCurrentTextColor() == mContext.getResources().getColor(R.color.calendarNextPrevMonthDate)) {
+                        Log.i(CLASS_NAME, "I Clicked on a grey date... nothing to do");
+                        return;
+                    }
 
                     //remove clicked date in old month view
-                    if(oldMonthView ==null){
+                    if(oldMonthView == null){
                         //oldMonthView is null when the todays date is single tapped by default
                         oldMonthView = calendarMonth2GridViewAdapter.todaysView;
                     }
@@ -210,6 +235,8 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
                         calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_two_tap);
                         calendarGridDayContentGL.setTag(R.drawable.circle_calendar_two_tap);
 
+                        oldMonthView = calendarGridDayContentGL;
+
                         TextView transactIndicatorView = (TextView) calendarGridDayContentGL.findViewById(R.id.calendarCellTransactionIndicatorTVId);
                         TextView transferIndicatorView = (TextView) calendarGridDayContentGL.findViewById(R.id.calendarCellTransferIndicatorTVId);
 
@@ -221,8 +248,8 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
 
                         //go to view transaction activity
                         ActivityModel activityModel = new ActivityModel();
-                        activityModel.setFromDateStr(selectedDateStr);
-                        activityModel.setToDateStr(selectedDateStr);
+                        activityModel.setFromDate(selectedDate);
+                        activityModel.setToDate(selectedDate);
                         activityModel.setWhichActivityStr("TRANSACTIONS");
 
                         //if there's only transfer in this date..then show transfers as default opened tab in view activities page
@@ -231,20 +258,25 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
                         }
                         //navigateTo(ViewActivitiesActivity.class, "ACTIVITY_OBJ", activityModel);
                     } else if (dateCellColor == R.drawable.circle_calendar_no_tap) {
-                        Log.i(CLASS_NAME, "New Date Cell is clicked(" + selectedDateFromCellStr + "), Checking whether its an prev month or next month date");
-                        selectedDateStr = selectedDateFromCellStr;
+                        Log.i(CLASS_NAME, "New Date Cell is clicked(" + selectedDateFromCell + "), Checking whether its an prev month or next month date");
+                        selectedDate = selectedDateFromCell;
 
-                        if(gridcell_date_TV.getCurrentTextColor() == mContext.getResources().getColor(R.color.calendarNextPrevMonthDate)){
+                        /*if(gridcell_date_TV.getCurrentTextColor() == mContext.getResources().getColor(R.color.calendarNextPrevMonthDate)){
                             doMonthChange = true;
                             Log.i(CLASS_NAME, "This cell is not in the current month, Changing the month");
+                            calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_no_tap);
+                            calendarGridDayContentGL.setTag(R.drawable.circle_calendar_no_tap);
                         }
                         else{
                             doMonthChange = false;
                             calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_one_tap);
                             calendarGridDayContentGL.setTag(R.drawable.circle_calendar_one_tap);
-
                             oldMonthView = calendarGridDayContentGL;
-                        }
+                        }*/
+                            doMonthChange = false;
+                            calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_one_tap);
+                            calendarGridDayContentGL.setTag(R.drawable.circle_calendar_one_tap);
+                            oldMonthView = calendarGridDayContentGL;
                     } else {
                         //if the activity transaction indicator or transfer indicator both are invisible...then do not proceed to ViewTransaction page..because there's no point
                         if (calendarGridDayContentGL.findViewById(R.id.calendarCellTransactionIndicatorTVId).getVisibility() == View.GONE

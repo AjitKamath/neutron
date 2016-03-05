@@ -17,11 +17,11 @@ public class IdGenerator {
 		return instance;
 	}
 
-	public String generateUniqueId(String id){
+	public static String generateUniqueId(String id){
 		return genRand()+id+genRand();
 	}
 
-	public int genRand() {
+	public static int genRand() {
 		Random r = new Random( System.currentTimeMillis() );
 		return 10000 + r.nextInt(20000);
 	}

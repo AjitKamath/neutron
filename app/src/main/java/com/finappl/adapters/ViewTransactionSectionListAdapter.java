@@ -157,16 +157,9 @@ public class ViewTransactionSectionListAdapter extends BaseAdapter {
         TextView viewTransactTileDayTotalTV = (TextView) convertView.findViewById(R.id.viewTransactTileDayTotalTVId);
         TextView viewTransactTileDayCountTV = (TextView) convertView.findViewById(R.id.viewTransactTileDayCountTVId);
 
-        SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
 
-        String formattedDateStr = "ERROR";
-        try{
-            formattedDateStr = rightSdf.format(wrongSdf.parse(dayTransactionsModel.getDateStr()));
-        }
-        catch(ParseException ex){
-            Log.e(CLASS_NAME, "That was a bad date you provided...The calendar 'Date' you idiot !!"+ex);
-        }
+        String formattedDateStr = rightSdf.format(dayTransactionsModel.getDate());
 
         viewTranHeaderDate.setText(formattedDateStr);
         viewTransactTileDayTotalTV.setText(String.valueOf(dayTransactionsModel.getDayTotal()));

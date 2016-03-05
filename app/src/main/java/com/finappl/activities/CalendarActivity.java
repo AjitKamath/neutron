@@ -51,7 +51,6 @@ import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
 import com.finappl.models.AccountsModel;
 import com.finappl.models.BudgetModel;
-import com.finappl.models.CalendarPageModel;
 import com.finappl.models.ConsolidatedTransactionModel;
 import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
@@ -62,6 +61,7 @@ import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
+import com.finappl.utils.DateTimeUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,17 +69,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.finappl.utils.Constants.*;
 
 @SuppressLint("NewApi")
 public class CalendarActivity extends LockerActivity {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext = this;
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    private SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
     private SimpleDateFormat sdf1 = new SimpleDateFormat("MM-yyyy");
 
     //header
@@ -133,25 +134,16 @@ public class CalendarActivity extends LockerActivity {
     private CalendarTabsViewPagerAdapter calendarTabsViewPagerAdapter;
     private CalendarMonthsViewPagerAdapter calendarMonthsViewPagerAdapter;
 
-
-
-
-
-
-
     //----------------------------------
     private static final int PAGE_LEFT = 0;
     private static final int PAGE_MIDDLE = 1;
     private static final int PAGE_RIGHT = 2;
 
-
     private LayoutInflater mInflater;
     private int mSelectedPageIndex = 999;
     private int oldScreenIndex;
 
-    // we save each page in a model
-    private CalendarPageModel[] mPageModel = new CalendarPageModel[3];
-    //-----------------------------------
+    private boolean ignore = false;
 
     @SuppressLint("NewApi")
     @Override
@@ -197,11 +189,10 @@ public class CalendarActivity extends LockerActivity {
 
         initUIComponents();
 
+        setUpHeader();
+
         //set up calendar
         currentFocusedMonthStr = selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
-        //setUpCalendar();
-        initPageModel();
-
         setUpCalendar();
 
         //set up FAB
@@ -216,13 +207,6 @@ public class CalendarActivity extends LockerActivity {
 
         //close fab if its open
         checkAndCollapseFab();
-    }
-
-    private void initPageModel() {
-        for (int i = 0; i < mPageModel.length; i++) {
-            // initing the pagemodel with indexes of -1, 0 and 1
-            mPageModel[i] = new CalendarPageModel(i - 1);
-        }
     }
 
     private void setUpActionPoppers() {
@@ -592,17 +576,9 @@ public class CalendarActivity extends LockerActivity {
         summaryPopperTransactionTitleTV.setText(consolidatedTransactionModelObj.getCategory());
         summaryPopperCountTV.setText("x " + consolidatedTransactionModelObj.getCount());
 
-        //convert dd-MM-yyyy into dd MMM 'yy
-        SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
+        //convert date into dd MMM 'yy
         SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
-        String rightDateStr = "ERROR";
-
-        try{
-            rightDateStr = rightSdf.format(wrongSdf.parse(consolidatedTransactionModelObj.getDate()));
-        }
-        catch(ParseException ex){
-            Log.e(CLASS_NAME, "Date parsing is sick of your wrong date formats...correction required !!"+ex);
-        }
+        String rightDateStr = rightSdf.format(consolidatedTransactionModelObj.getDate());
 
         summaryPopperDateTV.setText(rightDateStr);
         summaryPopperTotalLL.setBackgroundResource(R.color.transactionIndicator);
@@ -751,7 +727,7 @@ public class CalendarActivity extends LockerActivity {
                 TransactionModel transactionModelObj = new TransactionModel();
 
                 transactionModelObj.setUSER_ID(loggedInUserObj.getUSER_ID());
-                transactionModelObj.setTRAN_DATE(cleanUpDate(selectedDateStr));
+                transactionModelObj.setTRAN_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
                 transactionModelObj.setTRAN_AMT(amount);
                 transactionModelObj.setTRAN_NAME(Constants.DEFAULT_QUICK_TRANSACTION_NAME);
 
@@ -834,18 +810,17 @@ public class CalendarActivity extends LockerActivity {
         schedTransactionPopperStatusIV = (ImageView) dialog.findViewById(R.id.schedTransactionPopperStatusIVId);
 
         SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat sdfWrong1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         SimpleDateFormat sdfRight = new SimpleDateFormat("d MMM ''yy");
 
         try{
             schedTransactionPopperDateTV.setText(sdfRight.format(sdfWrong.parse(selectedDateStr)));
-            schedTransactionPopperCreateDateTV.setText(sdfRight.format(sdfWrong1.parse(scheduledTransactionModelObj.getCREAT_DTM())));
+            schedTransactionPopperCreateDateTV.setText(sdfRight.format(scheduledTransactionModelObj.getCREAT_DTM()));
 
-            if(scheduledTransactionModelObj.getMOD_DTM() == null || (scheduledTransactionModelObj.getMOD_DTM() != null && scheduledTransactionModelObj.getMOD_DTM().isEmpty())){
+            if(scheduledTransactionModelObj.getMOD_DTM() == null){
                 schedTransactionPopperUpdateDateLV.setVisibility(View.GONE);
             }
             else{
-                schedTransactionPopperUpdateDateTV.setText(sdfRight.format(sdfWrong1.parse(scheduledTransactionModelObj.getMOD_DTM())));
+                schedTransactionPopperUpdateDateTV.setText(sdfRight.format(scheduledTransactionModelObj.getMOD_DTM()));
             }
         }
         catch(ParseException pe){
@@ -980,18 +955,17 @@ public class CalendarActivity extends LockerActivity {
         schedTransferPopperStatusTV = (TextView) dialog.findViewById(R.id.schedTransferPopperStatusTVId);
 
         SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat sdfWrong1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         SimpleDateFormat sdfRight = new SimpleDateFormat("d MMM ''yy");
 
         try{
             schedTransferPopperDateTV.setText(sdfRight.format(sdfWrong.parse(selectedDateStr)));
-            schedTransferPopperCreateDateTV.setText(sdfRight.format(sdfWrong1.parse(scheduledTransferModelObj.getCREAT_DTM())));
+            schedTransferPopperCreateDateTV.setText(sdfRight.format(scheduledTransferModelObj.getCREAT_DTM()));
 
-            if(scheduledTransferModelObj.getMOD_DTM() == null || (scheduledTransferModelObj.getMOD_DTM() != null && scheduledTransferModelObj.getMOD_DTM().isEmpty())){
+            if(scheduledTransferModelObj.getMOD_DTM() == null){
                 schedTransferPopperUpdateDateLV.setVisibility(View.GONE);
             }
             else{
-                schedTransferPopperUpdateDateTV.setText(sdfRight.format(sdfWrong1.parse(scheduledTransferModelObj.getMOD_DTM())));
+                schedTransferPopperUpdateDateTV.setText(sdfRight.format(scheduledTransferModelObj.getMOD_DTM()));
             }
         }
         catch(ParseException pe){
@@ -1113,22 +1087,14 @@ public class CalendarActivity extends LockerActivity {
             transferDtlPopperNoteLL.setVisibility(View.GONE);
         }
 
-
-        SimpleDateFormat badFormat1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        SimpleDateFormat badFormat2 = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat goodFormat1 = new SimpleDateFormat("d MMM ''yy, h:mm a");
         SimpleDateFormat goodFormat2 = new SimpleDateFormat("d MMM ''yy");
 
-        try {
-            transferDtlPopperDateTV.setText(goodFormat2.format(badFormat2.parseObject(transferObj.getTRNFR_DATE())));
-            transferDtlPopperCreateTV.setText(goodFormat1.format(badFormat1.parseObject(transferObj.getCREAT_DTM())));
+        transferDtlPopperDateTV.setText(goodFormat2.format(transferObj.getTRNFR_DATE()));
+        transferDtlPopperCreateTV.setText(goodFormat1.format(transferObj.getCREAT_DTM()));
 
-            if(transferObj.getMOD_DTM() != null && !"".equalsIgnoreCase(transferObj.getMOD_DTM())){
-                transferDtlPopperUpdtdTV.setText(goodFormat2.format(badFormat2.parseObject(transferObj.getMOD_DTM())));
-            }
-        }
-        catch(ParseException pe){
-            Log.e(CLASS_NAME, "Error in date parsing..:"+pe);
+        if(transferObj.getMOD_DTM() != null){
+            transferDtlPopperUpdtdTV.setText(goodFormat2.format(transferObj.getMOD_DTM()));
         }
 
         //set font for all the text view
@@ -1194,8 +1160,6 @@ public class CalendarActivity extends LockerActivity {
             tranDtlPopperAmtTV.setText(String.valueOf("-"+transactionModelObj.getTRAN_AMT()));
         }
 
-        SimpleDateFormat badFormat1 = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        SimpleDateFormat badFormat2 = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat goodFormat1 = new SimpleDateFormat("d MMM ''yy, h:mm a");
         SimpleDateFormat goodFormat2 = new SimpleDateFormat("d MMM ''yy");
 
@@ -1206,17 +1170,11 @@ public class CalendarActivity extends LockerActivity {
         tranDtlPopperSpntOnTV.setText(transactionModelObj.getSpentOn());
         tranDtlPopperNoteTV.setText(transactionModelObj.getTRAN_NOTE());
 
-        try {
-            tranDtlPopperTranDateTV.setText(goodFormat2.format(badFormat2.parseObject(transactionModelObj.getTRAN_DATE())));
-            tranDtlPopperCreateTV.setText(goodFormat1.format(badFormat1.parseObject(transactionModelObj.getCREAT_DTM())));
+        tranDtlPopperTranDateTV.setText(goodFormat2.format(transactionModelObj.getTRAN_DATE()));
+        tranDtlPopperCreateTV.setText(goodFormat1.format(transactionModelObj.getCREAT_DTM()));
 
-            if(transactionModelObj.getMOD_DTM() != null && !transactionModelObj.getMOD_DTM().isEmpty()){
-                tranDtlPopperUpdtdTV.setText(goodFormat2.format(badFormat2.parseObject(transactionModelObj.getMOD_DTM())));
-            }
-        }
-        catch(ParseException pe){
-            Log.e(CLASS_NAME, "Error in date parsing..1:"+pe);
-            return;
+        if(transactionModelObj.getMOD_DTM() != null){
+            tranDtlPopperUpdtdTV.setText(goodFormat2.format(transactionModelObj.getMOD_DTM()));
         }
 
         tranDtlPopperDelIV.setTag(transactionModelObj.getTRAN_ID());
@@ -1245,7 +1203,7 @@ public class CalendarActivity extends LockerActivity {
     private void refreshActivity(){
         Log.i(CLASS_NAME, "Selected Date : "+selectedDateStr);
         Intent intent = new Intent(mContext, CalendarActivity.class);
-        intent.putExtra("SELECTED_DATE", cleanUpDate(selectedDateStr));
+        intent.putExtra("SELECTED_DATE", selectedDateStr);
         mContext.startActivity(intent);
     }
 
@@ -1453,23 +1411,16 @@ public class CalendarActivity extends LockerActivity {
         budgetPopperNotesTV.setText(budgetModelObj.getBUDGET_NOTE());
 
         //convert dd-MM-yyyy into dd MMM 'yy
-        SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
 
-        try{
-            budgetPopperCreateDateTV.setText(rightSdf.format(wrongSdf.parse(budgetModelObj.getCREAT_DTM())));
+        budgetPopperCreateDateTV.setText(rightSdf.format(budgetModelObj.getCREAT_DTM()));
 
-            if(budgetModelObj.getMOD_DTM() != null && !budgetModelObj.getMOD_DTM().isEmpty()){
-                budgetPopperUpdateDateTV.setText(rightSdf.format(wrongSdf.parse(budgetModelObj.getMOD_DTM())));
-                budgetUpdateDateLV.setVisibility(View.VISIBLE);
-            }
-            else{
-                budgetUpdateDateLV.setVisibility(View.GONE);
-            }
+        if(budgetModelObj.getMOD_DTM() != null){
+            budgetPopperUpdateDateTV.setText(rightSdf.format(budgetModelObj.getMOD_DTM()));
+            budgetUpdateDateLV.setVisibility(View.VISIBLE);
         }
-        catch(ParseException pe){
-            Log.e(CLASS_NAME, "Date Parse Exception:"+pe);
-            return;
+        else{
+            budgetUpdateDateLV.setVisibility(View.GONE);
         }
 
         //set font for all the text view
@@ -1523,7 +1474,6 @@ public class CalendarActivity extends LockerActivity {
         TransactionModel transactionModelObj = calendarDbService.getLastTransactionOnAccountId(accountsModelObj.getACC_ID());
 
         //convert dd-MM-yyyy into dd MMM 'yy
-        SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
 
         if(transactionModelObj == null){
@@ -1541,12 +1491,7 @@ public class CalendarActivity extends LockerActivity {
                 accountPopperTransactionAmtTV.setTextColor(mContext.getResources().getColor(R.color.finappleCurrencyPosColor));
             }
 
-            try{
-                accountPopperTransactionDateTV.setText(rightSdf.format(wrongSdf.parse(transactionModelObj.getTRAN_DATE())));
-            }
-            catch(ParseException ex){
-                Log.e(CLASS_NAME, "Date parsing is sick of your wrong date formats...correction required !!"+ex);
-            }
+            accountPopperTransactionDateTV.setText(rightSdf.format(transactionModelObj.getTRAN_DATE()));
         }
 
         //Set Last Transfer
@@ -1560,13 +1505,7 @@ public class CalendarActivity extends LockerActivity {
             accountPopperTransferToTV.setText(transferModelObj.getToAccName());
             accountPopperTransferAmtTV.setText(String.valueOf(transferModelObj.getTRNFR_AMT()));
 
-            try{
-                accountPopperTransferDateTV.setText(rightSdf.format(wrongSdf.parse(transferModelObj.getTRNFR_DATE())));
-            }
-            catch(ParseException ex){
-                Log.e(CLASS_NAME, "Date parsing is sick of your wrong date formats...correction required !!"+ex);
-                return;
-            }
+            accountPopperTransferDateTV.setText(rightSdf.format(transferModelObj.getTRNFR_DATE()));
         }
 
         if(transactionModelObj == null && transferModelObj == null){
@@ -1633,14 +1572,7 @@ public class CalendarActivity extends LockerActivity {
         //convert dd-MM-yyyy into dd MMM 'yy
         SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
-        String rightDateStr = "ERROR";
-
-        try{
-            rightDateStr = rightSdf.format(wrongSdf.parse(consolidatedTransferModelObj.getDateStr()));
-        }
-        catch(ParseException ex){
-            Log.e(CLASS_NAME, "Date parsing is sick of your wrong date formats...correction required !!"+ex);
-        }
+        String rightDateStr = rightSdf.format(consolidatedTransferModelObj.getDate());
 
         summaryPopperDateTV.setText(rightDateStr);
         summaryPopperTotalLL.setBackgroundResource(R.color.transferIndicator);
@@ -1648,7 +1580,7 @@ public class CalendarActivity extends LockerActivity {
 
         //set up list
         TransferModel trfrsObj = new TransferModel();
-        trfrsObj.setTRNFR_DATE(consolidatedTransferModelObj.getDateStr());
+        trfrsObj.setTRNFR_DATE(consolidatedTransferModelObj.getDate());
         trfrsObj.setFromAccName(consolidatedTransferModelObj.getFromAccountStr());
         trfrsObj.setToAccName(consolidatedTransferModelObj.getToAccountStr());
         //set user id
@@ -1671,12 +1603,12 @@ public class CalendarActivity extends LockerActivity {
 
     private void setUpTabs() {
         viewPagerTabsList = new ArrayList<>();
-        viewPagerMonthsList.add(R.layout.calendar_tab_summary);
+        viewPagerTabsList.add(R.layout.calendar_tab_summary);
         viewPagerTabsList.add(R.layout.calendar_tab_accounts);
         viewPagerTabsList.add(R.layout.calendar_tab_budgets);
         viewPagerTabsList.add(R.layout.calendar_tab_schedules);
 
-        calendarTabsViewPagerAdapter = new CalendarTabsViewPagerAdapter(mContext, viewPagerTabsList, cleanUpDate(selectedDateStr), loggedInUserObj, monthLegendMap,
+        calendarTabsViewPagerAdapter = new CalendarTabsViewPagerAdapter(mContext, viewPagerTabsList, DateTimeUtil.cleanUpDate(selectedDateStr), loggedInUserObj, monthLegendMap,
                         new ListViewItemClickListener() {
                             @Override
                             public void onListItemClick(Object listItemObject) {
@@ -1745,21 +1677,19 @@ public class CalendarActivity extends LockerActivity {
     private void setUpCalendar() {
         setUpHeader();
         fetchMonthLegend();
-
-        calendarMonthsViewPagerAdapter = new CalendarMonthsViewPagerAdapter(mContext, selectedDateStr, currentFocusedMonthStr, loggedInUserObj, monthLegendMap,
+        setUpTabs();
+        calendarMonthsViewPagerAdapter = new CalendarMonthsViewPagerAdapter(mContext, DateTimeUtil.cleanUpDate(selectedDateStr), currentFocusedMonthStr, loggedInUserObj, monthLegendMap,
                 new GridViewItemClickListener() {
                     @Override
                     public void onGridViewItemClick(Object position) {
-                        Log.i(CLASS_NAME, "");
+                        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+                        selectedDateStr = sdf.format(calendarMonthsViewPagerAdapter.selectedDate);
+                        setUpTabs();
 
-                        selectedDateStr = calendarMonthsViewPagerAdapter.selectedDateStr;
                         if(calendarMonthsViewPagerAdapter.doMonthChange) {
-                            if((Integer)position < 7){
-                                viewPagerMonths.setCurrentItem(viewPagerMonths.getCurrentItem()-1, false);
-                            }
-                            else{
-                                viewPagerMonths.setCurrentItem(viewPagerMonths.getCurrentItem()+1, false);
-                            }
+                            String selectedDateStrArr[] = selectedDateStr.split("-");
+                            currentFocusedMonthStr = selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
+                            setUpCalendar();
                         }
                     }
                 });
@@ -1775,7 +1705,38 @@ public class CalendarActivity extends LockerActivity {
 
             @Override
             public void onPageSelected(int position) {
+                //for all the left/right swipes in the limited loaded months
+                if(!ignore) {
+                    currentFocusedMonthStr = calendarMonthsViewPagerAdapter.currentFocusedMonthStr;
+                    String dateMonthStrArr[] = currentFocusedMonthStr.split("-");
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+                    String monthAndYear = sdf.format(new Date());
+                    String monthAndYearArr[] = monthAndYear.split("-");
+
+                    Calendar cal = Calendar.getInstance(Locale.getDefault());
+                    cal.set(Integer.parseInt(dateMonthStrArr[1]), Integer.parseInt(dateMonthStrArr[0]) - 1, 1);
+
+                    cal.add(Calendar.MONTH, position-oldScreenIndex);
+
+                    int month = cal.get(Calendar.MONTH) + 1;
+                    int year = cal.get(Calendar.YEAR);
+
+                    currentFocusedMonthStr = "";
+                    if (month < 10) {
+                        currentFocusedMonthStr = "0";
+                    }
+                    currentFocusedMonthStr += month + "-" + year;
+                    setUpHeader();
+                    //oldScreenIndex = position;
+                    calendarMonthsViewPagerAdapter.currentFocusedMonthStr = currentFocusedMonthStr;
+                }
+                else{
+                    ignore = false;
+                }
+
                 mSelectedPageIndex = position;
+                oldScreenIndex = position;
             }
 
             @Override
@@ -1804,6 +1765,7 @@ public class CalendarActivity extends LockerActivity {
                             currentFocusedMonthStr = "0";
                         }
                         currentFocusedMonthStr += month + "-" + year;
+                        ignore = true;
                         setUpCalendar();
                         return;
                     }
@@ -1819,10 +1781,11 @@ public class CalendarActivity extends LockerActivity {
                             currentFocusedMonthStr = "0";
                         }
                         currentFocusedMonthStr += month + "-" + year;
+                        ignore = true;
                         setUpCalendar();
                         return;
                     }
-                    //for all the left/right swipes in the limited loaded months
+                    /*//for all the left/right swipes in the limited loaded months
                     else if(mSelectedPageIndex != 999 && mSelectedPageIndex != oldScreenIndex) {
                         cal.add(Calendar.MONTH, mSelectedPageIndex-oldScreenIndex);
 
@@ -1834,11 +1797,10 @@ public class CalendarActivity extends LockerActivity {
                             currentFocusedMonthStr = "0";
                         }
                         currentFocusedMonthStr += month + "-" + year;
-
+                        //setUpHeader();
                         oldScreenIndex = mSelectedPageIndex;
                         calendarMonthsViewPagerAdapter.currentFocusedMonthStr = currentFocusedMonthStr;
-                        setUpHeader();
-                    }
+                    }*/
                 }
             }
         });
@@ -2004,6 +1966,14 @@ public class CalendarActivity extends LockerActivity {
         String tempSelectedDateStrArr[] = currentFocusedMonthStr.split("-");
         calendarMonthTV.setText(Constants.MONTHS_ARRAY[Integer.parseInt(tempSelectedDateStrArr[0])-1]);
         yearTV.setText(tempSelectedDateStrArr[1]);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM");
+        if(!tempSelectedDateStrArr[0].equals(sdf.format(new Date()))){
+            calendarHeaderMonthYearLL.animate().setDuration(500).translationX(-130);
+
+        } else{
+            calendarHeaderMonthYearLL.animate().setDuration(500).translationX(0);
+        }
     }
 
     public void onTodayClick(View view){
@@ -2011,158 +1981,9 @@ public class CalendarActivity extends LockerActivity {
         initActivity();
     }
 
-    //pass month as jan-1 feb-2
-    //TODO: Convert this into ViewPager
-    private void setGridCellAdapterToDate(int day, int month, int year) {
-        _calendar.set(year, month-1, day);
-        month = _calendar.get(Calendar.MONTH);
-        year = _calendar.get(Calendar.YEAR);
-        day = _calendar.get(Calendar.DAY_OF_MONTH);
-
-        //get the latest super real time monthLegend
-        fetchMonthLegend();
-        setUpTabs();
-
-        //adapter = new CalendarGridViewAdapter(this, monthLegendMap, day, month+1, year);
-        /*adapter.notifyDataSetChanged();
-        calendarView.setAdapter(adapter);*/
-
-        String tempMonthStr = String.valueOf(month+1);
-        String tempDayStr= String.valueOf(day);
-        if(month+1<10){
-            tempMonthStr = "0" + tempMonthStr;
-        }
-        if(day < 10){
-            tempDayStr = "0" + tempDayStr;
-        }
-
-        selectedDateStr = tempDayStr + "-" + tempMonthStr + "-" + year;
-
-        //if its not the current month...show a button on header to go to today
-        SimpleDateFormat sdf = new SimpleDateFormat("MM");
-        if(!tempMonthStr.equals(sdf.format(new Date()))){
-            calendarHeaderMonthYearLL.animate().setDuration(500).translationX(-130);
-
-        } else{
-            calendarHeaderMonthYearLL.animate().setDuration(500).translationX(0);
-        }
-        setUpHeader();
-    }
-
-    private String cleanUpDate(String dateStr){
-        if(dateStr.contains("-PAST")){
-            dateStr = dateStr.substring(0, dateStr.indexOf("-PAST"));
-        }
-        else if(dateStr.contains("-FUTURE")){
-            dateStr = dateStr.substring(0, dateStr.indexOf("-FUTURE"));
-        }
-        else if(dateStr.contains("-PRESENT")){
-            dateStr = dateStr.substring(0, dateStr.indexOf("-PRESENT"));
-        }
-        else if(dateStr.contains("-TODAY")){
-            dateStr = dateStr.substring(0, dateStr.indexOf("-TODAY"));
-        }
-        return dateStr;
-    }
-
-    /*private void setCalendarDateClickListener(){
-        calendarView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(checkAndCollapseFab()){
-                    return;
-                }
-
-                selectedDateStr = CalendarGridViewAdapter.list.get(position);
-                String selectedDateStrArr[] = selectedDateStr.split("-");
-                int selectedDate = Integer.parseInt(selectedDateStrArr[0]);
-                int selectedYear = Integer.parseInt(selectedDateStrArr[2]);
-
-                //update header
-                //();
-
-                GridLayout calendarGridDayContentGL = (GridLayout) view.findViewById(R.id.calendarGridDayContentGL);
-
-                //get backGround color of the currently clicked date cell
-                int dateCellColor = (int) calendarGridDayContentGL.getTag();
-
-                //user selected date is not in current month..either past month or next month
-                if (selectedDateStr.contains("PAST") || selectedDateStr.contains("FUTURE")) {
-                    Log.i(CLASS_NAME, "I clicked on either PAST or FUTURE month");
-
-                    //user has selected the past month
-                    if (position < 7) {
-                        Log.i(CLASS_NAME, "oh..its a PAST");
-                        *//*setGridCellAdapterToDate(selectedDate, CalendarGridViewAdapter.preMonth, selectedYear);*//*
-                        fetchMonthLegend();
-                        selectedDateStr = selectedDate+"-"+CalendarGridViewAdapter.preMonth+"-"+selectedYear;
-                        setUpCalendar();
-                    }
-                    //user has selected the future month
-                    else if (position > 27) {
-                        Log.i(CLASS_NAME, "wow..the FUTURE !!");
-                       *//* setGridCellAdapterToDate(selectedDate, CalendarGridViewAdapter.nexMonth, selectedYear);*//*
-                        selectedDateStr = selectedDate+"-"+CalendarGridViewAdapter.nexMonth+"-"+selectedYear;
-                        fetchMonthLegend();
-                        setUpCalendar();
-                    }
-                } else {
-                    Log.i(CLASS_NAME, "Wandering in the same month and wondering why i'm even looking at this log !!");
-
-                    if (dateCellColor == R.drawable.circle_calendar_one_tap) {
-                        Log.i(CLASS_NAME, "Dude u just clicked on the same cell twice !! either u r high or u want to view the transactions in detail..");
-                        calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_two_tap);
-                        calendarGridDayContentGL.setTag(R.drawable.circle_calendar_two_tap);
-
-                        TextView transactIndicatorView = (TextView) calendarGridDayContentGL.findViewById(R.id.calendarCellTransactionIndicatorTVId);
-                        TextView transferIndicatorView = (TextView) calendarGridDayContentGL.findViewById(R.id.calendarCellTransferIndicatorTVId);
-
-                        //if the activity transaction indicator or transfer indicator both are invisible...then do not proceed to ViewTransaction page..because there's no point
-                        if (transactIndicatorView.getVisibility() == View.GONE && transferIndicatorView.getVisibility() == View.GONE) {
-                            showToast("No Activities to Show");
-                            return;
-                        }
-
-                        //go to view transaction activity
-                        ActivityModel activityModel = new ActivityModel();
-                        activityModel.setFromDateStr(selectedDateStr);
-                        activityModel.setToDateStr(selectedDateStr);
-                        activityModel.setWhichActivityStr("TRANSACTIONS");
-
-                        //if there's only transfer in this date..then show transfers as default opened tab in view activities page
-                        if (transactIndicatorView.getVisibility() != View.VISIBLE && transferIndicatorView.getVisibility() == View.VISIBLE) {
-                            activityModel.setWhichActivityStr("TRANSFER");
-                        }
-                        navigateTo(ViewActivitiesActivity.class, "ACTIVITY_OBJ", activityModel);
-                    } else if (dateCellColor == R.drawable.circle_calendar_no_tap) {
-                        Log.i(CLASS_NAME, "Oooo.. New Date Cell..O Magic wand..turn this cell into blue !!");
-
-                        View cell = null;
-                        for (int i = 0; i < 42; i++) {
-                            cell = calendarView.getChildAt(i).findViewById(calendarGridDayContentGL.getId());
-                            cell.setBackgroundResource(R.drawable.circle_calendar_no_tap);
-                            cell.setTag(R.drawable.circle_calendar_no_tap);
-                        }
-                        calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_one_tap);
-                        calendarGridDayContentGL.setTag(R.drawable.circle_calendar_one_tap);
-
-                        setUpTabs();
-                    } else {
-                        //if the activity transaction indicator or transfer indicator both are invisible...then do not proceed to ViewTransaction page..because there's no point
-                        if (calendarGridDayContentGL.findViewById(R.id.calendarCellTransactionIndicatorTVId).getVisibility() == View.GONE
-                                && calendarGridDayContentGL.findViewById(R.id.calendarCellTransferIndicatorTVId).getVisibility() == View.GONE) {
-                            showToast("No Activities to Show");
-                            return;
-                        }
-                    }
-                }
-            }
-        });
-    }*/
-
     private Intent toAddUpdateTransaction() {
         TransactionModel tranObj = new TransactionModel();
-        tranObj.setTRAN_DATE(selectedDateStr);
+        tranObj.setTRAN_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
         Intent intent = new Intent(mContext, AddUpdateTransactionActivity.class);
         intent.putExtra("TRANSACTION_OBJ", tranObj);
         return intent;
@@ -2170,7 +1991,7 @@ public class CalendarActivity extends LockerActivity {
 
     private Intent toAddUpdateTransfer() {
         TransferModel tranfrObj = new TransferModel();
-        tranfrObj.setTRNFR_DATE(selectedDateStr);
+        tranfrObj.setTRNFR_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
         Intent intent = new Intent(mContext, AddUpdateTransferActivity.class);
         intent.putExtra("TRANSFER_OBJ", tranfrObj);
         return intent;
@@ -2199,7 +2020,7 @@ public class CalendarActivity extends LockerActivity {
                         killPopper();
                         intent = new Intent(mContext, AddUpdateScheduleTransactionActivity.class);
                         ScheduledTransactionModel scheduledTransactionModelObj = new ScheduledTransactionModel();
-                        scheduledTransactionModelObj.setSCH_TRAN_DATE(selectedDateStr);
+                        scheduledTransactionModelObj.setSCH_TRAN_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
                         intent.putExtra("SCHEDULED_TRANSACTION_OBJ", scheduledTransactionModelObj);
                         break;
                     case R.id.transferPopperNewLVId :  intent = toAddUpdateTransfer();
@@ -2212,7 +2033,7 @@ public class CalendarActivity extends LockerActivity {
                         killPopper();
                         intent = new Intent(mContext, AddUpdateScheduleTransferActivity.class);
                         ScheduledTransferModel scheduledTransferModelObj = new ScheduledTransferModel();
-                        scheduledTransferModelObj.setSCH_TRNFR_DATE(selectedDateStr);
+                        scheduledTransferModelObj.setSCH_TRNFR_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
                         intent.putExtra("SCHEDULED_TRANSFER_OBJ", scheduledTransferModelObj);
                         break;
 
@@ -2512,7 +2333,7 @@ public class CalendarActivity extends LockerActivity {
                 transferModelObj.setACC_ID_FRM(String.valueOf(quickTransferAccFrmSpn.getSelectedView().getTag()));
                 transferModelObj.setACC_ID_TO(String.valueOf(quickTransferAccToSpn.getSelectedView().getTag()));
                 transferModelObj.setTRNFR_AMT(amount);
-                transferModelObj.setTRNFR_DATE(cleanUpDate(selectedDateStr));
+                transferModelObj.setTRNFR_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
                 transferModelObj.setUSER_ID(loggedInUserObj.getUSER_ID());
 
                 //stop the user if the from and to accounts are same
@@ -2583,10 +2404,7 @@ public class CalendarActivity extends LockerActivity {
                 selectedDateStr = dayStr+"-"+monthStr+"-"+year+"-SELECTED_FROM_DATE_PICKER";
 
                 //change calendar accordingly
-                setGridCellAdapterToDate(day, month, year);
-
-                //update the header
-                //setUpHeader();
+                setUpCalendar();
             }
         };
     }

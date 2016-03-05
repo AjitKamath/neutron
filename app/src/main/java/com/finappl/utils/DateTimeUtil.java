@@ -10,13 +10,40 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
+
 public class DateTimeUtil {
 
-	private final String CLASS_NAME = this.getClass().getName();
+	private static final String CLASS_NAME = getInstance().getClass().getName();
 	
 	private static DateTimeUtil instance = null;
 
-	public String reformatDate(String dateStr){
+	public static Date cleanUpDate(String dateStr){
+		if(dateStr.contains("-PAST")){
+			dateStr = dateStr.substring(0, dateStr.indexOf("-PAST"));
+		}
+		else if(dateStr.contains("-FUTURE")){
+			dateStr = dateStr.substring(0, dateStr.indexOf("-FUTURE"));
+		}
+		else if(dateStr.contains("-PRESENT")){
+			dateStr = dateStr.substring(0, dateStr.indexOf("-PRESENT"));
+		}
+		else if(dateStr.contains("-TODAY")){
+			dateStr = dateStr.substring(0, dateStr.indexOf("-TODAY"));
+		}
+
+		try{
+			SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+			return sdf.parse(dateStr);
+		}
+		catch(ParseException e){
+			Log.e(CLASS_NAME, "Error !! Exception in parsing the date: "+dateStr);
+		}
+		return null;
+	}
+
+	public static String reformatDate(String dateStr){
 		String dateStrArr[] = dateStr.split("-");
 		
 		if(dateStrArr.length != 3){
@@ -35,10 +62,10 @@ public class DateTimeUtil {
 	    	monthStr = "0"+monthStr;
 	    }
 			
-	    return dayStr+"-"+monthStr+"-"+dateStrArr[2];
+	    return dateStrArr[2]+"-"+monthStr+"-"+dayStr;
 	}
 
-	public String[] getStartAndEndMonthDates(String dateStr, int range){
+	public static String[] getStartAndEndMonthDates(String dateStr, int range){
 		String dateStrArr[] = dateStr.split("-");
 		
 		if(dateStrArr.length != 3){
@@ -51,8 +78,8 @@ public class DateTimeUtil {
 		
 		//get Start Date
 		Calendar cal = Calendar.getInstance();
-	    	cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
-	    	cal.clear(Calendar.MINUTE);
+		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+	    cal.clear(Calendar.MINUTE);
 		cal.clear(Calendar.SECOND);
 		cal.clear(Calendar.MILLISECOND);
 		    	
@@ -84,12 +111,12 @@ public class DateTimeUtil {
 		String endYearStr = String.valueOf(cal.get(Calendar.YEAR));
 		//get End Date ends
 	    	
-	    	String startDateStr =  reformatDate(startDayStr+"-"+startMonthStr+"-"+startYearStr);
+		String startDateStr =  reformatDate(startDayStr+"-"+startMonthStr+"-"+startYearStr);
 		String endDateStr = reformatDate(endDayStr+"-"+endMonthStr+"-"+endYearStr);
 		return new String[]{startDateStr, endDateStr};
 	}
 	
-	public boolean isDateAfterOrEquals(String checkDateStr, String withDateStr){
+	public static boolean isDateAfterOrEquals(String checkDateStr, String withDateStr){
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
 		try{
@@ -106,7 +133,7 @@ public class DateTimeUtil {
 		return false;
 	}
 
-	public List<String> getAllDatesInWeekOnDate(String dateStr){
+	public static List<String> getAllDatesInWeekOnDate(String dateStr){
 		Calendar now = Calendar.getInstance();
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		List<String> datesList = new ArrayList<>();
@@ -148,19 +175,12 @@ public class DateTimeUtil {
 		return datesList;
 	}
 
-	public String getDayOfWeekFromDate(String dateStr){
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	public static String getDayOfWeekFromDate(Date date){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE", Locale.US);
-		try{
-			return dateFormat.format(sdf.parse(dateStr));
-		}
-		catch(ParseException e){
-			Log.e(CLASS_NAME, "Parse Exception"+e);
-		}
-		return null;
+		return dateFormat.format(date);
 	}
 
-	public int getLastDayOfTheMonth(String dateStr){
+	public static int getLastDayOfTheMonth(String dateStr){
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
 		try{
@@ -183,7 +203,7 @@ public class DateTimeUtil {
 		return 0;
 	}
 
-	public boolean checkBetween(Date date, Date dateStart, Date dateEnd){
+	public static boolean checkBetween(Date date, Date dateStart, Date dateEnd){
 	    if (date != null && dateStart != null && dateEnd != null){
 	        if (date.after(dateStart) && date.before(dateEnd)){
 	            return true;
@@ -196,7 +216,7 @@ public class DateTimeUtil {
 	}
 	
 	// get how manyth day this date is in that particular month
-	public int getDayNumberInMonth() {
+	public static int getDayNumberInMonth() {
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DB_DATE);
 		String dateStr = sdf.format(new Date());
 		
@@ -217,7 +237,7 @@ public class DateTimeUtil {
 	}
 	
 	//get max days in that particular month
-	public int getMaxDaysInMonth(String dateStr){
+	public static int getMaxDaysInMonth(String dateStr){
 		String dateArr[] = dateStr.split("-");
 		
 		Calendar calendar = Calendar.getInstance();
@@ -235,7 +255,7 @@ public class DateTimeUtil {
 	}
 	
 	//get how manyth day this date is in that particular year
-	public int getDayNumberInYear(){
+	public static int getDayNumberInYear(){
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DB_DATE);
 		String dateStr = sdf.format(new Date());
 		
@@ -255,7 +275,7 @@ public class DateTimeUtil {
 		return days;
 	}
 	
-	public int getMaxDaysInYear(String dateStr){
+	public static int getMaxDaysInYear(String dateStr){
 		String dateArr[] = dateStr.split("-");
 		
 		Calendar calendar = Calendar.getInstance();
@@ -273,7 +293,7 @@ public class DateTimeUtil {
 	}
 	
 	//method to check if the chosen date is from past, present or future
-	public String checkDateForPastPresentFuture(String choosenDateStr, String checkWhat){
+	public static String checkDateForPastPresentFuture(String choosenDateStr, String checkWhat){
 		SimpleDateFormat sdf =  null;
 		String choosenDateStrArr[] = choosenDateStr.split("-");
 		
@@ -294,28 +314,28 @@ public class DateTimeUtil {
 			todaysDate = sdf.parse(sdf.format(new Date()));
 		} 
 		catch (ParseException e){
-			Log.e(this.getClass().getName(), "Exception during date conversion in checkDateForPastPresentFuture Util method in DateTimeUtil Class :"+e.getMessage());
+			Log.e(CLASS_NAME, "Exception during date conversion in checkDateForPastPresentFuture Util method in DateTimeUtil Class :"+e.getMessage());
 		}
 		
 		//check if past date
 		if(choosenDate.before(todaysDate)){
-			Log.i(this.getClass().getName(), "The choosen date is past date");
+			Log.i(CLASS_NAME, "The choosen date is past date");
 			return "PAST";
 		}
 		//check if future date
 		else if(choosenDate.after(todaysDate)){
-			Log.i(this.getClass().getName(), "The choosen date is future date");
+			Log.i(CLASS_NAME, "The choosen date is future date");
 			return "FUTURE";
 		}
 		////check if today
 		else{
-			Log.i(this.getClass().getName(), "The choosen date/ pre selected date is today's date");
+			Log.i(CLASS_NAME, "The choosen date/ pre selected date is today's date");
 			return "TODAY";
 		}
 	}
 	
 	//method which returns DateTimestamp
-	public String getDateTimeStamp(){
+	public static String getDateTimeStamp(){
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
 		Date date = new Date();
 		
@@ -323,7 +343,7 @@ public class DateTimeUtil {
 	}
 	
 	//method to convert yyyy-MM-dd to dd MMM yyyy format
-	public String convertDateToGoodFormat(String dateStr){
+	public static String convertDateToGoodFormat(String dateStr){
 		SimpleDateFormat sdfBad = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdfGood = new SimpleDateFormat("dd MMM yyyy");
 		
@@ -339,7 +359,7 @@ public class DateTimeUtil {
 	}
 	
 	//	method to convert UI date(String)dd MMM yyyy -> DB date(String) dd-MM-yyyy
-	public String uiDateStringToDbDateString(String dateStr){
+	public static String uiDateStringToDbDateString(String dateStr){
 		SimpleDateFormat sdfUi = new SimpleDateFormat("dd MMM yyyy");
 		SimpleDateFormat sdfDb = new SimpleDateFormat("dd-MM-yyyy");
 		
@@ -347,14 +367,14 @@ public class DateTimeUtil {
 			return sdfDb.format(sdfUi.parse(dateStr));
 		} 
 		catch (ParseException e){
-			Log.e(CLASS_NAME, "Error in uiDateStringToDbDateString() while parsing date"+e.getMessage());
+			Log.e(CLASS_NAME, "Error in uiDateStringToDbDateString() while parsing date" + e.getMessage());
 		}
 		
 		return null;
 	}
 	
 	//	method to convert UI date(String)dd MM yyyy -> UI date(String) dd MMM yyyy
-	public String uiDateStringToUIDateString(String dateStr){
+	public static String uiDateStringToUIDateString(String dateStr){
 		SimpleDateFormat sdfUi = new SimpleDateFormat("dd MM yyyy");
 		SimpleDateFormat sdfUi2 = new SimpleDateFormat("dd MMM yyyy");
 		
@@ -369,55 +389,45 @@ public class DateTimeUtil {
 	}
 	
 	//	method to convert date(String) from yyyy-MM-dd to Date object
-	public Date  appDateStringToDateObj(String appDateStr){
+	public static Date appDateStringToDateObj(String appDateStr){
 		SimpleDateFormat sdfUi = new SimpleDateFormat("yyyy-MM-dd");
 		
-		try 
-		{
+		try{
 			return sdfUi.parse(appDateStr);
 		} 
-		catch (ParseException e) 
-		{
+		catch (ParseException e){
 			Log.e(CLASS_NAME, "Error in appDateStringToUiDateString() while parsing date"+e.getMessage());
 		}
 		return null;
 	}
 	
 	//	method to convert date(date) -> UI date(String) dd MMM yyyy
-	public String dateDateToUIDateString(Date date)
-	{
+	public static String dateDateToUIDateString(Date date){
 		SimpleDateFormat sdfUi = new SimpleDateFormat("dd MMM yyyy");
 		
 		return sdfUi.format(date);
 	}
 	
 	//	method to convert date(date) -> db date(String) dd-MM-yyyy
-	public String dateDateToDbDateString(Date date)
-	{
+	public static String dateDateToDbDateString(Date date){
 		SimpleDateFormat sdfUi = new SimpleDateFormat("dd-MM-yyyy");
-		
 		return sdfUi.format(date);
 	}
 	
 	//	method to convert date(date) -> db date(String) dd-MM-yyyy HH:mm:ss
-	public String dateDateToDbDateString1(Date date)
-	{
+	public static String dateDateToDbDateString1(Date date){
 		SimpleDateFormat sdfUi = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		
 		return sdfUi.format(date);
 	}
 	
 	//	method to convert UI date(String)dd MMM yyyy -> date(Date) 
-	public Date uiDateToDateDate(String dateStr)
-	{
+	public static Date uiDateToDateDate(String dateStr){
 		SimpleDateFormat sdfUi = new SimpleDateFormat("dd MMM yyyy");
 		
-		try 
-		{
+		try{
 			return sdfUi.parse(dateStr);
 		} 
-		catch (ParseException e) 
-		{
+		catch (ParseException e){
 			Log.e(CLASS_NAME, "Error in uiDateStringToDbDateString() while parsing date"+e.getMessage());
 		}
 		return null;
@@ -426,12 +436,36 @@ public class DateTimeUtil {
 	//get instance
 	private DateTimeUtil(){}
 
-	public synchronized static DateTimeUtil getInstance() 
-	{
-		if (instance == null) 
-		{
+	public synchronized static DateTimeUtil getInstance(){
+		if (instance == null){
 			instance = new DateTimeUtil();
 		}
 		return instance;
+	}
+
+	public static List<String> getAllDatesBetweenRange(String[] dateStrArr) {
+		SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
+
+		String dateMonthStrArr[] = dateStrArr[0].split("-");
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		cal.set(Integer.parseInt(dateMonthStrArr[1]), Integer.parseInt(dateMonthStrArr[0]) - 1, Integer.parseInt(dateMonthStrArr[2]));
+
+		List<String> datesList = new ArrayList<>();
+		try {
+
+			while (true) {
+				if (cal.getTime().after(sdf.parse(dateStrArr[0])) && cal.getTime().after(sdf.parse(dateStrArr[1]))){
+					datesList.add(sdf.format(cal.getTime()));
+					cal.add(Calendar.DATE, 1);
+				}
+				else{
+					return datesList;
+				}
+			}
+		}
+		catch (ParseException pe){
+			Log.e(CLASS_NAME, "Error !!:"+pe);
+		}
+		return datesList;
 	}
 }

@@ -127,16 +127,9 @@ public class ViewTransferSectionListAdapter extends BaseAdapter {
         TextView viewTransferDayTotalTV = (TextView) convertView.findViewById(R.id.viewTransferDayTotalTVId);
         TextView viewTransferDayCountTV = (TextView) convertView.findViewById(R.id.viewTransferDayCountTVId);
 
-        SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
 
-        String formattedDateStr = "ERROR";
-        try{
-            formattedDateStr = rightSdf.format(wrongSdf.parse(dayTransfersModel.getDateStr()));
-        }
-        catch(ParseException ex){
-            Log.e(CLASS_NAME, "That was a bad date you provided...The calendar 'Date' you idiot !!" + ex);
-        }
+        String formattedDateStr  = rightSdf.format(dayTransfersModel.getDate());
 
         viewTransferHeaderDate.setText(formattedDateStr);
         viewTransferDayTotalTV.setText(String.valueOf(dayTransfersModel.getDayTotal()));

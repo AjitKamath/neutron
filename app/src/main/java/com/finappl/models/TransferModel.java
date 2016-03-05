@@ -1,6 +1,7 @@
 package com.finappl.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by ajit on 14/2/15.
@@ -17,22 +18,14 @@ public class TransferModel  implements Serializable {
     private Double TRNFR_AMT;
     private String TRNFR_IS_DEL;
     private String TRNFR_NOTE;
-    private String TRNFR_DATE;
-    private String CREAT_DTM;
-    private String MOD_DTM;
+    private Date TRNFR_DATE;
+    private Date CREAT_DTM;
+    private Date MOD_DTM;
 
     private String fromAccName;
     private String toAccName;
     private String currency;
-    private String schCreateDate;
-
-    public String getSchCreateDate() {
-        return schCreateDate;
-    }
-
-    public void setSchCreateDate(String schCreateDate) {
-        this.schCreateDate = schCreateDate;
-    }
+    private Date schCreateDate;
 
     public String getCurrency() {
         return currency;
@@ -122,27 +115,35 @@ public class TransferModel  implements Serializable {
         this.TRNFR_NOTE = TRNFR_NOTE;
     }
 
-    public String getTRNFR_DATE() {
-        return TRNFR_DATE;
+    public Date getSchCreateDate() {
+        return schCreateDate;
     }
 
-    public void setTRNFR_DATE(String TRNFR_DATE) {
-        this.TRNFR_DATE = TRNFR_DATE;
+    public void setSchCreateDate(Date schCreateDate) {
+        this.schCreateDate = schCreateDate;
     }
 
-    public String getCREAT_DTM() {
-        return CREAT_DTM;
-    }
-
-    public void setCREAT_DTM(String CREAT_DTM) {
-        this.CREAT_DTM = CREAT_DTM;
-    }
-
-    public String getMOD_DTM() {
+    public Date getMOD_DTM() {
         return MOD_DTM;
     }
 
-    public void setMOD_DTM(String MOD_DTM) {
+    public void setMOD_DTM(Date MOD_DTM) {
         this.MOD_DTM = MOD_DTM;
+    }
+
+    public Date getCREAT_DTM() {
+        return CREAT_DTM;
+    }
+
+    public void setCREAT_DTM(Date CREAT_DTM) {
+        this.CREAT_DTM = CREAT_DTM;
+    }
+
+    public Date getTRNFR_DATE() {
+        return TRNFR_DATE;
+    }
+
+    public void setTRNFR_DATE(Date TRNFR_DATE) {
+        this.TRNFR_DATE = TRNFR_DATE;
     }
 }

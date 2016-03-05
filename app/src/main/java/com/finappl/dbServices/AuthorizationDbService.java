@@ -22,12 +22,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.finappl.utils.Constants.*;
+
 public class AuthorizationDbService extends SQLiteOpenHelper {
 
     private final String CLASS_NAME = this.getClass().getName();
 
-    private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
     public List<CountryModel> getAllCountry(){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -42,10 +44,10 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" CUR_NAME AS curNameStr ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_COUNTRYTABLE+ " CNTRY ");
+        sqlQuerySB.append(DB_TABLE_COUNTRYTABLE+ " CNTRY ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_CURRENCYTABLE+" CUR ");
+        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE+" CUR ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CNTRY.CUR_ID = CUR.CUR_ID ");
 
@@ -78,7 +80,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" CUR_SYMB ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_CURRENCYTABLE);
+        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE);
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
         CurrencyModel currencyModelObj = null;
@@ -102,28 +104,25 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
 
             //logout all users first
-            values.put("USER_IS_DEL", Constants.DB_AFFIRMATIVE);
-            db.update(Constants.DB_TABLE_USERSTABLE, values, "USER_IS_DEL = '" + Constants.DB_NONAFFIRMATIVE + "'", null);
+            values.put("USER_IS_DEL", DB_AFFIRMATIVE);
+            db.update(DB_TABLE_USERSTABLE, values, "USER_IS_DEL = '" + DB_NONAFFIRMATIVE + "'", null);
 
             values.clear();
-
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
             values.put("USER_ID", userModelObj.getUSER_ID());
             values.put("NAME", userModelObj.getNAME());
             values.put("PASS", EncryptionUtil.encrypt(userModelObj.getPASS()));
             values.put("EMAIL", userModelObj.getEMAIL());
-            values.put("DOB", sdf.format(userModelObj.getDOB()));
+            values.put("DOB", simpleDateFormat.format(userModelObj.getDOB()));
             values.put("CNTRY_ID", userModelObj.getCNTRY_ID());
             values.put("TELEPHONE", userModelObj.getTELEPHONE());
             values.put("CUR_ID", userModelObj.getCUR_ID());
             values.put("DEV_ID", userModelObj.getDEV_ID());
-            values.put("USER_IS_DEL", Constants.DB_NONAFFIRMATIVE);
-            values.put("CREAT_DTM", sdf1.format(new Date()));
+            values.put("USER_IS_DEL", DB_NONAFFIRMATIVE);
+            values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
             // Inserting a new Row in USERS_TABLE
-            long result = db.insert(Constants.DB_TABLE_USERSTABLE, null, values);
+            long result = db.insert(DB_TABLE_USERSTABLE, null, values);
 
             if (result == -1) {
                 Log.e(CLASS_NAME, "Something went wrong while registering the user");
@@ -133,13 +132,13 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             //inserting a new row into SETTINGS_NOTIFICATIONS table
             values.clear();
             values.put("SET_NOTIF_ID", IdGenerator.getInstance().generateUniqueId("SET_NOTIF"));
-            values.put("SET_NOTIF_ACTIVE", Constants.DB_AFFIRMATIVE);
-            values.put("SET_NOTIF_TIME", Constants.DB_DEFAULT_NOTIF_TIME);
-            values.put("SET_NOTIF_BUZZ", Constants.DB_NONAFFIRMATIVE);
+            values.put("SET_NOTIF_ACTIVE", DB_AFFIRMATIVE);
+            values.put("SET_NOTIF_TIME", DB_DEFAULT_NOTIF_TIME);
+            values.put("SET_NOTIF_BUZZ", DB_NONAFFIRMATIVE);
             values.put("USER_ID", userModelObj.getUSER_ID());
-            values.put("CREAT_DTM", sdf1.format(new Date()));
+            values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
-            result = db.insert(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS, null, values);
+            result = db.insert(DB_TABLE_SETTINGS_NOTIFICATIONS, null, values);
 
             if (result == -1) {
                 Log.e(CLASS_NAME, "Something went wrong while registering the user");
@@ -149,11 +148,11 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             //inserting a new row into SETTINGS_SOUNDS table
             values.clear();
             values.put("SET_SND_ID", IdGenerator.getInstance().generateUniqueId("SET_SND"));
-            values.put("SET_SND_ACTIVE", Constants.DB_AFFIRMATIVE);
+            values.put("SET_SND_ACTIVE", DB_AFFIRMATIVE);
             values.put("USER_ID", userModelObj.getUSER_ID());
-            values.put("CREAT_DTM", sdf1.format(new Date()));
+            values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
-            result = db.insert(Constants.DB_TABLE_SETTINGS_SOUNDS, null, values);
+            result = db.insert(DB_TABLE_SETTINGS_SOUNDS, null, values);
 
             if (result == -1) {
                 Log.e(CLASS_NAME, "Something went wrong while registering the user");
@@ -163,12 +162,12 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             //inserting a new row into SETTINGS_SECURITY table
             values.clear();
             values.put("SET_SEC_ID", IdGenerator.getInstance().generateUniqueId("SET_SEC"));
-            //values.put("SET_SEC_ACTIVE", Constants.DB_AFFIRMATIVE);
-            values.put("SET_SEC_ACTIVE", Constants.DB_NONAFFIRMATIVE);
+            //values.put("SET_SEC_ACTIVE", DB_AFFIRMATIVE);
+            values.put("SET_SEC_ACTIVE", DB_NONAFFIRMATIVE);
             values.put("USER_ID", userModelObj.getUSER_ID());
-            values.put("CREAT_DTM", sdf1.format(new Date()));
+            values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
-            result = db.insert(Constants.DB_TABLE_SETTINGS_SECURITY, null, values);
+            result = db.insert(DB_TABLE_SETTINGS_SECURITY, null, values);
 
             return result;
         }
@@ -189,7 +188,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
 
             sqlQuerySB.append(" FROM ");
 
-            sqlQuerySB.append(Constants.DB_TABLE_USERSTABLE);
+            sqlQuerySB.append(DB_TABLE_USERSTABLE);
 
             sqlQuerySB.append(" WHERE ");
             sqlQuerySB.append(" USER_ID = '" + usersModelObj.getUSER_ID() + "' ");
@@ -198,7 +197,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             sqlQuerySB.append(" PASS = '" + EncryptionUtil.encrypt(usersModelObj.getPASS()) + "' ");
 
             sqlQuerySB.append(" AND ");
-            sqlQuerySB.append(" USER_IS_DEL = '" + Constants.DB_AFFIRMATIVE + "' ");
+            sqlQuerySB.append(" USER_IS_DEL = '" + DB_AFFIRMATIVE + "' ");
 
             Log.i(CLASS_NAME, "Query to know if user is authentic  :" + sqlQuerySB);
             Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
@@ -208,10 +207,10 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
                     Log.i(CLASS_NAME, "Aaahhh... the master !! How can i serve you Mr. User. Use finappl all you want to use");
 
                     ContentValues values = new ContentValues();
-                    values.put("USER_IS_DEL", Constants.DB_NONAFFIRMATIVE);
+                    values.put("USER_IS_DEL", DB_NONAFFIRMATIVE);
 
                     // Updating an old Row
-                    db.update(Constants.DB_TABLE_USERSTABLE, values, "USER_ID = '" + usersModelObj.getUSER_ID() + "'", null);
+                    db.update(DB_TABLE_USERSTABLE, values, "USER_ID = '" + usersModelObj.getUSER_ID() + "'", null);
 
                     return true;
                 }
@@ -236,7 +235,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
 
         sqlQuerySB.append(" FROM ");
 
-        sqlQuerySB.append(Constants.DB_TABLE_USERSTABLE);
+        sqlQuerySB.append(DB_TABLE_USERSTABLE);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER_ID = '" + usernameStr + "' ");
@@ -288,40 +287,40 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SET_SEC_PIN ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_USERSTABLE+ " USER ");
+        sqlQuerySB.append(DB_TABLE_USERSTABLE+ " USER ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_COUNTRYTABLE+" CNTRY ");
+        sqlQuerySB.append(DB_TABLE_COUNTRYTABLE+" CNTRY ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CNTRY.CNTRY_ID = USER.CNTRY_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_CURRENCYTABLE+" CUR ");
+        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE+" CUR ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CUR.CUR_ID = USER.CUR_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_NOTIFICATIONS+" NOTIF ");
+        sqlQuerySB.append(DB_TABLE_SETTINGS_NOTIFICATIONS+" NOTIF ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" NOTIF.USER_ID = USER.USER_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SOUNDS+" SND ");
+        sqlQuerySB.append(DB_TABLE_SETTINGS_SOUNDS+" SND ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" SND.USER_ID = USER.USER_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_SETTINGS_SECURITY+" SEC ");
+        sqlQuerySB.append(DB_TABLE_SETTINGS_SECURITY+" SEC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" SEC.USER_ID = USER.USER_ID ");
 
         sqlQuerySB.append(" LEFT OUTER JOIN ");
-        sqlQuerySB.append(Constants.DB_TABLE_WORK_TIMELINETABLE+" WORK ");
+        sqlQuerySB.append(DB_TABLE_WORK_TIMELINETABLE+" WORK ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" WORK.USER_ID = USER.USER_ID ");
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" USER.USER_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" USER.USER_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
         UsersModel usersModelObject;
@@ -373,7 +372,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" MAX(MOD_DTM) ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_USERSTABLE);
+        sqlQuerySB.append(DB_TABLE_USERSTABLE);
 
         Log.i(CLASS_NAME, "Query to fetch last used username  :"+sqlQuerySB);
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
@@ -393,7 +392,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
 	}
 
 	public AuthorizationDbService(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override

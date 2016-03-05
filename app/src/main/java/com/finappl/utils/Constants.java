@@ -5,12 +5,12 @@ import android.app.Activity;
 /**
  * Created by ajit on 6/1/15.
  */
-public class Constants extends Activity {
+public final class Constants{
     //DB Name
     public static final String DB_NAME = "FINAPPL.db";
 
     //DB version
-    public static final int DB_VERSION = 18;
+    public static final int DB_VERSION = 19;
 
     //DB Properties
     public static final String USERNAME = "Ajit";
@@ -117,4 +117,11 @@ public class Constants extends Activity {
                 "Schedules-Transactions_Transfers|Profile-Profile Info_Notifications_Widget|Security-Lock Application_Pin|Backup & Restore-Backup_Restore_Backup " +
                 "Interval|Stats-Usage Statistics";
 
+    //Month Range to fetch data in one shot
+    public static final int MONTHS_RANGE = 11;  //always keep it odd
+
+    //Date formats
+    public static final String JAVA_DATE_FORMAT = "dd-MM-yyyy";
+    public static final String DB_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DB_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 }

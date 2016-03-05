@@ -13,30 +13,23 @@ import com.finappl.models.SpentOnModel;
 import com.finappl.utils.ColumnFetcher;
 import com.finappl.utils.Constants;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static com.finappl.utils.Constants.*;
 
 
 public class ManageContentDbService extends SQLiteOpenHelper {
 
 	private final String CLASS_NAME = this.getClass().getName();
 
-	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = Constants.DB_VERSION;
 	private static ManageContentDbService sInstance = null;
 
-	//db tables
-	private static final String USERS_TABLE = Constants.DB_TABLE_USERSTABLE;
-	private static final String ACCOUNT_TABLE = Constants.DB_TABLE_ACCOUNTTABLE;
-	private static final String CATEGORY_TABLE = Constants.DB_TABLE_CATEGORYTABLE;
-	private static final String SPENT_ON_TABLE = Constants.DB_TABLE_SPENTONTABLE;
-	private static final String TRANSACTION_TABLE = Constants.DB_TABLE_TRANSACTIONTABLE;
-	private static final String SCHEDULED_TRANSACTIONS_TABLE = Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
-	private static final String SCHEDULED_TRANSFER_TABLE = Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE;
-	private static final String BUDGET_TABLE = Constants.DB_TABLE_BUDGETTABLE;
-	private static final String TRANSFERS_TABLE = Constants.DB_TABLE_TRANSFERSTABLE;
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+	private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
 	//method to get all categories, accounts and spent ons categorized as default and user created ones
 	public ManageContentModel getAllContent(String userId){
@@ -54,17 +47,17 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" CAT.USER_ID ");
 
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(USERS_TABLE+" USR ");
+		sqlQuerySB.append(DB_TABLE_USERSTABLE+" USR ");
 
 		sqlQuerySB.append(" LEFT OUTER JOIN ");
-		sqlQuerySB.append(CATEGORY_TABLE+" CAT ");
-		sqlQuerySB.append(" ON USR.USER_ID IN ('"+Constants.ADMIN_USERID+"', '"+userId+"')");
+		sqlQuerySB.append(DB_TABLE_CATEGORYTABLE+" CAT ");
+		sqlQuerySB.append(" ON USR.USER_ID IN ('"+ADMIN_USERID+"', '"+userId+"')");
 
 		sqlQuerySB.append(" WHERE ");
-		sqlQuerySB.append(" CAT.USER_ID IN ('"+Constants.ADMIN_USERID+"', '"+userId+"') ");
+		sqlQuerySB.append(" CAT.USER_ID IN ('"+ADMIN_USERID+"', '"+userId+"') ");
 
 		sqlQuerySB.append(" AND ");
-		sqlQuerySB.append(" CAT.CAT_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+		sqlQuerySB.append(" CAT.CAT_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
 
 		sqlQuerySB.append(" GROUP BY ");
 		sqlQuerySB.append(" CAT.CAT_ID ");
@@ -143,11 +136,11 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" (SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(ACC_TOTAL), '0')  ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE);
+		sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE);
 		sqlQuerySB.append(" WHERE  ");
 		sqlQuerySB.append(" ACC_ID = ACC.ACC_ID ");
 		sqlQuerySB.append(" AND ");
-		sqlQuerySB.append(" ACC_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"' ");
+		sqlQuerySB.append(" ACC_IS_DEL  =  '"+DB_NONAFFIRMATIVE+"' ");
 		sqlQuerySB.append(" AND ");
 		sqlQuerySB.append(" USER_ID  =  '"+userId+"' ) ");
 
@@ -156,13 +149,13 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" (( SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0')  ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(TRANSACTION_TABLE);
+		sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
 		sqlQuerySB.append(" WHERE  ");
 		sqlQuerySB.append(" TRAN_TYPE = 'INCOME'  ");
 		sqlQuerySB.append(" AND  ");
 		sqlQuerySB.append(" ACC_ID = ACC.ACC_ID  ");
 		sqlQuerySB.append(" AND ");
-		sqlQuerySB.append(" TRAN_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"' ");
+		sqlQuerySB.append(" TRAN_IS_DEL  =  '"+DB_NONAFFIRMATIVE+"' ");
 		sqlQuerySB.append(" AND ");
 		sqlQuerySB.append(" USER_ID  =  '"+userId+"' ) ");
 
@@ -171,11 +164,11 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" (SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(TRANSFERS_TABLE);
+		sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE);
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" ACC_ID_TO = ACC.ACC_ID ");
 		sqlQuerySB.append(" AND ");
-		sqlQuerySB.append(" TRNFR_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"' ");
+		sqlQuerySB.append(" TRNFR_IS_DEL  =  '"+DB_NONAFFIRMATIVE+"' ");
 		sqlQuerySB.append(" AND ");
 		sqlQuerySB.append(" USER_ID  =  '"+userId+"' )) ");
 
@@ -184,13 +177,13 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" ((SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(TRANSACTION_TABLE);
+		sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" TRAN_TYPE = 'EXPENSE' ");
 		sqlQuerySB.append(" AND ");
 		sqlQuerySB.append(" ACC_ID = ACC.ACC_ID ");
 		sqlQuerySB.append(" AND ");
-		sqlQuerySB.append(" TRAN_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"' ");
+		sqlQuerySB.append(" TRAN_IS_DEL  =  '"+DB_NONAFFIRMATIVE+"' ");
 		sqlQuerySB.append(" AND ");
 		sqlQuerySB.append(" USER_ID  =  '"+userId+"' ) ");
 
@@ -199,11 +192,11 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" (SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(TRANSFERS_TABLE);
+		sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE);
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" ACC_ID_FRM = ACC.ACC_ID ");
 		sqlQuerySB.append(" AND ");
-		sqlQuerySB.append(" TRNFR_IS_DEL  =  '"+Constants.DB_NONAFFIRMATIVE+"' ");
+		sqlQuerySB.append(" TRNFR_IS_DEL  =  '"+DB_NONAFFIRMATIVE+"' ");
 		sqlQuerySB.append(" AND ");
 		sqlQuerySB.append(" USER_ID  =  '"+userId+"' )) ");
 
@@ -211,18 +204,18 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" ACC_TOTAL ");
 
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(ACCOUNT_TABLE+" ACC ");
+		sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" ACC ");
 
 		sqlQuerySB.append(" LEFT JOIN ");
-		sqlQuerySB.append(TRANSACTION_TABLE+" TRAN ON ");
+		sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE+" TRAN ON ");
 		sqlQuerySB.append(" TRAN.ACC_ID = ACC.ACC_ID ");
 
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" (ACC.USER_ID = '"+userId+"' ");
 		sqlQuerySB.append(" OR ");
-		sqlQuerySB.append(" ACC.USER_ID = '"+Constants.ADMIN_USERID+"') ");
+		sqlQuerySB.append(" ACC.USER_ID = '"+ADMIN_USERID+"') ");
 		sqlQuerySB.append(" AND ");
-		sqlQuerySB.append(" ACC.ACC_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"' ");
+		sqlQuerySB.append(" ACC.ACC_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
 
 		sqlQuerySB.append(" GROUP BY ");
 		sqlQuerySB.append(" ACC.ACC_ID ");
@@ -288,12 +281,12 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" SPNT_ON_NOTE ");
 
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(SPENT_ON_TABLE);
+		sqlQuerySB.append(DB_TABLE_SPENTONTABLE);
 
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" (USER_ID = '"+userId+"' ");
 		sqlQuerySB.append(" OR ");
-		sqlQuerySB.append(" USER_ID = '"+Constants.ADMIN_USERID+"') ");
+		sqlQuerySB.append(" USER_ID = '"+ADMIN_USERID+"') ");
 
 		sqlQuerySB.append(" GROUP BY ");
 		sqlQuerySB.append(" SPNT_ON_ID ");
@@ -370,7 +363,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 	// constructors
 	public ManageContentDbService(Context context)
 	{
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
 	@Override

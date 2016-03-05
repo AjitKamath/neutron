@@ -1,6 +1,7 @@
 package com.finappl.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by ajit on 4/4/15.
@@ -14,8 +15,8 @@ public class BudgetModel implements Serializable{
     private String BUDGET_IS_DEL;
     private Double BUDGET_AMT;
     private String BUDGET_NOTE;
-    private String CREAT_DTM;
-    private String MOD_DTM;
+    private Date CREAT_DTM;
+    private Date MOD_DTM;
     private String BUDGET_GRP_TYPE;
 
     private Double budgetRangeTotal;
@@ -87,19 +88,19 @@ public class BudgetModel implements Serializable{
         this.BUDGET_NOTE = BUDGET_NOTE;
     }
 
-    public String getCREAT_DTM() {
+    public Date getCREAT_DTM() {
         return CREAT_DTM;
     }
 
-    public void setCREAT_DTM(String CREAT_DTM) {
+    public void setCREAT_DTM(Date CREAT_DTM) {
         this.CREAT_DTM = CREAT_DTM;
     }
 
-    public String getMOD_DTM() {
+    public Date getMOD_DTM() {
         return MOD_DTM;
     }
 
-    public void setMOD_DTM(String MOD_DTM) {
+    public void setMOD_DTM(Date MOD_DTM) {
         this.MOD_DTM = MOD_DTM;
     }
 

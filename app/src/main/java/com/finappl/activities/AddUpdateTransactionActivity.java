@@ -16,6 +16,7 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.webkit.JavascriptInterface;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -36,8 +37,13 @@ import com.finappl.models.TransactionModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.finappl.utils.Constants.*;
 
 public class AddUpdateTransactionActivity extends Activity {
 	
@@ -71,6 +77,8 @@ public class AddUpdateTransactionActivity extends Activity {
 
     //message popper
     private Dialog dialog;
+
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -198,7 +206,8 @@ public class AddUpdateTransactionActivity extends Activity {
     }
 
     private void setUpHeader() {
-        String[] dateStrArr = transactionModelObj.getTRAN_DATE().split("-");
+        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        String[] dateStrArr = sdf.format(transactionModelObj.getTRAN_DATE()).split("-");
         int date = Integer.parseInt(dateStrArr[0]);
 
         addUpdateDayTV.setText(String.valueOf(date));
@@ -290,7 +299,17 @@ public class AddUpdateTransactionActivity extends Activity {
 
         TransactionModel transactionModel = new TransactionModel();
 
-        transactionModel.setTRAN_DATE(dayStr + "-" + monthStr + "-" + yearStr);
+        String dateStr = dayStr + "-" + monthStr + "-" + yearStr;
+        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+
+        try{
+            transactionModel.setTRAN_DATE(sdf.parse(dateStr));
+        }
+        catch (ParseException p){
+            Log.e(CLASS_NAME, "Error !!"+p);
+            return null;
+        }
+
         transactionModel.setTRAN_NAME(tranNameStr);
         transactionModel.setTRAN_AMT(Double.parseDouble(tranAmtStr));
         transactionModel.setCAT_ID(catIdStr);
@@ -367,7 +386,7 @@ public class AddUpdateTransactionActivity extends Activity {
         finish();
     }
 
-    public String addTransaction(){
+    public Date addTransaction(){
         //get inputs
         TransactionModel transactionModel = getInputs();
 
@@ -580,7 +599,9 @@ public class AddUpdateTransactionActivity extends Activity {
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == 999) {
-            String selectedDateStrArr[] = transactionModelObj.getTRAN_DATE().split("-");
+            SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+
+            String selectedDateStrArr[] = sdf.format(transactionModelObj.getTRAN_DATE()).split("-");
 
             return new DatePickerDialog(this, myDateListener, Integer.parseInt(selectedDateStrArr[2]), Integer.parseInt(selectedDateStrArr[1])-1,
                         Integer.parseInt(selectedDateStrArr[0]));
@@ -614,7 +635,16 @@ public class AddUpdateTransactionActivity extends Activity {
                 }
 
                 //update object
-                transactionModelObj.setTRAN_DATE(dateStr+"-"+monthStr+"-"+year);
+                String tempDateStr = dateStr+"-"+monthStr+"-"+year;
+                SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+
+                try{
+                    transactionModelObj.setTRAN_DATE(sdf.parse(tempDateStr));
+                }
+                catch (ParseException p){
+                    Log.e(CLASS_NAME, "Error !!"+p);
+                    return;
+                }
 
                 //update the header
                 setUpHeader();
