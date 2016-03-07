@@ -165,7 +165,7 @@
                                 android:text="INR"
                                 android:layout_marginRight="2dp"
                                 android:textSize="35sp"
-                                android:textColor="@color/finappleCurrencyCodeColor"
+                                android:textColor="@color/finappleCurrencyCodeColorLight"
                                 android:gravity="center" />
 
                             <EditText

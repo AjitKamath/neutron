@@ -189,8 +189,6 @@ public class CalendarActivity extends LockerActivity {
 
         initUIComponents();
 
-        setUpHeader();
-
         //set up calendar
         currentFocusedMonthStr = selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
         setUpCalendar();
@@ -577,7 +575,7 @@ public class CalendarActivity extends LockerActivity {
         summaryPopperCountTV.setText("x " + consolidatedTransactionModelObj.getCount());
 
         //convert date into dd MMM 'yy
-        SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
+        SimpleDateFormat rightSdf = new SimpleDateFormat(UI_DATE_FORMAT);
         String rightDateStr = rightSdf.format(consolidatedTransactionModelObj.getDate());
 
         summaryPopperDateTV.setText(rightDateStr);
@@ -809,8 +807,8 @@ public class CalendarActivity extends LockerActivity {
         schedTransactionPopperStatusTV = (TextView) dialog.findViewById(R.id.schedTransactionPopperStatusTVId);
         schedTransactionPopperStatusIV = (ImageView) dialog.findViewById(R.id.schedTransactionPopperStatusIVId);
 
-        SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat sdfRight = new SimpleDateFormat("d MMM ''yy");
+        SimpleDateFormat sdfWrong = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        SimpleDateFormat sdfRight = new SimpleDateFormat(UI_DATE_FORMAT);
 
         try{
             schedTransactionPopperDateTV.setText(sdfRight.format(sdfWrong.parse(selectedDateStr)));
@@ -954,8 +952,8 @@ public class CalendarActivity extends LockerActivity {
         schedTransferPopperStatusIV = (ImageView) dialog.findViewById(R.id.schedTransferPopperStatusIVId);
         schedTransferPopperStatusTV = (TextView) dialog.findViewById(R.id.schedTransferPopperStatusTVId);
 
-        SimpleDateFormat sdfWrong = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat sdfRight = new SimpleDateFormat("d MMM ''yy");
+        SimpleDateFormat sdfWrong = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        SimpleDateFormat sdfRight = new SimpleDateFormat(UI_DATE_FORMAT);
 
         try{
             schedTransferPopperDateTV.setText(sdfRight.format(sdfWrong.parse(selectedDateStr)));
@@ -1160,8 +1158,8 @@ public class CalendarActivity extends LockerActivity {
             tranDtlPopperAmtTV.setText(String.valueOf("-"+transactionModelObj.getTRAN_AMT()));
         }
 
-        SimpleDateFormat goodFormat1 = new SimpleDateFormat("d MMM ''yy, h:mm a");
-        SimpleDateFormat goodFormat2 = new SimpleDateFormat("d MMM ''yy");
+        SimpleDateFormat goodFormat1 = new SimpleDateFormat(UI_DATE_TIME_FORMAT);
+        SimpleDateFormat goodFormat2 = new SimpleDateFormat(UI_DATE_FORMAT);
 
         //set values
         tranDtlPopperTranNameTV.setText(transactionModelObj.getTRAN_NAME());
@@ -1411,7 +1409,7 @@ public class CalendarActivity extends LockerActivity {
         budgetPopperNotesTV.setText(budgetModelObj.getBUDGET_NOTE());
 
         //convert dd-MM-yyyy into dd MMM 'yy
-        SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
+        SimpleDateFormat rightSdf = new SimpleDateFormat(UI_DATE_FORMAT);
 
         budgetPopperCreateDateTV.setText(rightSdf.format(budgetModelObj.getCREAT_DTM()));
 
@@ -1474,7 +1472,7 @@ public class CalendarActivity extends LockerActivity {
         TransactionModel transactionModelObj = calendarDbService.getLastTransactionOnAccountId(accountsModelObj.getACC_ID());
 
         //convert dd-MM-yyyy into dd MMM 'yy
-        SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
+        SimpleDateFormat rightSdf = new SimpleDateFormat(UI_DATE_FORMAT);
 
         if(transactionModelObj == null){
             accountPopperLastTransactionLL.setVisibility(View.GONE);
@@ -1570,8 +1568,8 @@ public class CalendarActivity extends LockerActivity {
         summaryPopperCountTV.setText("x " + consolidatedTransferModelObj.getCount());
 
         //convert dd-MM-yyyy into dd MMM 'yy
-        SimpleDateFormat wrongSdf = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat rightSdf = new SimpleDateFormat("d MMM ''yy");
+        SimpleDateFormat wrongSdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        SimpleDateFormat rightSdf = new SimpleDateFormat(UI_DATE_FORMAT);
         String rightDateStr = rightSdf.format(consolidatedTransferModelObj.getDate());
 
         summaryPopperDateTV.setText(rightDateStr);
@@ -1969,7 +1967,7 @@ public class CalendarActivity extends LockerActivity {
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM");
         if(!tempSelectedDateStrArr[0].equals(sdf.format(new Date()))){
-            calendarHeaderMonthYearLL.animate().setDuration(500).translationX(-130);
+            calendarHeaderMonthYearLL.animate().setDuration(500).translationX(-150);
 
         } else{
             calendarHeaderMonthYearLL.animate().setDuration(500).translationX(0);
@@ -1977,8 +1975,17 @@ public class CalendarActivity extends LockerActivity {
     }
 
     public void onTodayClick(View view){
-        selectedDateStr = sdf.format(new Date());
-        initActivity();
+        //this is to stop unnecessary code to execute in setUpCalendar method page selected event
+        ignore = true;
+
+        Date today = new Date();
+        selectedDateStr = sdf.format(today);
+        //initActivity();
+
+        SimpleDateFormat sdf1 = new SimpleDateFormat("MM-yyyy");
+        currentFocusedMonthStr = sdf1.format(today);
+        setUpCalendar();
+        setUpTabs();
     }
 
     private Intent toAddUpdateTransaction() {

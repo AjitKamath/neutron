@@ -81,7 +81,7 @@
                         android:id="@+id/calendarTodayTVId"
                         android:layout_width="60dp"
                         android:layout_height="20dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="20dp"
                         android:background="@drawable/calendar_small_tab_inactive_inner"
                         android:gravity="center"
                         android:onClick="onTodayClick"

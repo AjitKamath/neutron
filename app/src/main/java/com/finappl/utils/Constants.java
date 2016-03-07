@@ -35,19 +35,6 @@ public final class Constants{
     public static final String TEST_MONTHLYLIMIT = "3000";
     public static final String TEST_YEARLYLIMIT = "250000";
 
-    //DB Date Time format
-    public static final String DB_DATETIME = "yyyy-MM-dd KK:mm:ss";
-    public static final String DB_DATE = "yyyy-MM-dd";
-    public static final String DB_TIME = "KK:mm:ss";
-    public static final String DB_YEARMONTH = "yyyy-MM";
-    public static final String DB_YEAR = "yyyy";
-
-    //UI Date Time format
-    public static final String UI_DATETIME = "dd MMM yyyy KK:mm:ss";
-    public static final String UI_DATE = "dd MMM yyyy";
-    public static final String UI_TIME = "KK:mm:ss";
-    public static final String UI_HOURMINUTE = "hh:mm";
-
     //DB flag value for affirmative/non affirmative
     public static final String DB_AFFIRMATIVE = "Y";
     public static final String DB_NONAFFIRMATIVE = "N";
@@ -124,4 +111,7 @@ public final class Constants{
     public static final String JAVA_DATE_FORMAT = "dd-MM-yyyy";
     public static final String DB_DATE_FORMAT = "yyyy-MM-dd";
     public static final String DB_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String UI_DATE_TIME_FORMAT = "d MMM ''yy H:mm:ss a";
+    public static final String UI_DATE_FORMAT = "d MMM ''yy";
+
 }

@@ -69,7 +69,7 @@
                 android:layout_height="match_parent"
                 android:text="INR"
                 android:textSize="35sp"
-                android:textColor="@color/finappleCurrencyCodeColor"
+                android:textColor="@color/finappleCurrencyCodeColorLight"
                 android:gravity="center" />
 
             <TextView

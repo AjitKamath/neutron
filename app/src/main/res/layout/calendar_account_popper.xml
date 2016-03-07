@@ -74,7 +74,7 @@
                 android:layout_height="match_parent"
                 android:text="INR"
                 android:textSize="30sp"
-                android:textColor="@color/finappleCurrencyCodeColor"
+                android:textColor="@color/finappleCurrencyCodeColorLight"
                 android:gravity="center" />
 
             <TextView
@@ -157,7 +157,7 @@
                                 android:layout_height="match_parent"
                                 android:text="INR"
                                 android:textSize="14sp"
-                                android:textColor="@color/finappleCurrencyCodeColor"
+                                android:textColor="@color/finappleCurrencyCodeColorLight"
                                 android:gravity="center" />
 
                             <TextView
@@ -292,7 +292,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="INR"
                                     android:textSize="14sp"
-                                    android:textColor="@color/finappleCurrencyCodeColor"
+                                    android:textColor="@color/finappleCurrencyCodeColorLight"
                                     android:gravity="center" />
 
                                 <TextView

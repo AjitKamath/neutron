@@ -132,7 +132,7 @@
                     android:layout_marginLeft="20dp"
                     android:text="INR"
                     android:textSize="14sp"
-                    android:textColor="@color/finappleCurrencyCodeColor"
+                    android:textColor="@color/finappleCurrencyCodeColorLight"
                     android:gravity="center" />
 
                 <TextView

@@ -101,7 +101,7 @@
                             android:id="@+id/addUpdBdgtAmtETId"
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
-                            android:hint="amount"
+                            android:hint="INR"
                             android:inputType="numberDecimal"
                             android:paddingLeft="15dp"
                             android:textColor="@color/Black"

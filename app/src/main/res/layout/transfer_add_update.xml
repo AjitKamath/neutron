@@ -142,11 +142,11 @@
                             android:layout_width="fill_parent"
                             android:layout_height="35dp"
                             android:background="@drawable/edit_text_border"
-                            android:hint="amount"
+                            android:hint="INR"
                             android:inputType="numberDecimal"
                             android:maxLines="1"
                             android:paddingLeft="15dp"
-                            android:textColor="@color/Black"
+                            android:textColor="@color/finappleCurrencyCodeColorLight"
                             android:textSize="20sp"
                             android:textStyle="italic">
                         </EditText>

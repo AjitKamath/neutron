@@ -256,6 +256,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
         List<Object> transactionList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
 
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" TRAN.TRAN_NAME, ");
@@ -292,7 +293,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" CAT.CAT_NAME = '"+transObj.getCategory()+"'");
 
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRAN.TRAN_DATE = '"+transObj.getTRAN_DATE()+"'");
+        sqlQuerySB.append(" TRAN.TRAN_DATE = '"+sdf.format(transObj.getTRAN_DATE())+"'");
 
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRAN.TRAN_IS_DEL = '"+DB_NONAFFIRMATIVE+"'");
@@ -331,6 +332,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
         List<Object> transfersList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
 
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" TRFR.TRNFR_AMT, ");
@@ -358,7 +360,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TO_ACC.ACC_NAME = '"+trfrObj.getToAccName()+"'");
 
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRFR.TRNFR_DATE = '"+trfrObj.getTRNFR_DATE()+"'");
+        sqlQuerySB.append(" TRFR.TRNFR_DATE = '"+sdf.format(trfrObj.getTRNFR_DATE())+"'");
 
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRFR.TRNFR_IS_DEL = '"+DB_NONAFFIRMATIVE+"'");
@@ -511,7 +513,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             groupConnectorStr =" AND SPNT_ON_ID = '"+budgetModelObj.getBUDGET_GRP_ID()+"' ";
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE);
+        SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
         String dateStr = sdf.format(date);
         String dateStrArr[] = dateStr.split("-");
         String dateConnectorStr = "";
@@ -620,10 +622,6 @@ public class CalendarDbService extends SQLiteOpenHelper {
             String tranTypeStr = ColumnFetcher.loadString(cursor, "TRAN_TYPE");
             String tempDateStrArr[] = ColumnFetcher.loadString(cursor, "TRAN_DATE").split("-");
 
-            if(tempDateStrArr[0].length() == 1){
-                tempDateStrArr[0] = "0"+tempDateStrArr[0];
-            }
-
             String tranDateStr = tempDateStrArr[2]+"-"+tempDateStrArr[1]+"-"+tempDateStrArr[0];
 
             MonthLegend monthLegendObj = null;
@@ -632,7 +630,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             ConsolidatedTransactionModel consolidatedTransactionModel = null;
 
             try{
-                SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
+                SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
 
                 //if the legend map already contains an entry for this date
                 if(monthLegendMap.containsKey(tranDateStr)){
@@ -812,14 +810,6 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             String transferCombinationStr = fromAccStr+"-"+toAccStr;
 
-            if(tempDateStrArr[1].length() == 1){
-                tempDateStrArr[1] = "0"+tempDateStrArr[1];
-            }
-
-            if(tempDateStrArr[2].length() == 1){
-                tempDateStrArr[2] = "0"+tempDateStrArr[2];
-            }
-
             String tranDateStr = tempDateStrArr[2]+"-"+tempDateStrArr[1]+"-"+tempDateStrArr[0];
 
             MonthLegend monthLegendObj = null;
@@ -828,7 +818,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             ConsolidatedTransferModel consolidatedTransferModel = null;
 
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
+                SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
 
                 //if the legend map already contains an entry for this date
                 if (monthLegendMap.containsKey(tranDateStr)) {

@@ -216,7 +216,7 @@ public class DateTimeUtil {
 	}
 	
 	// get how manyth day this date is in that particular month
-	public static int getDayNumberInMonth() {
+	/*public static int getDayNumberInMonth() {
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DB_DATE);
 		String dateStr = sdf.format(new Date());
 		
@@ -234,7 +234,7 @@ public class DateTimeUtil {
 		// System.out.println("Number of Days: " + days);
 
 		return days;
-	}
+	}*/
 	
 	//get max days in that particular month
 	public static int getMaxDaysInMonth(String dateStr){
@@ -255,7 +255,7 @@ public class DateTimeUtil {
 	}
 	
 	//get how manyth day this date is in that particular year
-	public static int getDayNumberInYear(){
+	/*public static int getDayNumberInYear(){
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DB_DATE);
 		String dateStr = sdf.format(new Date());
 		
@@ -273,7 +273,7 @@ public class DateTimeUtil {
 		//System.out.println("Number of Days: " + days);
 		
 		return days;
-	}
+	}*/
 	
 	public static int getMaxDaysInYear(String dateStr){
 		String dateArr[] = dateStr.split("-");
@@ -293,7 +293,7 @@ public class DateTimeUtil {
 	}
 	
 	//method to check if the chosen date is from past, present or future
-	public static String checkDateForPastPresentFuture(String choosenDateStr, String checkWhat){
+	/*public static String checkDateForPastPresentFuture(String choosenDateStr, String checkWhat){
 		SimpleDateFormat sdf =  null;
 		String choosenDateStrArr[] = choosenDateStr.split("-");
 		
@@ -332,7 +332,7 @@ public class DateTimeUtil {
 			Log.i(CLASS_NAME, "The choosen date/ pre selected date is today's date");
 			return "TODAY";
 		}
-	}
+	}*/
 	
 	//method which returns DateTimestamp
 	public static String getDateTimeStamp(){

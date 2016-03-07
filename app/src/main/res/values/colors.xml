@@ -241,7 +241,7 @@
     <color name="finappleCurrencyDividerColor">#000000</color>
     <color name="finappleLimitCrossColor">#FFEFD5</color>
     <color name="finappleCurrencyCodeColor">#000000</color>
-    <color name="finappleCurrencyCodeColorLight">#FFFFFF</color>
+    <color name="finappleCurrencyCodeColorLight">#808080</color>
 
     <!--Budget View Heading Colors -->
     <color name="budgetsViewHeadingCategory">#FF0000</color>
