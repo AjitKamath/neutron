@@ -60,7 +60,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
-		values.put("TRAN_ID", IdGenerator.getInstance().generateUniqueId("TRAN"));
+		values.put("TRAN_ID", transactionModel.getTRAN_ID());
 		values.put("USER_ID", transactionModel.getUSER_ID());
 		values.put("CAT_ID", transactionModel.getCAT_ID());
 		values.put("SPNT_ON_ID", transactionModel.getSPNT_ON_ID());

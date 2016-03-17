@@ -36,6 +36,7 @@ import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
+import com.finappl.utils.IdGenerator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -202,7 +203,7 @@ public class AddUpdateTransferActivity extends Activity {
         addUpdTrnfrFromAccSpn = (Spinner) this.findViewById(R.id.addUpdTrnfrFromAccSpnId);
         addUpdTrnfrToAccSpn = (Spinner) this.findViewById(R.id.addUpdTrnfrToAccSpnId);
 
-        addUpdateTrnsfrPageFabIB = (ImageButton) this.findViewById(R.id.addUpdatePageFabIBId);
+        addUpdateTrnsfrPageFabIB = (ImageButton) this.findViewById(R.id.addUpdateTrnsfrPageFabIBId);
 
         //text watcher
         addUpdTrnfrAmtET.addTextChangedListener(fieldTextWatcher);
@@ -287,6 +288,9 @@ public class AddUpdateTransferActivity extends Activity {
             }
         }
         else if("ADD".equalsIgnoreCase(String.valueOf(addUpdateTrnsfrPageFabIB.getTag()))){
+            transferModelObj.setTRNFR_ID(IdGenerator.getInstance().generateUniqueId("TRNSFR"));
+            transferModel.setTRNFR_ID(transferModelObj.getTRNFR_ID());
+
             long result = addUpdateTransferDbService.addNewTransfer(transferModel);
 
             if(result == -1) {

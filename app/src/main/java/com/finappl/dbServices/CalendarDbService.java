@@ -18,22 +18,34 @@ import com.finappl.models.SummaryModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
 import com.finappl.utils.ColumnFetcher;
-import com.finappl.utils.Constants;
 import com.finappl.utils.DateTimeUtil;
 import com.finappl.utils.IdGenerator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
-import static com.finappl.utils.Constants.*;
+import static com.finappl.utils.Constants.ADMIN_USERID;
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
+import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_NONAFFIRMATIVE;
+import static com.finappl.utils.Constants.DB_TABLE_ACCOUNTTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_BUDGETTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_NOTIFICATIONSTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSACTIONTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSFERSTABLE;
+import static com.finappl.utils.Constants.DB_VERSION;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
+import static com.finappl.utils.Constants.MONTHS_RANGE;
 
 
 public class CalendarDbService extends SQLiteOpenHelper {
@@ -757,12 +769,66 @@ public class CalendarDbService extends SQLiteOpenHelper {
         monthLegendMap = getConsolidatedTransfers(monthLegendMap, dateStrArr, userId);
 
         //get the all the scheduled transaction (daily, weekly, monthly & yearly) scheduled to be happening in this month
+        //get the 1st scheduled transactiondate
+        dateStrArr[0] = getFirstSchdTransactionOnUserId(userId);
         monthLegendMap = getScheduledTransactions(monthLegendMap, dateStrArr, userId);
 
         //get the all the scheduled transfers (daily, weekly, monthly & yearly) scheduled to be happening in this month
+        //get the 1st scheduled transfer date
+        dateStrArr[0] = getFirstSchdTransferOnUserId(userId);
         monthLegendMap = getScheduledTransfers(monthLegendMap, dateStrArr, userId);
 
         return monthLegendMap;
+    }
+
+    private String getFirstSchdTransactionOnUserId(String userId) {
+        SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
+
+        StringBuffer sqlQuerySB = new StringBuffer(50);
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" MIN(SCH_TRAN_DATE) AS SCH_TRAN_DATE");
+        sqlQuerySB.append(" FROM "+DB_TABLE_SCHEDULEDTRANSACTIONSTABLE);
+        sqlQuerySB.append(" WHERE USER_ID = '" + userId + "' ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        String dateStr = "";
+        if(cursor.moveToNext()){
+             dateStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_DATE");
+        }
+
+        if(dateStr == null || (dateStr != null && dateStr.isEmpty())){
+            dateStr = sdf.format(new Date());
+        }
+
+        return dateStr;
+    }
+
+    private String getFirstSchdTransferOnUserId(String userId) {
+        SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
+
+        StringBuffer sqlQuerySB = new StringBuffer(50);
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" MIN(SCH_TRNFR_DATE) AS SCH_TRNFR_DATE");
+        sqlQuerySB.append(" FROM "+DB_TABLE_SHEDULEDTRANSFERSTABLE);
+        sqlQuerySB.append(" WHERE USER_ID = '" + userId + "' ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        String dateStr = "";
+        if(cursor.moveToNext()){
+            dateStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_DATE");
+        }
+
+        if(dateStr == null || (dateStr != null && dateStr.isEmpty())){
+            dateStr = sdf.format(new Date());
+        }
+
+        return dateStr;
     }
 
     private Map<String, MonthLegend> getConsolidatedTransfers(Map<String, MonthLegend> monthLegendMap, String dateStrArr[], String userId) {
@@ -791,10 +857,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRFR.TRNFR_DATE ");
         sqlQuerySB.append(" BETWEEN ");
-        sqlQuerySB.append(" '"+dateStrArr[0]+" AND "+dateStrArr[1]+"' ");
-
-        sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRFR.TRNFR_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" '"+dateStrArr[0]+"' AND '"+dateStrArr[1]+"' ");
 
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRFR.USER_ID = '"+userId+"' ");
@@ -900,7 +963,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" SCH_TRNFR_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" SCH.USER_ID = '"+userId+"' ");
+        sqlQuerySB.append(" SCH.USER_ID = '" + userId + "' ");
 
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" SCH.SCH_TRNFR_DATE BETWEEN '"+dateStrArr[0]+"' AND '"+dateStrArr[1]+"' ");
@@ -913,7 +976,16 @@ public class CalendarDbService extends SQLiteOpenHelper {
         MonthLegend tempMonthLegend;
         ScheduledTransferModel scheduledTransferModelObj;
 
-        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        SimpleDateFormat sdf2 = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        Date now = null;
+
+        try{
+            now = sdf2.parse(sdf2.format(new Date()));
+        }
+        catch (ParseException e){
+            Log.e(CLASS_NAME, "PARSE EXCEPTION : "+e);
+        }
+
         while (cursor.moveToNext()){
             String schTransferIdStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_ID");
             Date schTransfersDate = ColumnFetcher.loadDate(cursor, "SCH_TRNFR_DATE");
@@ -928,6 +1000,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
             Date schTransferModDtm = ColumnFetcher.loadDateTime(cursor, "MOD_DTM");
             String schTransferNoteStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_NOTE");
             String schUserIdStr = ColumnFetcher.loadString(cursor, "USER_ID");
+
+            String schTransfersDateStrArr[] = sdf2.format(schTransfersDate).split("-");
 
             //check the status of the notif (added, scheduled or cancelled)
             sqlQuerySB.setLength(0);
@@ -949,13 +1023,15 @@ public class CalendarDbService extends SQLiteOpenHelper {
             Map<String, String> notifActionMap = new HashMap<>();
             while (cursor2.moveToNext()) {
                 String reasonStr = ColumnFetcher.loadString(cursor2, "CNCL_NOTIF_RSN");
-                String notifActionDateStr = ColumnFetcher.loadString(cursor2, "CNCL_NOTIF_DATE");
+                String notifActionDateStr = sdf2.format(ColumnFetcher.loadDate(cursor2, "CNCL_NOTIF_DATE"));
 
                 notifActionMap.put(notifActionDateStr, reasonStr);
             }
             //check the status of the notif (added, scheduled or cancelled) ends--
 
-            String schTransfersDateStrArr[] = sdf.format(schTransfersDate).split("-");
+
+            SimpleDateFormat sdf3 = new SimpleDateFormat(DB_DATE_FORMAT);
+            String dateStr = "";
 
             for(String iterAllDatesInRangeList : allDatesInRange){
                 //this flag allows us whether to proceed with adding this date into month legend as a scheduled transfer
@@ -966,11 +1042,13 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
                 Date thisDate = null;
                 try{
-                    thisDate = sdf.parse(thisDateStr);
+                    thisDate = sdf3.parse(thisDateStr);
                     //to get only those scheduled transactions which are after the SCH_TRAN_DATE
-                    if(thisDate.before(schTransfersDate)){
+                    if(!thisDate.equals(now) && thisDate.before(now)){
                         continue;
                     }
+
+                    dateStr = sdf2.format(thisDate);
                 }
                 catch(ParseException e){
                     Log.e(CLASS_NAME, "ERROR !!"+e);
@@ -993,13 +1071,13 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 scheduledTransferModelObj.setUSER_ID(schUserIdStr);
 
                 //if the date is present in the notifActionMap, that means there's an action for the scheduled transfer on that day(cancel). If it isn't, it means it is still scheduled.
-                if(notifActionMap.containsKey(thisDateStr)){
+                if(notifActionMap.containsKey(dateStr)){
                     //if its a deleted scheduled transfer then skip it from adding into month legend
-                    if ("DELETE".equalsIgnoreCase(notifActionMap.get(thisDateStr))){
+                    if ("DELETE".equalsIgnoreCase(notifActionMap.get(dateStr))){
                         continue;
                     }
 
-                    scheduledTransferModelObj.setStatus(notifActionMap.get(thisDateStr));
+                    scheduledTransferModelObj.setStatus(notifActionMap.get(dateStr));
                 }
                 else{
                     scheduledTransferModelObj.setStatus("SCHEDULED");
@@ -1028,7 +1106,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //for monthly transfers
                 else if("MONTHLY".equalsIgnoreCase(schTransferFreqStr)){
                     //to check if sch tran date (01,02,03...) is same as this date's day (01,02,03...)..here we're neglecting the month and year of both the dates
-                    if(thisDateStrArr[0].equalsIgnoreCase(schTransfersDateStrArr[2])){
+                    if(thisDateStrArr[2].equalsIgnoreCase(schTransfersDateStrArr[0])){
                         isScheduledTransfer = true;
                     }
                 }
@@ -1049,8 +1127,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
                     continue;
                 }
 
-                if(monthLegendMap.containsKey(thisDateStr)){
-                    tempMonthLegend = monthLegendMap.get(thisDateStr);
+                if(monthLegendMap.containsKey(dateStr)){
+                    tempMonthLegend = monthLegendMap.get(dateStr);
                     scheduledTransferModelList = tempMonthLegend.getScheduledTransferModelList();
 
                     if(scheduledTransferModelList == null){
@@ -1065,7 +1143,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 scheduledTransferModelList.add(scheduledTransferModelObj);
                 tempMonthLegend.setScheduledTransferModelList(scheduledTransferModelList);
 
-                monthLegendMap.put(thisDateStr, tempMonthLegend);
+                monthLegendMap.put(dateStr, tempMonthLegend);
             }
         }
         return monthLegendMap;
@@ -1110,13 +1188,10 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" ON SPNT.SPNT_ON_ID = SCH.SCH_TRAN_SPNT_ON_ID ");
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" SCH_TRAN_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
-        sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" SCH.USER_ID = '" + userId + "' ");
 
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" SCH.SCH_TRAN_DATE BETWEEN '" + dateStrArr[0] + "' AND '"+dateStrArr[1]+"' ");
-
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
@@ -1126,6 +1201,15 @@ public class CalendarDbService extends SQLiteOpenHelper {
         ScheduledTransactionModel scheduledTransactionModelObj;
 
         SimpleDateFormat sdf2 = new SimpleDateFormat(JAVA_DATE_FORMAT);
+        Date now = null;
+
+        try{
+            now = sdf2.parse(sdf2.format(new Date()));
+        }
+        catch (ParseException e){
+            Log.e(CLASS_NAME, "PARSE EXCEPTION : "+e);
+        }
+
         while (cursor.moveToNext()){
             String schTranIdStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_ID");
             String schTranNameStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_NAME");
@@ -1167,10 +1251,14 @@ public class CalendarDbService extends SQLiteOpenHelper {
             Map<String, String> notifActionMap = new HashMap<>();
             while (cursor2.moveToNext()) {
                 String reasonStr = ColumnFetcher.loadString(cursor2, "CNCL_NOTIF_RSN");
-                String notifActionDateStr = ColumnFetcher.loadString(cursor2, "CNCL_NOTIF_DATE");
+                String notifActionDateStr = sdf2.format(ColumnFetcher.loadDate(cursor2, "CNCL_NOTIF_DATE"));
 
                 notifActionMap.put(notifActionDateStr, reasonStr);
             }
+
+            SimpleDateFormat sdf3 = new SimpleDateFormat(DB_DATE_FORMAT);
+            String dateStr = "";
+
             //check the status of the notif (added, scheduled or cancelled) ends--
             for(String iterallDatesInRangeList : allDatesInRange){
                 //this flag allows us whether to proceed with adding this date into month legend as a scheduled transaction
@@ -1181,11 +1269,13 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
                 Date thisDate = null;
                 try{
-                    thisDate = sdf2.parse(thisDateStr);
-                    //to get only those scheduled transactions which are after the SCH_TRAN_DATE
-                    if(thisDate.before(schTransactionDate)){
+                    thisDate = sdf3.parse(thisDateStr);
+                    //to get only those scheduled transactions which are after today
+                    if(!thisDate.equals(now) && thisDate.before(now)){
                         continue;
                     }
+
+                    dateStr = sdf2.format(thisDate);
                 }
                 catch(ParseException e){
                     Log.e(CLASS_NAME, "ERROR !!"+e);
@@ -1212,12 +1302,12 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 scheduledTransactionModelObj.setUSER_ID(schUserIdStr);
 
                 //if the date is present in the notifActionMap, that means there's an action for the scheduled transaction on that day(cancel). If it isn't, it means it is still scheduled.
-                if(notifActionMap.containsKey(thisDateStr)){
+                if(notifActionMap.containsKey(dateStr)){
                     //if its a deleted scheduled transaction then skip it from adding into month legend
-                    if ("DELETE".equalsIgnoreCase(notifActionMap.get(thisDateStr))){
+                    if ("DELETE".equalsIgnoreCase(notifActionMap.get(dateStr))){
                         continue;
                     }
-                    scheduledTransactionModelObj.setStatus(notifActionMap.get(thisDateStr));
+                    scheduledTransactionModelObj.setStatus(notifActionMap.get(dateStr));
                 }
                 else{
                     scheduledTransactionModelObj.setStatus("SCHEDULED");
@@ -1247,7 +1337,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 //for monthly transactions
                 else if("MONTHLY".equalsIgnoreCase(schTranFreqStr)){
                     //to check if sch tran date (01,02,03...) is same as this date's day (01,02,03...)..here we're neglecting the month and year of both the dates
-                    if(thisDateStrArr[0].equalsIgnoreCase(schTransactionDateStrArr[2])){
+                    if(thisDateStrArr[2].equalsIgnoreCase(schTransactionDateStrArr[0])){
                         isScheduledTransaction = true;
                     }
                 }
@@ -1268,8 +1358,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
                     continue;
                 }
 
-                if(monthLegendMap.containsKey(thisDateStr)){
-                    tempMonthLegend = monthLegendMap.get(thisDateStr);
+                if(monthLegendMap.containsKey(dateStr)){
+                    tempMonthLegend = monthLegendMap.get(dateStr);
                     scheduledTransactionModelList = tempMonthLegend.getScheduledTransactionModelList();
 
                     if(scheduledTransactionModelList == null){
@@ -1285,7 +1375,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 scheduledTransactionModelList.add(scheduledTransactionModelObj);
                 tempMonthLegend.setScheduledTransactionModelList(scheduledTransactionModelList);
 
-                monthLegendMap.put(thisDateStr, tempMonthLegend);
+                monthLegendMap.put(dateStr, tempMonthLegend);
             }
         }
         return monthLegendMap;

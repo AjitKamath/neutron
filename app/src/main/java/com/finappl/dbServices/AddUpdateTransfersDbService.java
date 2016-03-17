@@ -37,7 +37,6 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         values.put("ACC_ID_FRM", transferModel.getACC_ID_FRM());
         values.put("ACC_ID_TO", transferModel.getACC_ID_TO());
         values.put("TRNFR_AMT", transferModel.getTRNFR_AMT());
@@ -54,9 +53,8 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
     public long addNewTransfer(TransferModel transferModel){
 		SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
-        values.put("TRNFR_ID", IdGenerator.getInstance().generateUniqueId("TRNSFR"));
+        values.put("TRNFR_ID", transferModel.getTRNFR_ID());
 		values.put("USER_ID", transferModel.getUSER_ID());
 		values.put("ACC_ID_FRM", transferModel.getACC_ID_FRM());
 		values.put("ACC_ID_TO", transferModel.getACC_ID_TO());

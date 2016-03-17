@@ -68,13 +68,13 @@ public class DateTimeUtil {
 	public static String[] getStartAndEndMonthDates(String dateStr, int range){
 		String dateStrArr[] = dateStr.split("-");
 		
-		if(dateStrArr.length != 3){
-			Log.e(CLASS_NAME, "ERROR in date format !! expecting dd-MM-yyyy but found : "+dateStr);
+		if(dateStrArr.length != 2){
+			Log.e(CLASS_NAME, "ERROR in date format !! expecting MM-yyyy but found : "+dateStr);
 			return null;
 		}
 		
-		Integer month = Integer.parseInt(dateStrArr[1])-1;
-		Integer year = Integer.parseInt(dateStrArr[2]);
+		Integer month = Integer.parseInt(dateStrArr[0])-1;
+		Integer year = Integer.parseInt(dateStrArr[1]);
 		
 		//get Start Date
 		Calendar cal = Calendar.getInstance();
@@ -446,16 +446,21 @@ public class DateTimeUtil {
 	public static List<String> getAllDatesBetweenRange(String[] dateStrArr) {
 		SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
 
+		//begin th list from today
+		dateStrArr[0] = sdf.format(new Date());
+
 		String dateMonthStrArr[] = dateStrArr[0].split("-");
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		cal.set(Integer.parseInt(dateMonthStrArr[1]), Integer.parseInt(dateMonthStrArr[0]) - 1, Integer.parseInt(dateMonthStrArr[2]));
+		cal.set(Integer.parseInt(dateMonthStrArr[0]), Integer.parseInt(dateMonthStrArr[1]) - 1, Integer.parseInt(dateMonthStrArr[2]));
 
 		List<String> datesList = new ArrayList<>();
 		try {
-
 			while (true) {
-				if (cal.getTime().after(sdf.parse(dateStrArr[0])) && cal.getTime().after(sdf.parse(dateStrArr[1]))){
-					datesList.add(sdf.format(cal.getTime()));
+                Date dates = sdf.parse(sdf.format(cal.getTime()));
+
+				if ((dates.equals(sdf.parse(dateStrArr[0])) || dates.after(sdf.parse(dateStrArr[0])))
+                        && (dates.equals(sdf.parse(dateStrArr[1])) || dates.before(sdf.parse(dateStrArr[1])))){
+					datesList.add(sdf.format(dates));
 					cal.add(Calendar.DATE, 1);
 				}
 				else{

@@ -36,6 +36,7 @@ import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
+import com.finappl.utils.IdGenerator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -414,6 +415,7 @@ public class AddUpdateTransactionActivity extends Activity {
 
         }
         else if("done".equalsIgnoreCase(doneDiscardStr)){
+            transactionModel.setTRAN_ID(IdGenerator.getInstance().generateUniqueId("TRAN"));
             long result = addUpdateTransactionsDbService.addNewTransaction(transactionModel);
 
             if(result == -1) {

@@ -10,7 +10,7 @@ public final class Constants{
     public static final String DB_NAME = "FINAPPL.db";
 
     //DB version
-    public static final int DB_VERSION = 19;
+    public static final int DB_VERSION = 20;
 
     //DB Properties
     public static final String USERNAME = "Ajit";

@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addUpdateTransactionRLId"
     android:layout_width="fill_parent"
-    android:background="@color/white"
     android:layout_height="fill_parent"
     android:layout_gravity="center_vertical"
+    android:background="@color/white"
     android:gravity="right"
     android:orientation="vertical"
     tools:context=".ExpensePageView">
@@ -12,11 +12,11 @@
     <!-- header -->
 
     <LinearLayout
-        android:elevation="@dimen/layout_header_elevation"
         android:id="@+id/addUpdateTranHeaderLLId"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/layout_header_size"
         android:background="@color/finappleTheme"
+        android:elevation="@dimen/layout_header_elevation"
         android:gravity="left|center_vertical"
         android:orientation="horizontal"
         android:paddingRight="5dp">
@@ -97,7 +97,7 @@
     <ScrollView
         android:id="@+id/addUpdatePageSVId"
         android:layout_width="fill_parent"
-        android:layout_height="492dp"
+        android:layout_height="match_parent"
         android:layout_below="@+id/addUpdateTranHeaderLLId">
 
         <LinearLayout
@@ -117,71 +117,127 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="40dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/addUpdateTranTVId"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="20dp"
                         android:background="@color/transactionIndicator"
                         android:paddingLeft="10dp"
-                        android:text="Transaction"
+                        android:gravity="center_vertical"
+                        android:text="TRANSACTION"
                         android:textColor="@color/white"
-                        android:textSize="15sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <EditText
-                            android:id="@+id/addUpdateTranNameETId"
-                            android:layout_width="fill_parent"
-                            android:layout_height="35dp"
-                            android:background="@drawable/edit_text_border"
-                            android:hint="TITLE"
-                            android:inputType="textCapWords"
-                            android:maxLength="25"
-                            android:textColorHint="@color/gray"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:textColor="@color/Black"
-                            android:textSize="15sp"
-                            android:textStyle="italic"></EditText>
+                        android:orientation="horizontal"
+                        android:padding="15dp">
 
                         <LinearLayout
-                            android:layout_width="fill_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="35dp"
-                                android:text="INR"
-                                android:layout_marginRight="2dp"
-                                android:textSize="35sp"
-                                android:textColor="@color/finappleCurrencyCodeColorLight"
-                                android:gravity="center" />
-
                             <EditText
-                                android:textColorHint="@color/gray"
-                                android:gravity="center"
                                 android:id="@+id/addUpdateTranAmtETId"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="60dp"
+                                android:layout_height="35dp"
                                 android:background="@drawable/edit_text_border"
-                                android:hint="AMOUNT"
-                                android:paddingLeft="-40dp"
+                                android:gravity="center"
+                                android:hint="INR"
                                 android:inputType="numberDecimal"
                                 android:textColor="@color/Black"
-                                android:textSize="15sp"
-                                android:textStyle="italic" />
+                                android:textColorHint="@color/gray"
+                                android:textSize="15sp" />
 
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/addUpdateTranNameETId"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_marginLeft="20dp"
+                                android:background="@drawable/edit_text_border"
+                                android:gravity="center"
+                                android:hint="TITLE"
+                                android:inputType="textCapWords"
+                                android:maxLength="25"
+                                android:maxLines="1"
+                                android:textColor="@color/Black"
+                                android:textColorHint="@color/gray"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="40dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/addUpdateCatAccHeaderTVId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="20dp"
+                        android:background="@color/transactionIndicator"
+                        android:paddingLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:text="CATEGORY &amp; ACCOUNT"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_background_selector"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="15dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Spinner
+                                android:id="@+id/addUpdateCatSpnId"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp" />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <Spinner
+                                android:id="@+id/addUpdateAccSpnId"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp" />
 
                         </LinearLayout>
 
@@ -192,68 +248,30 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/addUpdateCatAccHeaderTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/transactionIndicator"
-                        android:paddingLeft="10dp"
-                        android:text="Category &amp; Account"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <Spinner
-                            android:id="@+id/addUpdateCatSpnId"
-                            android:layout_width="fill_parent"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center"
-                            android:spinnerMode="dialog" />
-
-                        <Spinner
-                            android:id="@+id/addUpdateAccSpnId"
-                            android:layout_width="fill_parent"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_marginTop="5dp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="40dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/addUpdateTranTypeHeaderTVId"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="20dp"
                         android:background="@color/transactionIndicator"
                         android:paddingLeft="10dp"
-                        android:text="Transaction Type"
+                        android:text="TRANSACTION TYPE"
                         android:textColor="@color/white"
-                        android:textSize="15sp"
+                        android:textSize="10sp"
+                        android:gravity="center_vertical"
                         android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/card_background_selector"
+                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="10dp">
+                        android:padding="15dp">
 
                         <RadioGroup
                             android:id="@+id/addUpdateTranExpIncRadioGrpId"
@@ -268,20 +286,20 @@
                                 android:layout_gravity="left"
                                 android:checked="true"
                                 android:tag="EXPENSE"
-                                android:text="Expense"
+                                android:text="EXPENSE"
                                 android:textColor="@color/finappleTheme"
-                                android:textSize="20sp" />
+                                android:textSize="15sp" />
 
                             <RadioButton
                                 android:id="@+id/addUpdateTranIncRadioId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="30dp"
                                 android:layout_gravity="right"
-                                android:layout_marginLeft="25dp"
+                                android:layout_marginLeft="50dp"
                                 android:tag="INCOME"
-                                android:text="Income"
+                                android:text="INCOME"
                                 android:textColor="@color/finappleTheme"
-                                android:textSize="20sp" />
+                                android:textSize="15sp" />
                         </RadioGroup>
 
                     </LinearLayout>
@@ -296,26 +314,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:orientation="vertical"
-                android:visibility="visible">
+                android:layout_marginTop="40dp"
+                android:orientation="vertical">
 
                 <!-- spent on -->
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/addUpdateSpntOnNoteHeaderTVId"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="20dp"
                         android:background="@color/transactionIndicator"
                         android:paddingLeft="10dp"
-                        android:text="Spent On &amp; Notes"
+                        android:text="SPENT ON &amp; NOTES"
                         android:textColor="@color/white"
-                        android:textSize="15sp"
+                        android:textSize="10sp"
+                        android:gravity="center_vertical"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -325,27 +345,33 @@
                         android:orientation="vertical"
                         android:padding="10dp">
 
-                        <Spinner
-                            android:id="@+id/addUpdateSpntOnSpnId"
-                            android:layout_width="fill_parent"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_horizontal|center_vertical" />
-
-                        <EditText
-                            android:id="@+id/addUpdateNoteETId"
-                            android:layout_width="fill_parent"
-                            android:layout_height="35dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/edit_text_border"
-                            android:hint="NOTES"
-                            android:inputType="textCapWords|textMultiLine"
-                            android:maxLength="50"
-                            android:textColorHint="@color/gray"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/black"
-                            android:textSize="15sp"
-                            android:textStyle="italic" />
+                            android:orientation="horizontal">
+
+                            <Spinner
+                                android:id="@+id/addUpdateSpntOnSpnId"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center_horizontal|center_vertical" />
+                        </LinearLayout>
+
+                       <EditText
+                                android:id="@+id/addUpdateNoteETId"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/edit_text_border"
+                                android:gravity="center"
+                                android:hint="NOTES"
+                                android:inputType="textCapWords|textMultiLine"
+                                android:maxLength="50"
+                                android:textAlignment="center"
+                                android:textColor="@android:color/black"
+                                android:textColorHint="@color/gray"
+                                android:textSize="15sp" />
 
                     </LinearLayout>
 
@@ -355,15 +381,15 @@
     </ScrollView>
 
     <ImageButton
-        android:clickable="true"
-        android:onClick="onDone"
         android:id="@+id/addUpdatePageFabIBId"
         style="@style/FloatingActionButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
-        android:tag="ADD"
+        android:clickable="true"
         android:contentDescription="@null"
-        android:src="@drawable/tick_white_small" />
+        android:onClick="onDone"
+        android:src="@drawable/tick_white_small"
+        android:tag="ADD" />
 
 </RelativeLayout>

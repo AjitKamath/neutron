@@ -243,10 +243,10 @@ public class CalendarActivity extends LockerActivity {
         TextView calendarTransferAddedPopperAmountTV = (TextView) dialog.findViewById(R.id.calendarTransferAddedPopperAmountTVId);
         TextView calendarTransferAddedPopperFromAccountTV = (TextView) dialog.findViewById(R.id.calendarTransferAddedPopperFromAccountTVId);
         TextView calendarTransferAddedPopperToAccountTV = (TextView) dialog.findViewById(R.id.calendarTransferAddedPopperToAccountTVId);
-        ImageView calendarTransferAddedPopperDeleteIV = (ImageView) dialog.findViewById(R.id.calendarTransactionAddedPopperDeleteIVId);
-        ImageView calendarTransferAddedPopperEditIV = (ImageView) dialog.findViewById(R.id.calendarTransactionAddedPopperEditIVId);
-        LinearLayout calendarTransferAddedPopperOkLL = (LinearLayout) dialog.findViewById(R.id.calendarTransactionAddedPopperOkLLId);
-        LinearLayout calendarTransferAddedPopperAddLL = (LinearLayout) dialog.findViewById(R.id.calendarTransactionAddedPopperAddLLId);
+        ImageView calendarTransferAddedPopperDeleteIV = (ImageView) dialog.findViewById(R.id.calendarTransferAddedPopperDeleteIVId);
+        ImageView calendarTransferAddedPopperEditIV = (ImageView) dialog.findViewById(R.id.calendarTransferAddedPopperEditIVId);
+        LinearLayout calendarTransferAddedPopperOkLL = (LinearLayout) dialog.findViewById(R.id.calendarTransferAddedPopperOkLLId);
+        LinearLayout calendarTransferAddedPopperAddLL = (LinearLayout) dialog.findViewById(R.id.calendarTransferAddedPopperAddLLId);
 
         //if the transfer was updated..the action object would contain TRNFR_ID
         if(transferModelObj.getTRNFR_ID() != null){
@@ -269,7 +269,7 @@ public class CalendarActivity extends LockerActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                showToast("Delete, Yet to be implemented");
+                showMessagePopper(transferModelObj);
             }
         });
 
@@ -344,7 +344,7 @@ public class CalendarActivity extends LockerActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                showToast("Delete, yet to be implemented");
+                showMessagePopper(transactionModelObj);
             }
         });
 
@@ -1596,7 +1596,7 @@ public class CalendarActivity extends LockerActivity {
     }
 
     private void fetchMonthLegend(){
-        monthLegendMap = calendarDbService.getMonthLegendOnDate(selectedDateStr, loggedInUserObj.getUSER_ID());
+        monthLegendMap = calendarDbService.getMonthLegendOnDate(currentFocusedMonthStr, loggedInUserObj.getUSER_ID());
     }
 
     private void setUpTabs() {
@@ -1751,26 +1751,19 @@ public class CalendarActivity extends LockerActivity {
                     Calendar cal = Calendar.getInstance(Locale.getDefault());
                     cal.set(Integer.parseInt(dateMonthStrArr[1]), Integer.parseInt(dateMonthStrArr[0]) - 1, 1);
 
+                    boolean refreshCalendar = false;
                     //if the user has reached to the beginning of the limited loaded months
                     if (mSelectedPageIndex == 0) {
                         cal.add(Calendar.MONTH, -1);
-
-                        int month = cal.get(Calendar.MONTH) + 1;
-                        int year = cal.get(Calendar.YEAR);
-
-                        currentFocusedMonthStr = "";
-                        if (month < 10) {
-                            currentFocusedMonthStr = "0";
-                        }
-                        currentFocusedMonthStr += month + "-" + year;
-                        ignore = true;
-                        setUpCalendar();
-                        return;
+                        refreshCalendar = true;
                     }
                     //if the user has reached to the end of the limited loaded months
                     else if (mSelectedPageIndex == calendarMonthsViewPagerAdapter.getCount() - 1) {
                         cal.add(Calendar.MONTH, +1);
+                        refreshCalendar = true;
+                    }
 
+                    if(refreshCalendar){
                         int month = cal.get(Calendar.MONTH) + 1;
                         int year = cal.get(Calendar.YEAR);
 
@@ -1783,22 +1776,6 @@ public class CalendarActivity extends LockerActivity {
                         setUpCalendar();
                         return;
                     }
-                    /*//for all the left/right swipes in the limited loaded months
-                    else if(mSelectedPageIndex != 999 && mSelectedPageIndex != oldScreenIndex) {
-                        cal.add(Calendar.MONTH, mSelectedPageIndex-oldScreenIndex);
-
-                        int month = cal.get(Calendar.MONTH) + 1;
-                        int year = cal.get(Calendar.YEAR);
-
-                        currentFocusedMonthStr = "";
-                        if (month < 10) {
-                            currentFocusedMonthStr = "0";
-                        }
-                        currentFocusedMonthStr += month + "-" + year;
-                        //setUpHeader();
-                        oldScreenIndex = mSelectedPageIndex;
-                        calendarMonthsViewPagerAdapter.currentFocusedMonthStr = currentFocusedMonthStr;
-                    }*/
                 }
             }
         });
@@ -1965,8 +1942,8 @@ public class CalendarActivity extends LockerActivity {
         calendarMonthTV.setText(Constants.MONTHS_ARRAY[Integer.parseInt(tempSelectedDateStrArr[0])-1]);
         yearTV.setText(tempSelectedDateStrArr[1]);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM");
-        if(!tempSelectedDateStrArr[0].equals(sdf.format(new Date()))){
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+        if(!currentFocusedMonthStr.equalsIgnoreCase(sdf.format(new Date()))){
             calendarHeaderMonthYearLL.animate().setDuration(500).translationX(-150);
 
         } else{
