@@ -6,6 +6,8 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,11 +46,13 @@ import com.finappl.adapters.CalendarMonthsViewPagerAdapter;
 import com.finappl.adapters.CalendarTabsViewPagerAdapter;
 import com.finappl.adapters.CalendarTransactionsOptionsPopperViewPagerAdapter;
 import com.finappl.adapters.SummaryPopperListAdapter;
-import com.finappl.dbServices.AddUpdateTransactionsDbService;
+import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
+import com.finappl.fragments.TransactionFragment;
+import com.finappl.fragments.TransferFragment;
 import com.finappl.models.AccountsModel;
 import com.finappl.models.BudgetModel;
 import com.finappl.models.ConsolidatedTransactionModel;
@@ -76,7 +80,7 @@ import java.util.Map;
 import static com.finappl.utils.Constants.*;
 
 @SuppressLint("NewApi")
-public class CalendarActivity extends LockerActivity {
+public class CalendarActivity extends LockerActivity implements TransactionFragment.DialogResultListener, TransferFragment.DialogResultListener {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext = this;
 
@@ -106,7 +110,7 @@ public class CalendarActivity extends LockerActivity {
     private Sqlite controller = new Sqlite(mContext);
     private CalendarDbService calendarDbService = new CalendarDbService(mContext);
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
-    private AddUpdateTransactionsDbService addUpdateTransactionsDbService = new AddUpdateTransactionsDbService(mContext);
+    private TransactionsDbService addUpdateTransactionsDbService = new TransactionsDbService(mContext);
     private AddUpdateTransfersDbService addUpdateTransfersDbService = new AddUpdateTransfersDbService(mContext);
 
     //User
@@ -366,7 +370,6 @@ public class CalendarActivity extends LockerActivity {
         calendarTransactionAddedPopperAddLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
                 startActivity(toAddUpdateTransaction());
                 finish();
             }
@@ -1993,8 +1996,7 @@ public class CalendarActivity extends LockerActivity {
 
                 switch(v.getId()){
                     case R.id.transactionPopperNewLVId :
-                        killPopper();
-                        intent = toAddUpdateTransaction();
+                        showAddUpdateTransactionPopper(null);
                         break;
                     case R.id.transactionPopperQuickLVId :
                         killPopper();
@@ -2143,6 +2145,24 @@ public class CalendarActivity extends LockerActivity {
             }
         };
     }
+
+    private void showAddUpdateTransactionPopper(String transactionIdStr) {
+        // close existing dialog fragments
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag("fragment_edit_name");
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        TransactionFragment editNameDialog = new TransactionFragment();
+        editNameDialog.show(manager, "fragment_edit_name");
+    }
+
+    @Override
+    public void onFinishUserDialog(String resultStr) {
+        showToast(resultStr);
+    }
+
 
     public void goToSettings(View view){
         if(checkAndCollapseFab()){
@@ -2447,5 +2467,4 @@ public class CalendarActivity extends LockerActivity {
     public interface GridViewItemClickListener {
         public abstract void onGridViewItemClick(Object position);
     }
-
 }

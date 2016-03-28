@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
-import com.finappl.dbServices.AddUpdateTransactionsDbService;
+import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
@@ -52,7 +52,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     private Sqlite controller;
     private CalendarDbService calendarDbService;
     private AuthorizationDbService authorizationDbService;
-    private AddUpdateTransactionsDbService addUpdateTransactionsDbService;
+    private TransactionsDbService addUpdateTransactionsDbService;
     private AddUpdateTransfersDbService addUpdateTransfersDbService;
 
     //User
@@ -87,7 +87,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         controller = new Sqlite(mContext);
         calendarDbService = new CalendarDbService(mContext);
         authorizationDbService = new AuthorizationDbService(mContext);
-        addUpdateTransactionsDbService = new AddUpdateTransactionsDbService(mContext);
+        addUpdateTransactionsDbService = new TransactionsDbService(mContext);
         addUpdateTransfersDbService = new AddUpdateTransfersDbService(mContext);
     }
 

@@ -344,6 +344,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		manageContentModelObj.setAccountsMap(accMap);
 		manageContentModelObj.setSpentOnsMap(spentOnMap);
 
+		db.close();
 		return manageContentModelObj;
 	}
 

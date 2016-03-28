@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="image_header_size">25dp</dimen>
-    <dimen name="text_header_title_size">18sp</dimen>
+    <dimen name="image_header_size">20dp</dimen>
+    <dimen name="text_header_title_size">15sp</dimen>
     <dimen name="text_button_big_text_size">15sp</dimen>
     <dimen name="text_tab_big_size">15sp</dimen>
     <dimen name="text_tab_small_size">12sp</dimen>
     <dimen name="text_bubble_counter_small_size">8sp</dimen>
+
     <dimen name="layout_header_size">40dp</dimen>
     <dimen name="layout_header_elevation">10dp</dimen>
+
     <dimen name="text_header_primary">70sp</dimen>
     <dimen name="text_header_secondary">15sp</dimen>
+    <dimen name="input_indicator_image_size">20dp</dimen>
+
+    <dimen name="text_form_header_size">10sp</dimen>
+
+    <dimen name="screen_components_padding_from_walls">10dp</dimen>
+    <dimen name="screen_half_width">140dp</dimen>
+
+    <dimen name="divider_height">0.5dp</dimen>
+    <dimen name="divider_margin">15dp</dimen>
+
+    <dimen name="component_line_height">0.5dp</dimen>
+
+    <dimen name="spinner_text_size">15sp</dimen>
 
     <dimen name="activity_horizontal_margin">10dp</dimen>
     <dimen name="activity_vertical_margin">10dp</dimen>
@@ -17,4 +32,7 @@
     <dimen name="fab_elevation">5dp</dimen>
     <dimen name="fab_rise">10dp</dimen>
     <integer name="fab_duration">500</integer>
+
+
+
 </resources>

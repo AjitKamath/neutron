@@ -98,7 +98,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             return transactionModelObj;
         }
-
+        db.close();
         return null;
     }
 
@@ -149,7 +149,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             return transferModelObj;
         }
-
+        db.close();
         return null;
     }
 
@@ -204,7 +204,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 filteredSchTransfersObjList.add(iterSchTransferModelList);
             }
         }
-
+        db.close();
         return filteredSchTransfersObjList;
     }
 
@@ -260,7 +260,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 filteredSchTransObjList.add(iterSchTransactionModelList);
             }
         }
-
+        db.close();
         return filteredSchTransObjList;
     }
 
@@ -337,6 +337,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             transactionList.add(transactionModelObj);
         }
+        db.close();
         return transactionList;
     }
 
@@ -400,6 +401,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             transfersList.add(transferModelObj);
         }
+        db.close();
         return transfersList;
     }
 
@@ -469,6 +471,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
         return budgetModelList;
     }
 
@@ -507,6 +510,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         if(cursor.moveToNext()){
             return ColumnFetcher.loadString(cursor, selectorStr.trim());
         }
+        db.close();
         return null;
     }
 
@@ -594,7 +598,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         if(cursor.moveToNext()){
             return ColumnFetcher.loadDouble(cursor, "TOTAL");
         }
-
+        db.close();
         return 0.0;
     }
 
@@ -722,42 +726,12 @@ public class CalendarDbService extends SQLiteOpenHelper {
             monthLegendMap.put(tranDateStr, monthLegendObj);
         }
         cursor.close();
-
+        db.close();
         return monthLegendMap;
     }
 
     public Map<String, MonthLegend> getMonthLegendOnDate(String dateStr, String userId){
         Map<String, MonthLegend> monthLegendMap = new HashMap<>();
-
-        //TODO:Fetch current month, prev month & next month data
-        /*String selectedDateStrArr[] = dateStr.split("-");
-
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
-        String monthAndYear = sdf.format(new Date());
-        String monthAndYearArr[] = monthAndYear.split("-");
-
-        Calendar cal = Calendar.getInstance(Locale.getDefault());
-        cal.set(Integer.parseInt(selectedDateStrArr[2]), Integer.parseInt(selectedDateStrArr[1]) - 1, Integer.parseInt(selectedDateStrArr[0]));
-
-        cal.roll(Calendar.MONTH, monthIndexSet.get(position));
-
-        int month = cal.get(Calendar.MONTH) + 1;
-
-        boolean isDifferentYear = false;
-        if (Integer.parseInt(selectedDateStrArr[1]) == 12 && month == 1) {
-            isDifferentYear = true;
-        } else if (Integer.parseInt(selectedDateStrArr[1]) == 1 && month == 12) {
-            isDifferentYear = true;
-        }
-
-        if (isDifferentYear && month >= 1 && monthIndexSet.get(position) > 0) {
-            cal.roll(Calendar.YEAR, 1);
-        } else if (isDifferentYear && month <= 12 && monthIndexSet.get(position) < 0) {
-            cal.roll(Calendar.YEAR, -1);
-        }
-
-        int year = cal.get(Calendar.YEAR);
-        int day = cal.get(Calendar.DAY_OF_MONTH);*/
 
         //get start and end dates based on the passed date
         String dateStrArr[] = DateTimeUtil.getStartAndEndMonthDates(dateStr, MONTHS_RANGE/2);
@@ -802,7 +776,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         if(dateStr == null || (dateStr != null && dateStr.isEmpty())){
             dateStr = sdf.format(new Date());
         }
-
+        db.close();
         return dateStr;
     }
 
@@ -827,7 +801,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         if(dateStr == null || (dateStr != null && dateStr.isEmpty())){
             dateStr = sdf.format(new Date());
         }
-
+        db.close();
         return dateStr;
     }
 
@@ -926,7 +900,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             monthLegendMap.put(tranDateStr, monthLegendObj);
         }
         cursor.close();
-
+        db.close();
         return monthLegendMap;
     }
 
@@ -1146,6 +1120,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 monthLegendMap.put(dateStr, tempMonthLegend);
             }
         }
+        db.close();
         return monthLegendMap;
     }
 
@@ -1378,12 +1353,15 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 monthLegendMap.put(dateStr, tempMonthLegend);
             }
         }
+        db.close();
         return monthLegendMap;
     }
 
     public boolean deleteTransaction(String transactionIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(DB_TABLE_TRANSACTIONTABLE, "TRAN_ID = '" + transactionIdStr+"'", null) > 0;
+        boolean result = db.delete(DB_TABLE_TRANSACTIONTABLE, "TRAN_ID = '" + transactionIdStr+"'", null) > 0;
+        db.close();
+        return result;
     }
 
     public boolean deleteAllSched(Object object){
@@ -1395,6 +1373,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         else if(object instanceof ScheduledTransferModel){
             return db.delete(DB_TABLE_SHEDULEDTRANSFERSTABLE, "SCH_TRNFR_ID = '" + ((ScheduledTransferModel)object).getSCH_TRNFR_ID()+"'", null) > 0;
         }
+        db.close();
         return false;
     }
 
@@ -1424,18 +1403,23 @@ public class CalendarDbService extends SQLiteOpenHelper {
         else{
             return false;
         }
-
-        return db.insert(DB_TABLE_NOTIFICATIONSTABLE, null, values) > 0;
+        boolean result = db.insert(DB_TABLE_NOTIFICATIONSTABLE, null, values) > 0;
+        db.close();
+        return result;
     }
 
     public boolean deleteTransfer(String transferIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(DB_TABLE_TRANSFERSTABLE, "TRNFR_ID = '" + transferIdStr + "'", null) > 0;
+        boolean result = db.delete(DB_TABLE_TRANSFERSTABLE, "TRNFR_ID = '" + transferIdStr + "'", null) > 0;;
+        db.close();
+        return result;
     }
 
     public boolean deleteBudget(String budgetIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(DB_TABLE_BUDGETTABLE, "BUDGET_ID = '" + budgetIdStr + "'", null) > 0;
+        boolean result = db.delete(DB_TABLE_BUDGETTABLE, "BUDGET_ID = '" + budgetIdStr + "'", null) > 0;
+        db.close();
+        return result;
     }
 
     public boolean deleteAccount(AccountsModel accountsModelObj){
@@ -1456,8 +1440,11 @@ public class CalendarDbService extends SQLiteOpenHelper {
         //delete budgets which are using this account
         db.delete(DB_TABLE_BUDGETTABLE, "BUDGET_GRP_ID = '" + accountsModelObj.getACC_ID()+"'", null);
 
+        boolean result = db.delete(DB_TABLE_ACCOUNTTABLE, "ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null) > 0;
+        db.close();
+
         //delete the account
-        return db.delete(DB_TABLE_ACCOUNTTABLE, "ACC_ID = '" + accountsModelObj.getACC_ID()+"'", null) > 0;
+        return result;
     }
 
     //---------------------method to get all accounts--------------------------//
@@ -1586,7 +1573,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             accountsList.add(accountsModel);
         }
         cursor.close();
-
+        db.close();
         return accountsList;
     }
     //--------------------- end of method to get all accounts--------------------------//

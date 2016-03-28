@@ -28,8 +28,7 @@ public class FinappleUtility{
     private FinappleUtility(){}
 
 	public synchronized static FinappleUtility getInstance(){
-		if (instance == null) 
-		{
+		if (instance == null) {
 			instance = new FinappleUtility();
         }
 		return instance;
@@ -141,5 +140,4 @@ public class FinappleUtility{
         }
         //--------------------------------------
     }
-
 }

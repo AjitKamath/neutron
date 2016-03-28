@@ -65,7 +65,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             countryModelList.add(countryModelObj);
         }
         cursor.close();
-
+        db.close();
         return countryModelList;
     }
 
@@ -94,13 +94,13 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             currencyModelList.add(currencyModelObj);
         }
         cursor.close();
-
+        db.close();
         return currencyModelList;
     }
 
     public long addNewUser(UsersModel userModelObj){
+        SQLiteDatabase db = this.getWritableDatabase();
         try {
-            SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
             //logout all users first
@@ -174,13 +174,13 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         catch(Exception e){
             Log.i(CLASS_NAME, "ERROR !! While adding a new User");
         }
+        db.close();
         return -1;
     }
 
     public boolean isAuthenticUser(UsersModel usersModelObj) {
+        SQLiteDatabase db = this.getWritableDatabase();
         try {
-            SQLiteDatabase db = this.getWritableDatabase();
-
             StringBuilder sqlQuerySB = new StringBuilder(50);
 
             sqlQuerySB.append(" SELECT ");
@@ -222,6 +222,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         }
 
         Log.i(CLASS_NAME, "Enemy at the gates trying to breach !!!! Code Red. Code Red.");
+        db.close();
         return false;
     }
 
@@ -252,6 +253,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This username is unique in the whole universe..go ahead.");
+        db.close();
         return false;
     }
 
@@ -356,7 +358,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             userModelMap.put(cursor.getPosition(), usersModelObject);
         }
         cursor.close();
-
+        db.close();
         return userModelMap;
     }
 
@@ -383,6 +385,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.e(CLASS_NAME, "If i'm printing, you must have screwed up. User_id cannot be null");
+        db.close();
         return "";
     }
 

@@ -16,7 +16,6 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.webkit.JavascriptInterface;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -28,7 +27,7 @@ import android.widget.Toast;
 
 import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
 import com.finappl.R;
-import com.finappl.dbServices.AddUpdateTransactionsDbService;
+import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.SpinnerModel;
@@ -54,7 +53,7 @@ public class AddUpdateTransferActivity extends Activity {
 
     //db services
     private AddUpdateTransfersDbService addUpdateTransferDbService = new AddUpdateTransfersDbService(mContext);
-    private AddUpdateTransactionsDbService addUpdateTransactionsDbService = new AddUpdateTransactionsDbService(mContext);
+    private TransactionsDbService addUpdateTransactionsDbService = new TransactionsDbService(mContext);
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User

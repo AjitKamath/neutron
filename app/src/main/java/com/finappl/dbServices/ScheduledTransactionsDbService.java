@@ -47,7 +47,9 @@ public class ScheduledTransactionsDbService extends SQLiteOpenHelper {
         values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         // inserting a new row
-        return db.insert(DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, null, values);
+        long result = db.insert(DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, null, values);
+        db.close();
+        return result;
     }
 
     //this method updates a old transaction based on the users input
@@ -69,7 +71,9 @@ public class ScheduledTransactionsDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
         // update a old row
-        return db.update(DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, values,	"SCH_TRAN_ID = '" + scheduledTransactionModelObj.getSCH_TRAN_ID() + "'", null);
+        int result = db.update(DB_TABLE_SCHEDULEDTRANSACTIONSTABLE, values,	"SCH_TRAN_ID = '" + scheduledTransactionModelObj.getSCH_TRAN_ID() + "'", null);
+        db.close();
+        return result;
     }
 
     //Gets the Scheduled Transaction using the Scheduled Transaction Id & User Id and returns back the ScheduledTransactionModel object
@@ -145,6 +149,7 @@ public class ScheduledTransactionsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.e(CLASS_NAME, "If i'm printing, you must have screwed up. scheduledTransactionModelObj shouldnt be null at this point");
+        db.close();
         return null;
     }
 

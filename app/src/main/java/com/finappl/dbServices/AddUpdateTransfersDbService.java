@@ -46,6 +46,7 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
 		// Updating an old Row
 		int result = db.update(DB_TABLE_TRANSFERSTABLE, values,	"TRNFR_ID = '" + transferModel.getTRNFR_ID() + "'", null);
 
+		db.close();
         return result;
     }
 
@@ -66,6 +67,7 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
 
 		// Inserting a new Row
 		long result =  db.insert(DB_TABLE_TRANSFERSTABLE, null, values);
+		db.close();
         return result;
     }
 

@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.finappl.adapters.AddUpdateBudgetSpinnerAdapter;
 import com.finappl.R;
 import com.finappl.dbServices.AddUpdateBudgetsDbService;
-import com.finappl.dbServices.AddUpdateTransactionsDbService;
+import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.BudgetModel;
 import com.finappl.models.SpinnerModel;
@@ -57,7 +57,7 @@ public class AddUpdateBudgetActivity extends Activity {
     private TextView addUpdBdgtDoneTV;
 
     //db services
-    private AddUpdateTransactionsDbService addUpdateTransactionsDbService = new AddUpdateTransactionsDbService(mContext);
+    private TransactionsDbService addUpdateTransactionsDbService = new TransactionsDbService(mContext);
     private AddUpdateBudgetsDbService addUpdateBudgetsDbService = new AddUpdateBudgetsDbService(mContext);
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 

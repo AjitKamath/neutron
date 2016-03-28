@@ -17,7 +17,7 @@
         <item name="android:navigationBarColor">@color/finappleThemeDark</item>
         <item name="android:colorForeground">@color/finappleTheme</item>
         <item name="colorPrimaryDark">@color/DarkGreen</item>
-        <item name="android:textColorSecondary">@android:color/secondary_text_dark</item>
+        <item name="android:textColorSecondary">@color/secondary_text_dark</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:textColorSecondaryInverse">@color/secondary_text_material_light</item>
         <item name="android:colorBackground">@color/white</item>

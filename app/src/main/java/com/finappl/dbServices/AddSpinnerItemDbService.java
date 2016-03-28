@@ -34,6 +34,7 @@ public class AddSpinnerItemDbService extends SQLiteOpenHelper {
 	//	method to update an already created transaction.. returns 0 for fail, 1 for success
 	public int updateOldSpinnerItem(SpinnerItemModel spnItemModel){
 		SQLiteDatabase db = this.getWritableDatabase();
+		int result;
 
 		ContentValues values = new ContentValues();
 		values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
@@ -44,22 +45,26 @@ public class AddSpinnerItemDbService extends SQLiteOpenHelper {
 			values.put("CAT_TYPE", spnItemModel.getSpinnerItemType());
 			
 			// Updating an old Row
-			return db.update(DB_TABLE_CATEGORYTABLE, values,	"CAT_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
+			result = db.update(DB_TABLE_CATEGORYTABLE, values,	"CAT_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
 		}
 		else if(temp.equalsIgnoreCase("spent on")){
 			values.put("SPNT_ON_NAME", spnItemModel.getSpinnerItemName());
 			
 			// Updating an old Row
-			return db.update(DB_TABLE_SPENTONTABLE, values,	"SPNT_ON_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
+			result =  db.update(DB_TABLE_SPENTONTABLE, values,	"SPNT_ON_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
 		}
 		else if(temp.equalsIgnoreCase("account")){
 			values.put("ACC_NAME", spnItemModel.getSpinnerItemName());
 			
 			// Updating an old Row
-			return db.update(DB_TABLE_ACCOUNTTABLE, values,	"ACC_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
+			result =  db.update(DB_TABLE_ACCOUNTTABLE, values,	"ACC_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
 		}
-		Log.e(CLASS_NAME, "Error : Couldnt update an old Spinner Item");
-		return -1;
+		else {
+			Log.e(CLASS_NAME, "Error : Couldnt update an old Spinner Item");
+			result = -1;
+		}
+		db.close();
+		return result;
 	}
 
 	@Override

@@ -43,7 +43,9 @@ public class ScheduledTransfersDbService extends SQLiteOpenHelper {
         values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         // inserting a new row
-        return db.insert(DB_TABLE_SHEDULEDTRANSFERSTABLE, null, values);
+        long result = db.insert(DB_TABLE_SHEDULEDTRANSFERSTABLE, null, values);
+        db.close();
+        return result;
     }
 
     //this method creates a update scheduled transfer based on the users input
@@ -62,7 +64,9 @@ public class ScheduledTransfersDbService extends SQLiteOpenHelper {
         values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         // update a old row
-        return db.update(DB_TABLE_SHEDULEDTRANSFERSTABLE, values, "SCH_TRNFR_ID = '" + scheduledTransferModelObj.getSCH_TRNFR_ID() + "'", null);
+        int result = db.update(DB_TABLE_SHEDULEDTRANSFERSTABLE, values, "SCH_TRNFR_ID = '" + scheduledTransferModelObj.getSCH_TRNFR_ID() + "'", null);
+        db.close();
+        return result;
     }
 
     //Gets the Scheduled Transfer using the Scheduled Transfer Id & User Id and returns back the Scheduled Transfer object
@@ -135,6 +139,7 @@ public class ScheduledTransfersDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.e(CLASS_NAME, "If i'm printing, you must have screwed up. scheduledTransferModelObj shouldnt be null at this point");
+        db.close();
         return null;
     }
 

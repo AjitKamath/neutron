@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
-import com.finappl.dbServices.AddUpdateTransactionsDbService;
+import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
@@ -376,7 +376,7 @@ public class NotificationsService extends Service {
                     transactionModelObj.setTRAN_NOTE(iterSchedTransactionsList.getSCH_TRAN_NOTE());
                     transactionModelObj.setTRAN_DATE(iterSchedTransactionsList.getScheduledDate());
 
-                    if((new AddUpdateTransactionsDbService(getApplicationContext())).addNewTransaction(transactionModelObj) != -1){
+                    if((new TransactionsDbService(getApplicationContext())).addNewTransaction(transactionModelObj) != -1){
                         Log.i(CLASS_NAME, "Building a notification just to notify the user of the automatically added scheduled transaction");
                         buildSchTransactionJustNotification(iterSchedTransactionsList, todaysNotificationsObj.getLoggedInUser());
 

@@ -28,7 +28,7 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
-import com.finappl.dbServices.AddUpdateTransactionsDbService;
+import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.ScheduledTransfersDbService;
 import com.finappl.models.ScheduledTransactionModel;
@@ -51,7 +51,7 @@ public class AddUpdateScheduleTransferActivity extends Activity {
 
     //db service
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
-    private AddUpdateTransactionsDbService addUpdateTransactionsDbService = new AddUpdateTransactionsDbService(mContext);
+    private TransactionsDbService addUpdateTransactionsDbService = new TransactionsDbService(mContext);
     private ScheduledTransfersDbService scheduledTransfersDbService = new ScheduledTransfersDbService(mContext);
 
     //UI Components

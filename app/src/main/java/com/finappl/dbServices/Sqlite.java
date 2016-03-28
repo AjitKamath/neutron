@@ -136,6 +136,7 @@ public class Sqlite extends SQLiteOpenHelper{
         Log.i(CLASS_NAME, "Create " + DB_TABLE_SETTINGS_SECURITY + " Table query:" + sqlQuerySB.toString());
 
         db.execSQL(sqlQuerySB.toString());
+		db.close();
     }
 
     private void createSettingsSoundsTable(SQLiteDatabase db) {
@@ -154,6 +155,7 @@ public class Sqlite extends SQLiteOpenHelper{
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_SETTINGS_SOUNDS + " Table query:" + sqlQuerySB.toString());
 
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 
 	private void createSettingsNotificationsTable(SQLiteDatabase db) {
@@ -174,6 +176,7 @@ public class Sqlite extends SQLiteOpenHelper{
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_SETTINGS_NOTIFICATIONS + " Table query:" + sqlQuerySB.toString());
 
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 
 	private void createNotificationsTable(SQLiteDatabase db) {
@@ -192,9 +195,10 @@ public class Sqlite extends SQLiteOpenHelper{
 
 		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID)) ");
 
-		Log.i(CLASS_NAME, "Create "+DB_TABLE_NOTIFICATIONSTABLE+" Table query:\n"+sqlQuerySB.toString());
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_NOTIFICATIONSTABLE + " Table query:\n" + sqlQuerySB.toString());
 
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 
 	private void createWorkTimelineTable(SQLiteDatabase db) {
@@ -213,9 +217,10 @@ public class Sqlite extends SQLiteOpenHelper{
 
         sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID)) ");
 
-        Log.i(CLASS_NAME, "Create "+DB_TABLE_WORK_TIMELINETABLE+" Table query:\n"+sqlQuerySB.toString());
+        Log.i(CLASS_NAME, "Create " + DB_TABLE_WORK_TIMELINETABLE + " Table query:\n" + sqlQuerySB.toString());
 
         db.execSQL(sqlQuerySB.toString());
+		db.close();
     }
 
     private void createCurrencyMastertable(SQLiteDatabase db) {
@@ -230,9 +235,10 @@ public class Sqlite extends SQLiteOpenHelper{
 		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sqlQuerySB.append(" MOD_DTM DATETIME) ");
 
-		Log.i(CLASS_NAME, "Create "+DB_TABLE_CURRENCYTABLE+" Table query:\n"+sqlQuerySB.toString());
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_CURRENCYTABLE + " Table query:\n" + sqlQuerySB.toString());
 
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 
 	private void createCountryMastertable(SQLiteDatabase db) {
@@ -249,9 +255,10 @@ public class Sqlite extends SQLiteOpenHelper{
 
 		sqlQuerySB.append(" FOREIGN KEY (CUR_ID) REFERENCES "+DB_TABLE_CURRENCYTABLE+" (CUR_ID)) ");
 
-		Log.i(CLASS_NAME, "Create "+DB_TABLE_COUNTRYTABLE+" Table query:\n"+sqlQuerySB.toString());
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_COUNTRYTABLE + " Table query:\n" + sqlQuerySB.toString());
 
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 
 	private void createScheduledTransfersTable(SQLiteDatabase db) {
@@ -276,9 +283,10 @@ public class Sqlite extends SQLiteOpenHelper{
         sqlQuerySB.append(" FOREIGN KEY (SCH_TRNFR_ACC_ID_FRM) REFERENCES "+DB_TABLE_ACCOUNTTABLE+" (ACC_ID), ");
         sqlQuerySB.append(" FOREIGN KEY (SCH_TRNFR_ACC_ID_TO) REFERENCES "+DB_TABLE_ACCOUNTTABLE+" (ACC_ID)) ");
 
-        Log.i(CLASS_NAME, "Create "+DB_TABLE_SHEDULEDTRANSFERSTABLE+" Table query:\n"+sqlQuerySB.toString());
+        Log.i(CLASS_NAME, "Create " + DB_TABLE_SHEDULEDTRANSFERSTABLE + " Table query:\n" + sqlQuerySB.toString());
 
         db.execSQL(sqlQuerySB.toString());
+		db.close();
     }
 
     private void createTransfersTable(SQLiteDatabase db) {
@@ -306,9 +314,10 @@ public class Sqlite extends SQLiteOpenHelper{
         sqlQuerySB.append(" FOREIGN KEY (SCH_TRNFR_ID) REFERENCES "+DB_TABLE_SHEDULEDTRANSFERSTABLE+" (SCH_TRNFR_ID) ");
         sqlQuerySB.append(" ) ");
 
-        Log.i(CLASS_NAME, "Create "+DB_TABLE_TRANSFERSTABLE+" Table query:\n"+sqlQuerySB.toString());
+        Log.i(CLASS_NAME, "Create " + DB_TABLE_TRANSFERSTABLE + " Table query:\n" + sqlQuerySB.toString());
 
         db.execSQL(sqlQuerySB.toString());
+		db.close();
     }
 
     private void createCategoryTagsTable(SQLiteDatabase db) {
@@ -330,9 +339,10 @@ public class Sqlite extends SQLiteOpenHelper{
         sqlQuerySB.append(" FOREIGN KEY (CAT_ID) REFERENCES "+DB_TABLE_CATEGORYTABLE+" (CAT_ID) ");
         sqlQuerySB.append(" ) ");
 
-        Log.i(CLASS_NAME, "Create "+DB_TABLE_CATEGORYTAGSTABLE+" Table query:\n"+sqlQuerySB.toString());
+        Log.i(CLASS_NAME, "Create " + DB_TABLE_CATEGORYTAGSTABLE + " Table query:\n" + sqlQuerySB.toString());
 
         db.execSQL(sqlQuerySB.toString());
+		db.close();
     }
     //------------END OF CREATE TABLE-----------------------//
 	
@@ -365,9 +375,10 @@ public class Sqlite extends SQLiteOpenHelper{
 		sqlQuerySB.append(" FOREIGN KEY (SCH_TRAN_ID) REFERENCES "+DB_TABLE_SCHEDULEDTRANSACTIONSTABLE+" (SCH_TRAN_ID) ");
 		sqlQuerySB.append(" ) ");
 		
-		Log.i(CLASS_NAME, "Create "+DB_TABLE_TRANSACTIONTABLE+" Table query:\n"+sqlQuerySB.toString());
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_TRANSACTIONTABLE + " Table query:\n" + sqlQuerySB.toString());
 
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 	
 	public void createSpentOnTable(SQLiteDatabase db){
@@ -388,9 +399,10 @@ public class Sqlite extends SQLiteOpenHelper{
 		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID) ");
 		sqlQuerySB.append(" ) ");
 		
-		Log.i(CLASS_NAME, "Create SPENT_ON_MASTER Table query:"+sqlQuerySB.toString());
+		Log.i(CLASS_NAME, "Create SPENT_ON_MASTER Table query:" + sqlQuerySB.toString());
 			
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 	
 	public void createCategoryMasterTable(SQLiteDatabase db){
@@ -414,9 +426,10 @@ public class Sqlite extends SQLiteOpenHelper{
         //sqlQuerySB.append(" FOREIGN KEY (BUDGET_ID) REFERENCES "+DB_TABLE_BUDGETTABLE+" (USER_ID) ");
 		sqlQuerySB.append(" ) ");
 		
-		Log.i(CLASS_NAME, "Create CATEGORY_MASTER Table query:"+sqlQuerySB.toString());
+		Log.i(CLASS_NAME, "Create CATEGORY_MASTER Table query:" + sqlQuerySB.toString());
 				
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 	
 	public void createAccountMasterTable(SQLiteDatabase db){
@@ -440,9 +453,10 @@ public class Sqlite extends SQLiteOpenHelper{
         //sqlQuerySB.append(" FOREIGN KEY (BUDGET_ID) REFERENCES "+DB_TABLE_BUDGETTABLE+" (BUDGET_ID) ");
 		sqlQuerySB.append(" ) ");
 		
-		Log.i(CLASS_NAME, "Create ACCOUNT_MASTER Table query:"+sqlQuerySB.toString());
+		Log.i(CLASS_NAME, "Create ACCOUNT_MASTER Table query:" + sqlQuerySB.toString());
 				
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 	
 	public void createUsersTable(SQLiteDatabase db){
@@ -471,6 +485,7 @@ public class Sqlite extends SQLiteOpenHelper{
 		Log.i(CLASS_NAME, "Create USERS Table Query:" + sqlQuerySB.toString());
 				
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 	
 	public void createScheduledTransactionsTable(SQLiteDatabase db){
@@ -504,6 +519,7 @@ public class Sqlite extends SQLiteOpenHelper{
 		Log.i(CLASS_NAME, "Create SCHEDULED_TRANASCTIONS Table Query:" + sqlQuerySB.toString());
 				
 		db.execSQL(sqlQuerySB.toString());
+		db.close();
 	}
 
     public void createBudgetTable(SQLiteDatabase db){
@@ -528,9 +544,10 @@ public class Sqlite extends SQLiteOpenHelper{
         sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID) ");
         sqlQuerySB.append(" ) ");
 
-        Log.i(CLASS_NAME, "Create "+DB_TABLE_BUDGETTABLE+" Table Query:" + sqlQuerySB.toString());
+        Log.i(CLASS_NAME, "Create " + DB_TABLE_BUDGETTABLE + " Table Query:" + sqlQuerySB.toString());
 
         db.execSQL(sqlQuerySB.toString());
+		db.close();
     }
 	
 	//generic method to check and add defaults only if they are not in db
@@ -622,6 +639,7 @@ public class Sqlite extends SQLiteOpenHelper{
 		    } 
 			cursor.close();
 		}
+		db.close();
 	}
 	
 	// Upgrading database

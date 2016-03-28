@@ -19,7 +19,7 @@ import com.finappl.activities.CalendarActivity;
 import com.finappl.adapters.calendar.CalendarMonth1GridViewAdapter;
 import com.finappl.adapters.calendar.CalendarMonth2GridViewAdapter;
 import com.finappl.adapters.calendar.CalendarMonth3GridViewAdapter;
-import com.finappl.dbServices.AddUpdateTransactionsDbService;
+import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
@@ -59,7 +59,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
     private Sqlite controller;
     private CalendarDbService calendarDbService;
     private AuthorizationDbService authorizationDbService;
-    private AddUpdateTransactionsDbService addUpdateTransactionsDbService;
+    private TransactionsDbService addUpdateTransactionsDbService;
     private AddUpdateTransfersDbService addUpdateTransfersDbService;
 
     //User
@@ -110,7 +110,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
         controller = new Sqlite(mContext);
         calendarDbService = new CalendarDbService(mContext);
         authorizationDbService = new AuthorizationDbService(mContext);
-        addUpdateTransactionsDbService = new AddUpdateTransactionsDbService(mContext);
+        addUpdateTransactionsDbService = new TransactionsDbService(mContext);
         addUpdateTransfersDbService = new AddUpdateTransfersDbService(mContext);
     }
 

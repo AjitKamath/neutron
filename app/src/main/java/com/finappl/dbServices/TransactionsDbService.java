@@ -27,7 +27,7 @@ import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSACTIONTABLE;
 import static com.finappl.utils.Constants.DB_VERSION;
 
-public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
+public class TransactionsDbService extends SQLiteOpenHelper {
 
     private final String CLASS_NAME = this.getClass().getName();
 
@@ -51,7 +51,9 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
 		// Updating an old Row
-		return db.update(DB_TABLE_TRANSACTIONTABLE, values,	"TRAN_ID = '" + transactionModel.getTRAN_ID() + "'", null);
+        int result = db.update(DB_TABLE_TRANSACTIONTABLE, values,	"TRAN_ID = '" + transactionModel.getTRAN_ID() + "'", null);
+        db.close();
+		return result;
     }
 
     //	method to add a new transaction..returns -1 on fail to add new transaction. row id on success
@@ -82,6 +84,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
         catch(Exception e){
             Log.e(CLASS_NAME, "Error while adding transaction:"+e);
         }
+        db.close();
         return result;
     }
 
@@ -122,7 +125,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
             catList.add(spnObj);
         }
         cursor.close();
-
+        db.close();
         return catList;
     }
 
@@ -160,7 +163,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
             spntList.add(spnObj);
         }
         cursor.close();
-
+        db.close();
         return spntList;
     }
     //--------------------- end of method to get all spent on type--------------------------//
@@ -199,7 +202,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
             accList.add(spnObj);
         }
         cursor.close();
-
+        db.close();
         return accList;
     }
     //--------------------- end of method to get all pay type--------------------------//
@@ -210,7 +213,7 @@ public class AddUpdateTransactionsDbService extends SQLiteOpenHelper {
 	}
 
 	//constructors
-	public AddUpdateTransactionsDbService(Context context) {
+	public TransactionsDbService(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
 	}
 

@@ -201,6 +201,13 @@
     <color name="primaryText">#4682B4</color>
     <color name="secondaryText">#000000</color>
     <color name="tertiaryText">#808080</color>
+    <color name="formHeadingTextDark">#000000</color>
+    <color name="formHintTextDark">#D3D3D3</color>
+    <color name="formTextDark">#000000</color>
+    <color name="formHeadingTextLight">#FFFFFF</color>
+    <color name="formHintTextLight">#FFFFFF</color>
+    <color name="formTextLight">#FFFFFF</color>
+    <color name="formSpinnerDark">#808080</color>
 
     <!--Calendar grid colors-->
     <color name="calendarThisMonthDate">#000000</color>
@@ -229,6 +236,7 @@
     <color name="finappleThemeDark">#3F51B5</color>
     <color name="finappleThemeLightViolet">#E1BEE7</color>
     <color name="finappleThemeLightGreen">#DCEDC8</color>
+    <color name="finappleBackground">#FFFFFF</color>
 
     <!--button colors-->
     <color name="negativeButtonColor">#F44336</color>
@@ -241,7 +249,7 @@
     <color name="finappleCurrencyDividerColor">#000000</color>
     <color name="finappleLimitCrossColor">#FFEFD5</color>
     <color name="finappleCurrencyCodeColor">#000000</color>
-    <color name="finappleCurrencyCodeColorLight">#808080</color>
+    <color name="finappleCurrencyCodeColorLight">#FFFFFF</color>
 
     <!--Budget View Heading Colors -->
     <color name="budgetsViewHeadingCategory">#FF0000</color>
@@ -271,5 +279,13 @@
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
+    <color name="dim_foreground_dark_inverse_disabled">#fe070606</color>
+    <color name="dim_foreground_dark_disabled">#fb030303</color>
+    <color name="dim_foreground_dark_inverse_disabled_1">#fe070606</color>
+    <color name="dim_foreground_dark_disabled_1">#f8040404</color>
+    <color name="dim_foreground_dark">#fcbebebe</color>
+    <color name="dim_foreground_dark_inverse_1">#fd020202</color>
+    <color name="bright_foreground_dark_inverse_1">#fd0c0b0b</color>
+    <color name="dim_foreground_dark_inverse">#040404</color>
 
 </resources>

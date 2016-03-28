@@ -45,7 +45,9 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
                     "serve the purpose of this app.. hope you know what i mean. Peace.");
 
         // Updating an old Row
-        return db.update(DB_TABLE_TRANSACTIONTABLE, values,	"TRAN_ID = '" + transactionIdStr + "'", null);
+        int result = db.update(DB_TABLE_TRANSACTIONTABLE, values,	"TRAN_ID = '" + transactionIdStr + "'", null);
+        db.close();
+        return result;
     }
 
     public TransactionModel getTransactionOnTransactionID(String transIdStr){
@@ -126,6 +128,7 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
             transactionModelObj.setMOD_DTM(ColumnFetcher.loadDateTime(cursor, "MOD_DTM"));
             transactionModelObj.setSchCreateDate(ColumnFetcher.loadDateTime(cursor, "SCH_CREAT_DTM"));
         }
+        db.close();
         return transactionModelObj;
     }
 
@@ -197,6 +200,7 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
             transferModelObj.setMOD_DTM(ColumnFetcher.loadDateTime(cursor, "MOD_DTM"));
             transferModelObj.setSchCreateDate(ColumnFetcher.loadDateTime(cursor, "SCH_CREAT_DTM"));
         }
+        db.close();
         return transferModelObj;
     }
 
@@ -379,7 +383,7 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
             transferModelObj.setCurrency(ColumnFetcher.loadString(cursor, "CUR_NAME"));
             transferModelObj.setCurrency(ColumnFetcher.loadString(cursor, "SCH_TRNFR_ID"));
 
-            Double totalAmt = 0.0;
+            Double totalAmt;
 
             if(transfersMap.containsKey(transferModelObj.getTRNFR_DATE())){
                 dayTransfersModel = transfersMap.get(transferModelObj.getTRNFR_DATE());
@@ -387,7 +391,7 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
                 totalAmt = dayTransfersModel.getDayTotal() + transferModelObj.getTRNFR_AMT();
             }
             else{
-                transfersList = new ArrayList<TransferModel>();
+                transfersList = new ArrayList<>();
                 dayTransfersModel = new DayTransfersModel();
                 totalAmt = transferModelObj.getTRNFR_AMT();
                 dayTransfersModel.setDate(transferModelObj.getTRNFR_DATE());
@@ -404,7 +408,7 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
         ActivityModel actsModelObj = new ActivityModel();
         actsModelObj.setTransactionsMap(transactionsMap);
         actsModelObj.setTransfersMap(transfersMap);
-
+        db.close();
         return actsModelObj;
     }
 

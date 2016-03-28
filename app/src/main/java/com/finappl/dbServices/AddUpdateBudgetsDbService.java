@@ -72,7 +72,9 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Updating an old Row
-        return db.update(DB_TABLE_BUDGETTABLE, values,	"BUDGET_ID = '" + budgetModel.getBUDGET_ID() + "'", null);
+        int result = db.update(DB_TABLE_BUDGETTABLE, values,	"BUDGET_ID = '" + budgetModel.getBUDGET_ID() + "'", null);
+        db.close();
+        return result;
     }
 
     //	method to add a new budget..returns -1 on fail to add new budget. 1 on success
@@ -128,6 +130,7 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         if(result == -1){
             Log.e(CLASS_NAME, "New budget couldnt be saved in db");
         }
+        db.close();
         return result;
     }
 

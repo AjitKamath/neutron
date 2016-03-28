@@ -117,6 +117,7 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
             }
         }
 
+        db.close();
         return result;
     }
 

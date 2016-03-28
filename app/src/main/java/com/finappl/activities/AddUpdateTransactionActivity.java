@@ -16,7 +16,6 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.webkit.JavascriptInterface;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -30,7 +29,7 @@ import android.widget.Toast;
 
 import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
 import com.finappl.R;
-import com.finappl.dbServices.AddUpdateTransactionsDbService;
+import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
@@ -53,7 +52,7 @@ public class AddUpdateTransactionActivity extends Activity {
     private Context mContext = this;
 
     //db services
-    private AddUpdateTransactionsDbService addUpdateTransactionsDbService = new AddUpdateTransactionsDbService(mContext);
+    private TransactionsDbService addUpdateTransactionsDbService = new TransactionsDbService(mContext);
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
@@ -122,8 +121,8 @@ public class AddUpdateTransactionActivity extends Activity {
         }
         //this means the user is in this page for a fresh new transaction...so give him focus on transaction name on arrival
         else{
-            //give transaction name focus by default
-            addUpdateTranNameET.requestFocus();
+            //give transaction Amt focus by default
+            addUpdateTranAmtET.requestFocus();
         }
 
         //set transaction

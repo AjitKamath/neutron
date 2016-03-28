@@ -18,6 +18,7 @@
         <!-- enable overlap of transitions -->
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:textColorSecondary">@color/secondary_text_dark</item>
     </style>
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
         <item name="android:popupBackground">@android:color/holo_purple</item>

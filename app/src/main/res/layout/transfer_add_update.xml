@@ -12,250 +12,315 @@
     <!-- header -->
 
     <LinearLayout
-        android:elevation="@dimen/layout_header_elevation"
-        android:id="@+id/addUpdTrnfrHdrLLId"
+        android:id="@+id/addUpdateTranHeaderLLId"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/layout_header_size"
+        android:layout_height="wrap_content"
         android:background="@color/finappleTheme"
-        android:layout_gravity="left|center_vertical"
-        android:orientation="horizontal"
-        android:paddingRight="5dp">
-
-        <ImageView
-            android:id="@+id/addUpdTrnfrHdrBackIVId"
-            android:layout_width="@dimen/image_header_size"
-            android:layout_height="@dimen/image_header_size"
-            android:layout_gravity="center"
-            android:tag="BACK"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/back"
-            android:onClick="showMessagePopper"/>
+        android:gravity="left|center_vertical"
+        android:orientation="vertical">
 
 
         <LinearLayout
-            android:id="@+id/addUpdateDateLLId"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="5dp"
-            android:background="@color/finappleTheme"
-            android:gravity="right"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            <TextView
-                android:id="@+id/addUpdtrnfrDayTVId"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:gravity="right|center_vertical"
-                android:maxLength="2"
-                android:onClick="showDatePicker"
-                android:text="28"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_header_title_size"/>
+            <ImageView
+                android:layout_width="@dimen/image_header_size"
+                android:layout_height="@dimen/image_header_size"
+                android:background="@drawable/back"
+                android:id="@+id/addUpdTrnfrHdrBackIVId"
+                android:onClick="showMessagePopper"
+                android:tag="BACK" />
 
-            <TextView
-                android:id="@+id/addUpdTrnfrSuperScriptTVId"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:paddingTop="4dp"
-                android:gravity="left"
-                android:maxLength="2"
-                android:onClick="showDatePicker"
-                android:text="nd"
-                android:textColor="@color/white"
-                android:textSize="8sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/addUpdtrnfrDayTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right|center_vertical"
+                    android:maxLength="2"
+                    android:onClick="showDatePicker"
+                    android:text="28"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_header_title_size" />
+
+                <TextView
+                    android:id="@+id/addUpdTrnfrSuperScriptTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:gravity="left"
+                    android:maxLength="2"
+                    android:onClick="showDatePicker"
+                    android:text="nd"
+                    android:textColor="@color/white"
+                    android:textSize="8sp" />
 
 
-            <TextView
-                android:id="@+id/addUpdTrnfrMonthTVId"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="10dp"
-                android:maxLength="9"
-                android:gravity="center"
-                android:onClick="showDatePicker"
-                android:text="November"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_header_title_size"/>
+                <TextView
+                    android:id="@+id/addUpdTrnfrMonthTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:maxLength="9"
+                    android:onClick="showDatePicker"
+                    android:text="SEPT"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_header_title_size" />
 
-            <TextView
-                android:id="@+id/addUpdTrnfrYearTVId"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:maxLength="3"
-                android:onClick="showDatePicker"
-                android:text="'16"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_header_title_size"/>
+                <TextView
+                    android:id="@+id/addUpdTrnfrYearTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="bottom"
+                    android:maxLength="3"
+                    android:onClick="showDatePicker"
+                    android:text="'16"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_header_title_size" />
+
+            </LinearLayout>
+
+
         </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/screen_components_padding_from_walls">
+
+            <LinearLayout
+                android:layout_width="@dimen/screen_half_width"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="AMOUNT"
+                        android:textColor="@color/formHeadingTextLight"
+                        android:textSize="@dimen/text_form_header_size" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/edit_text_border_light"
+                        android:clickable="false"
+                        android:editable="false"
+                        android:gravity="bottom"
+                        android:hint="INR"
+                        android:textColorHint="@color/finappleCurrencyCodeColorLight"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/addUpdTrnfrAmtETId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_text_border_light"
+                        android:gravity="center"
+                        android:hint="0"
+                        android:inputType="numberDecimal"
+                        android:textColor="@color/formTextLight"
+                        android:textColorHint="@color/formHintTextLight"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
     </LinearLayout>
+
 
     <!--Page-->
     <ScrollView
         android:id="@+id/addUpdTrnfrPageSVId"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/addUpdTrnfrHdrLLId">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addUpdateTranHeaderLLId">
 
         <LinearLayout
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:id="@+id/addUpdTrnfrPageLLId"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            android:id="@+id/addUpdTrnfrPageLLId">
 
             <LinearLayout
-                android:id="@+id/basicLLId"
-                android:layout_width="fill_parent"
+                android:padding="@dimen/screen_components_padding_from_walls"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:orientation="vertical">
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
-
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="20dp"
-                        android:background="@color/transferIndicator"
-                        android:paddingLeft="10dp"
-                        android:gravity="center_vertical"
-                        android:text="TRANSFER"
-                        android:textColor="@color/white"
-                        android:textSize="10sp"
-                        android:textStyle="bold"/>
-
                     <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="15dp">
+                        android:layout_width="@dimen/screen_half_width"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <EditText
-                            android:id="@+id/addUpdTrnfrAmtETId"
-                            android:layout_width="80dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/edit_text_border"
-                            android:hint="INR"
-                            android:inputType="numberDecimal"
-                            android:textColorHint="@color/tertiaryText"
-                            android:maxLines="1"
-                            android:gravity="center"
-                            android:textColor="@color/finappleCurrencyCodeColorLight"
-                            android:textSize="15sp">
-                        </EditText>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="FROM ACCOUNT"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/addUpdateTranTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="20dp"
-                        android:background="@color/transferIndicator"
-                        android:paddingLeft="10dp"
-                        android:gravity="center_vertical"
-                        android:text="ACCOUNTS"
-                        android:textColor="@color/white"
-                        android:textSize="10sp"
-                        android:textStyle="bold"/>
-
                     <LinearLayout
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:padding="15dp">
+                        android:orientation="horizontal">
 
                         <Spinner
                             android:id="@+id/addUpdTrnfrFromAccSpnId"
                             android:layout_width="match_parent"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center"/>
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginBottom="20dp"
-                            android:gravity="center"
-                            android:text="TO"
-                            android:textColor="@color/SteelBlue"
-                            android:textSize="15sp"
-                            android:textStyle="bold"/>
-
-                        <Spinner
-                            android:id="@+id/addUpdTrnfrToAccSpnId"
-                            android:layout_width="match_parent"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center"/>
+                            android:layout_height="35dp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginLeft="20dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="20dp"
-                        android:background="@color/transferIndicator"
-                        android:paddingLeft="10dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
                         android:gravity="center_vertical"
-                        android:text="NOTES"
-                        android:textColor="@color/white"
-                        android:textSize="10sp"
-                        android:textStyle="bold"/>
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TO ACCOUNT"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:padding="15dp">
+                        android:orientation="horizontal">
+
+                        <Spinner
+                            android:id="@+id/addUpdTrnfrToAccSpnId"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginTop="@dimen/divider_margin"
+                android:layout_marginBottom="@dimen/divider_margin"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:padding="@dimen/screen_components_padding_from_walls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NOTES"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/input_indicator_image_size"
+                            android:layout_height="@dimen/input_indicator_image_size"
+                            android:background="@drawable/write_grey" />
 
                         <EditText
                             android:id="@+id/addUpdTrnfrNoteETId"
-                            android:layout_width="fill_parent"
-                            android:layout_height="35dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_border"
-                            android:hint="NOTES"
-                            android:textColorHint="@color/tertiaryText"
-                            android:inputType="textMultiLine|textCapWords"
-                            android:maxLength="50"
-                            android:paddingLeft="15dp"
                             android:gravity="center"
-                            android:textColor="@color/Black"
-                            android:textSize="15sp">
-                        </EditText>
+                            android:inputType="textCapWords|textMultiLine"
+                            android:maxLength="50"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textColorHint="@color/gray"
+                            android:textSize="20sp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 

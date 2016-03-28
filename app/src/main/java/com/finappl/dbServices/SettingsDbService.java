@@ -36,6 +36,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_USERSTABLE, values,	"USER_IS_DEL = '" + DB_NONAFFIRMATIVE + "'", null);
+        db.close();
     }
 
     public void saveNotificationSetting(SettingsNotificationModel settingsNotificationModelObj){
@@ -48,6 +49,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + settingsNotificationModelObj.getUSER_ID() + "'", null);
+        db.close();
     }
 
     public void enableDisableSecurityOnUserId(String userIdStr, boolean isEnabled){
@@ -64,6 +66,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_SECURITY, values,	"USER_ID = '" + userIdStr + "'", null);
+        db.close();
     }
 
     public void enableDisableNotificationOnUserId(String userIdStr, boolean isEnabled){
@@ -80,6 +83,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + userIdStr + "'", null);
+        db.close();
     }
 
     public void enableDisableNotificationVibrationsOnUserId(String userIdStr, boolean isEnabled){
@@ -96,6 +100,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + userIdStr + "'", null);
+        db.close();
     }
 
     //returns 0 on fail and 1 on success
@@ -111,7 +116,9 @@ public class SettingsDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Updating an old Row
-        return db.update(DB_TABLE_USERSTABLE, values,	"USER_ID = '" + userModelObj.getUSER_ID() + "'", null);
+        int result = db.update(DB_TABLE_USERSTABLE, values,	"USER_ID = '" + userModelObj.getUSER_ID() + "'", null);
+        db.close();
+        return result;
     }
 
     public UsersModel getUserProfile(UsersModel userModelObj){
@@ -183,7 +190,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
             usersModelObject.setWorkModDtm(ColumnFetcher.getInstance().loadDateTime(cursor, "workModDtm"));
         }
         cursor.close();
-
+        db.close();
         return usersModelObject;
     }
 
@@ -221,7 +228,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
             countryModelList.add(countryModelObj);
         }
         cursor.close();
-
+        db.close();
         return countryModelList;
     }
 
@@ -257,7 +264,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
             notificationModelObj.setSET_NOTIF_BUZZ(notifBuzzStr);
         }
         cursor.close();
-
+        db.close();
         return notificationModelObj;
     }
 
@@ -274,6 +281,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_SOUNDS, values,	"USER_ID = '" + userIdStr + "'", null);
+        db.close();
     }
 
     public void saveSecurityKeyUserId(String userIdStr, String keyStr){
@@ -284,6 +292,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_SECURITY, values,	"USER_ID = '" + userIdStr + "'", null);
+        db.close();
     }
 
     public boolean isSoundsEnabledOnUserId(String userIdStr) {
@@ -313,6 +322,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This user has not enabled sounds");
+        db.close();
         return false;
     }
 
@@ -343,6 +353,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This user has not enabled security");
+        db.close();
         return false;
     }
 
@@ -373,6 +384,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This user has not enabled notifications");
+        db.close();
         return false;
     }
 
@@ -405,6 +417,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
             keyStr = "";
         }
 
+        db.close();
         return keyStr;
     }
 
@@ -435,6 +448,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This user has not enabled notifications");
+        db.close();
         return false;
     }
 
@@ -463,7 +477,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
             currencyModelList.add(currencyModelObj);
         }
         cursor.close();
-
+        db.close();
         return currencyModelList;
     }
 

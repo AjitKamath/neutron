@@ -121,6 +121,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         }
 
         Log.e(CLASS_NAME, "If this is printed, Something went wrong while fetching Account details from db");
+        db.close();
         return null;
     }
 
@@ -133,7 +134,9 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Updating an old Row
-        return db.update(Constants.DB_TABLE_ACCOUNTTABLE, values,	"ACC_ID = '" + accObj.getACC_ID() + "'", null);
+        int result = db.update(Constants.DB_TABLE_ACCOUNTTABLE, values, "ACC_ID = '" + accObj.getACC_ID() + "'", null);
+        db.close();
+        return result;
     }
 
 	public long addNewAccount(AccountsModel accObject){
@@ -218,6 +221,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         catch(Exception e){
             Log.e(CLASS_NAME, "Error while adding transaction after creating account:"+e);
         }
+        db.close();
         return result2;
     }
 

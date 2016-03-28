@@ -83,6 +83,7 @@ public class AddUpdateSpentOnDbService extends SQLiteOpenHelper {
             Log.e(CLASS_NAME, "Aye Aye Android developer !! A simple insert operation failed !! You shalt die now !");
             return result;
         }
+        db.close();
         return result;
     }
 

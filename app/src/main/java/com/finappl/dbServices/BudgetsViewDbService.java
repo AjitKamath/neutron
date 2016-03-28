@@ -155,6 +155,7 @@ public class BudgetsViewDbService extends SQLiteOpenHelper {
         budgetsViewModelObj.setBudgetMonthlyMap(monthlyBudgetsMap);
         budgetsViewModelObj.setBudgetYearlyMap(yearlyBudgetsMap);
 
+		db.close();
 		return budgetsViewModelObj;
 	}
 

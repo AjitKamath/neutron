@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center_vertical"
-    android:background="@color/cardBackground"
+    android:background="@color/white"
     android:gravity="right"
     android:orientation="vertical"
     tools:context=".ExpensePageView">
@@ -35,7 +35,7 @@
             android:layout_width="230dp"
             android:layout_height="fill_parent"
             android:gravity="center"
-            android:text="Scheduled Transfer"
+            android:text="SCHEDULE TRANSFER"
             android:textColor="@color/white"
             android:textSize="@dimen/text_header_title_size" />
 
@@ -45,7 +45,7 @@
             android:layout_height="fill_parent"
             android:gravity="right|center_vertical"
             android:onClick="showDatePicker"
-            android:paddingRight="5dp"
+            android:paddingRight="10dp"
             android:text="99 Sep '15"
             android:textColor="@color/white"
             android:textSize="@dimen/text_header_title_size" />
@@ -55,157 +55,223 @@
     <!--Page-->
     <ScrollView
         android:id="@+id/addUpdatePageSVId"
-        android:layout_width="fill_parent"
-        android:layout_height="490dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
         android:layout_below="@+id/schedTransferAddUpdHeaderLLId">
 
         <LinearLayout
             android:id="@+id/schedTransferAddUpdPageLLId"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/basicLLId"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
-
-                    <TextView
-                        android:id="@+id/schedTransferAddUpdTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/transferIndicator"
-                        android:paddingLeft="10dp"
-                        android:text="Transfer"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:padding="10dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:text="AMOUNT"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:text="INR"
-                                android:textSize="20sp"
-                                android:textColor="@color/finappleCurrencyCodeColorLight"
-                                android:gravity="center" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@color/divider" />
 
-                            <EditText
-                                android:id="@+id/schedTransferAddUpdAmtETId"
-                                android:layout_width="match_parent"
-                                android:layout_height="35dp"
-                                android:background="@drawable/edit_text_border"
-                                android:hint="amount"
-                                android:inputType="numberDecimal"
-                                android:paddingLeft="15dp"
-                                android:textColor="@color/Black"
-                                android:textSize="20sp"
-                                android:textStyle="italic" />
+                    </LinearLayout>
 
 
-                        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/edit_text_border"
+                            android:clickable="false"
+                            android:editable="false"
+                            android:gravity="bottom"
+                            android:hint="INR"
+                            android:textColorHint="@color/finappleCurrencyCodeColorLight"
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:id="@+id/schedTransferAddUpdAmtETId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_border"
+                            android:gravity="center"
+                            android:hint="0.0"
+                            android:inputType="numberDecimal"
+                            android:textColor="@color/Black"
+                            android:textColorHint="@color/formHeadingTextDark"
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                 </LinearLayout>
 
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="30dp"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/transferIndicator"
-                        android:paddingLeft="10dp"
-                        android:text="Accounts"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="155dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="FROM ACCOUNT"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@color/divider" />
+
+                    </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:padding="10dp">
+                        android:orientation="horizontal">
 
                         <Spinner
                             android:id="@+id/schedTransferAddUpdAccFromSpnId"
-                            android:layout_width="fill_parent"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center" />
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="155dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="fill_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:gravity="center"
-                            android:text="to"
-                            android:textColor="@color/SteelBlue"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:text="TO ACCOUNT"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@color/divider" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                         <Spinner
                             android:id="@+id/schedTransferAddUpdAccToSpnId"
-                            android:layout_width="fill_parent"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center" />
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/transferIndicator"
-                        android:paddingLeft="10dp"
-                        android:text="Schedule"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="REPEAT"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@color/divider" />
+
+                    </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:padding="10dp">
+                        android:orientation="horizontal">
 
                         <RadioGroup
                             android:id="@+id/schedTransferSchedRadioGrpId"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
@@ -213,152 +279,52 @@
                                 android:id="@+id/schedTransferOnceAddRadioId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="left"
                                 android:checked="true"
                                 android:tag="ONCE"
-                                android:text="Once"
+                                android:text="ONCE"
                                 android:textColor="@color/finappleTheme"
-                                android:textSize="13sp" />
+                                android:textSize="8sp" />
 
                             <RadioButton
                                 android:id="@+id/schedTransferDailyAddRadioId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="left"
+                                android:layout_marginLeft="10dp"
                                 android:tag="DAILY"
-                                android:text="Daily"
+                                android:text="DAILY"
                                 android:textColor="@color/finappleTheme"
-                                android:textSize="13sp" />
+                                android:textSize="8sp" />
 
                             <RadioButton
                                 android:id="@+id/schedTransferWeeklyAddRadioId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:layout_marginLeft="2dp"
+                                android:layout_marginLeft="10dp"
                                 android:tag="WEEKLY"
-                                android:text="Weekly"
+                                android:text="WEEKLY"
                                 android:textColor="@color/finappleTheme"
-                                android:textSize="13sp" />
+                                android:textSize="8sp" />
 
                             <RadioButton
                                 android:id="@+id/schedTransferMonthlyAddRadioId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:layout_marginLeft="2dp"
+                                android:layout_marginLeft="10dp"
                                 android:tag="MONTHLY"
-                                android:text="Monthly"
+                                android:text="MONTHLY"
                                 android:textColor="@color/finappleTheme"
-                                android:textSize="13sp" />
+                                android:textSize="8sp" />
 
                             <RadioButton
                                 android:id="@+id/schedTransferYearlyAddRadioId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:layout_marginLeft="2dp"
+                                android:layout_marginLeft="10dp"
                                 android:tag="YEARLY"
-                                android:text="Yearly"
+                                android:text="YEARLY"
                                 android:textColor="@color/finappleTheme"
-                                android:textSize="13sp" />
+                                android:textSize="8sp" />
                         </RadioGroup>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/transferIndicator"
-                        android:paddingLeft="10dp"
-                        android:text="Auto Transfer"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <RadioGroup
-                            android:id="@+id/schedTransferAutoRadioGrpId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/schedTransferAutoAddRadioId"
-                                android:layout_width="175dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:checked="true"
-                                android:tag="AUTO_ADD"
-                                android:text="Auto Add"
-                                android:textColor="@color/finappleTheme"
-                                android:textSize="18sp" />
-
-                            <RadioButton
-                                android:id="@+id/schedTransferAutoAddNotifyRadioId"
-                                android:layout_width="175dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:tag="NOTIFY_ADD"
-                                android:text="Notify &amp; Add"
-                                android:textColor="@color/finappleTheme"
-                                android:textSize="18sp" />
-                        </RadioGroup>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/transferIndicator"
-                        android:paddingLeft="10dp"
-                        android:text="Note"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/card_background_selector"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <EditText
-                            android:id="@+id/schTranAddUpdNoteETId"
-                            android:layout_width="fill_parent"
-                            android:layout_height="35dp"
-                            android:background="@drawable/edit_text_border"
-                            android:hint="notes"
-                            android:inputType="textCapWords|textMultiLine"
-                            android:maxLength="50"
-                            android:paddingLeft="15dp"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/black"
-                            android:textSize="20sp"
-                            android:textStyle="italic" />
 
                     </LinearLayout>
 
@@ -366,7 +332,145 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AUTO TRANSACTION"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@color/divider" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/schedTransferAutoRadioGrpId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/schedTransferAutoAddRadioId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:tag="AUTO_ADD"
+                                android:text="AUTO ADD"
+                                android:textColor="@color/finappleTheme"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/schedTransferAutoAddNotifyRadioId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:tag="NOTIFY_ADD"
+                                android:text="NOTIFY &amp; ADD"
+                                android:textColor="@color/finappleTheme"
+                                android:textSize="12sp" />
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="30dp"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NOTES"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@color/divider" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/input_indicator_image_size"
+                            android:layout_height="@dimen/input_indicator_image_size"
+                            android:background="@drawable/write_grey" />
+
+                        <EditText
+                            android:id="@+id/schTranAddUpdNoteETId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_border"
+                            android:gravity="center"
+                            android:inputType="textCapWords|textMultiLine"
+                            android:maxLength="50"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textColorHint="@color/gray"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
