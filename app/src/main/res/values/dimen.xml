@@ -15,6 +15,7 @@
     <dimen name="input_indicator_image_size">20dp</dimen>
 
     <dimen name="text_form_header_size">10sp</dimen>
+    <dimen name="text_form_text_size">18sp</dimen>
 
     <dimen name="screen_components_padding_from_walls">10dp</dimen>
     <dimen name="screen_half_width">140dp</dimen>

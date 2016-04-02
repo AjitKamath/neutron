@@ -52,11 +52,11 @@ public class TransferFragment extends DialogFragment implements ImageButton.OnCl
         View view = inflater.inflate(R.layout.transaction_add_update, container);
 
         //header
-        addUpdateYearTV = (TextView) view.findViewById(R.id.addUpdateYearTVId);
+        /*addUpdateYearTV = (TextView) view.findViewById(R.id.addUpdateYearTVId);
         addUpdateMonthTV = (TextView) view.findViewById(R.id.addUpdateMonthTVId);
         addUpdateSuperScriptTV = (TextView) view.findViewById(R.id.addUpdateSuperScriptTVId);
         addUpdateDayTV = (TextView) view.findViewById(R.id.addUpdateDayTVId);
-        addUpdateTranBackImg = (ImageView) view.findViewById(R.id.addUpdateTranBackImgId);
+        addUpdateTranBackImg = (ImageView) view.findViewById(R.id.addUpdateTranBackImgId);*/
 
         //page content
         addUpdateTranNameET = (EditText) view.findViewById(R.id.addUpdateTranNameETId);
@@ -69,7 +69,7 @@ public class TransferFragment extends DialogFragment implements ImageButton.OnCl
         addUpdateSpntOnSpn = (Spinner) view.findViewById(R.id.addUpdateSpntOnSpnId);
         addUpdateNoteET = (EditText) view.findViewById(R.id.addUpdateNoteETId);
 
-        addUpdatePageFabIB = (ImageButton) view.findViewById(R.id.addUpdatePageFabIBId);
+        // = (ImageButton) view.findViewById(R.id.addUpdatePageFabIBId);
 
         addUpdateTranAmtET.requestFocus();
         addUpdatePageFabIB.setOnClickListener(this);

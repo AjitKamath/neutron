@@ -1,0 +1,717 @@
+29-01-2015
+*Beautified summary in calendar page and view transactions list
+*Added NOTE column in ACCOUNT_MASTER
+*Added NOTE column in CATEGORY_MASTER
+*Added a new table CATEGORY_TAGS to store category tags
+*Added SCH_TRAN_IS_DEL column in SCHEDULED_TRANSACTIONS to soft delete Scheduled transaction
+
+30-01-2015
+1.Added a new page to add new category
+2.Able to add tags for a category
+3.side pane in calendar page implemented(still in infancy)
+
+1-2-15
+1.impl settings
+2.impl view category page
+3.able to add category from settings panel
+4.cleaned up the add upate transaction page by removing the ability to add category from it
+5.Added "jim broke it" page
+
+03-feb-15
+1.added back button in many screens
+2.added functionality to discard a transaction(although eed to implement popup for "sure" message)
+3.added and impl a button to save and new transaction
+4.fixed 'date as single digit not fetching records' bug
+5.impl view transaction on click on a consolidated transaction item in summary
+6.Animate show more button in add updaate transaction page
+
+04-feb-15
+1.implemented dialogs over popup(looks great !)
+2.view accounts implemented
+3.changed button in calendar page
+4.fixed mis alignment of date in add update transaction page (not sure its still right or not!)
+5.DB data model updated with new tables TRANSFERS & SCHEDULED_TRANSFERS
+
+5-feb-15
+1.view spent on implemented
+2.add accounts and add spent on pages
+3.Add new tables TRANSFERS & SCHEDULED_TRANSFERS
+
+6-feb-15
+1.removed sliding panel and introduced popup for settings(looks better!)
+2.implemented back button operation in all the activities
+3.impl view transaction details popper on tapping on a transaction
+4.increased the size of settings page font
+
+12-feb-15
+1. redesigned add update tansaction & add category, add spent on, add account (same layout pattern in all pages)
+2. fixed the divider being grey in list views for view transaction, view account, view category, view spent on pages
+
+13-feb-15
+1. Changed the caledar page buttons to be only transaction and transfer
+2. implement transfers
+3. impl transfer popper from calendar page
+4. Ability to add a transfer
+<--Git Push-->
+
+18-feb-15
+1. implement options popper for calendar page
+
+20-feb-15
+1. impl date picker for calendar page(even the calendar updates accordingly)
+2. Added Month label on header (or else how the hell would the user know the month)
+<--Git Push-->
+
+21-feb-15
+1. date picker wherever necessary
+2. impl view transfers
+3. impl view transfers details popper(looks ugly though)
+
+22-feb-15
+1. user can see the transfer indicator on calendar date cell now
+<--Git Push-->
+
+23-feb-15
+1. fixed the multiple transactions bug
+
+24-feb-15
+1.redesigned the add update transaction page...looks damn good..need to follow the same template all over the app
+2. redesigned the calendar app as per the add update trans page..which sort of has become the template which needs to be followed all over the app.
+
+3-mar-15
+1. added press effect styles for all the buttons
+
+7-mar-15
+1. cosmetics in the transaction & transfer popper in calendar page
+2. removed the "finapple" from the calendar page...looks neat now
+3. redesigned add update transfers page applying the current design template
+
+16-mar-15
+1. impl message popups on events like discarding a unsaved transaction, back button, discard button in addUpdate transaction as well as addUpdate transfers page.
+2. Slight cosmetics in calendar page in trnasfers and transaction buttons
+3. impl "Are you sure to delete ?" confirmation popup while deleting a transaction. But yet to implement business logic.
+
+<--Git Push-->
+
+17-mar-15
+1. ability to edit a transaction from the view transaction detail popper and update an old transaction.
+
+25-mar-15
+1. impl tab concept for summary, accounts & budgets in calendar page.
+doing this i could utilize the more real estate per tab. Yet to implement budgets.
+
+31-mar-15
+1. redesigned the tab part in calendar page again !!
+2. redesigned the calendar. sligtly improving the look and feel. Bigger dates(for the sight deprieved like me)
+3. calendar grid view still in prototype
+
+1-apr-15
+1. screen for add update budget...service and linking are pending...still no idea where to call this screen from
+
+2-apr-15
+1. user wont be redirected to view transaction on tapping twice in calendar grid if there's no activity (no transaction, no transfer) on that particular day
+2. added schedules in settings page for later impl.
+3. added send a smile button in settings page...idea is to provide a free financial tip on every smile for the user. Boosting his use of app.
+
+4-apr-15
+1. ability to add a budget...still need to link and check for update
+2. ability to list out budgets on calendar page and show live budget status on each day click
+
+5-apr-15
+1. fixed popper leak in create transaction, transfer, budget screens.
+2. full implementation of budget (add, add and new, see the budgets in calendar page).
+3. bigger text for transaction and transfers in calendar page.
+
+<--Git Push-->
+
+6-apr-15
+1. ability to stop user from creating multiple budget having same group type and type (doesnt make sense so)
+2. more clickable estate for settings button calendar page.
+3. implemented soft delete for transactions.
+
+7-apr-15
+1. added currency symbols in account list, budget list, summary list in calendar page
+2. new design for view transaction initiated...(sevice is pending)
+
+17-apr-15
+1. new design discarded due to technicality. Newer design proposed & rough impl. completed.
+
+21-apr-15
+1. new smart looking design for view activity page impl (only transactions)
+2. smart design for calendar summary list to know expense or income on that transaction category
+3. smart design for calendar accounts to know whether the account is in credit or debit state currently
+
+22-apr-15
+1. no need of going to view transaction on click on consolidated transactions in summary instead it'll be shown beautifully in a popup in the calendar page itself...need further brush ups and cosmetics
+2. Added a Schedules tab in Calendar page... which's yet to be thought over and later implemented.
+
+25-apr-15
+1. categorized the transactions on date basis in view activities
+2. ability to see the count and total amount of all the transactins done on a particulat day.
+3. New way to show that the value is an approximation (+)
+
+26-apr-15
+1. view activities tab implementation complete. Now we can see both transaction and transfers on a particular day.
+
+<--Git Push-->
+
+27-apr-15
+1. Brilliant redesign for calendar. Bubbles instead of square cells. Smaller bubbles in place of indicators.
+2. Consolidated Transaction Popper date is shown in smarter way.
+3. View Activities page now shows no. of transactions/transfers in that particular range besides the respective tab selector label.
+
+28-apr-15
+1. Totally new settings page. Beautiful and self explanatory.
+
+29-apr-15
+1. Hints added for settings items
+
+6-may-15
+1. Redesigned transactions detail popper in view activities screen. 
+
+7-may-15
+1. Redesigned transfers detail popper to match transactions detail popper. Looks crisp and makes more sense. delete in transfer detail popper is yet to be implemented.ye
+
+11-may-15
+1. Tabbed manage content screen designed and implemented. Poppers have yet to be implemented.
+
+12-may-15
+1. Standard finapple template applied to age old add category screen.
+2. Partially implemented the back-discard unified animaed button. Makes sense.
+
+13-may-15
+1. fixed the issue with users cat, acc, spent on appearing after defaults
+2. cosmetics in manage content screen.
+
+19-may-15
+1. fixed the HIGH SEVERITY issue with how the android handles the list views using ViewHolder concept in manage content screen (categories, accounts and spant ons)
+2. Unnecessary displaying of empty notes is removed in the list views (categories, accounts and spent ons). Notes is shown only if the user has entered notes.
+
+20-may-15
+1. fixed the issue with new account creation not able to update the account total and not able to do a auto transaction.
+
+21-may-15
+1. Redesigned add update spent on screen according to the app template design.
+
+22-may-15
+1. dynamic back and discard button in add update spent on , category and account screens.
+2. accidental discard preventing popper impl. in add update category, account and spent on screens.
+
+<--Git Push-->
+
+10 june 15
+1. Calendar page now displays mnth name in full.
+2. Added telephone column in users table.
+
+11-june-15
+1. started to design profile for personal popper
+2. Created tables for currency and countries
+3. mapped the user with country and currency in db
+
+16-june 15
+1. created tables for work history called work_timeline
+2. almost finished with the personal profile popper.
+
+19-june-15
+1. finished impl profile-personal popup
+2. impl authorzation db service to get the active user. can be re used in all the classes to get the active user.
+
+20-june-15
+1. Designed login page
+
+22-june-15
+1. designed the 4 step registration pages
+
+<--Git Push-->
+
+24-june-15
+1. Implemented register user and login user...in local db scope
+2. birthday date picker and profile-work is pending
+3. impl logout in settings page
+
+<--Git Push-->
+
+5 july 15
+1. upgraded the ubuntu and setup the dev environment...phew !!
+
+8-july-15
+1. Solved the issue with wrong username in manage content screen
+
+9-july-15
+1. fix for all users accounts appearing in home screen under accounts tab
+
+10-july-15
+1. screen to view budgets is designed.
+2. Linked the add budgets screen to the view budgets screen.
+
+11-july-15
+1. Daily Budgets implementation is complete.
+
+12-july-15
+1. view budget and add budget has been implemented.
+2. back/discard animated button in add update budget screen implemented.
+
+21-july-15
+1. Changed the butons style in calendar screen.
+2. 1st draft for schedule add update screen(service is pending)
+3. Linked the AddUpdate Scheuled Transaction
+
+22-july-15
+1. Added column SCH_TRAN_AUTO and SCH_TRNFR_AUTO forstoring user choice to add automaticaaly or notify him before adding.
+
+25-july-15
+1. Add Scheduled Transaction has been implemented.
+2. Quick transaction implemented in calendar screen.
+
+27-july-15
+1. Ability to view scheduled transactions on the calendar.
+2. Fixed the issue with date picker in add update scheduled transaction screen.
+
+28-july-15
+1. beautified the indicator bubbles in calendar screen.
+2. fixed the issue with incorrect month legend displaying on selecting date from the date picker in the calendar screen
+3. schedules common list view for transaction and transfer is designed (service yet to be implemented)
+
+29-july-15
+1. schedules implemented in calendar screen.
+2. fixed the issue with schedules not changing on change of month
+3. slightly changed the way schedules is shown in calendar screen to make more real state utilization for trsansfers.
+
+30-july-15
+1. designed the quick transfer popper in calendar screen.
+2. implemented quick transfer.
+3. made the calendar to refresh its contents on adding quick transaction/transfer rather than recreate the activity.
+4. cosmetics on previous/next month dates in calendar to make it more contrast.
+5. Designed the scheduled add update transfer screen.
+6. Implemented the schedule transfer update screen.
+
+31-july-15
+1. ability to view scheduled transfers as bubbles in the calendar screen & schedules list view.
+
+1-aug-15
+1. redesig of schedules
+
+3-aug-15
+1. Incorrect Budgets consumption issue is fixed now.
+
+4-aug-15
+1. week budget blooper bug got fixed finally.
+2. fixed a minor issue with the schedules message floating atop.
+3. cosmetic experiments in calendar screen.
+4. cosmetic uplift of Calendar screen using capsules. 
+5. capsules implemented on tabs in calendar screen.
+6. bug with budgets not updating on quick transactions has been fixed.
+
+5-aug-15
+1. capsules popper buttons for transactions/transfer options in calendar screen.
+2. tansaction/transfer button click effect on click.
+3. transaction bubble color in sync with summary items. (transfer bubble sync is yet to be implemnted)
+
+6-aug-15
+1. capsule verticals for accounts tattoo.
+2. - for negative money. no - for positive money.
+3. Date on top of summary list.
+4. converted accounts list view into View Holder safety implementation.
+
+7-aug-15
+1. capsules capsules and capsules everywhere !!! calendar and several other screens revamped with capsule buttons and tabs.
+2. cards design has been standardised across all the screens.
+
+9-aug-15
+1. started to impl notifications
+2. started to impl actions in notifications
+3. design implemented for showing scheduled trasaction on show action in notification(service is pending)
+
+10-aug-15
+1. fix for errorneaous start of schedules.
+
+11-aug-15
+1. Issue with incorrect cancelled notifs is fixed
+2. implemented cancelling of notification on user action for both transaction and transfer.
+3. added new columns CNCL_NOTIF_RSN into NOTIFICATIONS table for the reason Add/cancel action by the user.
+4. New capsule buttons designed in login and register screens.
+
+15-aug-15
+1. Service to show notifications for scheduled transction(auto & notify) and scheduled transfer(auto & notify)
+2. receivers on reboot and set time
+3. minor fixes to fetch schedules
+4. Auto add transaction and transfers when set in Auto mode.
+5. DB versioning impl. Any changes to DB need not mean to remove old DB. Can increase DB Version on any change in DB.
+
+16-aug-15
+1. Ability to one time schedule transaction/transfer.
+
+17-aug-15
+1. Issue with scheduled transactions automatically adding and duplicating themselves is fixed.
+<--Git Push-->
+
+29-aug-15
+1. cosmetic changes in all screens
+
+30-aug-15
+1. changed the finappl theme colors. prettier colors all over the app.
+2. summary in calendar screen now displays consolidated transfers made on the particular day
+
+31-aug-15
+1. cosmetics in activity view screen.
+2. poppers for both transactions and transfers to show all the transactions/transfers on clicking on summary item.
+3. designed notifications settings popper.
+4. data model updated to have SETTINGS_NOTIFICATIONS table
+5. Updated the Sqlite scripts to create the new table SETTINGS_NOTIFICATIONS table.
+<--Git Push on 31 aug 15-->
+
+1-sep-15
+1. message popper on logout
+2. removed twitter color and added finapple theme color all over the app
+3. card background color changed. yet to decide on its future.
+4. implemeted notification settings in settings page.
+
+2-sep-15
+1. fixed issues with tabs in manage content screen.
+2. dimensions from dimen.xml to maintain uniformity across sreens.
+3. all the buttons and tabs and image dimensions are now referred from dimen.xml to maintain uniformity across screens.4
+4. screen title dimension is referred from dimen.xml
+5. elevation and header size is referred from dimen.xml
+
+3-sep-15
+1. list view related cosmetics in manage content screen
+
+14-sep-15
+1. transactions/transfer popper minor consmetics
+2. added new table for managing sound settings
+3. enable/disable sounds implemented in settings screen.
+4. designed pin popper.
+5. implemented saving of user pin into database. yet to implement pre check/uncheck security on settings screen load.
+<--Git Push on 14 sep 15-->
+
+15-sep-15
+1. added new table fo managing security settings
+2. cosmetics in settigs screen.
+3. security implemeted in settings screen.
+4. redesign of register and login screens, utilizing real estates. 
+
+20-sep-15
+1. show account popper to show last transaction/transfer for the particular account in calendar screen implemented.
+
+21-sep-15
+1. fixed issue with scrolling of list view which registered a click and crashed.
+
+22-sep-15
+1. notifications now work as espected.
+2. cleaned the USERS table
+
+23-sep-15
+1. Fixed the notorious issue with cancelling of notifications. Need to tune it further.
+
+25-sep-15
+1. recievers implemented to call notification listeners.
+2. notifications as soon as we create schedules.
+3. home page UI revamp.
+
+26-sep-15
+1. refined home page UI
+2. flipper for action buttons and tabs in home screen implemented.
+3. introduced FAB(floating action button)
+
+28-sep-15
+1. revamped Calendar screen.
+2. New Designs for transactions/transfer popper.
+3. fixed the random application crash issue.
+
+29-sep-15
+1. Prototype for swipeable views implemented for transaction popper.
+
+30-sep-15
+1. Swipeable actions in calendar screen feasibility check is passed.
+2. major changes done in calendar screen. Need code sanitization as priority. No git check in planned untill this is finished.
+
+2-oct-15
+1. Code clean up after major ui overhaul.
+<--Git Push on 2 oct 15-->
+
+5-oct-15
+1. impl transfer detail popper impl in calendar screen.
+2. update operations in both transfer and transaction detail popper in calendar working.
+3. New card design.
+
+6-oct-15
+1. App theme is updated.
+
+8-oct-15
+1. Designed scheduled transaction and scheduled transfer details popper. Impl still pending.
+
+9-oct-15
+1. impl schedule transaction/transfer details popper.
+
+10-oct-15
+1. fixed an issue with failed auto add of scheduled transfer.
+2. Floating Action Button(FAB) prototype impl.
+
+12-oct-15
+1. FAB prototye is partially impl. in Calendar screen.
+2. Performance degrading implementation to disable click when the FAB is expanded has to be looked into.
+
+13-oct-15
+1. Performance degrading implementation is removed and better but not the best implementation is done.
+2. FAB is promoted from prototype to implementation.
+3. Code has been cleaned up.
+4. Step design for the FAB is implemented.
+
+<--Git Push on 18 oct 15-->
+
+18-oct-15
+1. FAB prototype in add update transaction page
+2. new transaction/transfer added poppers in clendar screen have been designed. impl is pending.
+
+19-oct-15
+1. action poppers for add/update transaction & transfers in  calendar activity impl.
+
+16-nov-15
+1. Update Shceduled Transations Implemented.
+2. Minor bugs in Update of Scheduled Transactions are fixed.
+
+<--Git Push on 16 nov 15-->
+
+16-nov-15
+1. Implemented Budgets popper. Yet to implement Edit and Delete.
+
+21-nov-15
+1. fixed the bug with status being cancelled for all the future notifs once cancelled.
+2. added scheduled status if the tranaction/transfer is scheduled in the future.
+
+22-nov-15
+1. bug in notification is fixed
+
+24-nov-15
+1. modify budget and modify account implemented through poppers in calendar screen.
+2. bug with account note not popullating in edit account screen has been fixed.
+
+26-nov-15
+1. fixed an issue with the date for transaction popper in calendar screen
+2. deleting of transaction has been implemented (decided to go witht the hard delete to save on space and simplicity)
+
+30-nov-15
+1. impl transfer delete.
+2. designed message popper for schedules delete.
+
+6-dec-15
+1. impl scheduled transfer/transaction delete.
+2. fixed a bug with incorect date passed as transaction/transer date while creating quick transaction/transfer.
+3. added arrow icon instead of 'TO' between accounts in tranfers. 
+
+<--Git Push on 6 dec 15-->
+
+7-dec-15
+1. Password is no longer stored as plain text. Encrypted wih AES algo and stored.
+2. App launcher icon has been changed. App renamed from finapple to finappl.
+
+8-dec-15
+1. allow the last item to be shown by scrolling if in case its verlapped by the FAB in calendar screen.
+2. All the currency symbols have been replaced with 3 letter currency codes.
+3. fab remaining open on inimizing and maximizing the app is fixed.
+4. Implemented Deletion of Budgets.
+5. Delete Button Added for Account Popper in Calendar screen.
+6. Message Popper on delete button in Account popper in Calendar screen. Functionality yet to be implemented.
+
+<--Git Push on 8 dec 15-->
+
+9-dec-15
+1. Account delete has been implemented.
+2. Impacts on Account Deletion message popper has been implemented.
+
+10-dec-15
+1. locker popup designed and partially implemented.
+2. Reusable Activity to handle locker. Currently expirementing on single activity.
+
+14-dec-15
+1. enable disable PIN security to access App
+2. Change PIN in settings screen implemented.
+
+15-dec-15
+1. App Security Generic Class LockerActivity has been implemented.
+2. Generic Activity LockerActivity will now handle setFont and navigations via generic methods.
+
+<--Git Push on 15 dec 15-->
+
+18-dec-15
+1. added button to go back to todays date if the user navigates away to any other month.
+2. added slide left and right animations to the calendar screen header.
+3. Fixed an issue with the locker popper popping up on diaolog dismissals.
+
+<--Git Push on 23 dec 15-->
+
+23-dec-15
+1. Swipeable calendar prototype implemented
+2. Locker issue on minimize and maximize app has been fixed.
+
+12-feb-16
+1. swipeable calendar implemetation completed.
+
+29-feb-15
+1. swipeable calendar implemetation completed with satisfactory performance.
+
+<--Git Push on 29 feb 16-->
+
+5-mar-16
+1. issues related to calendar swipes and date select fixes.
+2. fetch month legend in the month range and display it in the ui as ORBS
+3. redesign of tabs.
+
+<--Git Push on 5-mar-2016-->
+
+7-mar-16
+1. fixed minor issue with swipe calendar
+2. fixed date format change issue with fetching of consolidated tansactions/transfers
+3. fixed issue with poppers due to new date formats.
+
+9-mar-16
+1. Cosmetics in add update transaction screen.
+
+<--Git Push on 7-mar-2016-->
+
+14-Mar-16
+1. adding schedules & fetching Schedules and diplaying it on calendar
+
+<--Git Push on 17-mar-2016-->
+
+19-mar-16
+1. Simplified the designs on add update transaction/transfer & add update schedule transactions/transfers screens
+2. Stopped the db leaks.
+
+21-mar-16
+1. POC on Fragmets. Started with One Screen App concept.
+
+28-mar-16
+1. Pre popullate spinners in transaction dialog
+2. minor cosmetic fixes in transaction dialog.
+
+<--Git Push on 28-mar-2016-->
+
+30-mar-16
+1. can now add a sample transaction(no scheduling).
+
+31-mar-16
+1. discarded the FAB in transaction screen.
+2. animated simple tick button to save/update the transaction.
+3. update the calendar on new transaction.
+
+2-apr-15
+1. redesigned & simplified Database data model by merger of schedules into the transaction/transfer tables.
+2. added dail log file & Data model files (old & new) into the git repository
+
+------------------------------------------------------------------------------------18/50-----------------------------------------------------------------------------------
+1. ability to do a transfer from view transfers
+2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.
+   warn they will all be moved to others..same for all)
+4. replace back button with discard icon when user starts typing(OLA app feature)---------------------------------------------------------------------------------------------DONE
+5. GAME CHANGER: tabs in view Activity (transaction/ transfer)... impl tabs (for transactions/ transfers) in view activity----------------------------------------------------DONE
+6. UNIFY is the mantra !!:  unify transaction / transfer ...unify category / spent on / accounts as tabs----------------------------------------------------------------------DONE
+7. ability to set budget while creating category, account, spent on..make it optional
+8. highlight the inactive and active tab links differently--------------------------------------------------------------------------------------------------------------------DONE
+9. As a concept, implement budget calculator based on few basic questions..generate and show the report and ask whether to add these budgets into the app. 
+   Allow to edit, and if user is ok, then auto insert.
+10. notifications triggering only when the app is bought to foreground. Make it automatic from the background at user choosen time irrespective of the apps focus-------------DONE
+11. make the app auto run on startup.(Service, not the app has been made to auto run. Serves the purpose)---------------------------------------------------------------------DONE
+12. make the register & login screen fabulous. Utilize the real estate generously. you have very few fields to display. use the rest goddamn space. --------------------------DONE
+13. do not store passwords and keys in plain text. Encrypt-decrypt must be done.(get POC on encrypting the *.db file)
+14. make sure the scheduled activity which is scheduled to happen only once, is not set in the past. It'll never happen. Finapple isn't time machine.
+15. cannot disable sound for the notifications. remove the concept.
+16. need to implement activity graphs in transactions/transfers options popper showing things like recent transaction/transfer. Total transactions in a day/week/month/year/lifetime. 
+    month wise transaction/transfer graphs etc. think on this.
+17. Swipeable calendar.------------------------------------------------------------------------------------------------------------------------------------------------------DONE
+18. Swipeable tabs(everywhere !!).
+19. Material buttons(everywhere !!).
+20. Custom Textpad for number entry as a popup(everywhere !!).
+21. Provide a switch in scheduled transaction/transfer details popper to delete the whole schedule(DELETE & DELETE ALL button has been implemented).-------------------------DONE
+22. Decision has been made to implement Hard delete Vs. the soft delete(everywhere !!).
+23. Remove (now)unnecessary column such as *IS_DEL. 
+24. Auto cancel or remove the old scheduled transfer/transaction notification when a day passes. 
+25. Remove the concept of showing currency symbols. Not all countries have them. Instead go for the country code like INR, USD, GBP------------------------------------------DONE
+26. Generate Brief report on Impact on Account Deletion. Eg: Deleted 2 Transactions, 3 Transfers, 2 Scheduled Transactions, 5 Scheduled Transfers & 1 Budget
+27. Reports !!!!
+28. Help user with setting up with Accounts, Categories, Spent On, Budgets & Schedules.
+29. Encrypt & Store the PIN--------------------------------------------------------------------------------------------------------------------------------------------------DONE
+30. finish() causes problems. Override back button instead.(OBSOLETE)--------------------------------------------------------------------------------------------------------DONE
+31. Use the Generic method navigateTo(Class) in all the Activities to navigate to other Activities.(OBSOLETE)----------------------------------------------------------------DONE
+32. Use the Generic method setFont(ViewGroup) in all the Activities to set font in.
+33. MoneyFormatter Class.
+34. HIGH SEVERITY ISSUE WITH HOW THE LISTVIEW BEHAVES IN ANDROID !!! URGENT FIX REQUIRED ALL OVER THE APP !!!----------------------------------------------------------------DONE
+35. Animations Babay !!!
+36. access constants across the classes in a static way.---------------------------------------------------------------------------------------------------------------------DONE
+37. DO NOT CALL get All accounts and Budgets in CalendarTabsViewPagerAdapter class, checkMonthLegend method.(OBSOLETE)-------------------------------------------------------DONE
+38. STOP Database Leaks !!
+39. Fetching Schedules are insanely in effecient(Check ONE NOTE)
+40. Find out why fetchMonthLegend is called twice.---------------------------------------------------------------------------------------------------------------------------DONE
+41. Ability to schedule from date 1 to date 2
+42. Grand plan to make the App- ONE SCREEN APP
+43. encrypt the FINAPPL.DB file
+44. Arrive at a standard way to display a currency. (INR 250 or 250 INR ???)
+45. Custom popup to choose category/account/spent on
+46. Database re-design(consolidation of transaction/transfer & schedule transaction/transfer)--------------------------------------------------------------------------------DONE
+47. get live account balance in transaction/transfer screen.
+48. simple tick preferred over FABs
+49. POC on threads for intensive tasks(db, adapters)
+50. if the user has chosen a future date while adding a new transaction/transfer, and if it isn't a scheduled transaction/transfer, then ask whether to add the transaction/transfer now or on the particular day
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CORE FUNTIONALITY CHECK:	0/22
+
+TRANSACTION: 			0/5
+1. NEW TRANSACTION		(N)
+2. UPDATE TRANSACTION		(N)
+3. QUICK TRANSACTION		(N)
+4. DELETE TRANSACTION		(N)
+5. SCHEDULE TRANSACTION		(N)
+
+TRANSFER:			0/5
+1. NEW TRANSFER			(N)
+2. UPDATE TRANSFER		(N)
+3. QUICK TRANSFER		(N)
+4. DELETE TRANSFER		(N)
+5. SCHEDULE TRANSFER		(N)
+
+BUDGET:				0/3
+1. NEW BUDGET			(N)
+2. UPDATE BUDGET		(N)
+3. DELETE BUDGET		(N)
+				
+ACCOUNT:			0/3
+1. NEW BUDGET			(N)
+2. UPDATE BUDGET		(N)
+3. DELETE BUDGET		(N)
+
+CATEGORY:			0/3
+1. NEW BUDGET			(N)
+2. UPDATE BUDGET		(N)
+3. DELETE BUDGET		(N)
+
+SPENT ON:			0/3
+1. NEW BUDGET			(N)
+2. UPDATE BUDGET		(N)
+3. DELETE BUDGET		(N)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

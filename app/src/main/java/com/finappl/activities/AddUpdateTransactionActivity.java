@@ -231,11 +231,11 @@ public class AddUpdateTransactionActivity extends Activity {
 
     private void initUIComponents() {
         //header
-        addUpdateYearTV = (TextView) this.findViewById(R.id.addUpdateYearTVId);
+        /*addUpdateYearTV = (TextView) this.findViewById(R.id.addUpdateYearTVId);
         addUpdateMonthTV = (TextView) this.findViewById(R.id.addUpdateMonthTVId);
         addUpdateSuperScriptTV = (TextView) this.findViewById(R.id.addUpdateSuperScriptTVId);
         addUpdateDayTV = (TextView) this.findViewById(R.id.addUpdateDayTVId);
-        addUpdateTranBackImg = (ImageView) this.findViewById(R.id.addUpdateTranBackImgId);
+        addUpdateTranBackImg = (ImageView) this.findViewById(R.id.addUpdateTranBackImgId);*/
 
         //page content
         addUpdateTranNameET = (EditText) this.findViewById(R.id.addUpdateTranNameETId);
@@ -249,7 +249,7 @@ public class AddUpdateTransactionActivity extends Activity {
         addUpdateNoteET = (EditText) this.findViewById(R.id.addUpdateNoteETId);
         doneDiscardTV = (TextView) this.findViewById(R.id.addUpdateDoneTVId);
 
-        addUpdatePageFabIB = (ImageButton) this.findViewById(R.id.addUpdatePageFabIBId);
+        //addUpdatePageFabIB = (ImageButton) this.findViewById(R.id.addUpdatePageFabIBId);
 
         //focus listener for title and amt
         addUpdateTranNameET.addTextChangedListener(fieldTextWatcher);

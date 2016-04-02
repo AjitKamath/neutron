@@ -3,6 +3,8 @@ package com.finappl.utils;
 import android.app.Activity;
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by ajit on 6/1/15.
  */
@@ -114,4 +116,11 @@ public final class Constants{
     public static final String DB_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String UI_DATE_TIME_FORMAT = "d MMM ''yy H:mm:ss a";
     public static final String UI_DATE_FORMAT = "d MMM ''yy";
+    public static final SimpleDateFormat DB_DATE_FORMAT_SDF = new SimpleDateFormat(DB_DATE_FORMAT);
+    public static final SimpleDateFormat DB_DATE_TIME_FORMAT_SDF = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
+    public static final SimpleDateFormat UI_DATE_FORMAT_SDF = new SimpleDateFormat(UI_DATE_FORMAT);
+    public static final SimpleDateFormat UI_DATE_TIME_FORMAT_SDF = new SimpleDateFormat(UI_DATE_TIME_FORMAT);
+
+    //Bundle Keys
+    public static final String TRANSACTION_OBJECT = "TRANSACTION_OBJECT";
 }

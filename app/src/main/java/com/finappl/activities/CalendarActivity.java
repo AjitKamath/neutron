@@ -2147,6 +2147,8 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void showAddUpdateTransactionPopper(String transactionIdStr) {
+        killPopper();
+
         // close existing dialog fragments
         FragmentManager manager = getFragmentManager();
         Fragment frag = manager.findFragmentByTag("fragment_edit_name");
@@ -2154,13 +2156,34 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
             manager.beginTransaction().remove(frag).commit();
         }
 
+        TransactionModel transactionModelObj = new TransactionModel();
+
+        if(transactionIdStr != null && !transactionIdStr.isEmpty()){
+            transactionModelObj.setTRAN_ID(transactionIdStr);
+        }
+        else{
+            try{
+                transactionModelObj.setTRAN_DATE(sdf.parse(selectedDateStr));
+            }
+            catch (ParseException pe){
+                Log.e(CLASS_NAME, "Date Parse Error !! "+pe);
+            }
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(TRANSACTION_OBJECT, transactionModelObj);
+
         TransactionFragment editNameDialog = new TransactionFragment();
+        editNameDialog.setArguments(bundle);
         editNameDialog.show(manager, "fragment_edit_name");
     }
 
     @Override
     public void onFinishUserDialog(String resultStr) {
+        killPopper();
         showToast(resultStr);
+        fetchMonthLegend();
+        setUpCalendar();
     }
 
 

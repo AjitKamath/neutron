@@ -21,6 +21,7 @@ import java.util.List;
 import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_NONAFFIRMATIVE;
 import static com.finappl.utils.Constants.DB_TABLE_ACCOUNTTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
@@ -33,6 +34,60 @@ public class TransactionsDbService extends SQLiteOpenHelper {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
     private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
+
+    public TransactionModel getTransactionOnTransactionId(String transactionIdStr){
+        SQLiteDatabase db = this.getWritableDatabase();
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" TRAN_DATE, ");
+        sqlQuerySB.append(" TRAN_AMT, ");
+        sqlQuerySB.append(" TRAN_NAME, ");
+        sqlQuerySB.append(" CAT_NAME, ");
+        sqlQuerySB.append(" ACC_NAME, ");
+        sqlQuerySB.append(" TRAN_TYPE, ");
+        sqlQuerySB.append(" SPNT_ON_NAME, ");
+        sqlQuerySB.append(" TRAN_NOTE, ");
+        sqlQuerySB.append(" SCH_TRAN_ID ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE + " TRAN ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE + " CAT ");
+        sqlQuerySB.append(" ON CAT.CAT_ID = TRAN.CAT_ID ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " ACC ");
+        sqlQuerySB.append(" ON ACC.ACC_ID = TRAN.ACC_ID ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(DB_TABLE_SPENTONTABLE + " SPNT ");
+        sqlQuerySB.append(" ON SPNT.SPNT_ON_ID = TRAN.SPNT_ON_ID ");
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" TRAN_ID = '" + transactionIdStr + "' ");
+
+        Log.i(CLASS_NAME, "Query to fetch Transaction using the Transaction ID("+transactionIdStr+") : "+sqlQuerySB);
+        Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
+
+        TransactionModel transactionModelObj = null;
+        if(cursor.moveToNext()){
+            transactionModelObj = new TransactionModel();
+            transactionModelObj.setTRAN_DATE(ColumnFetcher.loadDate(cursor, "TRAN_DATE"));
+            transactionModelObj.setTRAN_AMT(ColumnFetcher.loadDouble(cursor, "TRAN_AMT"));
+            transactionModelObj.setTRAN_NAME(ColumnFetcher.loadString(cursor, "TRAN_NAME"));
+            transactionModelObj.setCategory(ColumnFetcher.loadString(cursor, "CAT_NAME"));
+            transactionModelObj.setAccount(ColumnFetcher.loadString(cursor, "ACC_NAME"));
+            transactionModelObj.setTRAN_TYPE(ColumnFetcher.loadString(cursor, "TRAN_TYPE"));
+            transactionModelObj.setSpentOn(ColumnFetcher.loadString(cursor, "SPNT_ON_NAME"));
+            transactionModelObj.setTRAN_NOTE(ColumnFetcher.loadString(cursor, "TRAN_NOTE"));
+            transactionModelObj.setSCH_TRAN_ID(ColumnFetcher.loadString(cursor, "SCH_TRAN_ID"));
+        }
+        cursor.close();
+        db.close();
+        return transactionModelObj;
+    }
 
     //	method to update an already created transaction.. returns 0 for fail, 1 for success
     public int updateOldTransaction(TransactionModel transactionModel){
