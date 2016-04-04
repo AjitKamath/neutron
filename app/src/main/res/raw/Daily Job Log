@@ -595,11 +595,11 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 2. animated simple tick button to save/update the transaction.
 3. update the calendar on new transaction.
 
-2-apr-15
+2-apr-16
 1. redesigned & simplified Database data model by merger of schedules into the transaction/transfer tables.
 2. added dail log file & Data model files (old & new) into the git repository
 
-------------------------------------------------------------------------------------18/50-----------------------------------------------------------------------------------
+------------------------------------------------------------------------------------18/51-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
 2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.
    warn they will all be moved to others..same for all)
@@ -652,7 +652,7 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 48. simple tick preferred over FABs
 49. POC on threads for intensive tasks(db, adapters)
 50. if the user has chosen a future date while adding a new transaction/transfer, and if it isn't a scheduled transaction/transfer, then ask whether to add the transaction/transfer now or on the particular day
-
+51. POC on Property Row mapper
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 CORE FUNTIONALITY CHECK:	0/22
