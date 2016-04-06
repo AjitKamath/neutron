@@ -3,22 +3,14 @@ package com.finappl.fragments;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -38,12 +30,9 @@ import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.UsersModel;
-import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static com.finappl.utils.Constants.*;
@@ -86,7 +75,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.transaction_add_update, container);
+        View view = inflater.inflate(R.layout.transaction, container);
 
         Dialog d = getDialog();
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);

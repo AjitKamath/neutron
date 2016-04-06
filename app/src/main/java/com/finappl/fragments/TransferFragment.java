@@ -49,7 +49,7 @@ public class TransferFragment extends DialogFragment implements ImageButton.OnCl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.transaction_add_update, container);
+        View view = inflater.inflate(R.layout.transaction, container);
 
         //header
         /*addUpdateYearTV = (TextView) view.findViewById(R.id.addUpdateYearTVId);

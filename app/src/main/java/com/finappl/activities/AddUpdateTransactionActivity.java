@@ -83,7 +83,7 @@ public class AddUpdateTransactionActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.transaction_add_update);
+		setContentView(R.layout.transaction);
 
         //get the Active user
         loggedInUserObj = getUser();

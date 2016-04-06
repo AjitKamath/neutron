@@ -288,4 +288,8 @@
     <color name="bright_foreground_dark_inverse_1">#fd0c0b0b</color>
     <color name="dim_foreground_dark_inverse">#040404</color>
 
+    <color name="numeric_popper_background">#FFFFFF</color>
+    <color name="numeric_popper_text">#040404</color>
+    <color name="numeric_popper_text_disabled">#727272</color>
+
 </resources>
