@@ -595,9 +595,14 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 2. animated simple tick button to save/update the transaction.
 3. update the calendar on new transaction.
 
-2-apr-15
+2-apr-16
 1. redesigned & simplified Database data model by merger of schedules into the transaction/transfer tables.
 2. added dail log file & Data model files (old & new) into the git repository
+
+<--Git Push on 6-apr-2016-->
+
+7-apr-16
+1. create tables scripts
 
 ------------------------------------------------------------------------------------18/51-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
