@@ -33,8 +33,10 @@ import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
+import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
 
 import java.text.ParseException;
@@ -56,7 +58,7 @@ public class AddUpdateTransactionActivity extends Activity {
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
 	//header
 	private TextView addUpdateYearTV, addUpdateMonthTV, addUpdateSuperScriptTV, addUpdateDayTV, doneDiscardTV;
@@ -86,7 +88,7 @@ public class AddUpdateTransactionActivity extends Activity {
 		setContentView(R.layout.transaction);
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -136,7 +138,7 @@ public class AddUpdateTransactionActivity extends Activity {
         }
         //this means the user is in this page for a fresh new transaction...so select default as selected
         else{
-            addUpdateCatSpn.setSelection(getSpinnerItemIndex(categoryList, Constants.DEFAULTS_CATEGORIES_SELECT));
+            //addUpdateCatSpn.setSelection(getSpinnerItemIndex(categoryList, Constants.DEFAULTS_CATEGORIES_SELECT));
         }
 
         //select accounts spinner by default
@@ -145,7 +147,7 @@ public class AddUpdateTransactionActivity extends Activity {
         }
         //this means the user is in this page for a fresh new transaction...so select default as selected
         else{
-            addUpdateAccSpn.setSelection(getSpinnerItemIndex(accountList, Constants.DEFAULTS_ACCOUNTS_SELECT));
+            //addUpdateAccSpn.setSelection(getSpinnerItemIndex(accountList, Constants.DEFAULTS_ACCOUNTS_SELECT));
         }
 
         //select spent on spinner by default
@@ -154,7 +156,7 @@ public class AddUpdateTransactionActivity extends Activity {
         }
         //this means the user is in this page for a fresh new transaction...so select default as selected
         else{
-            addUpdateSpntOnSpn.setSelection(getSpinnerItemIndex(spentOnList, Constants.DEFAULTS_SPENTON_SELECT));
+            //addUpdateSpntOnSpn.setSelection(getSpinnerItemIndex(spentOnList, Constants.DEFAULTS_SPENTON_SELECT));
         }
 
         //select transaction type radio default_button
@@ -486,31 +488,6 @@ public class AddUpdateTransactionActivity extends Activity {
         msgPoprNegTV.setTypeface(robotoCondensedLightFont);
         msgPoprPosTV.setTypeface(robotoCondensedLightFont);
         msgPoprMsgTV.setTypeface(robotoCondensedLightFont);
-    }
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                    "probably die twice by now.");
-        return null;
     }
 
     //---------------------------------Edit Text type Listener-----------------------------------

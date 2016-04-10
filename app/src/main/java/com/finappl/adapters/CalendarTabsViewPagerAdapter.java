@@ -14,11 +14,11 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
-import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
+import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.models.AccountsModel;
 import com.finappl.models.BudgetModel;
 import com.finappl.models.ConsolidatedTransactionModel;
@@ -27,14 +27,14 @@ import com.finappl.models.MonthLegend;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.SummaryModel;
-import com.finappl.models.UsersModel;
+import com.finappl.models.UserMO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.finappl.utils.Constants.*;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
 
 /**
  * Created by ajit on 30/9/15.
@@ -56,7 +56,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     private AddUpdateTransfersDbService addUpdateTransfersDbService;
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     //month legend availability
     private boolean hasSummary;
@@ -75,7 +75,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
 
 
     public CalendarTabsViewPagerAdapter(Context context, List<Integer> layoutsList, Date selectedDate
-            , UsersModel loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
+            , UserMO loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
                                         CalendarActivity.ListViewItemClickListener listViewItemClickListener) {
         this.mContext = context;
         this.layoutsList = layoutsList;

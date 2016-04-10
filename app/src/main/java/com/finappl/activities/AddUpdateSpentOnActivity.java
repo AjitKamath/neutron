@@ -26,7 +26,9 @@ import com.finappl.R;
 import com.finappl.dbServices.AddUpdateSpentOnDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.SpentOnModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.FinappleUtility;
 
 import java.util.Map;
 
@@ -58,7 +60,7 @@ public class AddUpdateSpentOnActivity extends Activity {
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class AddUpdateSpentOnActivity extends Activity {
         setContentView(R.layout.manage_content_add_update_spenton);
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -161,31 +163,6 @@ public class AddUpdateSpentOnActivity extends Activity {
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
         setFont((ViewGroup) dialog.findViewById(R.id.msgPoprLLId), robotoCondensedLightFont);
-    }
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                    "probably die twice by now.");
-        return null;
     }
 
     private void initUIComponents() {

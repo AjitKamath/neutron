@@ -34,7 +34,7 @@ public class LoginActivity extends Activity {
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        /*setContentView(R.layout.login);
 
         //init UI
         initUiComponents();
@@ -44,10 +44,10 @@ public class LoginActivity extends Activity {
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) this.findViewById(R.id.loginRLId), robotoCondensedLightFont);
+        setFont((ViewGroup) this.findViewById(R.id.loginRLId), robotoCondensedLightFont);*/
     }
 
-    public void toRegisterUserPage(View view){
+    /*public void toRegisterUserPage(View view){
         Intent intent = new Intent(this, RegisterUserActivity.class);
         startActivity(intent);
         finish();
@@ -122,5 +122,5 @@ public class LoginActivity extends Activity {
                 setFont((ViewGroup) v, font);
             }
         }
-    }
+    }*/
 }

@@ -26,7 +26,9 @@ import com.finappl.R;
 import com.finappl.dbServices.AddUpdateAccDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.AccountsModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.FinappleUtility;
 
 import java.util.Map;
 
@@ -56,7 +58,7 @@ public class AddUpdateAccountActivity extends Activity {
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     private AccountsModel accountsModelObj = null;
 
@@ -66,7 +68,7 @@ public class AddUpdateAccountActivity extends Activity {
         setContentView(R.layout.manage_content_add_update_account);
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -352,31 +354,6 @@ public class AddUpdateAccountActivity extends Activity {
         };
     }
     //---------------------------------Edit Text type Listener ends-----------------------------------
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                    "probably die twice by now.");
-        return null;
-    }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
     public void setFont(ViewGroup group, Typeface font) {

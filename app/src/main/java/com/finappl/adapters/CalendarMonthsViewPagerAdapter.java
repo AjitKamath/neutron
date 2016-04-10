@@ -32,6 +32,7 @@ import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
 
 import java.text.ParseException;
@@ -63,7 +64,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
     private AddUpdateTransfersDbService addUpdateTransfersDbService;
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     //month legend availability
     private boolean hasSummary;
@@ -96,7 +97,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
     public View oldMonthView;
 
     public CalendarMonthsViewPagerAdapter(Context context, Date selectedDate, String centralMateMonthStr,
-                                          UsersModel loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
+                                          UserMO loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
                                           CalendarActivity.GridViewItemClickListener gridViewItemClickListener) {
         this.mContext = context;
         this.selectedDate = selectedDate;

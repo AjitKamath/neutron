@@ -1,10 +1,15 @@
 package com.finappl.utils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Environment;
 import android.util.Log;
 
 import com.finappl.R;
+import com.finappl.dbServices.AuthorizationDbService;
+import com.finappl.models.UserMO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +20,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class FinappleUtility{
+import static com.finappl.utils.Constants.SHARED_PREF;
+import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
+
+public class FinappleUtility extends Activity{
 
     private final String CLASS_NAME = this.getClass().getName();
 	private static FinappleUtility instance = null;
@@ -24,6 +32,8 @@ public class FinappleUtility{
     
     private static final int[] PLEASANT_COLOR_ARRAY = new int[]{R.color.SkyBlue, R.color.Plum, R.color.Aquamarine, R.color.Coral, R.color.Orange, R.color.Gold, R.color.LightSalmon, R.color.MediumSeaGreen, R.color.Violet, R.color.Tomato,
                 R.color.SpringGreen, R.color.SandyBrown};
+
+    private AuthorizationDbService authorizationDbService = new AuthorizationDbService(this);
 
     private FinappleUtility(){}
 
@@ -139,5 +149,19 @@ public class FinappleUtility{
             }
         }
         //--------------------------------------
+    }
+
+    public UserMO getUser(Context context){
+        SharedPreferences sharedpreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        String userIdStr = sharedpreferences.getString(SHARED_PREF_ACTIVE_USER_ID, null);
+
+        if(userIdStr != null && !userIdStr.isEmpty()){
+            return authorizationDbService.getActiveUser(userIdStr);
+        }
+        else{
+            Log.e(CLASS_NAME, "Error while fetching user id from the shared preference");
+        }
+        return null;
     }
 }

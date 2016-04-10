@@ -43,7 +43,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	//------------CREATE TABLE-----------------------//
 	@Override
 	public void onCreate(SQLiteDatabase db){
-		Log.i(CLASS_NAME, DB_NAME+" seems to not exist..so creating it");
+		/*Log.i(CLASS_NAME, DB_NAME+" seems to not exist..so creating it");
 
 		createCurrencyMastertable(db);
 		Log.i(CLASS_NAME, DB_TABLE_CURRENCYTABLE + " table created successfully");
@@ -116,10 +116,10 @@ public class Sqlite extends SQLiteOpenHelper{
 
 		//country
 		String countryDefaultsStrArr[] = DEFAULTS_COUNTRIES.split(",");
-		checkAndAddDefault(db, countryDefaultsStrArr, DB_TABLE_COUNTRYTABLE, "CNTRY_NAME");
+		checkAndAddDefault(db, countryDefaultsStrArr, DB_TABLE_COUNTRYTABLE, "CNTRY_NAME");*/
 	}
 
-    private void createSettingsSecurityTable(SQLiteDatabase db) {
+    /*private void createSettingsSecurityTable(SQLiteDatabase db) {
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
         sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
@@ -640,13 +640,13 @@ public class Sqlite extends SQLiteOpenHelper{
 			cursor.close();
 		}
 		db.close();
-	}
+	}*/
 	
 	// Upgrading database
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Drop older table if existed
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_USERSTABLE);
+		/*db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_USERSTABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_ACCOUNTTABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_CATEGORYTABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SPENTONTABLE);
@@ -665,6 +665,6 @@ public class Sqlite extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SETTINGS_SECURITY);
 
 		// Create tables again
-        onCreate(db);
+        onCreate(db);*/
 	}
 }

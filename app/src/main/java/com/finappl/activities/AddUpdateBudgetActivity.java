@@ -31,7 +31,9 @@ import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.BudgetModel;
 import com.finappl.models.SpinnerModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.FinappleUtility;
 
 import java.util.List;
 import java.util.Map;
@@ -62,7 +64,7 @@ public class AddUpdateBudgetActivity extends Activity {
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     //spinner adapter
     private AddUpdateBudgetSpinnerAdapter budgetTypeSpinnerAdapter;
@@ -83,7 +85,7 @@ public class AddUpdateBudgetActivity extends Activity {
 		setContentView(R.layout.budget_add_update);
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -436,31 +438,6 @@ public class AddUpdateBudgetActivity extends Activity {
         msgPoprNegTV.setTypeface(robotoCondensedLightFont);
         msgPoprPosTV.setTypeface(robotoCondensedLightFont);
         msgPoprMsgTV.setTypeface(robotoCondensedLightFont);
-    }
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                    "probably die twice by now.");
-        return null;
     }
 
 	/*public void updateOldTransaction(TransactionModel transactionModel)

@@ -11,6 +11,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -46,11 +47,11 @@ import com.finappl.adapters.CalendarMonthsViewPagerAdapter;
 import com.finappl.adapters.CalendarTabsViewPagerAdapter;
 import com.finappl.adapters.CalendarTransactionsOptionsPopperViewPagerAdapter;
 import com.finappl.adapters.SummaryPopperListAdapter;
-import com.finappl.dbServices.TransactionsDbService;
-import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
-import com.finappl.dbServices.Sqlite;
+import com.finappl.dbServices.Sqlite_NEW;
+import com.finappl.dbServices.TransactionsDbService;
+import com.finappl.fragments.LoginFragment;
 import com.finappl.fragments.TransactionFragment;
 import com.finappl.fragments.TransferFragment;
 import com.finappl.models.AccountsModel;
@@ -63,9 +64,10 @@ import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
-import com.finappl.models.UsersModel;
+import com.finappl.models.UserMO;
 import com.finappl.utils.Constants;
 import com.finappl.utils.DateTimeUtil;
+import com.finappl.utils.FinappleUtility;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -77,7 +79,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.finappl.utils.Constants.*;
+import static com.finappl.utils.Constants.FRAGMENT_LOGIN;
+import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
+import static com.finappl.utils.Constants.SHARED_PREF;
+import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
+import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
+import static com.finappl.utils.Constants.UI_DATE_FORMAT;
+import static com.finappl.utils.Constants.UI_DATE_TIME_FORMAT;
 
 @SuppressLint("NewApi")
 public class CalendarActivity extends LockerActivity implements TransactionFragment.DialogResultListener, TransferFragment.DialogResultListener {
@@ -107,14 +116,14 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     private Integer backButtonCounter = 0;
 
     //db services
-    private Sqlite controller = new Sqlite(mContext);
+    private Sqlite_NEW controller = new Sqlite_NEW(mContext);
     private CalendarDbService calendarDbService = new CalendarDbService(mContext);
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
     private TransactionsDbService addUpdateTransactionsDbService = new TransactionsDbService(mContext);
-    private AddUpdateTransfersDbService addUpdateTransfersDbService = new AddUpdateTransfersDbService(mContext);
+    //private AddUpdateTransfersDbService addUpdateTransfersDbService = new AddUpdateTransfersDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     //FAB starts
     private ImageButton calendarFabIB;
@@ -168,8 +177,9 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
         Log.i(CLASS_NAME, "Initializing the application database ends");
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
+            forceLogin();
             return;
         }
 
@@ -209,6 +219,18 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
         //close fab if its open
         checkAndCollapseFab();
+    }
+
+    private void forceLogin() {
+        // close existing dialog fragments
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_LOGIN);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        LoginFragment fragment = new LoginFragment();
+        fragment.show(manager, FRAGMENT_LOGIN);
     }
 
     private void setUpActionPoppers() {
@@ -2151,7 +2173,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
         // close existing dialog fragments
         FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag("fragment_edit_name");
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
         if (frag != null) {
             manager.beginTransaction().remove(frag).commit();
         }
@@ -2175,7 +2197,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
         TransactionFragment editNameDialog = new TransactionFragment();
         editNameDialog.setArguments(bundle);
-        editNameDialog.show(manager, "fragment_edit_name");
+        editNameDialog.show(manager, FRAGMENT_TRANSACTION);
     }
 
     @Override
@@ -2227,31 +2249,6 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
         Log.i(CLASS_NAME, "Working very hard to call date picker to work");
         // Ask our service to set an alarm for that date, this activity talks to the client that talks to the service
         showDialog(999);
-    }
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                "probably die twice by now.");
-        return null;
     }
 
     protected void showToast(String string){
@@ -2369,7 +2366,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
                     return;
                 }
 
-                Long result = addUpdateTransfersDbService.addNewTransfer(transferModelObj);
+                /*Long result = addUpdateTransfersDbService.addNewTransfer(transferModelObj);
 
                 if (result == -1) {
                     showToast("Error !! Could not create Transaction");
@@ -2384,7 +2381,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
                     dialog.dismiss();
 
                     refreshActivity();
-                }
+                }*/
             }
         });
 

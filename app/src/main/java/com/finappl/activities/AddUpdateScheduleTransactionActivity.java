@@ -33,8 +33,10 @@ import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.ScheduledTransactionsDbService;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.SpinnerModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.DateTimeUtil;
+import com.finappl.utils.FinappleUtility;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +48,7 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
     private Context mContext = this;
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     //db service
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
@@ -96,7 +98,7 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
         Log.e(CLASS_NAME, "Navigated to Schedule Transaction Add Update Screen");
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -408,31 +410,6 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
         Intent intent = new Intent(this, CalendarActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                "probably die twice by now.");
-        return null;
     }
 
     protected void showToast(String string){

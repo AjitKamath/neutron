@@ -27,7 +27,9 @@ import com.finappl.models.DayTransactionsModel;
 import com.finappl.models.DayTransfersModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.FinappleUtility;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,7 +55,7 @@ public class ViewActivitiesActivity extends Activity {
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     //dialogs
     private Dialog messageDialog, detailsDialog;
@@ -64,7 +66,7 @@ public class ViewActivitiesActivity extends Activity {
 		setContentView(R.layout.activities_view);
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -359,7 +361,7 @@ public class ViewActivitiesActivity extends Activity {
         tranDtlPopperEditIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toEditTransaction((String)v.getTag());
+                toEditTransaction((String) v.getTag());
                 if(detailsDialog != null){
                     detailsDialog.dismiss();
                 }
@@ -523,31 +525,6 @@ public class ViewActivitiesActivity extends Activity {
         intent.putExtra("TRANSFER_OBJ", transferObj);
         startActivity(intent);
         finish();
-    }
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                    "probably die twice by now.");
-        return null;
     }
 
     protected void showToast(String string){

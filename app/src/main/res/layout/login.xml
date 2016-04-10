@@ -1,154 +1,473 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/loginRLId"
-                android:background="@color/white">
+    android:id="@+id/loginRLId"
+    android:layout_width="@dimen/screen_full_width"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/loginHeaderId"
-        android:layout_width="fill_parent"
-        android:background="@color/finappleTheme"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="@dimen/layout_header_elevation"
+        android:background="@color/finappleTheme"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ಫಿ"
-            android:textColor="@color/white"
-            android:textSize="25dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="315dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="finappl"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_header_primary"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="simple . beautiful . precise"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_header_secondary" />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:id="@+id/loginContentLLId"
-        android:layout_width="fill_parent"
-        android:layout_height="160dp"
-        android:layout_below="@+id/loginHeaderId"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/loginUsernameETId"
-            android:layout_width="250dp"
-            android:layout_height="35dp"
-            android:hint="username"
-            android:inputType="text"
-            android:maxLength="25"
-            android:background="@drawable/edit_text_border"
-            android:maxLines="1"
-            android:textColor="@color/Black"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:textStyle="italic" />
-
-        <EditText
-            android:layout_marginTop="20dp"
-            android:id="@+id/loginPasswordETId"
-            android:layout_width="250dp"
-            android:layout_height="35dp"
-            android:hint="password"
-            android:inputType="textPassword"
-            android:maxLength="25"
-            android:background="@drawable/edit_text_border"
-            android:maxLines="1"
-            android:textColor="@color/Black"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:textStyle="italic" />
-
-        <TextView
-            android:layout_marginTop="5dp"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="right"
-            android:text="Forgot Password ?"
-            android:textColor="@color/finappleThemeDark"
-            android:textSize="15sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/loginContentLLId"
-        android:background="@color/white"
-        android:gravity="center"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="175dp"
-            android:layout_height="fill_parent"
-            android:background="@color/white"
-            android:clickable="true"
-            android:gravity="center"
-            android:onClick="authenticateUser"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:layout_height="40dp"
+            android:paddingLeft="10dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:background="@drawable/oval_buttons_text_view"
-                android:layout_width="fill_parent"
-                android:layout_height="30dp"
-                android:gravity="center"
-                android:text="LOGIN"
-                android:textAlignment="center"
+            <!--<TextView
+                android:id="@+id/finapplIVId"
+                android:layout_width="@dimen/image_header_size"
+                android:layout_height="@dimen/image_header_size"
+                android:text="ಫಿ"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_button_big_text_size"/>
+                android:textSize="@dimen/text_header_title_size" />-->
+
+            <ImageView
+                android:id="@+id/discardIVId"
+                android:layout_width="@dimen/image_header_size"
+                android:layout_height="@dimen/image_header_size"
+                android:background="@drawable/cross_white_small"
+                android:visibility="visible" />
         </LinearLayout>
+
 
         <LinearLayout
-            android:layout_width="175dp"
-            android:layout_height="fill_parent"
-            android:background="@color/white"
-            android:clickable="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:gravity="center"
-            android:onClick="toRegisterUserPage"
+            android:id="@+id/featuresLLId"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <TextView
-                android:background="@drawable/oval_buttons_text_view"
-                android:layout_width="fill_parent"
-                android:layout_height="30dp"
+            <LinearLayout
+                android:id="@+id/finapplLLId"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="@dimen/screen_full_width"
+                    android:layout_height="200dp"
+                    android:background="@color/finappleTheme"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="finappl"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_header_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="simple . beautiful . precise"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_header_secondary" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/loginContentLLId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="220dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/loginUsernameETId"
+                            android:layout_width="250dp"
+                            android:layout_height="35dp"
+                            android:background="@drawable/edit_text_border"
+                            android:gravity="center"
+                            android:hint="username"
+                            android:inputType="text"
+                            android:maxLength="25"
+                            android:maxLines="1"
+                            android:text="ajitkamath47"
+                            android:textColor="@color/formTextDark"
+                            android:textSize="25sp" />
+
+                        <EditText
+                            android:id="@+id/loginPasswordETId"
+                            android:layout_width="250dp"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/edit_text_border"
+                            android:gravity="center"
+                            android:hint="password"
+                            android:inputType="textPassword"
+                            android:maxLength="25"
+                            android:maxLines="1"
+                            android:text="newton"
+                            android:textColor="@color/formTextDark"
+                            android:textSize="25sp" />
+
+                        <TextView
+                            android:layout_width="250dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:gravity="right"
+                            android:text="Forgot Password ?"
+                            android:textColor="@color/finappleThemeDark"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/loginContentLLId"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/screen_components_padding_from_walls">
+
+                        <LinearLayout
+                            android:id="@+id/loginLLId"
+                            android:layout_width="@dimen/screen_half_width"
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:background="@drawable/oval_buttons_text_view"
+                                android:gravity="center"
+                                android:text="LOGIN"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_button_big_text_size" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/registerLLId"
+                            android:layout_width="@dimen/screen_half_width"
+                            android:layout_height="fill_parent"
+                            android:layout_marginLeft="10dp"
+                            android:background="@color/white"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:background="@drawable/oval_buttons_text_view"
+                                android:gravity="center"
+                                android:text="REGISTER"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_button_big_text_size" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/simpleLLId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="@dimen/screen_full_width"
+                    android:layout_height="200dp"
+                    android:background="@color/finappleTheme"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Simple"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_header_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="manage money in your own way"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_header_secondary" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/register1ContentLLId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="@dimen/screen_components_padding_from_walls">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="260dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="330dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:text="Name"
+                                android:textColor="@color/finappleThemeDark"
+                                android:textSize="20sp" />
+
+                            <EditText
+                                android:id="@+id/profilePersonalNameETId"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_border"
+                                android:gravity="center"
+                                android:hint="full name"
+                                android:inputType="textCapWords"
+                                android:maxLength="25"
+                                android:maxLines="1"
+                                android:text="Ajit"
+                                android:textColor="@color/Black"
+                                android:textSize="20sp"
+                                android:textStyle="italic" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="330dp"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:text="Birthday"
+                                android:textColor="@color/finappleThemeDark"
+                                android:textSize="20sp" />
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:background="@drawable/scheduled_grey"
+                                android:onClick="showDatePicker" />
+
+                            <TextView
+                                android:id="@+id/profilePersonalDobTVId"
+                                android:layout_width="155dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:gravity="center|left"
+                                android:onClick="showDatePicker"
+                                android:text="1 Jan '90"
+                                android:textColor="@color/orrange"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="330dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:text="Country"
+                                android:textColor="@color/finappleThemeDark"
+                                android:textSize="20sp" />
+
+                            <Spinner
+                                android:id="@+id/profilePersonalCntrySpnId"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="330dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:text="Currency"
+                                android:textColor="@color/finappleThemeDark"
+                                android:textSize="20sp" />
+
+                            <Spinner
+                                android:id="@+id/profilePersonalCurSpnId"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="330dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:text="Employed"
+                                android:textColor="@color/finappleThemeDark"
+                                android:textSize="20sp" />
+
+                            <RadioGroup
+                                android:id="@+id/profilePersonalEmplydRadioGrpId"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:id="@+id/profilePersonalEmplydYesRadioId"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left"
+                                    android:tag="YES"
+                                    android:text="Yes"
+                                    android:textColor="@color/finappleTheme"
+                                    android:textSize="20sp" />
+
+                                <RadioButton
+                                    android:id="@+id/profilePersonalEmplydNoRadioId"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="right"
+                                    android:layout_marginLeft="20dp"
+                                    android:checked="true"
+                                    android:tag="NO"
+                                    android:text="No"
+                                    android:textColor="@color/finappleTheme"
+                                    android:textSize="25sp" />
+                            </RadioGroup>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/profilePersonalContentLLId"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/register1NextLLId"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:background="@color/white"
+                            android:clickable="true"
+                            android:gravity="right"
+                            android:orientation="horizontal"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="10dp">
+
+                            <TextView
+                                android:layout_width="120dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/oval_buttons_text_view"
+                                android:gravity="center"
+                                android:text="NEXT"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_button_big_text_size" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/beautifulLLId"
+                android:layout_width="@dimen/screen_full_width"
+                android:layout_height="match_parent"
+                android:background="@color/googleRed"
                 android:gravity="center"
-                android:text="REGISTER"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_button_big_text_size"/>
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Beautiful"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_header_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="designed to appeal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_header_secondary" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/preciseLLId"
+                android:layout_width="@dimen/screen_full_width"
+                android:layout_height="match_parent"
+                android:background="@color/purple"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Precise"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_header_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="track untll your last penny"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_header_secondary" />
+
+            </LinearLayout>
+
+
         </LinearLayout>
+
+
     </LinearLayout>
 
 </RelativeLayout>

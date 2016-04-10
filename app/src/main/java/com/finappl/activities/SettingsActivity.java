@@ -38,9 +38,11 @@ import com.finappl.models.CountryModel;
 import com.finappl.models.CurrencyModel;
 import com.finappl.models.SettingsNotificationModel;
 import com.finappl.models.SpinnerModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
 import com.finappl.utils.EncryptionUtil;
+import com.finappl.utils.FinappleUtility;
 
 import java.sql.Time;
 import java.text.ParseException;
@@ -64,7 +66,7 @@ public class SettingsActivity extends LockerActivity {
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     private EditText lockPoprPinET, lockPoprNewPinET, lockPoprRPinET;
     private LinearLayout lockPoprNewPinLL;
@@ -77,7 +79,7 @@ public class SettingsActivity extends LockerActivity {
         setContentView(R.layout.settings);
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -689,31 +691,6 @@ public class SettingsActivity extends LockerActivity {
     }
     //--------------------------------Linear Layout ends--------------------------------------------------
 
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                    "probably die twice by now.");
-        return null;
-    }
-
     private TextView.OnClickListener textViewClickListener;
     {
         textViewClickListener = new TextView.OnClickListener() {
@@ -800,7 +777,7 @@ public class SettingsActivity extends LockerActivity {
                                     setUpSecurity();
 
                                     //update Sec PIN in loggedInUserObj
-                                    loggedInUserObj = getUser();
+                                    loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
 
                                     showToast("New PIN Saved");
                                 }
@@ -826,7 +803,7 @@ public class SettingsActivity extends LockerActivity {
                                     setUpSecurity();
 
                                     //update Sec PIN in loggedInUserObj
-                                    loggedInUserObj = getUser();
+                                    loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
 
                                     showToast("PIN Saved");
                                 }
@@ -902,7 +879,7 @@ public class SettingsActivity extends LockerActivity {
                                     setUpSecurity();
 
                                     //update Sec PIN in loggedInUserObj
-                                    loggedInUserObj = getUser();
+                                    loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
 
                                     showToast("PIN Saved & Security is Enabled");
                                 }
@@ -923,7 +900,7 @@ public class SettingsActivity extends LockerActivity {
                                 }
                                 else {
                                     boolean secIsEnabled = false;
-                                    if("Y".equalsIgnoreCase(loggedInUserObj.getSET_SEC_ACTIVE())){
+                                    if(!loggedInUserObj.getSET_SEC_PIN().isEmpty()){
                                         secIsEnabled = true;
                                     }
 
@@ -932,9 +909,9 @@ public class SettingsActivity extends LockerActivity {
                                     setUpSecurity();
 
                                     //update Sec PIN in loggedInUserObj
-                                    loggedInUserObj = getUser();
+                                    loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
 
-                                    if("Y".equalsIgnoreCase(loggedInUserObj.getSET_SEC_ACTIVE())){
+                                    if(!loggedInUserObj.getSET_SEC_PIN().isEmpty()){
                                         showToast("Security is Enabled");
                                     }
                                     else{

@@ -62,52 +62,27 @@ public final class Constants{
 
     //DB
     public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 21;
+    public static final int DB_VERSION = 22;
 
-    public static final String DB_TABLE_USER = "USER";
-    public static final String DB_TABLE_ACCOUNT = "ACCOUNT";
-    public static final String DB_TABLE_CATEGORY = "CATEGORY";
-    public static final String DB_TABLE_SPENTON = "SPENT_ON";
-    public static final String DB_TABLE_TRANSACTION = "TRANSACTION";
-    public static final String DB_TABLE_BUDGET = "BUDGET";
-    public static final String DB_TABLE_TRANSFER = "TRANSFER";
-    public static final String DB_TABLE_COUNTRY = "COUNTRY";
-    public static final String DB_TABLE_NOTIFICATION = "NOTIFICATION";
-    public static final String DB_TABLE_SETTING = "SETTING";
+    public static final String DB_TABLE_USER = "USERS";
+    public static final String DB_TABLE_ACCOUNT = "ACCOUNTS";
+    public static final String DB_TABLE_CATEGORY = "CATEGORIES";
+    public static final String DB_TABLE_SPENTON = "SPENT_ONS";
+    public static final String DB_TABLE_TRANSACTION = "TRANSACTIONS";
+    public static final String DB_TABLE_BUDGET = "BUDGETS";
+    public static final String DB_TABLE_TRANSFER = "TRANSFERS";
+    public static final String DB_TABLE_COUNTRY = "COUNTRIES";
+    public static final String DB_TABLE_NOTIFICATION = "NOTIFICATIONS";
+    public static final String DB_TABLE_SETTING = "SETTINGS";
     //DB
 
     //defaults
     public static final String DEFAULT_CATEGORIES = "Food,Entertainment,Bill,Commute,Shopping,Fuel,Health,Other";
     public static final String DEFAULT_ACCOUNTS = "Cash,Bank,Credit Card,Debit Card";
     public static final String DEFAULT_SPENT_ONS = "Self,Family,Friends,Business";
-
-    //defaults & their id's
-    //OBSOLETE
-    public static final String DEFAULTS_CATEGORIES = "Food/Drinks-CAT_1-expense,Fuel/Gas-CAT_2-expense,Health/Medicare-CAT_3-expense,Shopping-CAT_4-expense,Accommodation/Hotel-CAT_5-expense," +
-                "Other-CAT_6-expense,Salary-CAT_7-income,Interest-CAT_8-income,Entertainment-CAT_9-expense,Lost-CAT_10-expense,Stationary-CAT_11-expense,Cellphone-CAT_12-expense,Logistics-CAT_13-expense,Education/Learning-CAT_14-expense,Investments-CAT_15-expense,Lend/Borrow-CAT_16-expense";
-    public static final String DEFAULTS_SPENTON = "Self-SPNT_1,Family-SPNT_2,Friends-SPNT_3,Business-SPNT_4";
-    public static final String DEFAULTS_ACCOUNTS = "Cash-ACC_1,Credit Card-ACC_2,Bank-ACC_3,Debit Card-ACC_4,Gift Card-ACC_5";
-    //OBSOLETE
-
-    public static final String DEFAULTS_CATEGORIES_SELECT = "Other";
-    public static final String DEFAULTS_SPENTON_SELECT = "Self";
-    public static final String DEFAULTS_ACCOUNTS_SELECT = "Cash";
-
-    public static final String DEFAULTS_COUNTRIES = "India-CNTRY1-CUR1-bug.png,USA-CNTRY2-CUR2-bug.png";
-    public static final String DEFAULTS_CURRENCIES = "Rupee-CUR1-bug.png-₹,Dollar-CUR2-bug.png-$";
-
-    public static final String DEFAULTS_TRANSACTIONTYPE = "expense-0,income-1";
-    public static final String DEFAULTS_TRANSACTIONTYPE_SELECT = "expense";
+    public static final String DEFAULT_COUNTRIES_CURRENCIES = "India-Rupee-INR,USA-Dollar-USD,USA-Dollar-USD,Australia-Dollar-AUD";
 
     public static final String DEFAULT_QUICK_TRANSACTION_NAME = "Quick Transaction";
-
-    //data for repeat spinner
-    public static final String ADDRECUREXPENSEACTIVITY_REPEAT = "Everyday-0,Monthly-1,Yearly-2";
-
-    //default_button values
-    public static final String BUTTON_VALUES_DONE = "done";
-    public static final String BUTTON_VALUES_CANCEL = "discard";
-    public static final String BUTTON_VALUES_UPDATE = "update";
 
     //weekdays order
     public static final String[] WEEK_ARRAY = new String[]{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -139,6 +114,10 @@ public final class Constants{
     public static final SimpleDateFormat UI_DATE_FORMAT_SDF = new SimpleDateFormat(UI_DATE_FORMAT);
     public static final SimpleDateFormat UI_DATE_TIME_FORMAT_SDF = new SimpleDateFormat(UI_DATE_TIME_FORMAT);
 
-    //Bundle Keys
+    //Bundle Keys, Sharde Prefs, Intent, fragment names
+    public static final String FRAGMENT_TRANSACTION = "FRAGMENT_TRANSACTION";
+    public static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
     public static final String TRANSACTION_OBJECT = "TRANSACTION_OBJECT";
+    public static final String SHARED_PREF = "SHARED_PREFERENCE";
+    public static final String SHARED_PREF_ACTIVE_USER_ID = "ACTIVE_USER_ID";
 }

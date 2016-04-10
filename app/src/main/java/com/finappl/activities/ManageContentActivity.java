@@ -21,7 +21,9 @@ import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.ManageContentDbService;
 import com.finappl.models.ManageContentModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.FinappleUtility;
 
 import java.util.Map;
 
@@ -38,7 +40,7 @@ public class ManageContentActivity extends Activity {
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     //UI Components
     private LinearLayout manageContentCatTabLL;
@@ -59,7 +61,7 @@ public class ManageContentActivity extends Activity {
         setContentView(R.layout.manage_content);
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -190,31 +192,6 @@ public class ManageContentActivity extends Activity {
                 Log.e(CLASS_NAME, "TAB error !!! Something is wrong while switching tabs !! Check where ur clicking..");
                 showToast("TAB ERROR !");
         }
-    }
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                    "probably die twice by now.");
-        return null;
     }
 
     public void onAddClick(View view) {

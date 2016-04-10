@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.finappl.utils.ColumnFetcher;
+import com.finappl.utils.IdGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,8 +18,74 @@ import static com.finappl.utils.Constants.*;
 public class Sqlite_NEW extends SQLiteOpenHelper{
 
 	private final String CLASS_NAME = this.getClass().getName();
-
 	private static Sqlite_NEW sInstance = null;
+
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
+	private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
+
+	private SQLiteDatabase db;
+
+	private void addDefaults(){
+		ContentValues values = null;
+		String nowStr = simpleDateTimeFormat.format(new Date());
+
+		//Country
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_COUNTRY);
+		String countriesStrArr[] = DEFAULT_COUNTRIES_CURRENCIES.split(",");
+		values = new ContentValues();
+		for(String iterCountriesStrArr : countriesStrArr){
+			String countryCurrencyStrArr[] = iterCountriesStrArr.split("-");
+			values.put("CNTRY_ID", IdGenerator.generateUniqueId("CNTRY"));
+			values.put("CNTRY_NAME", countryCurrencyStrArr[0]);
+			values.put("CUR", countryCurrencyStrArr[1]);
+			values.put("CUR_CODE", countryCurrencyStrArr[2]);
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_COUNTRY, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults("+countriesStrArr.length+") into " + DB_TABLE_COUNTRY);
+
+		//Categories
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_CATEGORY);
+		String categoriesStrArr[] = DEFAULT_CATEGORIES.split(",");
+		values = new ContentValues();
+		for(String iterCategoriesStrArr : categoriesStrArr){
+			values.put("CAT_ID", IdGenerator.generateUniqueId("CAT"));
+			values.put("USER_ID", ADMIN_USERID);
+			values.put("CAT_NAME", iterCategoriesStrArr);
+			values.put("CAT_IS_DEF", DB_AFFIRMATIVE);
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_CATEGORY, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults("+categoriesStrArr.length+") into " + DB_TABLE_CATEGORY);
+
+		//Account
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_ACCOUNT);
+		String accountStrArr[] = DEFAULT_ACCOUNTS.split(",");
+		values = new ContentValues();
+		for(String iterAccountStrArr : accountStrArr){
+			values.put("ACC_ID", IdGenerator.generateUniqueId("ACC"));
+			values.put("USER_ID", ADMIN_USERID);
+			values.put("ACC_NAME", iterAccountStrArr);
+			values.put("ACC_IS_DEF", DB_AFFIRMATIVE);
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_ACCOUNT, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults("+accountStrArr.length+") into " + DB_TABLE_ACCOUNT);
+
+		//Spent On
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_SPENTON);
+		String spentOnStrArr[] = DEFAULT_SPENT_ONS.split(",");
+		values = new ContentValues();
+		for(String iterSpentOnStrArr : spentOnStrArr){
+			values.put("SPNT_ON_ID", IdGenerator.generateUniqueId("SPNTON"));
+			values.put("USER_ID", ADMIN_USERID);
+			values.put("SPNT_ON_NAME", iterSpentOnStrArr);
+			values.put("SPNT_ON_IS_DEF", DB_AFFIRMATIVE);
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_SPENTON, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults(" + spentOnStrArr.length + ") into " + DB_TABLE_SPENTON);
+	}
 
 	private void createNotificationsTable() {
 		StringBuilder sb = new StringBuilder(50);
@@ -32,13 +99,11 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" NOTIF_DATE DATE NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
-		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID)) ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_NOTIFICATION + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	private void createSettingsTable() {
@@ -52,13 +117,11 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" SET_SEC_PIN TEXT, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
-		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID)) ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_SETTING + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	private void createBudgetTable() {
@@ -75,13 +138,11 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" BUDGET_NOTE TEXT, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
-		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID)) ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_BUDGET + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	private void createTransferTable() {
@@ -102,13 +163,11 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" MOD_DTM DATETIME, ");
 		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID), ");
 		sb.append(" FOREIGN KEY (ACC_ID_FRM) REFERENCES "+DB_TABLE_ACCOUNT+" (ACC_ID), ");
-		sb.append(" FOREIGN KEY (ACC_ID) REFERENCES "+DB_TABLE_ACCOUNT+" (ACC_ID)) ");
+		sb.append(" FOREIGN KEY (ACC_ID_TO) REFERENCES " + DB_TABLE_ACCOUNT + " (ACC_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_TRANSFER + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	private void createTransactionTable() {
@@ -132,13 +191,11 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID), ");
 		sb.append(" FOREIGN KEY (CAT_ID) REFERENCES "+DB_TABLE_CATEGORY+" (CAT_ID), ");
 		sb.append(" FOREIGN KEY (ACC_ID) REFERENCES "+DB_TABLE_ACCOUNT+" (ACC_ID), ");
-		sb.append(" FOREIGN KEY (SPNT_ON_ID) REFERENCES "+DB_TABLE_SPENTON+" (SPNT_ON_ID)) ");
+		sb.append(" FOREIGN KEY (SPNT_ON_ID) REFERENCES " + DB_TABLE_SPENTON + " (SPNT_ON_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_TRANSACTION + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	private void createSpentOnTable() {
@@ -151,13 +208,11 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" SPNT_ON_IS_DEF TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
-		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID)) ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_SPENTON + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	private void createAccountTable() {
@@ -170,13 +225,11 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" ACC_IS_DEF TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
-		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID)) ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_ACCOUNT + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	private void createCategoryTable() {
@@ -189,13 +242,11 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" CAT_IS_DEF TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
-		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID)) ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_CATEGORY + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	private void createUserTable() {
@@ -212,13 +263,11 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" DEV_ID TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
-		sb.append(" FOREIGN KEY (CNTRY_ID) REFERENCES "+DB_TABLE_COUNTRY+" (CNTRY_ID)) ");
+		sb.append(" FOREIGN KEY (CNTRY_ID) REFERENCES " + DB_TABLE_COUNTRY + " (CNTRY_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_USER + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	private void createCountryTable() {
@@ -234,37 +283,41 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_COUNTRY + " Table query:\n" + String.valueOf(sb));
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(String.valueOf(sb));
-		db.close();
 	}
 
 	//------------CREATE TABLE-----------------------//
 	@Override
 	public void onCreate(SQLiteDatabase db){
-		Log.i(CLASS_NAME, "Creating the tables for "+DB_NAME);
+		this.db = db;
 
+		Log.i(CLASS_NAME, "Creating the tables for "+DB_NAME);
 		createCountryTable();
 		createUserTable();
 		createCategoryTable();
 		createAccountTable();
+		createSpentOnTable();
 		createTransactionTable();
 		createTransferTable();
 		createBudgetTable();
 		createNotificationsTable();
 		createSettingsTable();
+		Log.i(CLASS_NAME, "Creating the tables for " + DB_NAME + " is completed");
 
-		Log.i(CLASS_NAME, "Creating the tables for " + DB_NAME+" is completed");
+		Log.i(CLASS_NAME, "Inserting Defaults");
+		addDefaults();
+		Log.i(CLASS_NAME, "Inserted Defaults");
 
-		//TODO: Yet to add defaults
+		//this.db.close();
 	}
 
 	// Upgrading database
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		//TODO: check required
+		Log.i(CLASS_NAME, DB_NAME+" version has upgraded from("+oldVersion+") to("+newVersion+")");
 
 		// Drop older table if existed
+		Log.i(CLASS_NAME, "Dropping all the tables");
 		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_USER);
 		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_ACCOUNT);
 		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_CATEGORY);
@@ -275,9 +328,12 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_COUNTRY);
 		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_NOTIFICATION);
         db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SETTING);
+		Log.i(CLASS_NAME, "Dropping all the tables completed");
 
 		// Create tables again
+		Log.i(CLASS_NAME, "Recreating all the tables");
         onCreate(db);
+		Log.i(CLASS_NAME, "Recreating all the tables completed");
 	}
 
 	public Sqlite_NEW(Context context){

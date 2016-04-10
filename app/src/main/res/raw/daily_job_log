@@ -604,6 +604,12 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 7-apr-16
 1. create tables scripts
 
+<--Git Push on 7-apr-2016-->
+
+10-apr-16
+1. migrtion of login & register to a fragment
+2. animation poc on login and register.
+
 ------------------------------------------------------------------------------------18/51-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
 2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.

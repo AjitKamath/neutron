@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.finappl.models.CountryModel;
 import com.finappl.models.CurrencyModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.ColumnFetcher;
 import com.finappl.utils.Constants;
@@ -178,8 +179,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         return -1;
     }
 
-    public boolean isAuthenticUser(UsersModel usersModelObj) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public boolean isAuthenticUser(UserMO usersModelObj) {
         try {
             StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -188,7 +188,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
 
             sqlQuerySB.append(" FROM ");
 
-            sqlQuerySB.append(DB_TABLE_USERSTABLE);
+            sqlQuerySB.append(DB_TABLE_USER);
 
             sqlQuerySB.append(" WHERE ");
             sqlQuerySB.append(" USER_ID = '" + usersModelObj.getUSER_ID() + "' ");
@@ -196,25 +196,16 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             sqlQuerySB.append(" AND ");
             sqlQuerySB.append(" PASS = '" + EncryptionUtil.encrypt(usersModelObj.getPASS()) + "' ");
 
-            sqlQuerySB.append(" AND ");
-            sqlQuerySB.append(" USER_IS_DEL = '" + DB_AFFIRMATIVE + "' ");
-
             Log.i(CLASS_NAME, "Query to know if user is authentic  :" + sqlQuerySB);
-            Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
 
-            while (cursor.moveToNext()) {
+            if (cursor.moveToNext()) {
                 if (ColumnFetcher.getInstance().loadInt(cursor, "COUNT") > 0) {
-                    Log.i(CLASS_NAME, "Aaahhh... the master !! How can i serve you Mr. User. Use finappl all you want to use");
-
-                    ContentValues values = new ContentValues();
-                    values.put("USER_IS_DEL", DB_NONAFFIRMATIVE);
-
-                    // Updating an old Row
-                    db.update(DB_TABLE_USERSTABLE, values, "USER_ID = '" + usersModelObj.getUSER_ID() + "'", null);
-
                     return true;
                 }
             }
+            db.close();
             cursor.close();
         }
         catch(Exception e){
@@ -222,7 +213,6 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         }
 
         Log.i(CLASS_NAME, "Enemy at the gates trying to breach !!!! Code Red. Code Red.");
-        db.close();
         return false;
     }
 
@@ -257,109 +247,57 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         return false;
     }
 
-    public Map<Integer, UsersModel> getActiveUser(){
-        SQLiteDatabase db = this.getWritableDatabase();
-
+    public UserMO getActiveUser(String userIdStr){
         StringBuilder sqlQuerySB = new StringBuilder(50);
-
         sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" USER.USER_ID, ");
         sqlQuerySB.append(" NAME, ");
         sqlQuerySB.append(" EMAIL, ");
         sqlQuerySB.append(" DOB, ");
-        sqlQuerySB.append(" CNTRY.CNTRY_ID, ");
-        sqlQuerySB.append(" CNTRY.CNTRY_NAME AS countryName, ");
         sqlQuerySB.append(" TELEPHONE, ");
-        sqlQuerySB.append(" CUR.CUR_ID, ");
-        sqlQuerySB.append(" CUR.CUR_NAME AS currencyName, ");
-        sqlQuerySB.append(" CUR.CUR_TXT AS currencyText, ");
-        sqlQuerySB.append(" USER.CREAT_DTM AS userCreatDtm, ");
-        sqlQuerySB.append(" USER.MOD_DTM AS userModDtm, ");
-        sqlQuerySB.append(" WORK_TYPE, ");
-        sqlQuerySB.append(" COMPANY, ");
-        sqlQuerySB.append(" SALARY, ");
-        sqlQuerySB.append(" SAL_FREQ, ");
-        sqlQuerySB.append(" WORK.MOD_DTM AS workCreatDtm, ");
-        sqlQuerySB.append(" WORK.MOD_DTM AS workModDtm, ");
-        sqlQuerySB.append(" SET_NOTIF_ACTIVE, ");
+        sqlQuerySB.append(" DEV_ID, ");
+        sqlQuerySB.append(" CNTRY_NAME, ");
+        sqlQuerySB.append(" CUR, ");
+        sqlQuerySB.append(" CUR_CODE, ");
         sqlQuerySB.append(" SET_NOTIF_TIME, ");
         sqlQuerySB.append(" SET_NOTIF_BUZZ, ");
-        sqlQuerySB.append(" SET_SND_ACTIVE, ");
-        sqlQuerySB.append(" SET_SEC_ACTIVE, ");
         sqlQuerySB.append(" SET_SEC_PIN ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_USERSTABLE+ " USER ");
+        sqlQuerySB.append(DB_TABLE_USER+ " USR ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_COUNTRYTABLE+" CNTRY ");
+        sqlQuerySB.append(DB_TABLE_COUNTRY+" CNTRY ");
         sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" CNTRY.CNTRY_ID = USER.CNTRY_ID ");
+        sqlQuerySB.append(" CNTRY.CNTRY_ID = USR.CNTRY_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE+" CUR ");
+        sqlQuerySB.append(DB_TABLE_SETTING+" SET ");
         sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" CUR.CUR_ID = USER.CUR_ID ");
-
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_SETTINGS_NOTIFICATIONS+" NOTIF ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" NOTIF.USER_ID = USER.USER_ID ");
-
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_SETTINGS_SOUNDS+" SND ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" SND.USER_ID = USER.USER_ID ");
-
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_SETTINGS_SECURITY+" SEC ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" SEC.USER_ID = USER.USER_ID ");
-
-        sqlQuerySB.append(" LEFT OUTER JOIN ");
-        sqlQuerySB.append(DB_TABLE_WORK_TIMELINETABLE+" WORK ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" WORK.USER_ID = USER.USER_ID ");
+        sqlQuerySB.append(" SET.USER_ID = USR.USER_ID ");
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" USER.USER_IS_DEL = '"+DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" USR.USER_ID = '"+userIdStr+"' ");
 
+        SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-        UsersModel usersModelObject;
-        Map<Integer, UsersModel> userModelMap = new HashMap<>();
-
-        while (cursor.moveToNext()){
-            usersModelObject = new UsersModel();
-            usersModelObject.setUSER_ID(ColumnFetcher.getInstance().loadString(cursor, "USER_ID"));
-            usersModelObject.setNAME(ColumnFetcher.getInstance().loadString(cursor, "NAME"));
-            usersModelObject.setEMAIL(ColumnFetcher.getInstance().loadString(cursor, "EMAIL"));
-            usersModelObject.setDOB(ColumnFetcher.getInstance().loadDate(cursor, "DOB"));
-            usersModelObject.setCNTRY_ID(ColumnFetcher.getInstance().loadString(cursor, "CNTRY_ID"));
-            usersModelObject.setCountryName(ColumnFetcher.getInstance().loadString(cursor, "countryName"));
-            usersModelObject.setTELEPHONE(ColumnFetcher.getInstance().loadString(cursor, "TELEPHONE"));
-            usersModelObject.setCUR_ID(ColumnFetcher.getInstance().loadString(cursor, "CUR_ID"));
-            usersModelObject.setCurrencyText(ColumnFetcher.getInstance().loadString(cursor, "currencyText"));
-            usersModelObject.setCurrencyName(ColumnFetcher.getInstance().loadString(cursor, "currencyName"));
-            usersModelObject.setUserCreatDtm(ColumnFetcher.getInstance().loadDateTime(cursor, "userCreatDtm"));
-            usersModelObject.setUserModDtm(ColumnFetcher.getInstance().loadDateTime(cursor, "userModDtm"));
-            usersModelObject.setWORK_TYPE(ColumnFetcher.getInstance().loadString(cursor, "WORK_TYPE"));
-            usersModelObject.setCOMPANY(ColumnFetcher.getInstance().loadString(cursor, "COMPANY"));
-            usersModelObject.setSALARY(ColumnFetcher.getInstance().loadDouble(cursor, "SALARY"));
-            usersModelObject.setSAL_FREQ(ColumnFetcher.getInstance().loadString(cursor, "SAL_FREQ"));
-            usersModelObject.setWorkCreatDtm(ColumnFetcher.getInstance().loadDateTime(cursor, "workCreatDtm"));
-            usersModelObject.setWorkModDtm(ColumnFetcher.getInstance().loadDateTime(cursor, "workModDtm"));
-            usersModelObject.setSET_NOTIF_TIME(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_TIME"));
-            usersModelObject.setSET_NOTIF_ACTIVE(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_ACTIVE"));
-            usersModelObject.setSET_NOTIF_BUZZ(ColumnFetcher.getInstance().loadString(cursor, "SET_NOTIF_BUZZ"));
-            usersModelObject.setSET_SND_ACTIVE(ColumnFetcher.getInstance().loadString(cursor, "SET_SND_ACTIVE"));
-            usersModelObject.setSET_SEC_ACTIVE(ColumnFetcher.getInstance().loadString(cursor, "SET_SEC_ACTIVE"));
-            usersModelObject.setSET_SEC_PIN(ColumnFetcher.getInstance().loadString(cursor, "SET_SEC_PIN"));
-
-            userModelMap.put(cursor.getPosition(), usersModelObject);
+        UserMO userModelObject = null;
+        if (cursor.moveToNext()){
+            userModelObject = new UserMO();
+            userModelObject.setNAME(ColumnFetcher.loadString(cursor, "NAME"));
+            userModelObject.setEMAIL(ColumnFetcher.loadString(cursor, "EMAIL"));
+            userModelObject.setDOB(ColumnFetcher.loadDate(cursor, "DOB"));
+            userModelObject.setTELEPHONE(ColumnFetcher.loadString(cursor, "TELEPHONE"));
+            userModelObject.setDEV_ID(ColumnFetcher.loadString(cursor, "DEV_ID"));
+            userModelObject.setCNTRY_NAME(ColumnFetcher.loadString(cursor, "CNTRY_NAME"));
+            userModelObject.setCUR(ColumnFetcher.loadString(cursor, "CUR"));
+            userModelObject.setCUR_CODE(ColumnFetcher.loadString(cursor, "CUR_CODE"));
+            userModelObject.setSET_NOTIF_TIME(ColumnFetcher.loadString(cursor, "SET_NOTIF_TIME"));
+            userModelObject.setSET_NOTIF_BUZZ(ColumnFetcher.loadString(cursor, "SET_NOTIF_BUZZ"));
+            userModelObject.setSET_SEC_PIN(ColumnFetcher.loadString(cursor, "SET_SEC_PIN"));
         }
         cursor.close();
         db.close();
-        return userModelMap;
+        return userModelObject;
     }
 
     //Gets the most recently used username from the db

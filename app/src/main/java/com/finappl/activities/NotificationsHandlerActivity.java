@@ -35,8 +35,10 @@ import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.SettingsNotificationModel;
 import com.finappl.models.SpinnerModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
+import com.finappl.utils.FinappleUtility;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,7 +56,7 @@ public class NotificationsHandlerActivity extends Activity {
     private NotificationDbService notificationDbService;
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class NotificationsHandlerActivity extends Activity {
         notificationDbService = new NotificationDbService(mContext);
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -132,30 +134,6 @@ public class NotificationsHandlerActivity extends Activity {
         //for ADD action in notification starts--
         //TODO: ADD action yet to be implemented
         //for ADD action in notification ends--
-    }
-
-    private UsersModel getUser(){
-        AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(mContext, LoginActivity.class);
-            mContext.startActivity(intent);
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(mContext, JimBrokeItActivity.class);
-            mContext.startActivity(intent);
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                "probably die twice by now.");
-        return null;
     }
 
     protected void showToast(String string){

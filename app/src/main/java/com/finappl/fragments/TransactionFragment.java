@@ -29,7 +29,9 @@ import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
 
 import java.text.ParseException;
@@ -62,7 +64,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     private CheckBox transactionSchedueCB;
     private LinearLayout transactionSchedLL;
 
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     private TransactionsDbService transactionsDbService;
     private AuthorizationDbService authorizationDbService;
@@ -187,7 +189,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     }
 
     private void getLoggedInUser(){
-        loggedInUserObj = authorizationDbService.getActiveUser().get(0);
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
     }
 
     @Override

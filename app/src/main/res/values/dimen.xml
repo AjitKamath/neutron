@@ -19,6 +19,7 @@
 
     <dimen name="screen_components_padding_from_walls">10dp</dimen>
     <dimen name="screen_half_width">140dp</dimen>
+    <dimen name="screen_full_width">328dp</dimen>
 
     <dimen name="divider_height">0.5dp</dimen>
     <dimen name="divider_margin">15dp</dimen>

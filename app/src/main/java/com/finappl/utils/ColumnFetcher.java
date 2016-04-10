@@ -25,7 +25,7 @@ public class ColumnFetcher{
 	
 	public static String loadString(Cursor cursor, String column){
 	    if (cursor.isNull(cursor.getColumnIndex(column))){
-	        return null;
+	        return "";
 	    }
 	    return cursor.getString(cursor.getColumnIndex(column));
 	}

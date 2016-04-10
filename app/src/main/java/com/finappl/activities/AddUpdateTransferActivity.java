@@ -33,8 +33,10 @@ import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.Constants;
+import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
 
 import java.text.ParseException;
@@ -57,7 +59,7 @@ public class AddUpdateTransferActivity extends Activity {
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
 	//header
 	private TextView addUpdtrnfrDayTV, addUpdTrnfrMonthTV, addUpdTrnfrYearTV, addUpdTrnfrSuperScriptTV;
@@ -88,7 +90,7 @@ public class AddUpdateTransferActivity extends Activity {
 		setContentView(R.layout.transfer_add_update);
 
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return;
         }
@@ -127,7 +129,7 @@ public class AddUpdateTransferActivity extends Activity {
         }
         //this means the user is in this page for a fresh new transfer...so select default as selected
         else{
-            addUpdTrnfrFromAccSpn.setSelection(getSpinnerItemIndex(accList, Constants.DEFAULTS_ACCOUNTS_SELECT));
+            //addUpdTrnfrFromAccSpn.setSelection(getSpinnerItemIndex(accList, Constants.DEFAULTS_ACCOUNTS_SELECT));
             addUpdateTrnsfrPageFabIB.setTag("ADD");
         }
 
@@ -137,7 +139,7 @@ public class AddUpdateTransferActivity extends Activity {
         }
         //this means the user is in this page for a fresh new transfer...so select default as selected
         else{
-            addUpdTrnfrToAccSpn.setSelection(getSpinnerItemIndex(accList, Constants.DEFAULTS_ACCOUNTS_SELECT));
+           // addUpdTrnfrToAccSpn.setSelection(getSpinnerItemIndex(accList, Constants.DEFAULTS_ACCOUNTS_SELECT));
         }
 
         //set notes
@@ -450,31 +452,6 @@ public class AddUpdateTransferActivity extends Activity {
 		startActivity(intent);
         finish();
 	}
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                    "probably die twice by now.");
-        return null;
-    }
 
     //---------------------------------Edit Text type Listener-----------------------------------
     TextWatcher fieldTextWatcher;

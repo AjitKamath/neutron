@@ -11,7 +11,7 @@ public class TodaysNotifications implements Serializable {
     private List<ScheduledTransactionModel> todaysSchedTransactionsList;
     private List<ScheduledTransferModel> todaysSchedTransfersList;
 
-    private UsersModel loggedInUser;
+    private UserMO loggedInUser;
 
     public List<ScheduledTransactionModel> getTodaysSchedTransactionsList() {
         return todaysSchedTransactionsList;
@@ -29,11 +29,11 @@ public class TodaysNotifications implements Serializable {
         this.todaysSchedTransfersList = todaysSchedTransfersList;
     }
 
-    public UsersModel getLoggedInUser() {
+    public UserMO getLoggedInUser() {
         return loggedInUser;
     }
 
-    public void setLoggedInUser(UsersModel loggedInUser) {
+    public void setLoggedInUser(UserMO loggedInUser) {
         this.loggedInUser = loggedInUser;
     }
 }

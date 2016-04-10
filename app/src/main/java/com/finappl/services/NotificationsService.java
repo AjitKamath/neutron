@@ -28,7 +28,9 @@ import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.TodaysNotifications;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
+import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
 
 import java.text.SimpleDateFormat;
@@ -48,7 +50,7 @@ public class NotificationsService extends Service {
 
     private Context mContext = this;
 
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     @Override
     public void onCreate() {
@@ -58,11 +60,11 @@ public class NotificationsService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         //get the Active user
-        loggedInUserObj = getUser();
+        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
         if(loggedInUserObj == null){
             return Service.START_STICKY;
         }
-        else if("N".equalsIgnoreCase(loggedInUserObj.getSET_NOTIF_ACTIVE())){
+        else if(loggedInUserObj.getSET_SEC_PIN().isEmpty()){
             return Service.START_STICKY;
         }
 
@@ -147,11 +149,11 @@ public class NotificationsService extends Service {
         //TODO: yet to implement add and show
     }
 
-    private void buildSchTransferNotification(ScheduledTransferModel scheduledTransferModelObj, UsersModel loggedInUserObj){
+    private void buildSchTransferNotification(ScheduledTransferModel scheduledTransferModelObj, UserMO loggedInUserObj){
         String notificationTitle = this.getResources().getString(R.string.notifTitleSchedTransfer);
         String notificationMessage = this.getResources().getString(R.string.notifMsgSchedules);
         notificationTitle = notificationTitle.replace("XXXXX", loggedInUserObj.getNAME());
-        notificationMessage = notificationMessage.replace("YYYYY", "Transfer")+" "+loggedInUserObj.getCurrencyText()+scheduledTransferModelObj.getSCH_TRNFR_AMT();
+        notificationMessage = notificationMessage.replace("YYYYY", "Transfer")+" "+loggedInUserObj.getCUR_CODE()+scheduledTransferModelObj.getSCH_TRNFR_AMT();
 
         //generate unique hash for this particular transfer using its id
         int notifHashCode = IdGenerator.getInstance().getIntegerOnString(scheduledTransferModelObj.getSCH_TRNFR_ID());
@@ -210,7 +212,7 @@ public class NotificationsService extends Service {
                 .addAction(R.drawable.delete_small_grey, "CANCEL", pendingIntentCancel)
                 .setStyle(new Notification.InboxStyle()
                         .setBigContentTitle(scheduledTransferModelObj.getFromAccountStr() + " to " + scheduledTransferModelObj.getToAccountStr())
-                        .addLine(loggedInUserObj.getCurrencyText() + scheduledTransferModelObj.getSCH_TRNFR_AMT())
+                        .addLine(loggedInUserObj.getCUR_CODE() + scheduledTransferModelObj.getSCH_TRNFR_AMT())
                         .setSummaryText("This Scheduled Transfer will happen " + scheduledTransferModelObj.getSCH_TRNFR_FREQ()))
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
@@ -220,11 +222,11 @@ public class NotificationsService extends Service {
         notificationManager.notify(String.valueOf(notifHashCode), notifHashCode, mNotification);
     }
 
-    private void buildSchTransactionNotification(ScheduledTransactionModel scheduledTransactionModelObj, UsersModel loggedInUserObj){
+    private void buildSchTransactionNotification(ScheduledTransactionModel scheduledTransactionModelObj, UserMO loggedInUserObj){
         String notificationTitle = this.getResources().getString(R.string.notifTitleSchedTransaction);
         String notificationMessage = this.getResources().getString(R.string.notifMsgSchedules);
         notificationTitle = notificationTitle.replace("XXXXX", loggedInUserObj.getNAME());
-        notificationMessage = notificationMessage.replace("YYYYY", "Transaction")+" "+loggedInUserObj.getCurrencyText()+scheduledTransactionModelObj.getSCH_TRAN_AMT();
+        notificationMessage = notificationMessage.replace("YYYYY", "Transaction")+" "+loggedInUserObj.getCUR_CODE()+scheduledTransactionModelObj.getSCH_TRAN_AMT();
 
         //generate unique hash for this particular transfer using its id
         int notifHashCode = IdGenerator.getInstance().getIntegerOnString(scheduledTransactionModelObj.getSCH_TRAN_ID());
@@ -283,7 +285,7 @@ public class NotificationsService extends Service {
                 .addAction(R.drawable.delete_small_grey, "CANCEL", pendingIntentCancel)
                 .setStyle(new Notification.InboxStyle()
                         .setBigContentTitle(scheduledTransactionModelObj.getSCH_TRAN_NAME())
-                        .addLine(loggedInUserObj.getCurrencyText() + scheduledTransactionModelObj.getSCH_TRAN_AMT() + " (" + scheduledTransactionModelObj.getSCH_TRAN_TYPE() + ")")
+                        .addLine(loggedInUserObj.getCUR_CODE() + scheduledTransactionModelObj.getSCH_TRAN_AMT() + " (" + scheduledTransactionModelObj.getSCH_TRAN_TYPE() + ")")
                         .setSummaryText("This Scheduled Transaction will happen " + scheduledTransactionModelObj.getSCH_TRAN_FREQ()))
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
@@ -471,12 +473,12 @@ public class NotificationsService extends Service {
         //build Scheduled Transfers ends--
     }
 
-    private void buildSchTransferJustNotification(ScheduledTransferModel scheduledTransferModelObj, UsersModel loggedInUserObj) {
+    private void buildSchTransferJustNotification(ScheduledTransferModel scheduledTransferModelObj, UserMO loggedInUserObj) {
         String notificationTitle = this.getResources().getString(R.string.notifTitleSchedules);
         String notificationMessage = this.getResources().getString(R.string.notifMsgSchedulesAdd);
         notificationTitle = notificationTitle.replace("XXXXX", loggedInUserObj.getNAME());
         notificationMessage = notificationMessage.replace("YYYYY", "Transfer");
-        notificationMessage = notificationMessage.replace("WWWWW", loggedInUserObj.getCurrencyText()+scheduledTransferModelObj.getSCH_TRNFR_AMT());
+        notificationMessage = notificationMessage.replace("WWWWW", loggedInUserObj.getCUR_CODE()+scheduledTransferModelObj.getSCH_TRNFR_AMT());
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -491,7 +493,7 @@ public class NotificationsService extends Service {
                 .setSound(soundUri)
                 .setStyle(new Notification.InboxStyle()
                         .setBigContentTitle(scheduledTransferModelObj.getFromAccountStr() + " to " + scheduledTransferModelObj.getToAccountStr())
-                        .addLine(loggedInUserObj.getCurrencyText() + scheduledTransferModelObj.getSCH_TRNFR_AMT())
+                        .addLine(loggedInUserObj.getCUR_CODE() + scheduledTransferModelObj.getSCH_TRNFR_AMT())
                         .setSummaryText("This Transfer will happen " + scheduledTransferModelObj.getSCH_TRNFR_FREQ()))
                 .setOngoing(false)
                 .setOnlyAlertOnce(true)
@@ -504,12 +506,12 @@ public class NotificationsService extends Service {
         notificationManager.notify(notifHashCode, mNotification);
     }
 
-    private void buildSchTransactionJustNotification(ScheduledTransactionModel scheduledTransactionModelObj, UsersModel loggedInUserObj){
+    private void buildSchTransactionJustNotification(ScheduledTransactionModel scheduledTransactionModelObj, UserMO loggedInUserObj){
         String notificationTitle = this.getResources().getString(R.string.notifTitleSchedules);
         String notificationMessage = this.getResources().getString(R.string.notifMsgSchedulesAdd);
         notificationTitle = notificationTitle.replace("XXXXX", loggedInUserObj.getNAME());
         notificationMessage = notificationMessage.replace("YYYYY", "Transaction");
-        notificationMessage = notificationMessage.replace("WWWWW", loggedInUserObj.getCurrencyText()+scheduledTransactionModelObj.getSCH_TRAN_AMT());
+        notificationMessage = notificationMessage.replace("WWWWW", loggedInUserObj.getCUR_CODE()+scheduledTransactionModelObj.getSCH_TRAN_AMT());
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -524,7 +526,7 @@ public class NotificationsService extends Service {
                 .setSound(soundUri)
                 .setStyle(new Notification.InboxStyle()
                         .setBigContentTitle(scheduledTransactionModelObj.getSCH_TRAN_NAME())
-                        .addLine(loggedInUserObj.getCurrencyText() + scheduledTransactionModelObj.getSCH_TRAN_AMT() + " (" + scheduledTransactionModelObj.getSCH_TRAN_TYPE() + ")")
+                        .addLine(loggedInUserObj.getCUR_CODE() + scheduledTransactionModelObj.getSCH_TRAN_AMT() + " (" + scheduledTransactionModelObj.getSCH_TRAN_TYPE() + ")")
                         .setSummaryText("This Transaction will happen " + scheduledTransactionModelObj.getSCH_TRAN_FREQ()))
                 .setOngoing(false)
                 .setOnlyAlertOnce(true)
@@ -548,21 +550,6 @@ public class NotificationsService extends Service {
         calendar.set(Calendar.SECOND, 0);
         long diffTimestamp = calendar.getTimeInMillis() - currentTimestamp;
         return (diffTimestamp < 0 ? 0 : diffTimestamp);
-    }
-
-
-
-    private UsersModel getUser(){
-        AuthorizationDbService authorizationDbService = new AuthorizationDbService(getApplicationContext());
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap != null && userMap.size() == 1){
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                "probably die twice by now.");
-        return null;
     }
 
     protected void showToast(String string){

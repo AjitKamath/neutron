@@ -27,8 +27,10 @@ import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
+import com.finappl.models.UserMO;
 import com.finappl.models.UsersModel;
 import com.finappl.utils.EncryptionUtil;
+import com.finappl.utils.FinappleUtility;
 
 import java.util.Map;
 
@@ -44,7 +46,7 @@ public class LockerActivity extends Activity {
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
-    private UsersModel loggedInUserObj;
+    private UserMO loggedInUserObj;
 
     private EditText lockPoprPinET;
 
@@ -83,9 +85,9 @@ public class LockerActivity extends Activity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
 
         if(sharedpreferences.getBoolean("LOCK", true)){
-            loggedInUserObj = getUser();
+            loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
 
-            if("Y".equalsIgnoreCase(loggedInUserObj.getSET_SEC_ACTIVE())){
+            if(loggedInUserObj != null && loggedInUserObj.getSET_SEC_PIN() != null && !loggedInUserObj.getSET_SEC_PIN().isEmpty()){
                 showLockerPopper();
             }
         }
@@ -160,31 +162,6 @@ public class LockerActivity extends Activity {
 
     protected void showToast(String string){
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
-    }
-
-    private UsersModel getUser(){
-        Map<Integer, UsersModel> userMap = authorizationDbService.getActiveUser();
-
-        if(userMap == null || (userMap != null && userMap.isEmpty())){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Please Login");
-            return null;
-        }
-        else if(userMap.size() > 1){
-            Intent intent = new Intent(this, JimBrokeItActivity.class);
-            startActivity(intent);
-            finish();
-            showToast("Multiple Users are Active : Possible DB Corruption.");
-        }
-        else{
-            return userMap.get(0);
-        }
-
-        Log.e(CLASS_NAME, "I'm not supposed to be read/print/shown..... This should have been a dead code. If you can read me, Authorization of user has failed and you should " +
-                "probably die twice by now.");
-        return null;
     }
 
     private void killPoppers(){
