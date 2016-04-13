@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowId;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
+import com.finappl.activities.CalendarActivity;
 import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.TransactionsDbService;
@@ -228,7 +230,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
 
 
 
-        DialogResultListener activity = (DialogResultListener) getActivity();
+        CalendarActivity activity = (CalendarActivity) this.getActivity();
         activity.onFinishUserDialog(messageStr);
         this.dismiss();
     }

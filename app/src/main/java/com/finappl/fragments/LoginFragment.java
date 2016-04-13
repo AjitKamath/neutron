@@ -12,12 +12,15 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
+import com.finappl.activities.CalendarActivity;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.UserMO;
 
@@ -31,31 +34,24 @@ public class LoginFragment extends DialogFragment implements LinearLayout.OnClic
     private Context mContext;
 
     private TextView loginUsernameET, loginPasswordET;
-    private LinearLayout loginLL, registerLL, register1NextLL;
+    private LinearLayout loginLL, registerLL, register1NextLL, register2NextLL, register3NextLL;
     private TextView finapplTV;
     private ImageView discardIV;
     private LinearLayout finapplLL;
     private LinearLayout simpleLL;
-    private LinearLayout beautifulLL;
-    private LinearLayout preciseLL;
-    private LinearLayout featuresLL;
-    private LinearLayout loginContentLL;
-
-
     private LinearLayout register1ContentLL;
-    private LinearLayout register2ContentLL;
-    private LinearLayout register3ContentLL;
 
     private UserMO userObj;
 
     private AuthorizationDbService authorizationDbService;
+    private Dialog dialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login, container);
 
-        Dialog d = getDialog();
-        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog = getDialog();
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         initComps(view);
         setupPage();
@@ -76,25 +72,19 @@ public class LoginFragment extends DialogFragment implements LinearLayout.OnClic
     private void initComps(View view){
         loginUsernameET = (TextView) view.findViewById(R.id.loginUsernameETId);
         loginPasswordET = (TextView) view.findViewById(R.id.loginPasswordETId);
-        loginLL = (LinearLayout) view.findViewById(R.id.loginLLId);
+        loginLL = (LinearLayout) view.findViewById(R.id.loginButtonLLId);
         registerLL = (LinearLayout) view.findViewById(R.id.registerLLId);
         discardIV = (ImageView) view.findViewById(R.id.discardIVId);
-        finapplLL = (LinearLayout) view.findViewById(R.id.finapplLLId);
+        finapplLL = (LinearLayout) view.findViewById(R.id.loginLLId);
         simpleLL = (LinearLayout) view.findViewById(R.id.simpleLLId);
-        beautifulLL = (LinearLayout) view.findViewById(R.id.beautifulLLId);
-        preciseLL = (LinearLayout) view.findViewById(R.id.preciseLLId);
-        featuresLL = (LinearLayout) view.findViewById(R.id.featuresLLId);
-        loginContentLL = (LinearLayout) view.findViewById(R.id.loginContentLLId);
         register1NextLL = (LinearLayout) view.findViewById(R.id.register1NextLLId);
-
-                register1ContentLL = (LinearLayout) view.findViewById(R.id.register1ContentLLId);
-        //register2ContentLL = (LinearLayout) view.findViewById(R.id.register2ContentLLId);
-        //register3ContentLL = (LinearLayout) view.findViewById(R.id.register3ContentLLId);
 
         loginLL.setOnClickListener(this);
         registerLL.setOnClickListener(this);
         discardIV.setOnClickListener(this);
         register1NextLL.setOnClickListener(this);
+
+        discardIV.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -130,34 +120,37 @@ public class LoginFragment extends DialogFragment implements LinearLayout.OnClic
             }
         }
         else if(v.getId() == registerLL.getId()){
-            animateView(finapplLL, -655);
+            animateView(finapplLL);
+            discardIV.setVisibility(View.VISIBLE);
         }
         else if(v.getId() == register1NextLL.getId()){
-            animateView(simpleLL, -655);
+            //TODO: registration is in complete
+        }
+        else if(v.getId() == discardIV.getId()) {
+            doLogin = true;
+            messageStr = "LOGIN";
         }
 
-        //TODO: registration is in complete
-
         if(doLogin){
-            DialogResultListener activity = (DialogResultListener) getActivity();
+            CalendarActivity activity = (CalendarActivity) this.getActivity();
             activity.onFinishUserDialog(messageStr);
             this.dismiss();
         }
     }
 
-    private void animateView(LinearLayout layout, int margin){
-        final int newLeftMargin = margin;
-        final LinearLayout tempLayout = layout;
+    private void animateView(final LinearLayout layout){
         Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tempLayout.getLayoutParams();
-                params.leftMargin = (int)(newLeftMargin * interpolatedTime);
-                tempLayout.setLayoutParams(params);
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layout.getLayoutParams();
+                params.leftMargin = (int)(-660 * interpolatedTime);
+                layout.setLayoutParams(params);
             }
         };
         a.setDuration(250); // in ms
-        tempLayout.startAnimation(a);
+        layout.startAnimation(a);
+
+        //TODO: -660 is based on the moto-g test on other screen sizes required
     }
 
     protected void showToast(String string){

@@ -203,7 +203,7 @@
     <color name="tertiaryText">#808080</color>
     <color name="formHeadingTextDark">#000000</color>
     <color name="formHintTextDark">#D3D3D3</color>
-    <color name="formTextDark">#000000</color>
+    <color name="formTextDark">#808080</color>
     <color name="formHeadingTextLight">#FFFFFF</color>
     <color name="formHintTextLight">#FFFFFF</color>
     <color name="formTextLight">#FFFFFF</color>

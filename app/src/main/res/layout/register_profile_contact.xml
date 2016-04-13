@@ -88,6 +88,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="@dimen/screen_components_padding_from_walls"
         android:id="@+id/profileContactContentLLId"
         android:layout_width="fill_parent"
         android:layout_height="260dp"
@@ -159,37 +160,38 @@
 
         </LinearLayout>
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/profileContactContentLLId"
-        android:background="@color/white"
-        android:gravity="center"
-        android:orientation="horizontal">
-
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/profileContactContentLLId"
             android:background="@color/white"
-            android:clickable="true"
-            android:gravity="right"
-            android:onClick="goToCalendarPage"
-            android:paddingRight="10dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <TextView
-                android:background="@drawable/oval_buttons_text_view"
-                android:layout_width="170dp"
-                android:layout_height="30dp"
-                android:gravity="center"
-                android:text="OK, LETS START"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_button_big_text_size"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/white"
+                android:clickable="true"
+                android:gravity="right"
+                android:onClick="goToCalendarPage"
+                android:paddingRight="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:background="@drawable/oval_buttons_text_view"
+                    android:layout_width="170dp"
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:text="OK, LETS START"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_button_big_text_size"/>
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
+
+
 
 </RelativeLayout>

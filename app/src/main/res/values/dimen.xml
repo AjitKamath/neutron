@@ -10,16 +10,24 @@
     <dimen name="layout_header_size">40dp</dimen>
     <dimen name="layout_header_elevation">10dp</dimen>
 
-    <dimen name="text_header_primary">70sp</dimen>
-    <dimen name="text_header_secondary">15sp</dimen>
+    <dimen name="text_header_primary">40sp</dimen>
+    <dimen name="text_header_secondary">10sp</dimen>
     <dimen name="input_indicator_image_size">20dp</dimen>
 
     <dimen name="text_form_header_size">10sp</dimen>
     <dimen name="text_form_text_size">18sp</dimen>
+    <dimen name="text_form_text_height">30dp</dimen>
 
     <dimen name="screen_components_padding_from_walls">10dp</dimen>
     <dimen name="screen_half_width">140dp</dimen>
-    <dimen name="screen_full_width">328dp</dimen>
+    <dimen name="screen_full_width">330dp</dimen>
+    <dimen name="screen_full_width_negative">0dp</dimen>
+    <dimen name="login_header_height">200dp</dimen>
+    <dimen name="login_header_text_size_primary">40dp</dimen>
+    <dimen name="login_header_text_size_secondary">10dp</dimen>
+    <dimen name="login_form_height">450dp</dimen>
+    <dimen name="login_form_button_text_size">15sp</dimen>
+    <dimen name="login_form_component_space">35dp</dimen>
 
     <dimen name="divider_height">0.5dp</dimen>
     <dimen name="divider_margin">15dp</dimen>

@@ -2202,6 +2202,12 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
     @Override
     public void onFinishUserDialog(String resultStr) {
+        if("LOGIN".equalsIgnoreCase(resultStr)){
+            killPopper();
+            forceLogin();
+            return;
+        }
+
         killPopper();
         showToast(resultStr);
         fetchMonthLegend();

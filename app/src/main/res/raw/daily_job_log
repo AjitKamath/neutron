@@ -610,7 +610,20 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 1. migrtion of login & register to a fragment
 2. animation poc on login and register.
 
-------------------------------------------------------------------------------------18/51-----------------------------------------------------------------------------------
+<--Git Push on 10-apr-2016-->
+
+11-apr-16
+1. login fragment design.
+
+12-apr-2016
+1. cosmetic sanitization of login.xml
+2. load back login if cancelled login
+
+13-apr-16
+1. sanitized login screen. consolidated into login & register screens.
+2. added background for login popper.
+
+------------------------------------------------------------------------------------18/54-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
 2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.
    warn they will all be moved to others..same for all)
@@ -664,9 +677,12 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 49. POC on threads for intensive tasks(db, adapters)
 50. if the user has chosen a future date while adding a new transaction/transfer, and if it isn't a scheduled transaction/transfer, then ask whether to add the transaction/transfer now or on the particular day
 51. POC on Property Row mapper
+52. security check (check active user id in sharedprefs on each button action)
+53. disable back button for login popper.
+54. check for logged n user and show login popper before loading the calendar.xml
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-CORE FUNTIONALITY CHECK:	0/22
+CORE FUNCTIONALITY CHECK:	0/22
 
 TRANSACTION: 			0/5
 1. NEW TRANSACTION		(N)
