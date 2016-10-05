@@ -25,12 +25,9 @@ import android.widget.Toast;
 import com.finappl.R;
 import com.finappl.dbServices.AddUpdateAccDbService;
 import com.finappl.dbServices.AuthorizationDbService;
-import com.finappl.models.AccountsModel;
+import com.finappl.models.AccountsMO;
 import com.finappl.models.UserMO;
-import com.finappl.models.UsersModel;
 import com.finappl.utils.FinappleUtility;
-
-import java.util.Map;
 
 /**
  * Created by ajit on 31/1/15.
@@ -60,7 +57,7 @@ public class AddUpdateAccountActivity extends Activity {
     //User
     private UserMO loggedInUserObj;
 
-    private AccountsModel accountsModelObj = null;
+    private AccountsMO accountsModelObj = null;
 
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +65,7 @@ public class AddUpdateAccountActivity extends Activity {
         setContentView(R.layout.manage_content_add_update_account);
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }
@@ -86,11 +83,11 @@ public class AddUpdateAccountActivity extends Activity {
 
     private void getAccountFromIntent() {
         if(getIntent().getExtras() != null && getIntent().getExtras().get("ACCOUNT_OBJ") != null){
-            accountsModelObj = (AccountsModel) getIntent().getExtras().get("ACCOUNT_OBJ");
+            accountsModelObj = (AccountsMO) getIntent().getExtras().get("ACCOUNT_OBJ");
         }
 
         if(accountsModelObj == null){
-            accountsModelObj = new AccountsModel();
+            accountsModelObj = new AccountsMO();
             Log.i(CLASS_NAME, "Account Details is null in intent... User is here to create a new Account");
             return;
         }
@@ -115,7 +112,7 @@ public class AddUpdateAccountActivity extends Activity {
         });
     }
 
-    public AccountsModel getInputs(){
+    public AccountsMO getInputs(){
         String accAmt = addAccInitAmtET.getText().toString();
 
         if(accAmt.isEmpty()){
@@ -130,7 +127,7 @@ public class AddUpdateAccountActivity extends Activity {
     }
 
     public void onDoneUpdate(View view){
-        AccountsModel accObj = getInputs();
+        AccountsMO accObj = getInputs();
 
         if(accObj.getACC_NAME().trim().isEmpty()){
             showToast("account name cannot be empty !");

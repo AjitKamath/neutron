@@ -6,12 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.finappl.models.AccountsModel;
+import com.finappl.models.AccountsMO;
 import com.finappl.models.CategoryModel;
 import com.finappl.models.ManageContentModel;
 import com.finappl.models.SpentOnModel;
 import com.finappl.utils.ColumnFetcher;
-import com.finappl.utils.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -226,7 +225,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		Log.i(CLASS_NAME, "query to get all accounts for manage content page : " + sqlQuerySB);
 		cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
-		Map<String, List<AccountsModel>> accMap = new TreeMap<String, List<AccountsModel>>();
+		Map<String, List<AccountsMO>> accMap = new TreeMap<String, List<AccountsMO>>();
 
 		while (cursor.moveToNext()) {
 			String accIdStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_ID");
@@ -235,7 +234,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 			String accNoteStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_NOTE");
 			Double accTotal = ColumnFetcher.getInstance().loadDouble(cursor, "ACC_TOTAL");
 
-			AccountsModel accountsModelObj = new AccountsModel();
+			AccountsMO accountsModelObj = new AccountsMO();
 			accountsModelObj.setACC_ID(accIdStr);
 			accountsModelObj.setACC_NAME(accNameStr);
 			accountsModelObj.setACC_IS_DEFAULT(accIsDefStr);
@@ -243,26 +242,26 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 			accountsModelObj.setACC_TOTAL(accTotal);
 
 			if("N".equalsIgnoreCase(accIsDefStr)){
-				List<AccountsModel> accList = null;
+				List<AccountsMO> accList = null;
 
 				if(accMap.containsKey("USER")){
 					accList = accMap.get("USER");
 				}
 				else{
-					accList = new ArrayList<AccountsModel>();
+					accList = new ArrayList<AccountsMO>();
 				}
 
 				accList.add(accountsModelObj);
 				accMap.put("USER", accList);
 			}
 			else if("Y".equalsIgnoreCase(accIsDefStr)){
-				List<AccountsModel> accList = null;
+				List<AccountsMO> accList = null;
 
 				if(accMap.containsKey("Y-DEFAULT")){
 					accList = accMap.get("Y-DEFAULT");
 				}
 				else{
-					accList = new ArrayList<AccountsModel>();
+					accList = new ArrayList<AccountsMO>();
 				}
 
 				accList.add(accountsModelObj);

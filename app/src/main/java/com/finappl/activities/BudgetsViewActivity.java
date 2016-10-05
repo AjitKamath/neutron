@@ -58,7 +58,7 @@ public class BudgetsViewActivity extends Activity {
         Log.e(CLASS_NAME, "Navigated to Budgets Screen");
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }

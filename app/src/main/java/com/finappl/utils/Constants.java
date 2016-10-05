@@ -62,7 +62,7 @@ public final class Constants{
 
     //DB
     public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 22;
+    public static final int DB_VERSION = 29;
 
     public static final String DB_TABLE_USER = "USERS";
     public static final String DB_TABLE_ACCOUNT = "ACCOUNTS";
@@ -71,16 +71,18 @@ public final class Constants{
     public static final String DB_TABLE_TRANSACTION = "TRANSACTIONS";
     public static final String DB_TABLE_BUDGET = "BUDGETS";
     public static final String DB_TABLE_TRANSFER = "TRANSFERS";
+    public static final String DB_TABLE_REPEAT = "REPEATS";
     public static final String DB_TABLE_COUNTRY = "COUNTRIES";
     public static final String DB_TABLE_NOTIFICATION = "NOTIFICATIONS";
     public static final String DB_TABLE_SETTING = "SETTINGS";
     //DB
 
     //defaults
-    public static final String DEFAULT_CATEGORIES = "Food,Entertainment,Bill,Commute,Shopping,Fuel,Health,Other";
-    public static final String DEFAULT_ACCOUNTS = "Cash,Bank,Credit Card,Debit Card";
-    public static final String DEFAULT_SPENT_ONS = "Self,Family,Friends,Business";
-    public static final String DEFAULT_COUNTRIES_CURRENCIES = "India-Rupee-INR,USA-Dollar-USD,USA-Dollar-USD,Australia-Dollar-AUD";
+    public static final String DEFAULT_CATEGORIES = "FOOD,ENTERTAINMENT,BILL,COMMUTE,SHOPPING,FUEL,HEALTH,OTHER";
+    public static final String DEFAULT_CATEGORY = "OTHER";
+    public static final String DEFAULT_ACCOUNTS = "CASH,BANK,CREDIT CARD,DEBIT CARD";
+    public static final String DEFAULT_SPENT_ONS = "SELF,FAMILY,FRIENDS,BUSINESS";
+    public static final String DEFAULT_COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-INR,USA-1-DOLLAR-USD,AUSTRALIA-61-DOLLAR-AUD";
 
     public static final String DEFAULT_QUICK_TRANSACTION_NAME = "Quick Transaction";
 
@@ -109,6 +111,7 @@ public final class Constants{
     public static final String DB_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String UI_DATE_TIME_FORMAT = "d MMM ''yy H:mm:ss a";
     public static final String UI_DATE_FORMAT = "d MMM ''yy";
+    public static final SimpleDateFormat JAVA_DATE_FORMAT_SDF = new SimpleDateFormat(JAVA_DATE_FORMAT);
     public static final SimpleDateFormat DB_DATE_FORMAT_SDF = new SimpleDateFormat(DB_DATE_FORMAT);
     public static final SimpleDateFormat DB_DATE_TIME_FORMAT_SDF = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
     public static final SimpleDateFormat UI_DATE_FORMAT_SDF = new SimpleDateFormat(UI_DATE_FORMAT);
@@ -116,8 +119,11 @@ public final class Constants{
 
     //Bundle Keys, Sharde Prefs, Intent, fragment names
     public static final String FRAGMENT_TRANSACTION = "FRAGMENT_TRANSACTION";
+    public static final String FRAGMENT_CATEGORY = "FRAGMENT_CATEGORY";
     public static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
     public static final String TRANSACTION_OBJECT = "TRANSACTION_OBJECT";
+    public static final String CATEGORY_OBJECT = "CATEGORY_OBJECT";
+    public static final String SELECTED_CATEGORY_OBJECT = "SELECTED_CATEGORY_OBJECT";
     public static final String SHARED_PREF = "SHARED_PREFERENCE";
     public static final String SHARED_PREF_ACTIVE_USER_ID = "ACTIVE_USER_ID";
 }

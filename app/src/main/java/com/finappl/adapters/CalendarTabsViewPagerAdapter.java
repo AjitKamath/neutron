@@ -19,7 +19,7 @@ import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
 import com.finappl.dbServices.TransactionsDbService;
-import com.finappl.models.AccountsModel;
+import com.finappl.models.AccountsMO;
 import com.finappl.models.BudgetModel;
 import com.finappl.models.ConsolidatedTransactionModel;
 import com.finappl.models.ConsolidatedTransferModel;
@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
+import static com.finappl.utils.Constants.*;
 
 /**
  * Created by ajit on 30/9/15.
@@ -66,7 +66,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
 
     private Map<String, ConsolidatedTransactionModel> consolidatedTransactionModelMap;
     private Map<String, ConsolidatedTransferModel> consolidatedTransferModelMap;
-    private List<AccountsModel> accountsList;
+    private List<AccountsMO> accountsList;
     private List<BudgetModel> budgetsList;
     private List<ScheduledTransactionModel> scheduledTransactionModelList;
     private List<ScheduledTransferModel> scheduledTransferModelList;
@@ -106,15 +106,9 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         }
         //Budgets check ends
 
-        if (monthLegendMap == null || (monthLegendMap != null && monthLegendMap.isEmpty())) {
-            Log.e(CLASS_NAME, "Nothing found in MonthLegend...At least Accounts must be present");
-            return;
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
-        MonthLegend monthLegendObj = monthLegendMap.get(sdf.format(selectedDate));
+        MonthLegend monthLegendObj = monthLegendMap.get(JAVA_DATE_FORMAT_SDF.format(selectedDate));
         if (monthLegendObj == null) {
-            Log.e(CLASS_NAME, "Nothing found in MonthLegend...At least Accounts must be present");
+            Log.e(CLASS_NAME, "Nothing found in MonthLegend...");
             return;
         }
 

@@ -31,6 +31,7 @@ import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
 import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.ScheduledTransfersDbService;
+import com.finappl.models.AccountsMO;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.SpinnerModel;
@@ -93,7 +94,7 @@ public class AddUpdateScheduleTransferActivity extends Activity {
         Log.i(CLASS_NAME, "Navigated to Schedule Transfer Add Update Screen");
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }

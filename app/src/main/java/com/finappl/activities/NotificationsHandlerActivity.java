@@ -54,6 +54,7 @@ public class NotificationsHandlerActivity extends Activity {
     private Context mContext = this;
 
     private NotificationDbService notificationDbService;
+    private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     //User
     private UserMO loggedInUserObj;
@@ -79,7 +80,7 @@ public class NotificationsHandlerActivity extends Activity {
         notificationDbService = new NotificationDbService(mContext);
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }

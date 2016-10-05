@@ -6,7 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Spinner;
 
+import com.finappl.models.AccountsMO;
+import com.finappl.models.CategoryMO;
+import com.finappl.models.SpentOnMO;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.utils.ColumnFetcher;
@@ -18,14 +22,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.finappl.utils.Constants.ADMIN_USERID;
 import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 import static com.finappl.utils.Constants.DB_NAME;
 import static com.finappl.utils.Constants.DB_NONAFFIRMATIVE;
+import static com.finappl.utils.Constants.DB_TABLE_ACCOUNT;
 import static com.finappl.utils.Constants.DB_TABLE_ACCOUNTTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_CATEGORY;
 import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_SPENTON;
 import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSACTION;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSACTIONTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSFER;
 import static com.finappl.utils.Constants.DB_VERSION;
 
 public class TransactionsDbService extends SQLiteOpenHelper {
@@ -34,6 +44,225 @@ public class TransactionsDbService extends SQLiteOpenHelper {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
     private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
+
+    private Context mContext;
+
+    public CategoryMO getDefaultCategory(String loggedInUserIDStr){
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" CAT_ID, ");
+        sqlQuerySB.append(" CAT_NAME ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_CATEGORY);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" CAT_IS_DEF = '"+ Constants.DB_AFFIRMATIVE+"' ");
+        sqlQuerySB.append(" AND (USER_ID = '"+loggedInUserIDStr+"' OR USER_ID = '"+ADMIN_USERID+"') ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
+
+        if (cursor.moveToNext()) {
+            CategoryMO categoryMO = new CategoryMO();
+            categoryMO.setCAT_ID(ColumnFetcher.loadString(cursor, "CAT_ID"));
+            categoryMO.setCAT_NAME(ColumnFetcher.loadString(cursor, "CAT_NAME"));
+
+            return  categoryMO;
+        }
+
+        return null;
+    }
+
+    public List<SpinnerModel> getAllCategories(String userId){
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" CAT_ID, ");
+        sqlQuerySB.append(" CAT_NAME ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_CATEGORY);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" CAT_IS_DEF = '"+ Constants.DB_AFFIRMATIVE+"' ");
+        sqlQuerySB.append(" OR USER_ID = '"+userId+"' ");
+
+        sqlQuerySB.append(" ORDER BY ");
+        sqlQuerySB.append(" CAT_NAME ");
+        sqlQuerySB.append(" ASC ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        List<SpinnerModel> categoryMOList = new ArrayList<>();
+        while (cursor.moveToNext()){
+            SpinnerModel categoryMO = new SpinnerModel();
+            categoryMO.setItemId(ColumnFetcher.getInstance().loadString(cursor, "CAT_ID"));
+            categoryMO.setItemName(ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME"));
+            categoryMOList.add(categoryMO);
+        }
+        cursor.close();
+        db.close();
+        return categoryMOList;
+    }
+
+    public List<SpinnerModel> getAllSpentOn(String userId){
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" SPNT_ON_ID, ");
+        sqlQuerySB.append(" SPNT_ON_NAME ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_SPENTON);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" SPNT_ON_IS_DEF = '"+Constants.DB_AFFIRMATIVE+"' ");
+        sqlQuerySB.append(" OR ");
+        sqlQuerySB.append(" USER_ID = '"+userId+"' ");
+
+        sqlQuerySB.append(" ORDER BY ");
+        sqlQuerySB.append(" SPNT_ON_NAME ");
+        sqlQuerySB.append(" ASC ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        List<SpinnerModel> spentOnList = new ArrayList<>();
+        while (cursor.moveToNext()){
+            SpinnerModel spentOnMO = new SpinnerModel();
+            spentOnMO.setItemId(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_ID"));
+            spentOnMO.setItemName(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_NAME"));
+            spentOnList.add(spentOnMO);
+        }
+        cursor.close();
+        db.close();
+        return spentOnList;
+    }
+
+    //---------------------method to get all accounts--------------------------//
+    public List<SpinnerModel> getAllAccounts(String userId){
+        List<SpinnerModel> accountsList = new ArrayList<SpinnerModel>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        if(db == null){
+            Log.e(CLASS_NAME, "SQLiteDatabase object is null");
+            return null;
+        }
+
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" ACC.ACC_NAME, ");
+        sqlQuerySB.append(" ACC.ACC_ID, ");
+        sqlQuerySB.append(" ACC.ACC_IS_DEF, ");
+
+        sqlQuerySB.append(" (( SELECT ");
+        sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTION);
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" TRAN_TYPE = 'INCOME' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" ACC_ID = ACC.ACC_ID ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRAN_IS_SCHED ");
+        sqlQuerySB.append(" = ");
+        sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRAN_REPEAT is null ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
+        sqlQuerySB.append(" IN ");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"')) ");
+
+        sqlQuerySB.append(" + ");
+
+        sqlQuerySB.append(" (SELECT ");
+        sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_TRANSFER);
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" ACC_ID_TO = ACC.ACC_ID ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRNFR_IS_SCHED ");
+        sqlQuerySB.append(" = ");
+        sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRNFR_REPEAT is null ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
+        sqlQuerySB.append(" IN ");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"') ))");
+
+        sqlQuerySB.append(" - ");
+
+        sqlQuerySB.append(" ((SELECT ");
+        sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTION);
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" TRAN_TYPE = 'EXPENSE' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" ACC_ID = ACC.ACC_ID ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
+        sqlQuerySB.append(" IN ");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"')) ");
+
+        sqlQuerySB.append(" + ");
+
+        sqlQuerySB.append(" (SELECT ");
+        sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_TRANSFER);
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" ACC_ID_FRM = ACC.ACC_ID ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
+        sqlQuerySB.append(" IN ");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"') ))");
+
+        sqlQuerySB.append(" AS ACC_TOTAL ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT+" ACC ");
+
+        sqlQuerySB.append(" LEFT JOIN ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTION+" TRAN");
+        sqlQuerySB.append(" ON ");
+        sqlQuerySB.append(" TRAN.ACC_ID = ACC.ACC_ID ");
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
+        sqlQuerySB.append(" IN ");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"') ");
+
+        sqlQuerySB.append(" GROUP BY ACC.ACC_ID ");
+        sqlQuerySB.append(" ORDER BY ACC.CREAT_DTM ");
+
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        String accountIdStr, accountNameStr, currecyStr, accountIsDefaultStr;
+        Double accountTotal;
+        SpinnerModel accountsModel = null;
+        while (cursor.moveToNext()){
+            accountIdStr = ColumnFetcher.loadString(cursor, "ACC_ID");
+            accountNameStr = ColumnFetcher.loadString(cursor, "ACC_NAME");
+            accountTotal = ColumnFetcher.loadDouble(cursor, "ACC_TOTAL");
+            currecyStr = ColumnFetcher.loadString(cursor, "CUR_NAME");
+            accountIsDefaultStr = ColumnFetcher.loadString(cursor, "ACC_IS_DEFAULT");
+
+            accountsModel = new SpinnerModel();
+            accountsModel.setItemId(accountIdStr);
+            accountsModel.setItemName(accountNameStr);
+            accountsList.add(accountsModel);
+        }
+        cursor.close();
+        db.close();
+        return accountsList;
+    }
+    //--------------------- end of method to get all accounts--------------------------//
 
     public TransactionModel getTransactionOnTransactionId(String transactionIdStr){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -143,123 +372,13 @@ public class TransactionsDbService extends SQLiteOpenHelper {
         return result;
     }
 
-    public List<SpinnerModel> getAllCategories(String userId){
-        List<SpinnerModel> catList = new ArrayList<SpinnerModel>();
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" CAT_ID, ");
-        sqlQuerySB.append(" CAT_NAME ");
-
-        sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE);
-
-        sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" CAT_IS_DEFAULT ");
-        sqlQuerySB.append(" = ");
-        sqlQuerySB.append(" '"+Constants.DB_AFFIRMATIVE+"' ");
-
-        sqlQuerySB.append(" OR ");
-        sqlQuerySB.append(" (USER_ID = '"+userId+"' ");
-        sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" CAT_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"') ");
-
-        sqlQuerySB.append(" ORDER BY ");
-        sqlQuerySB.append(" CAT_NAME ");
-        sqlQuerySB.append(" ASC ");
-
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-
-        while (cursor.moveToNext()){
-            SpinnerModel spnObj = new SpinnerModel();
-            spnObj.setItemId(ColumnFetcher.getInstance().loadString(cursor, "CAT_ID"));
-            spnObj.setItemName(ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME"));
-
-            catList.add(spnObj);
-        }
-        cursor.close();
-        db.close();
-        return catList;
-    }
-
-    public List<SpinnerModel> getAllSpentOn(String userId){
-        List<SpinnerModel> spntList = new ArrayList<SpinnerModel>();
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" SPNT_ON_ID, ");
-        sqlQuerySB.append(" SPNT_ON_NAME ");
-
-        sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_SPENTONTABLE);
-
-        sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" SPNT_ON_IS_DEFAULT = '"+Constants.DB_AFFIRMATIVE+"' ");
-        sqlQuerySB.append(" OR ");
-        sqlQuerySB.append(" (USER_ID = '"+userId+"' ");
-        sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" SPNT_ON_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"') ");
-
-        sqlQuerySB.append(" ORDER BY ");
-        sqlQuerySB.append(" SPNT_ON_NAME ");
-        sqlQuerySB.append(" ASC ");
-
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-
-        while (cursor.moveToNext()){
-            SpinnerModel spnObj = new SpinnerModel();
-            spnObj.setItemId(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_ID"));
-            spnObj.setItemName(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_NAME"));
-
-            spntList.add(spnObj);
-        }
-        cursor.close();
-        db.close();
-        return spntList;
-    }
     //--------------------- end of method to get all spent on type--------------------------//
 
     //---------------------method to get all accounts--------------------------//
-    public List<SpinnerModel> getAllAccounts(String userId){
-        List<SpinnerModel> accList = new ArrayList<SpinnerModel>();
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" ACC_ID, ");
-        sqlQuerySB.append(" ACC_NAME ");
-
-        sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE);
-
-        sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" ACC_IS_DEFAULT = '"+Constants.DB_AFFIRMATIVE+"' ");
-        sqlQuerySB.append(" OR ");
-        sqlQuerySB.append(" (USER_ID = '"+userId+"' ");
-        sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" ACC_IS_DEL = '"+Constants.DB_NONAFFIRMATIVE+"') ");
-
-        sqlQuerySB.append(" ORDER BY ");
-        sqlQuerySB.append(" ACC_NAME ");
-        sqlQuerySB.append(" ASC ");
-
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-
-        while (cursor.moveToNext()){
-            SpinnerModel spnObj = new SpinnerModel();
-            spnObj.setItemId(ColumnFetcher.getInstance().loadString(cursor, "ACC_ID"));
-            spnObj.setItemName(ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME"));
-            accList.add(spnObj);
-        }
-        cursor.close();
-        db.close();
-        return accList;
-    }
+    /*public List<SpinnerModel> getAllAccounts(String userId){
+        CalendarDbService cal = new CalendarDbService(mContext);
+        return cal.getAllAccounts(userId);
+    }*/
     //--------------------- end of method to get all pay type--------------------------//
 
     @Override
@@ -269,7 +388,8 @@ public class TransactionsDbService extends SQLiteOpenHelper {
 
 	//constructors
 	public TransactionsDbService(Context context) {
-		super(context, DB_NAME, null, DB_VERSION);
+        super(context, DB_NAME, null, DB_VERSION);
+        mContext = context;
 	}
 
 	@Override

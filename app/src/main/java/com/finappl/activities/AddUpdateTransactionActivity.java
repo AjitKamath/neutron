@@ -88,7 +88,7 @@ public class AddUpdateTransactionActivity extends Activity {
 		setContentView(R.layout.transaction);
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }
@@ -247,7 +247,6 @@ public class AddUpdateTransactionActivity extends Activity {
         addUpdateTranExpRadio = (RadioButton) this.findViewById(R.id.addUpdateTranExpRadioId);
         addUpdateTranIncRadio = (RadioButton) this.findViewById(R.id.addUpdateTranIncRadioId);
         addUpdateTranExpIncRadioGrp = (RadioGroup) this.findViewById(R.id.addUpdateTranExpIncRadioGrpId);
-        addUpdateSpntOnSpn = (Spinner) this.findViewById(R.id.addUpdateSpntOnSpnId);
         addUpdateNoteET = (EditText) this.findViewById(R.id.addUpdateNoteETId);
         doneDiscardTV = (TextView) this.findViewById(R.id.addUpdateDoneTVId);
 

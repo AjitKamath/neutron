@@ -7,10 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.finappl.models.AccountsModel;
+import com.finappl.models.AccountsMO;
 import com.finappl.utils.ColumnFetcher;
 import com.finappl.utils.Constants;
-import com.finappl.utils.DateTimeUtil;
 import com.finappl.utils.IdGenerator;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +30,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
     private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
-    public AccountsModel getAccountDetailsOnAccountId(String accountIdStr) {
+    public AccountsMO getAccountDetailsOnAccountId(String accountIdStr) {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -109,9 +108,9 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
-        AccountsModel accountsModelObj = null;
+        AccountsMO accountsModelObj = null;
         if(cursor.moveToNext()) {
-            accountsModelObj = new AccountsModel();
+            accountsModelObj = new AccountsMO();
             accountsModelObj.setACC_NAME(ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME"));
             accountsModelObj.setACC_NOTE(ColumnFetcher.getInstance().loadString(cursor, "ACC_NOTE"));
             accountsModelObj.setACC_TOTAL(ColumnFetcher.getInstance().loadDouble(cursor, "ACC_TOTAL"));
@@ -125,7 +124,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         return null;
     }
 
-    public int updateOldAccount(AccountsModel accObj) {
+    public int updateOldAccount(AccountsMO accObj) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -139,7 +138,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         return result;
     }
 
-	public long addNewAccount(AccountsModel accObject){
+	public long addNewAccount(AccountsMO accObject){
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 

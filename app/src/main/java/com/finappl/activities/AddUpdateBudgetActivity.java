@@ -85,7 +85,7 @@ public class AddUpdateBudgetActivity extends Activity {
 		setContentView(R.layout.budget_add_update);
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }
@@ -106,9 +106,9 @@ public class AddUpdateBudgetActivity extends Activity {
 
     private void setUpPage() {
         //get all three lists, category, account and spent on
-        categorySpnList = addUpdateTransactionsDbService.getAllCategories(loggedInUserObj.getUSER_ID());
-        accountSpnList = addUpdateTransactionsDbService.getAllAccounts(loggedInUserObj.getUSER_ID());
-        spentOnSpnList = addUpdateTransactionsDbService.getAllSpentOn(loggedInUserObj.getUSER_ID());
+        //categorySpnList = addUpdateTransactionsDbService.getAllCategories(loggedInUserObj.getUSER_ID());
+        //accountSpnList = addUpdateTransactionsDbService.getAllAccounts(loggedInUserObj.getUSER_ID());
+        //spentOnSpnList = addUpdateTransactionsDbService.getAllSpentOn(loggedInUserObj.getUSER_ID());
 
         budgetTypeSpinnerAdapter = new AddUpdateBudgetSpinnerAdapter(this, R.layout.cat_acc_spnt_spnr, categorySpnList);
         addUpdBdgtGrpSpn.setAdapter(budgetTypeSpinnerAdapter);

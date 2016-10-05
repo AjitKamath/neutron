@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="cat_acc_spnt_max_count">15</integer>
+    <integer name="input_max_count_small">15</integer>
+    <integer name="input_max_count_big">50</integer>
 </resources>

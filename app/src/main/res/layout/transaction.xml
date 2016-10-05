@@ -1,27 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/addUpdateTransactionRLId"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
+    android:layout_width="@dimen/fragment_full_width"
+    android:layout_height="@dimen/fragment_full_height"
+    android:layout_gravity="center"
     android:layout_margin="@dimen/screen_components_padding_from_walls"
     android:background="@color/white"
     android:gravity="right"
-    app:theme="@style/FinappleTheme"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:theme="@style/FinappleTheme">
 
     <!-- header -->
 
     <LinearLayout
-        android:visibility="visible"
         android:id="@+id/addUpdateTranHeaderLLId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/finappleTheme"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="@dimen/screen_components_padding_from_walls">
+        android:padding="@dimen/screen_components_padding_from_walls"
+        android:visibility="visible">
 
 
         <LinearLayout
@@ -46,9 +45,9 @@
                     android:id="@+id/addUpdateDateTVId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="28 SEPTEMBER '16"
                     android:textColor="@color/white"
-                    android:layout_marginLeft="10dp"
                     android:textSize="@dimen/text_header_title_size" />
 
                 <!--<TextView
@@ -93,9 +92,9 @@
 
             <LinearLayout
                 android:id="@+id/transactionsButtonLLId"
-                android:layout_marginRight="-40dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="-40dp"
                 android:gravity="right|center"
                 android:orientation="horizontal">
 
@@ -106,12 +105,12 @@
                     android:background="@drawable/sched_set_white" />
 
                 <ImageView
-                    android:layout_marginLeft="20dp"
                     android:id="@+id/transactionSaveIVId"
                     android:layout_width="@dimen/image_header_size"
                     android:layout_height="@dimen/image_header_size"
-                    android:tag="HIDDEN"
-                    android:background="@drawable/tick_white_small"/>
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/tick_white_small"
+                    android:tag="HIDDEN" />
 
             </LinearLayout>
 
@@ -273,16 +272,38 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/transactionContentCategoryLLId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <Spinner
+                        <ImageView
+                            android:layout_width="@dimen/spinner_image_dimen"
+                            android:layout_height="@dimen/spinner_image_dimen"
+                            android:background="@drawable/version" />
+
+                        <TextView
+                            android:id="@+id/transactionContentCategoryTVId"
+                            android:layout_width="110dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:text="SHOPPING"
+                            android:textColor="@color/formSpinnerDark"
+                            android:textSize="@dimen/spinner_text_size" />
+
+                        <ImageView
+                            android:layout_width="@dimen/spinner_image_dimen"
+                            android:layout_height="@dimen/spinner_image_dimen"
+                            android:background="@drawable/slider" />
+
+                        <!--<Spinner
                             android:backgroundTint="@color/finappleThemeDark"
                             android:spinnerMode="dropdown"
                             android:id="@+id/addUpdateCatSpnId"
                             android:layout_width="match_parent"
-                            android:layout_height="35dp" />
+                            android:layout_height="35dp" />-->
 
                     </LinearLayout>
 
@@ -313,14 +334,64 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
 
-                        <Spinner
-                            android:backgroundTint="@color/finappleThemeDark"
-                            android:spinnerMode="dropdown"
-                            android:id="@+id/addUpdateAccSpnId"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="35dp" />
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/spinner_image_dimen"
+                                android:layout_height="@dimen/spinner_image_dimen"
+                                android:background="@drawable/manage_content" />
+
+                            <TextView
+                                android:layout_width="110dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:text="CREDIT CARD"
+                                android:textColor="@color/formSpinnerDark"
+                                android:textSize="@dimen/spinner_text_size" />
+
+                            <ImageView
+                                android:layout_width="@dimen/spinner_image_dimen"
+                                android:layout_height="@dimen/spinner_image_dimen"
+                                android:background="@drawable/slider" />
+
+                            <!-- <Spinner
+                                 android:backgroundTint="@color/finappleThemeDark"
+                                 android:spinnerMode="dropdown"
+                                 android:id="@+id/addUpdateAccSpnId"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="35dp" />-->
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/spinner_image_dimen"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:text="INR"
+                                android:textSize="@dimen/spinner_text_size_secondary"
+                                android:textColor="@color/finappleCurrencyCodeColor" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:text="465.75"
+                                android:textSize="@dimen/spinner_text_size_secondary"
+                                android:textColor="@color/finappleCurrencyPosColor" />
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -380,10 +451,10 @@
                                 android:id="@+id/addUpdateTranExpRadioId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:buttonTint="@color/finappleTheme"
                                 android:checked="true"
                                 android:tag="EXPENSE"
                                 android:text="EXPENSE"
-                                android:buttonTint="@color/finappleTheme"
                                 android:textColor="@color/finappleThemeDark"
                                 android:textSize="12sp" />
 
@@ -392,9 +463,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
+                                android:buttonTint="@color/finappleTheme"
                                 android:tag="INCOME"
                                 android:text="INCOME"
-                                android:buttonTint="@color/finappleTheme"
                                 android:textColor="@color/finappleThemeDark"
                                 android:textSize="12sp" />
                         </RadioGroup>
@@ -444,14 +515,34 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <Spinner
+                        <ImageView
+                            android:layout_width="@dimen/spinner_image_dimen"
+                            android:layout_height="@dimen/spinner_image_dimen"
+                            android:background="@drawable/work" />
+
+                        <TextView
+                            android:layout_width="110dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:text="SELF"
+                            android:textColor="@color/formSpinnerDark"
+                            android:textSize="@dimen/spinner_text_size" />
+
+                        <ImageView
+                            android:layout_width="@dimen/spinner_image_dimen"
+                            android:layout_height="@dimen/spinner_image_dimen"
+                            android:background="@drawable/slider" />
+
+                        <!--<Spinner
                             android:backgroundTint="@color/finappleThemeDark"
                             android:spinnerMode="dropdown"
-                            android:id="@+id/addUpdateSpntOnSpnId"
+                            android:id="@+id/addUpdateCatSpnId"
                             android:layout_width="match_parent"
-                            android:layout_height="35dp" />
+                            android:layout_height="35dp" />-->
 
                     </LinearLayout>
 
@@ -462,15 +553,15 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_height"
-                android:layout_marginTop="@dimen/divider_margin"
                 android:layout_marginBottom="@dimen/divider_margin"
+                android:layout_marginTop="@dimen/divider_margin"
                 android:background="@color/divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/fab_size_normal"
+                android:orientation="horizontal"
                 android:padding="@dimen/screen_components_padding_from_walls">
 
                 <LinearLayout
@@ -519,203 +610,6 @@
 
                 </LinearLayout>
             </LinearLayout>
-
-            <!--<View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginBottom="@dimen/divider_margin"
-                android:layout_marginTop="@dimen/divider_margin"
-                android:background="@color/divider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="25dp"
-                android:padding="@dimen/screen_components_padding_from_walls">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <CheckBox
-                            android:layout_marginLeft="-4dp"
-                            android:id="@+id/transactionSchedueCBId"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="SCHEDULE"
-                            android:textColor="@color/formTextDark"
-                            android:textSize="@dimen/text_form_header_size" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_marginBottom="@dimen/fab_size_normal"
-                        android:id="@+id/transactionSchedLLId"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <RadioGroup
-                                android:id="@+id/schedTranSchedRadioGrpId"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="left"
-                                android:orientation="horizontal">
-
-                                <RadioButton
-                                    android:layout_marginLeft="-4dp"
-                                    android:id="@+id/schedTranOnceAddRadioId"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:checked="true"
-                                    android:tag="ONCE"
-                                    android:text="ONCE"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
-
-                                <RadioButton
-                                    android:id="@+id/schedTranDailyAddRadioId"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:tag="DAILY"
-                                    android:text="DAILY"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
-
-                                <RadioButton
-                                    android:id="@+id/schedTranWeeklyAddRadioId"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:tag="WEEKLY"
-                                    android:text="WEEKLY"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
-
-                                <RadioButton
-                                    android:id="@+id/schedTranMonthlyAddRadioId"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:tag="MONTHLY"
-                                    android:text="MONTHLY"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
-
-                                <RadioButton
-                                    android:id="@+id/schedTranYearlyAddRadioId"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:tag="YEARLY"
-                                    android:text="YEARLY"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
-                            </RadioGroup>
-
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginBottom="5dp"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="NOTIFICATION"
-                                        android:textColor="@color/formHeadingTextDark"
-                                        android:textSize="10sp" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <RadioGroup
-                                        android:id="@+id/schedTranAutoRadioGrpId"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-
-                                        <RadioButton
-                                            android:id="@+id/schedTranAutoAddRadioId"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:checked="true"
-                                            android:tag="AUTO_ADD"
-                                            android:text="AUTO ADD"
-                                            android:textColor="@color/finappleTheme"
-                                            android:textSize="12sp" />
-
-                                        <RadioButton
-                                            android:id="@+id/schedTranAutoAddNotifyRadioId"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="10dp"
-                                            android:tag="NOTIFY_ADD"
-                                            android:text="NOTIFY &amp; ADD"
-                                            android:textColor="@color/finappleTheme"
-                                            android:textSize="12sp" />
-                                    </RadioGroup>
-
-                                </LinearLayout>
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>-->
-
-
-
         </LinearLayout>
     </ScrollView>
-
-    <!--<ImageButton
-        android:id="@+id/addUpdatePageFabIBId"
-        style="@style/FloatingActionButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="20dp"
-        android:clickable="true"
-        android:contentDescription="@null"
-        android:onClick="onDone"
-        android:src="@drawable/tick_white_small"
-        android:tag="ADD" />-->
-
 </RelativeLayout>

@@ -51,6 +51,7 @@ public class NotificationsService extends Service {
     private Context mContext = this;
 
     private UserMO loggedInUserObj;
+    private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
     @Override
     public void onCreate() {
@@ -60,7 +61,7 @@ public class NotificationsService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return Service.START_STICKY;
         }

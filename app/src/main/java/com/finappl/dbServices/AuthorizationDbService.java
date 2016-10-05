@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.finappl.models.CountryMO;
 import com.finappl.models.CountryModel;
 import com.finappl.models.CurrencyModel;
 import com.finappl.models.UserMO;
@@ -29,154 +30,72 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
 
     private final String CLASS_NAME = this.getClass().getName();
 
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
-    private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
-
-    public List<CountryModel> getAllCountry(){
-        SQLiteDatabase db = this.getWritableDatabase();
-
+    public List<CountryMO> getAllCountries(){
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" CNTRY_ID, ");
+        sqlQuerySB.append(" CNTRY_CODE, ");
         sqlQuerySB.append(" CNTRY_NAME, ");
-        sqlQuerySB.append(" CNTRY_FLAG, ");
-        sqlQuerySB.append(" CUR.CUR_ID, ");
-        sqlQuerySB.append(" CUR_NAME AS curNameStr ");
-
+        sqlQuerySB.append(" CUR_CODE, ");
+        sqlQuerySB.append(" CUR ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_COUNTRYTABLE+ " CNTRY ");
+        sqlQuerySB.append(DB_TABLE_COUNTRY);
 
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE+" CUR ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" CNTRY.CUR_ID = CUR.CUR_ID ");
-
+        SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-        CountryModel countryModelObj;
-        List<CountryModel> countryModelList = new ArrayList<>();
 
+        List<CountryMO> countryModelList = new ArrayList<>();
         while (cursor.moveToNext()){
-            countryModelObj = new CountryModel();
-            countryModelObj.setCNTRY_ID(ColumnFetcher.getInstance().loadString(cursor, "CNTRY_ID"));
-            countryModelObj.setCNTRY_NAME(ColumnFetcher.getInstance().loadString(cursor, "CNTRY_NAME"));
-            countryModelObj.setCNTRY_FLAG(ColumnFetcher.getInstance().loadString(cursor, "CNTRY_FLAG"));
-            countryModelObj.setCUR_ID(ColumnFetcher.getInstance().loadString(cursor, "CUR_ID"));
-            countryModelObj.setCurNameStr(ColumnFetcher.getInstance().loadString(cursor, "curNameStr"));
-            countryModelList.add(countryModelObj);
+            CountryMO countryMO = new CountryMO();
+            countryMO.setCNTRY_ID(ColumnFetcher.loadString(cursor, "CNTRY_ID"));
+            countryMO.setCNTRY_CODE(ColumnFetcher.loadString(cursor, "CNTRY_CODE"));
+            countryMO.setCNTRY_NAME(ColumnFetcher.loadString(cursor, "CNTRY_NAME"));
+            countryMO.setCUR_CODE(ColumnFetcher.loadString(cursor, "CUR_CODE"));
+            countryMO.setCUR(ColumnFetcher.loadString(cursor, "CUR"));
+            countryModelList.add(countryMO);
         }
         cursor.close();
         db.close();
         return countryModelList;
     }
 
-    public List<CurrencyModel> getAllCurrency(){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" CUR_ID, ");
-        sqlQuerySB.append(" CUR_NAME, ");
-        sqlQuerySB.append(" CUR_SYMB ");
-
-        sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE);
-
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-        CurrencyModel currencyModelObj = null;
-        List<CurrencyModel> currencyModelList = new ArrayList<>();
-
-        while (cursor.moveToNext()){
-            currencyModelObj = new CurrencyModel();
-            currencyModelObj.setCUR_ID(ColumnFetcher.getInstance().loadString(cursor, "CUR_ID"));
-            currencyModelObj.setCUR_NAME(ColumnFetcher.getInstance().loadString(cursor, "CUR_NAME"));
-            currencyModelObj.setCUR_SYMB(ColumnFetcher.getInstance().loadString(cursor, "CUR_SYMB"));
-            currencyModelList.add(currencyModelObj);
-        }
-        cursor.close();
-        db.close();
-        return currencyModelList;
-    }
-
-    public long addNewUser(UsersModel userModelObj){
+    public boolean addNewUser(UserMO userModelObj){
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             ContentValues values = new ContentValues();
-
-            //logout all users first
-            values.put("USER_IS_DEL", DB_AFFIRMATIVE);
-            db.update(DB_TABLE_USERSTABLE, values, "USER_IS_DEL = '" + DB_NONAFFIRMATIVE + "'", null);
-
-            values.clear();
-
             values.put("USER_ID", userModelObj.getUSER_ID());
+            values.put("CNTRY_ID", userModelObj.getCNTRY_ID());
             values.put("NAME", userModelObj.getNAME());
             values.put("PASS", EncryptionUtil.encrypt(userModelObj.getPASS()));
             values.put("EMAIL", userModelObj.getEMAIL());
-            values.put("DOB", simpleDateFormat.format(userModelObj.getDOB()));
-            values.put("CNTRY_ID", userModelObj.getCNTRY_ID());
+            values.put("DOB", DB_DATE_FORMAT_SDF.format(userModelObj.getDOB()));
             values.put("TELEPHONE", userModelObj.getTELEPHONE());
-            values.put("CUR_ID", userModelObj.getCUR_ID());
             values.put("DEV_ID", userModelObj.getDEV_ID());
-            values.put("USER_IS_DEL", DB_NONAFFIRMATIVE);
-            values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
+            values.put("CREAT_DTM", DB_DATE_TIME_FORMAT_SDF.format(new Date()));
 
-            // Inserting a new Row in USERS_TABLE
-            long result = db.insert(DB_TABLE_USERSTABLE, null, values);
+            long result = db.insert(DB_TABLE_USER, null, values);
 
             if (result == -1) {
                 Log.e(CLASS_NAME, "Something went wrong while registering the user");
-                return result;
+                return false;
             }
 
-            //inserting a new row into SETTINGS_NOTIFICATIONS table
+            //inserting a new row into SETTINGS table
             values.clear();
-            values.put("SET_NOTIF_ID", IdGenerator.getInstance().generateUniqueId("SET_NOTIF"));
-            values.put("SET_NOTIF_ACTIVE", DB_AFFIRMATIVE);
+            values.put("SET_ID", IdGenerator.getInstance().generateUniqueId("SET"));
+            values.put("USER_ID", userModelObj.getUSER_ID());
             values.put("SET_NOTIF_TIME", DB_DEFAULT_NOTIF_TIME);
             values.put("SET_NOTIF_BUZZ", DB_NONAFFIRMATIVE);
-            values.put("USER_ID", userModelObj.getUSER_ID());
-            values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
+            values.put("CREAT_DTM", DB_DATE_TIME_FORMAT_SDF.format(new Date()));
 
-            result = db.insert(DB_TABLE_SETTINGS_NOTIFICATIONS, null, values);
-
-            if (result == -1) {
-                Log.e(CLASS_NAME, "Something went wrong while registering the user");
-                return result;
-            }
-
-            //inserting a new row into SETTINGS_SOUNDS table
-            values.clear();
-            values.put("SET_SND_ID", IdGenerator.getInstance().generateUniqueId("SET_SND"));
-            values.put("SET_SND_ACTIVE", DB_AFFIRMATIVE);
-            values.put("USER_ID", userModelObj.getUSER_ID());
-            values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
-
-            result = db.insert(DB_TABLE_SETTINGS_SOUNDS, null, values);
-
-            if (result == -1) {
-                Log.e(CLASS_NAME, "Something went wrong while registering the user");
-                return result;
-            }
-
-            //inserting a new row into SETTINGS_SECURITY table
-            values.clear();
-            values.put("SET_SEC_ID", IdGenerator.getInstance().generateUniqueId("SET_SEC"));
-            //values.put("SET_SEC_ACTIVE", DB_AFFIRMATIVE);
-            values.put("SET_SEC_ACTIVE", DB_NONAFFIRMATIVE);
-            values.put("USER_ID", userModelObj.getUSER_ID());
-            values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
-
-            result = db.insert(DB_TABLE_SETTINGS_SECURITY, null, values);
-
-            return result;
+            return db.insert(DB_TABLE_SETTING, null, values) != -1;
         }
         catch(Exception e){
             Log.i(CLASS_NAME, "ERROR !! While adding a new User");
         }
         db.close();
-        return -1;
+        return false;
     }
 
     public boolean isAuthenticUser(UserMO usersModelObj) {
@@ -217,8 +136,6 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
     }
 
     public boolean isUserExists(String usernameStr) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
         sqlQuerySB.append(" SELECT ");
@@ -226,30 +143,29 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
 
         sqlQuerySB.append(" FROM ");
 
-        sqlQuerySB.append(DB_TABLE_USERSTABLE);
+        sqlQuerySB.append(DB_TABLE_USER);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER_ID = '" + usernameStr + "' ");
 
         Log.i(CLASS_NAME, "Query to know if user already exists  :" + sqlQuerySB);
+        SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
-        while (cursor.moveToNext()){
-            if(ColumnFetcher.getInstance().loadInt(cursor, "COUNT") > 0){
-                Log.i(CLASS_NAME, "No no no...you shant use this username... this username hath been taketh already");
-                return true;
-            }
+        if (cursor.moveToNext()){
+            return ColumnFetcher.getInstance().loadInt(cursor, "COUNT") > 0;
         }
         cursor.close();
+        db.close();
 
         Log.i(CLASS_NAME, "This username is unique in the whole universe..go ahead.");
-        db.close();
         return false;
     }
 
     public UserMO getActiveUser(String userIdStr){
         StringBuilder sqlQuerySB = new StringBuilder(50);
         sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" USR.USER_ID, ");
         sqlQuerySB.append(" NAME, ");
         sqlQuerySB.append(" EMAIL, ");
         sqlQuerySB.append(" DOB, ");
@@ -271,9 +187,9 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" CNTRY.CNTRY_ID = USR.CNTRY_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_SETTING+" SET ");
+        sqlQuerySB.append(DB_TABLE_SETTING+" SETT ");
         sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" SET.USER_ID = USR.USER_ID ");
+        sqlQuerySB.append(" SETT.USER_ID = USR.USER_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USR.USER_ID = '"+userIdStr+"' ");
@@ -283,6 +199,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         UserMO userModelObject = null;
         if (cursor.moveToNext()){
             userModelObject = new UserMO();
+            userModelObject.setUSER_ID(ColumnFetcher.loadString(cursor, "USER_ID"));
             userModelObject.setNAME(ColumnFetcher.loadString(cursor, "NAME"));
             userModelObject.setEMAIL(ColumnFetcher.loadString(cursor, "EMAIL"));
             userModelObject.setDOB(ColumnFetcher.loadDate(cursor, "DOB"));

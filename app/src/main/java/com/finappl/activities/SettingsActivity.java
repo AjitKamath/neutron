@@ -79,7 +79,7 @@ public class SettingsActivity extends LockerActivity {
         setContentView(R.layout.settings);
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }
@@ -777,7 +777,7 @@ public class SettingsActivity extends LockerActivity {
                                     setUpSecurity();
 
                                     //update Sec PIN in loggedInUserObj
-                                    loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+                                    loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
 
                                     showToast("New PIN Saved");
                                 }
@@ -803,7 +803,7 @@ public class SettingsActivity extends LockerActivity {
                                     setUpSecurity();
 
                                     //update Sec PIN in loggedInUserObj
-                                    loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+                                    loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
 
                                     showToast("PIN Saved");
                                 }
@@ -879,8 +879,7 @@ public class SettingsActivity extends LockerActivity {
                                     setUpSecurity();
 
                                     //update Sec PIN in loggedInUserObj
-                                    loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
-
+                                    loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
                                     showToast("PIN Saved & Security is Enabled");
                                 }
                             } catch (Exception e) {
@@ -909,7 +908,7 @@ public class SettingsActivity extends LockerActivity {
                                     setUpSecurity();
 
                                     //update Sec PIN in loggedInUserObj
-                                    loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+                                    loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
 
                                     if(!loggedInUserObj.getSET_SEC_PIN().isEmpty()){
                                         showToast("Security is Enabled");

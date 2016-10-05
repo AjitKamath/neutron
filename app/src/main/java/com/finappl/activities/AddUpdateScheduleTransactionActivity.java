@@ -98,7 +98,7 @@ public class AddUpdateScheduleTransactionActivity extends Activity {
         Log.e(CLASS_NAME, "Navigated to Schedule Transaction Add Update Screen");
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }

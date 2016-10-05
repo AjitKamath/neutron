@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.models.AccountsMO;
+import com.finappl.models.CategoryMO;
 import com.finappl.utils.FinappleUtility;
 
 import java.util.List;
@@ -18,24 +19,20 @@ import java.util.List;
 /**
  * Created by ajit on 17/1/15.
  */
-public class CalendarAccountsListViewAdapter extends BaseAdapter {
+public class CategoriesListViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private int layoutResourceId;
-    private List<AccountsMO> dataList;
-    private List<Integer> colorList;
+    private List<CategoryMO> dataList;
     private LayoutInflater inflater;
 
-    public CalendarAccountsListViewAdapter(Context mContext, int layoutResourceId, List<AccountsMO> data) {
+    public CategoriesListViewAdapter(Context mContext, int layoutResourceId, List<CategoryMO> dataList) {
         super();
 
         this.layoutResourceId = layoutResourceId;
         this.mContext = mContext;
-        this.dataList = data;
+        this.dataList = dataList;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        //get random colors in a list
-        colorList = FinappleUtility.getInstance().getUnRandomizedColorList(dataList.size());
     }
 
     @Override
@@ -57,21 +54,21 @@ public class CalendarAccountsListViewAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag(layoutResourceId);
         }
 
-        // object item based on the position
-        AccountsMO accountItem = dataList.get(position);
-
-        mHolder.summayAccountsLL.setTag(accountItem);
-        mHolder.accountTotalTV.setText(String.valueOf(accountItem.getACC_TOTAL()));
-        mHolder.accountNameTV.setText(accountItem.getACC_NAME());
-
-        if(accountItem.getACC_TOTAL() <= 0){
-            mHolder.accountTotalTV.setTextColor(mHolder.accountTotalTV.getResources().getColor(R.color.finappleCurrencyNegColor));
-            mHolder.accountsAmtStatView.setBackgroundResource(R.drawable.capsule_vertical_negative_view);
-        }
-        else{
-            mHolder.accountTotalTV.setTextColor(mHolder.accountTotalTV.getResources().getColor(R.color.finappleCurrencyPosColor));
-            mHolder.accountsAmtStatView.setBackgroundResource(R.drawable.capsule_vertical_positive_view);
-        }
+//        // object item based on the position
+//        AccountsMO accountItem = dataList.get(position);
+//
+//        mHolder.summayAccountsLL.setTag(accountItem);
+//        mHolder.accountTotalTV.setText(String.valueOf(accountItem.getACC_TOTAL()));
+//        mHolder.accountNameTV.setText(accountItem.getACC_NAME());
+//
+//        if(accountItem.getACC_TOTAL() <= 0){
+//            mHolder.accountTotalTV.setTextColor(mHolder.accountTotalTV.getResources().getColor(R.color.finappleCurrencyNegColor));
+//            mHolder.accountsAmtStatView.setBackgroundResource(R.drawable.capsule_vertical_negative_view);
+//        }
+//        else{
+//            mHolder.accountTotalTV.setTextColor(mHolder.accountTotalTV.getResources().getColor(R.color.finappleCurrencyPosColor));
+//            mHolder.accountsAmtStatView.setBackgroundResource(R.drawable.capsule_vertical_positive_view);
+//        }
 
         //TODO: Approximatization required
 
@@ -96,7 +93,7 @@ public class CalendarAccountsListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public AccountsMO getItem(int position) {
+    public CategoryMO getItem(int position) {
         return dataList.get(position);
     }
 

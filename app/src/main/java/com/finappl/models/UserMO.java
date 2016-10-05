@@ -18,6 +18,7 @@ public class UserMO {
     private Date MOD_DTM;
 
     private String CNTRY_NAME;
+    private String CNTRY_CODE;
     private String CUR;
     private String CUR_CODE;
     private String SET_NOTIF_TIME;
@@ -150,5 +151,13 @@ public class UserMO {
 
     public void setSET_SEC_PIN(String SET_SEC_PIN) {
         this.SET_SEC_PIN = SET_SEC_PIN;
+    }
+
+    public String getCNTRY_CODE() {
+        return CNTRY_CODE;
+    }
+
+    public void setCNTRY_CODE(String CNTRY_CODE) {
+        this.CNTRY_CODE = CNTRY_CODE;
     }
 }

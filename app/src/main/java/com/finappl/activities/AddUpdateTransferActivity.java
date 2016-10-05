@@ -90,7 +90,7 @@ public class AddUpdateTransferActivity extends Activity {
 		setContentView(R.layout.transfer_add_update);
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }

@@ -30,7 +30,7 @@ public class TransactionModel implements Serializable {
 
     private CategoryModel categoryObj;
     private SpentOnModel spentOnObj;
-    private AccountsModel accountObj;
+    private AccountsMO accountObj;
 
     private Date schCreateDate;
 
@@ -73,11 +73,11 @@ public class TransactionModel implements Serializable {
         this.spentOnObj = spentOnObj;
     }
 
-    public AccountsModel getAccountObj() {
+    public AccountsMO getAccountObj() {
         return accountObj;
     }
 
-    public void setAccountObj(AccountsModel accountObj) {
+    public void setAccountObj(AccountsMO accountObj) {
         this.accountObj = accountObj;
     }
 

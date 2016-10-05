@@ -623,7 +623,20 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 1. sanitized login screen. consolidated into login & register screens.
 2. added background for login popper.
 
-------------------------------------------------------------------------------------18/54-----------------------------------------------------------------------------------
+<--Git Push on 13-apr-2016-->
+
+14-apr-16
+1. register business and login business implemented (not tested)
+2. login background changed to match finappl theme
+3. added country code to store the ISD country code in COUNTRIES table.
+4. login popper shows up before the calendar screen is loaded (security to ensure that the user does not get access to do anything without logging in first)
+
+19-apr-16
+1. login implemented.
+2. fetching all the accounts query has been modified as per new business.
+3. new table REPEAT to track repeated Transactions/Transfers created.
+
+------------------------------------------------------------------------------------21/55-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
 2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.
    warn they will all be moved to others..same for all)
@@ -677,68 +690,44 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 49. POC on threads for intensive tasks(db, adapters)
 50. if the user has chosen a future date while adding a new transaction/transfer, and if it isn't a scheduled transaction/transfer, then ask whether to add the transaction/transfer now or on the particular day
 51. POC on Property Row mapper
-52. security check (check active user id in sharedprefs on each button action)
-53. disable back button for login popper.
-54. check for logged n user and show login popper before loading the calendar.xml
+52. security check (check active user id in sharedprefs on each button action)(obsolete)-------------------------------------------------------------------------------------DONE
+53. disable back button for login popper.------------------------------------------------------------------------------------------------------------------------------------DONE
+54. check for logged in user and show login popper before loading the calendar.xml-------------------------------------------------------------------------------------------DONE
+55. a flag in category/account/spent on tables to indicate they must be selected by default
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 CORE FUNCTIONALITY CHECK:	0/22
 
-TRANSACTION: 			0/5
-1. NEW TRANSACTION		(N)
+TRANSACTION: 			    0/5
+1. NEW TRANSACTION		    (N)
 2. UPDATE TRANSACTION		(N)
 3. QUICK TRANSACTION		(N)
 4. DELETE TRANSACTION		(N)
 5. SCHEDULE TRANSACTION		(N)
 
-TRANSFER:			0/5
-1. NEW TRANSFER			(N)
-2. UPDATE TRANSFER		(N)
-3. QUICK TRANSFER		(N)
-4. DELETE TRANSFER		(N)
+TRANSFER:			        0/5
+1. NEW TRANSFER		    	(N)
+2. UPDATE TRANSFER		    (N)
+3. QUICK TRANSFER		    (N)
+4. DELETE TRANSFER		    (N)
 5. SCHEDULE TRANSFER		(N)
 
-BUDGET:				0/3
-1. NEW BUDGET			(N)
-2. UPDATE BUDGET		(N)
-3. DELETE BUDGET		(N)
+BUDGET:				        0/3
+1. NEW BUDGET			    (N)
+2. UPDATE BUDGET		    (N)
+3. DELETE BUDGET		    (N)
 				
-ACCOUNT:			0/3
-1. NEW BUDGET			(N)
-2. UPDATE BUDGET		(N)
-3. DELETE BUDGET		(N)
+ACCOUNT:        			0/3
+1. NEW BUDGET	    		(N)
+2. UPDATE BUDGET	    	(N)
+3. DELETE BUDGET	    	(N)
 
-CATEGORY:			0/3
-1. NEW BUDGET			(N)
-2. UPDATE BUDGET		(N)
-3. DELETE BUDGET		(N)
+CATEGORY:		        	0/3
+1. NEW BUDGET	    		(N)
+2. UPDATE BUDGET	    	(N)
+3. DELETE BUDGET	    	(N)
 
-SPENT ON:			0/3
-1. NEW BUDGET			(N)
-2. UPDATE BUDGET		(N)
-3. DELETE BUDGET		(N)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+SPENT ON:			        0/3
+1. NEW BUDGET			    (N)
+2. UPDATE BUDGET		    (N)
+3. DELETE BUDGET		    (N)

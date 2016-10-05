@@ -24,7 +24,7 @@ import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
-import com.finappl.models.AccountsModel;
+import com.finappl.models.AccountsMO;
 import com.finappl.models.ActivityModel;
 import com.finappl.models.BudgetModel;
 import com.finappl.models.ConsolidatedTransactionModel;
@@ -33,7 +33,6 @@ import com.finappl.models.MonthLegend;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.UserMO;
-import com.finappl.models.UsersModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -74,7 +73,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
 
     private Map<String, ConsolidatedTransactionModel> consolidatedTransactionModelMap;
     private Map<String, ConsolidatedTransferModel> consolidatedTransferModelMap;
-    private List<AccountsModel> accountsList;
+    private List<AccountsMO> accountsList;
     private List<BudgetModel> budgetsList;
     private List<ScheduledTransactionModel> scheduledTransactionModelList;
     private List<ScheduledTransferModel> scheduledTransferModelList;

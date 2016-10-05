@@ -222,6 +222,7 @@
     <color name="transferIndicator">#ffc107</color>
     <color name="schedTransferIndicator">#ffd54f</color>
     <color name="report">#009688</color>
+    <color name="countryColor">#FF3200</color>
 
     <!-- week colors -->
     <color name="weekdays">#000000</color>

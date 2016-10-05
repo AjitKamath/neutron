@@ -66,7 +66,7 @@ public class ViewActivitiesActivity extends Activity {
 		setContentView(R.layout.activities_view);
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }

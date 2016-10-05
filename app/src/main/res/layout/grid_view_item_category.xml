@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/categoryLLId"
+    android:layout_width="160dp"
+    android:layout_height="80dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="@dimen/screen_components_padding_from_walls">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/grid_image_dimen"
+            android:layout_height="@dimen/grid_image_dimen"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/version" />
+
+        <TextView
+            android:id="@+id/categoryNameTVId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:maxLength="20"
+            android:layout_marginLeft="10dp"
+            android:text="Shopping"
+            android:textColor="@color/formSpinnerDark"
+            android:textSize="@dimen/grid_text_size_primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

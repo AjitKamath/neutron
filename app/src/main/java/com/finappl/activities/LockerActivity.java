@@ -3,7 +3,6 @@ package com.finappl.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -20,7 +19,7 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
-import com.finappl.models.AccountsModel;
+import com.finappl.models.AccountsMO;
 import com.finappl.models.ActivityModel;
 import com.finappl.models.BudgetModel;
 import com.finappl.models.ScheduledTransactionModel;
@@ -28,11 +27,8 @@ import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
 import com.finappl.models.UserMO;
-import com.finappl.models.UsersModel;
 import com.finappl.utils.EncryptionUtil;
 import com.finappl.utils.FinappleUtility;
-
-import java.util.Map;
 
 public class LockerActivity extends Activity {
 
@@ -85,7 +81,7 @@ public class LockerActivity extends Activity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
 
         if(sharedpreferences.getBoolean("LOCK", true)){
-            loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+            loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
 
             if(loggedInUserObj != null && loggedInUserObj.getSET_SEC_PIN() != null && !loggedInUserObj.getSET_SEC_PIN().isEmpty()){
                 showLockerPopper();
@@ -251,8 +247,8 @@ public class LockerActivity extends Activity {
             else if(obj instanceof BudgetModel){
                 intent.putExtra(key, (BudgetModel)obj);
             }
-            else if(obj instanceof AccountsModel){
-                intent.putExtra(key, (AccountsModel)obj);
+            else if(obj instanceof AccountsMO){
+                intent.putExtra(key, (AccountsMO)obj);
             }
             else if(obj instanceof ActivityModel){
                 intent.putExtra(key, (ActivityModel)obj);

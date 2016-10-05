@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/categoryRLId"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/white">
+
+    <!-- header -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/screen_components_padding_from_walls">
+
+
+        <ImageView
+            android:id="@+id/categoryIVId"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/version" />
+
+        <TextView
+            android:id="@+id/categoryTVId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="SHOPPING"
+            android:textColor="@color/formSpinnerDark"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical">
+
+            <ImageView
+                android:visibility="invisible"
+                android:id="@+id/categorySelectedIVId"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/tick_grey" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

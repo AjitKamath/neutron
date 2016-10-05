@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
+import com.finappl.models.CategoryMO;
+import com.finappl.models.SpinnerModel;
 import com.finappl.models.UserMO;
 
 import java.io.File;
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import static com.finappl.utils.Constants.SHARED_PREF;
@@ -151,17 +155,15 @@ public class FinappleUtility extends Activity{
         //--------------------------------------
     }
 
-    public UserMO getUser(Context context){
+    public String getActiveUserId(Context context){
         SharedPreferences sharedpreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         String userIdStr = sharedpreferences.getString(SHARED_PREF_ACTIVE_USER_ID, null);
 
-        if(userIdStr != null && !userIdStr.isEmpty()){
-            return authorizationDbService.getActiveUser(userIdStr);
-        }
-        else{
-            Log.e(CLASS_NAME, "Error while fetching user id from the shared preference");
-        }
-        return null;
+        return userIdStr;
+    }
+
+    public static String getDeviceId(Context context){
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }

@@ -7,17 +7,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.finappl.models.AccountsModel;
+import com.finappl.models.AccountsMO;
 import com.finappl.models.BudgetModel;
+import com.finappl.models.CategoryMO;
 import com.finappl.models.ConsolidatedTransactionModel;
 import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
+import com.finappl.models.SpentOnMO;
+import com.finappl.models.SpinnerModel;
 import com.finappl.models.SummaryModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
 import com.finappl.utils.ColumnFetcher;
+import com.finappl.utils.Constants;
 import com.finappl.utils.DateTimeUtil;
 import com.finappl.utils.IdGenerator;
 
@@ -34,14 +38,20 @@ import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 import static com.finappl.utils.Constants.DB_NAME;
 import static com.finappl.utils.Constants.DB_NONAFFIRMATIVE;
+import static com.finappl.utils.Constants.DB_TABLE_ACCOUNT;
 import static com.finappl.utils.Constants.DB_TABLE_ACCOUNTTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_BUDGET;
 import static com.finappl.utils.Constants.DB_TABLE_BUDGETTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_CATEGORY;
 import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_NOTIFICATIONSTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_SCHEDULEDTRANSACTIONSTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_SHEDULEDTRANSFERSTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_SPENTON;
 import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSACTION;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSACTIONTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSFER;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSFERSTABLE;
 import static com.finappl.utils.Constants.DB_VERSION;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
@@ -407,8 +417,6 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
     //method to get all the budgets_view for the particlar user
     public List<BudgetModel> getAllBudgets(Date date, String userId){
-        SQLiteDatabase db = this.getWritableDatabase();
-
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
         sqlQuerySB.append(" SELECT ");
@@ -423,17 +431,17 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" MOD_DTM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_BUDGETTABLE);
+        sqlQuerySB.append(DB_TABLE_BUDGET);
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" BUDGET_IS_DEL = '" + DB_NONAFFIRMATIVE + "' ");
-        sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" USER_ID = '" + userId + "' ");
 
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+        Log.i(CLASS_NAME, "Query to get the budgets: "+String.valueOf(sqlQuerySB));
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
         BudgetModel budgetModelObj = null;
 
-        List<BudgetModel> budgetModelList = new ArrayList<BudgetModel>();
+        List<BudgetModel> budgetModelList = new ArrayList<>();
         while (cursor.moveToNext()){
             String budIdStr = ColumnFetcher.loadString(cursor, "BUDGET_ID");
             String budNmeStr = ColumnFetcher.loadString(cursor, "BUDGET_NAME");
@@ -1422,7 +1430,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return result;
     }
 
-    public boolean deleteAccount(AccountsModel accountsModelObj){
+    public boolean deleteAccount(AccountsMO accountsModelObj){
         SQLiteDatabase db = this.getWritableDatabase();
 
         //delete transactions which are using this account
@@ -1447,9 +1455,79 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return result;
     }
 
+    //--------------------- end of method to get all accounts--------------------------//
+
+
+    public Map<String, CategoryMO> getAllCategories(String userId){
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" CAT_ID, ");
+        sqlQuerySB.append(" CAT_NAME ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_CATEGORY);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" CAT_IS_DEF = '"+ Constants.DB_AFFIRMATIVE+"' ");
+        sqlQuerySB.append(" OR USER_ID = '"+userId+"' ");
+
+        sqlQuerySB.append(" ORDER BY ");
+        sqlQuerySB.append(" CAT_NAME ");
+        sqlQuerySB.append(" ASC ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        Map<String, CategoryMO> categoryMap = new HashMap<>();
+        while (cursor.moveToNext()){
+            CategoryMO categoryMO = new CategoryMO();
+            categoryMO.setCAT_ID(ColumnFetcher.getInstance().loadString(cursor, "CAT_ID"));
+            categoryMO.setCAT_NAME(ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME"));
+
+            categoryMap.put(categoryMO.getCAT_ID(), categoryMO);
+        }
+        cursor.close();
+        db.close();
+        return categoryMap;
+    }
+
+    public List<SpentOnMO> getAllSpentOn(String userId){
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" SPNT_ON_ID, ");
+        sqlQuerySB.append(" SPNT_ON_NAME ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_SPENTON);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" SPNT_ON_IS_DEF = '"+Constants.DB_AFFIRMATIVE+"' ");
+        sqlQuerySB.append(" OR ");
+        sqlQuerySB.append(" USER_ID = '"+userId+"' ");
+
+        sqlQuerySB.append(" ORDER BY ");
+        sqlQuerySB.append(" SPNT_ON_NAME ");
+        sqlQuerySB.append(" ASC ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        List<SpentOnMO> spentOnList = new ArrayList<>();
+        while (cursor.moveToNext()){
+            SpentOnMO spentOnMO = new SpentOnMO();
+            spentOnMO.setSPNT_ON_ID(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_ID"));
+            spentOnMO.setSPNT_ON_NAME(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_NAME"));
+            spentOnList.add(spentOnMO);
+        }
+        cursor.close();
+        db.close();
+        return spentOnList;
+    }
+
     //---------------------method to get all accounts--------------------------//
-    public List<AccountsModel> getAllAccounts(String userId){
-        List<AccountsModel> accountsList = new ArrayList<AccountsModel>();
+    public List<AccountsMO> getAllAccounts(String userId){
+        List<AccountsMO> accountsList = new ArrayList<AccountsMO>();
         SQLiteDatabase db = this.getWritableDatabase();
 
         if(db == null){
@@ -1462,92 +1540,88 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" ACC.ACC_NAME, ");
         sqlQuerySB.append(" ACC.ACC_ID, ");
-        sqlQuerySB.append(" ACC.ACC_IS_DEFAULT, ");
+        sqlQuerySB.append(" ACC.ACC_IS_DEF, ");
 
         sqlQuerySB.append(" (( SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSACTION);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN_TYPE = 'INCOME' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" ACC_ID = ACC.ACC_ID ");
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRAN_IS_DEL ");
+        sqlQuerySB.append(" TRAN_IS_SCHED ");
         sqlQuerySB.append(" = ");
         sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRAN_REPEAT is null ");
+        sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"')) ");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"')) ");
 
         sqlQuerySB.append(" + ");
 
         sqlQuerySB.append(" (SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSFER);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_ID_TO = ACC.ACC_ID ");
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRNFR_IS_DEL ");
+        sqlQuerySB.append(" TRNFR_IS_SCHED ");
         sqlQuerySB.append(" = ");
         sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
         sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRNFR_REPEAT is null ");
+        sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"') ))");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"') ))");
 
         sqlQuerySB.append(" - ");
 
         sqlQuerySB.append(" ((SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSACTION);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN_TYPE = 'EXPENSE' ");
         sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" ACC_ID = ACC.ACC_ID ");
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRAN_IS_DEL ");
-        sqlQuerySB.append(" = ");
-        sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
-        sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"')) ");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"')) ");
 
         sqlQuerySB.append(" + ");
 
         sqlQuerySB.append(" (SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE);
+        sqlQuerySB.append(DB_TABLE_TRANSFER);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_ID_FRM = ACC.ACC_ID ");
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRNFR_IS_DEL ");
-        sqlQuerySB.append(" = ");
-        sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
-        sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"') ))");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"') ))");
 
         sqlQuerySB.append(" AS ACC_TOTAL ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT+" ACC ");
 
         sqlQuerySB.append(" LEFT JOIN ");
-        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE+" TRAN");
+        sqlQuerySB.append(DB_TABLE_TRANSACTION+" TRAN");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" TRAN.ACC_ID = ACC.ACC_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
-        sqlQuerySB.append(" ('" + userId.trim().toUpperCase()+"','"+ADMIN_USERID.trim().toUpperCase()+"') ");
+        sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"') ");
 
         sqlQuerySB.append(" GROUP BY ACC.ACC_ID ");
         sqlQuerySB.append(" ORDER BY ACC.CREAT_DTM ");
@@ -1556,7 +1630,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
         String accountIdStr, accountNameStr, currecyStr, accountIsDefaultStr;
         Double accountTotal;
-        AccountsModel accountsModel = null;
+        AccountsMO accountsModel = null;
         while (cursor.moveToNext()){
             accountIdStr = ColumnFetcher.loadString(cursor, "ACC_ID");
             accountNameStr = ColumnFetcher.loadString(cursor, "ACC_NAME");
@@ -1564,7 +1638,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             currecyStr = ColumnFetcher.loadString(cursor, "CUR_NAME");
             accountIsDefaultStr = ColumnFetcher.loadString(cursor, "ACC_IS_DEFAULT");
 
-            accountsModel = new AccountsModel();
+            accountsModel = new AccountsMO();
             accountsModel.setACC_ID(accountIdStr);
             accountsModel.setACC_NAME(accountNameStr);
             accountsModel.setACC_TOTAL(accountTotal);

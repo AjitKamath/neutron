@@ -9,7 +9,7 @@ import java.util.Map;
 public class ManageContentModel {
 
     private Map<String, List<CategoryModel>> categoriesMap;
-    private Map<String, List<AccountsModel>> accountsMap;
+    private Map<String, List<AccountsMO>> accountsMap;
     private Map<String, List<SpentOnModel>> spentOnsMap;
     private String userNameStr;
 
@@ -29,11 +29,11 @@ public class ManageContentModel {
         this.categoriesMap = categoriesMap;
     }
 
-    public Map<String, List<AccountsModel>> getAccountsMap() {
+    public Map<String, List<AccountsMO>> getAccountsMap() {
         return accountsMap;
     }
 
-    public void setAccountsMap(Map<String, List<AccountsModel>> accountsMap) {
+    public void setAccountsMap(Map<String, List<AccountsMO>> accountsMap) {
         this.accountsMap = accountsMap;
     }
 

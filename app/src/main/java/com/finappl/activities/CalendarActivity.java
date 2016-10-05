@@ -11,7 +11,6 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -54,7 +53,7 @@ import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.fragments.LoginFragment;
 import com.finappl.fragments.TransactionFragment;
 import com.finappl.fragments.TransferFragment;
-import com.finappl.models.AccountsModel;
+import com.finappl.models.AccountsMO;
 import com.finappl.models.BudgetModel;
 import com.finappl.models.ConsolidatedTransactionModel;
 import com.finappl.models.ConsolidatedTransferModel;
@@ -82,8 +81,6 @@ import java.util.Map;
 import static com.finappl.utils.Constants.FRAGMENT_LOGIN;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
-import static com.finappl.utils.Constants.SHARED_PREF;
-import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
 import static com.finappl.utils.Constants.UI_DATE_FORMAT;
 import static com.finappl.utils.Constants.UI_DATE_TIME_FORMAT;
@@ -102,7 +99,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
     //calendar
     private GridView calendarView;
-    private Calendar _calendar;
+    //private Calendar _calendar;
     private String selectedDateStr = sdf.format(new Date());
     private String currentFocusedMonthStr = sdf1.format(new Date());
 
@@ -158,10 +155,26 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
     private boolean ignore = false;
 
+    private Bundle savedInstanceState;
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.savedInstanceState = savedInstanceState;
+
+        //this is to ensure the tables are in the db...actually calls the Sqlite class constructor..importance of this line is known only when the db is deleted and the app is run
+        Log.i(CLASS_NAME, "Initializing the application database starts");
+        controller.getWritableDatabase();
+        Log.i(CLASS_NAME, "Initializing the application database ends");
+
+        //get the Active user
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
+        if(loggedInUserObj == null){
+            forceLogin();
+            return;
+        }
+
         setContentView(R.layout.calendar);
 
         initActivity();
@@ -171,21 +184,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void initActivity(){
-        //this is to ensure the tables are in the db...actually calls the Sqlite class constructor..importance of this line is known only when the db is deleted and the app is run
-        Log.i(CLASS_NAME, "Initializing the application database starts");
-        controller.getWritableDatabase();
-        Log.i(CLASS_NAME, "Initializing the application database ends");
-
-        //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
-        if(loggedInUserObj == null){
-            forceLogin();
-            return;
-        }
-
-        //initialize calendar
-        initializeCalendar();
-
+        //Check if Obsolete since the app is going to be single screen app
         if(getIntent().getExtras() != null && getIntent().getExtras().get("SELECTED_DATE") != null){
             selectedDateStr = String.valueOf(getIntent().getExtras().get("SELECTED_DATE"));
         }
@@ -665,6 +664,16 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     public void showTransactionPopper(View view){
         checkAndCollapseFab();
 
+        showAddUpdateTransactionPopper(null);
+
+
+
+
+
+
+
+
+        /*
         // Create custom calendar_transaction_options_popper object
         prepareDialog(R.layout.calendar_transaction_options_popper);
 
@@ -689,7 +698,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
         transactionPopperSchedLV.setOnClickListener(linearLayoutClickListener);
 
         //set font for all the text view
-        setFont((ViewGroup) dialog.findViewById(R.id.calendarTransactionsPopperLLId));
+        setFont((ViewGroup) dialog.findViewById(R.id.calendarTransactionsPopperLLId));*/
     }
 
     public void showQuickTransactionPopper(){
@@ -1230,7 +1239,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
         mContext.startActivity(intent);
     }
 
-    public void showAccountDeletePopper(AccountsModel accountsModelObj){
+    public void showAccountDeletePopper(AccountsMO accountsModelObj){
         // Create custom message popper object
         anotherMessageDialog = new Dialog(mContext);
         anotherMessageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1301,7 +1310,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
         else if(object instanceof BudgetModel){
             msgPoprMsgTV.setText("Delete this Budget ?");
         }
-        else if(object instanceof AccountsModel){
+        else if(object instanceof AccountsMO){
             msgPoprMsgTV.setText("Delete this Account ?");
         }
         else{
@@ -1454,7 +1463,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
         navigateTo(AddUpdateBudgetActivity.class, "BUDGET_OBJ", budgetModelObj);
     }
 
-    private void showAccountPopper(final AccountsModel accountsModelObj){
+    private void showAccountPopper(final AccountsMO accountsModelObj){
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_account_popper);
@@ -1621,7 +1630,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void fetchMonthLegend(){
-        monthLegendMap = calendarDbService.getMonthLegendOnDate(currentFocusedMonthStr, loggedInUserObj.getUSER_ID());
+        //monthLegendMap = calendarDbService.getMonthLegendOnDate(currentFocusedMonthStr, loggedInUserObj.getUSER_ID());
     }
 
     private void setUpTabs() {
@@ -1645,8 +1654,8 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
                                 else if (listItemObject instanceof ConsolidatedTransferModel) {
                                     showTransfersPopper((ConsolidatedTransferModel) listItemObject);
                                 }
-                                else if (listItemObject instanceof AccountsModel) {
-                                    showAccountPopper((AccountsModel) listItemObject);
+                                else if (listItemObject instanceof AccountsMO) {
+                                    showAccountPopper((AccountsMO) listItemObject);
                                 }
                                 else if (listItemObject instanceof BudgetModel) {
                                     showBudgetPopper((BudgetModel) listItemObject);
@@ -1943,11 +1952,6 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
         sendBroadcast(notifIntent);
     }
 
-    private void initializeCalendar(){
-        //this method runs on app start up, so setting the calendar to current actual state
-        _calendar = Calendar.getInstance(Locale.getDefault());
-    }
-
     private void initUIComponents() {
         //get UI components
 
@@ -2076,8 +2080,8 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
                                 showToast("Could not Delete the Budget");
                             }
                         }
-                        else if(object instanceof AccountsModel) {
-                            showAccountDeletePopper((AccountsModel) object);
+                        else if(object instanceof AccountsMO) {
+                            showAccountDeletePopper((AccountsMO) object);
                         }
                         break;
 
@@ -2143,7 +2147,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
                     case R.id.msgPoprAccPosLLId:
                         killPopper();
-                        AccountsModel accountsModelObj = (AccountsModel)v.getTag();
+                        AccountsMO accountsModelObj = (AccountsMO)v.getTag();
 
                         if(calendarDbService.deleteAccount(accountsModelObj)) {
                             refreshActivity();
@@ -2171,15 +2175,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     private void showAddUpdateTransactionPopper(String transactionIdStr) {
         killPopper();
 
-        // close existing dialog fragments
-        FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
-        if (frag != null) {
-            manager.beginTransaction().remove(frag).commit();
-        }
-
         TransactionModel transactionModelObj = new TransactionModel();
-
         if(transactionIdStr != null && !transactionIdStr.isEmpty()){
             transactionModelObj.setTRAN_ID(transactionIdStr);
         }
@@ -2190,6 +2186,12 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
             catch (ParseException pe){
                 Log.e(CLASS_NAME, "Date Parse Error !! "+pe);
             }
+        }
+
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
         }
 
         Bundle bundle = new Bundle();
@@ -2208,10 +2210,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
             return;
         }
 
-        killPopper();
-        showToast(resultStr);
-        fetchMonthLegend();
-        setUpCalendar();
+        onCreate(savedInstanceState);
     }
 
 

@@ -80,7 +80,7 @@ public class AddUpdateCategoryActivity extends Activity {
         setContentView(R.layout.manage_content_add_update_category);
 
         //get the Active user
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         if(loggedInUserObj == null){
             return;
         }

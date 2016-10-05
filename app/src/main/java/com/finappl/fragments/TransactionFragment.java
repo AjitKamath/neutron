@@ -2,6 +2,8 @@ package com.finappl.fragments;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -28,7 +31,12 @@ import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
 import com.finappl.adapters.AddUpdateTransactionSpinnerAdapter;
 import com.finappl.dbServices.AuthorizationDbService;
+import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.TransactionsDbService;
+import com.finappl.models.AccountsMO;
+import com.finappl.models.CategoryMO;
+import com.finappl.models.SpentOnMO;
+import com.finappl.models.SpentOnModel;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.UserMO;
@@ -36,8 +44,10 @@ import com.finappl.models.UsersModel;
 import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 import static com.finappl.utils.Constants.*;
 
@@ -55,12 +65,10 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     private ImageView addUpdateTranBackImg;
     private EditText addUpdateTranNameET;
     private EditText addUpdateTranAmtET;
-    private Spinner addUpdateCatSpn;
-    private Spinner addUpdateAccSpn;
+    private LinearLayout transactionContentCategoryLL;
     private RadioButton addUpdateTranExpRadio;
     private RadioButton addUpdateTranIncRadio;
     private RadioGroup addUpdateTranExpIncRadioGrp;
-    private Spinner addUpdateSpntOnSpn;
     private EditText addUpdateNoteET;
     private ImageView transactionSaveIV;
     private CheckBox transactionSchedueCB;
@@ -68,12 +76,14 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
 
     private UserMO loggedInUserObj;
 
+    private CalendarDbService calendarDbService;
     private TransactionsDbService transactionsDbService;
     private AuthorizationDbService authorizationDbService;
 
-    private List<SpinnerModel> categoryList;
-    private List<SpinnerModel> accountList;
-    private List<SpinnerModel> spentOnList;
+    private Map<String, CategoryMO> categoriesMap;
+    private List<AccountsMO> accountList;
+    private List<SpentOnMO> spentOnList;
+
 
     private TransactionModel transactionModelObj;
 
@@ -102,13 +112,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
 
         transactionModelObj.setTRAN_AMT(Double.parseDouble(String.valueOf(addUpdateTranAmtET.getText())));
         transactionModelObj.setTRAN_NAME(String.valueOf(addUpdateTranNameET.getText()));
-        transactionModelObj.setCAT_ID(String.valueOf(addUpdateCatSpn.getSelectedView().getTag()));
-        transactionModelObj.setCategory(((SpinnerModel) addUpdateCatSpn.getSelectedItem()).getItemName());
-        transactionModelObj.setACC_ID(String.valueOf(addUpdateAccSpn.getSelectedView().getTag()));
-        transactionModelObj.setAccount(((SpinnerModel) addUpdateAccSpn.getSelectedItem()).getItemName());
         transactionModelObj.setTRAN_TYPE(String.valueOf(getView().findViewById(addUpdateTranExpIncRadioGrp.getCheckedRadioButtonId()).getTag()));
-        transactionModelObj.setSPNT_ON_ID(String.valueOf(addUpdateSpntOnSpn.getSelectedView().getTag()));
-        transactionModelObj.setSpentOn(((SpinnerModel) addUpdateSpntOnSpn.getSelectedItem()).getItemName());
         transactionModelObj.setTRAN_NOTE(String.valueOf(addUpdateNoteET.getText()));
         transactionModelObj.setUSER_ID(loggedInUserObj.getUSER_ID());
     }
@@ -118,55 +122,33 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     }
 
     private void setupPage() {
-        setupSpinners();
-
-        //set rest of the page values based on the transactionModelObj from the bundle
-
-        //if the transactionModelObj contains transactionId in it, then its an already existing transaction. if not, it a new transaction
-        if(transactionModelObj.getTRAN_ID() != null && !transactionModelObj.getTRAN_ID().trim().isEmpty()){
-            TransactionModel tempTransactionModelObj = transactionsDbService.getTransactionOnTransactionId(transactionModelObj.getTRAN_ID());
-
-            addUpdateDateTV.setText(UI_DATE_FORMAT_SDF.format(tempTransactionModelObj.getTRAN_DATE()));
-            addUpdateTranAmtET.setText(String.valueOf(tempTransactionModelObj.getTRAN_AMT()));
-            addUpdateTranNameET.setText(tempTransactionModelObj.getTRAN_NAME());
-            addUpdateCatSpn.setSelection(getSpinnerItemIndex(categoryList, tempTransactionModelObj.getCategory()));
-            addUpdateAccSpn.setSelection(getSpinnerItemIndex(accountList, tempTransactionModelObj.getAccount()));
-            if("INCOME".equalsIgnoreCase(tempTransactionModelObj.getTRAN_TYPE())){
-                addUpdateTranIncRadio.setChecked(true);
-            }
-            addUpdateSpntOnSpn.setSelection(getSpinnerItemIndex(spentOnList, tempTransactionModelObj.getSpentOn()));
-            addUpdateNoteET.setText(tempTransactionModelObj.getTRAN_NOTE());
-            transactionSaveIV.setBackgroundResource(R.drawable.save_white_small);
-        }
-        else if(transactionModelObj.getTRAN_DATE() != null){
-            addUpdateDateTV.setText(UI_DATE_FORMAT_SDF.format(transactionModelObj.getTRAN_DATE()).toUpperCase());
+        if(transactionModelObj.getTRAN_ID() != null){
+            //this transaction is being edited
         }
         else{
-            Log.e(CLASS_NAME, "Expected data not found in "+TRANSACTION_OBJECT);
+            addUpdateDateTV.setText(UI_DATE_FORMAT_SDF.format(transactionModelObj.getTRAN_DATE()));
+
+            //set default category to be set
+            CategoryMO categoryMO = transactionsDbService.getDefaultCategory(loggedInUserObj.getUSER_ID());
+
+            ((TextView)transactionContentCategoryLL.findViewById(R.id.transactionContentCategoryTVId)).setText(categoryMO.getCAT_NAME());
+            transactionContentCategoryLL.setTag(categoryMO);
         }
+
+
+
+
+        getMasterData();
     }
 
-    private Integer getSpinnerItemIndex(List<SpinnerModel> spnList, String itemStr){
-        int spnListSize = spnList.size();
-        int index = 0;
+    private void getMasterData() {
+        categoriesMap = calendarDbService.getAllCategories(loggedInUserObj.getUSER_ID());
+        accountList = calendarDbService.getAllAccounts(loggedInUserObj.getUSER_ID());
+        spentOnList = calendarDbService.getAllSpentOn(loggedInUserObj.getUSER_ID());
 
-        for(int i=0; i<spnListSize; i++){
-            if(spnList.get(i).getItemName().equalsIgnoreCase(itemStr)){
-                index = i;
-                break;
-            }
-        }
-        return index;
-    }
-
-    private void setupSpinners() {
-        categoryList = transactionsDbService.getAllCategories(loggedInUserObj.getUSER_ID());
-        accountList = transactionsDbService.getAllAccounts(loggedInUserObj.getUSER_ID());
-        spentOnList = transactionsDbService.getAllSpentOn(loggedInUserObj.getUSER_ID());
-
-        addUpdateCatSpn.setAdapter(new AddUpdateTransactionSpinnerAdapter(mContext, R.layout.cat_acc_spnt_spnr, categoryList));
+        /*addUpdateCatSpn.setAdapter(new AddUpdateTransactionSpinnerAdapter(mContext, R.layout.cat_acc_spnt_spnr, categoryList));
         addUpdateAccSpn.setAdapter(new AddUpdateTransactionSpinnerAdapter(mContext, R.layout.cat_acc_spnt_spnr, accountList));
-        addUpdateSpntOnSpn.setAdapter(new AddUpdateTransactionSpinnerAdapter(mContext, R.layout.cat_acc_spnt_spnr, spentOnList));
+        addUpdateSpntOnSpn.setAdapter(new AddUpdateTransactionSpinnerAdapter(mContext, R.layout.cat_acc_spnt_spnr, spentOnList));*/
     }
 
     private void initComps(View view){
@@ -174,24 +156,47 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         addUpdateTranBackImg = (ImageView) view.findViewById(R.id.addUpdateTranBackImgId);
         addUpdateTranNameET = (EditText) view.findViewById(R.id.addUpdateTranNameETId);
         addUpdateTranAmtET = (EditText) view.findViewById(R.id.addUpdateTranAmtETId);
-        addUpdateCatSpn = (Spinner) view.findViewById(R.id.addUpdateCatSpnId);
-        addUpdateAccSpn = (Spinner) view.findViewById(R.id.addUpdateAccSpnId);
+
+        transactionContentCategoryLL = (LinearLayout) view.findViewById(R.id.transactionContentCategoryLLId);
+
         addUpdateTranExpRadio = (RadioButton) view.findViewById(R.id.addUpdateTranExpRadioId);
         addUpdateTranIncRadio = (RadioButton) view.findViewById(R.id.addUpdateTranIncRadioId);
         addUpdateTranExpIncRadioGrp = (RadioGroup) view.findViewById(R.id.addUpdateTranExpIncRadioGrpId);
-        addUpdateSpntOnSpn = (Spinner) view.findViewById(R.id.addUpdateSpntOnSpnId);
         addUpdateNoteET = (EditText) view.findViewById(R.id.addUpdateNoteETId);
         transactionSaveIV = (ImageView) view.findViewById(R.id.transactionSaveIVId);
 
         transactionSaveIV.setOnClickListener(this);
         addUpdateTranBackImg.setOnClickListener(this);
 
+        transactionContentCategoryLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCategoryFragment();
+            }
+        });
+
         addUpdateTranNameET.addTextChangedListener(fieldTextWatcher);
         addUpdateTranAmtET.addTextChangedListener(fieldTextWatcher);
     }
 
+    private void showCategoryFragment(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_CATEGORY);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CATEGORY_OBJECT, (Serializable) categoriesMap);
+        bundle.putSerializable(SELECTED_CATEGORY_OBJECT, ((CategoryMO)transactionContentCategoryLL.getTag()).getCAT_ID());
+
+        CategoriesFragment categoriesFragment = new CategoriesFragment();
+        categoriesFragment.setArguments(bundle);
+        categoriesFragment.show(manager, FRAGMENT_CATEGORY);
+    }
+
     private void getLoggedInUser(){
-        loggedInUserObj = FinappleUtility.getInstance().getUser(mContext);
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
     }
 
     @Override
@@ -318,6 +323,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     private void initDb() {
         mContext = getActivity().getApplicationContext();
 
+        calendarDbService = new CalendarDbService(mContext);
         transactionsDbService = new TransactionsDbService(mContext);
         authorizationDbService = new AuthorizationDbService(mContext);
     }

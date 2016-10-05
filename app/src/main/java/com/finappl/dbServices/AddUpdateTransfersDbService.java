@@ -2,21 +2,14 @@ package com.finappl.dbServices;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import com.finappl.models.AccountsModel;
 import com.finappl.models.TransferModel;
-import com.finappl.utils.ColumnFetcher;
 import com.finappl.utils.Constants;
-import com.finappl.utils.IdGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;

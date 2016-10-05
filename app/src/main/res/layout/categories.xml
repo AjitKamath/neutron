@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/categoriesRLId"
+    android:layout_width="@dimen/fragment_full_width"
+    android:layout_height="@dimen/fragment_full_height"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/screen_components_padding_from_walls"
+    android:background="@color/white"
+    android:gravity="right"
+    android:orientation="vertical"
+    app:theme="@style/FinappleTheme">
+
+    <!-- header -->
+
+    <LinearLayout
+        android:id="@+id/categoriesHeaderLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/screen_components_padding_from_walls"
+        android:visibility="visible">
+
+
+        <ImageView
+            android:id="@+id/categoriesHeaderBackIVId"
+            android:layout_width="@dimen/image_header_size"
+            android:layout_height="@dimen/image_header_size"
+            android:background="@drawable/cancel_grey" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="CATEGORIES"
+            android:textColor="@color/finappleTheme"
+            android:textSize="@dimen/own_spinner_text_size_primary" />
+
+
+    </LinearLayout>
+
+    <!--Page-->
+    <LinearLayout
+        android:id="@+id/categoriesContentLLId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/categoriesHeaderLLId"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_components_padding_from_walls">
+
+        <ListView
+            android:id="@+id/categoriesContentLVId"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+    </LinearLayout>
+</RelativeLayout>

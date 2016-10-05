@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.models.AccountsModel;
+import com.finappl.models.AccountsMO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +32,12 @@ public class ManageContentAccountsSectionListAdapter extends BaseAdapter {
     private TreeSet<Integer> mSeparatorsSet = new TreeSet<Integer>();
     private int sectionId;
     private int listId;
-    private Map<String, List<AccountsModel>> itemsMap;
+    private Map<String, List<AccountsMO>> itemsMap;
     private Context mContext;
     private String userNameStr;
     private LayoutInflater inflater;
 
-    public ManageContentAccountsSectionListAdapter(Context context, int sectionId, int listId, Map<String, List<AccountsModel>> itemsMap, String userNameStr) {
+    public ManageContentAccountsSectionListAdapter(Context context, int sectionId, int listId, Map<String, List<AccountsMO>> itemsMap, String userNameStr) {
         super();
         this.sectionId = sectionId;
         this.listId = listId;
@@ -50,15 +50,15 @@ public class ManageContentAccountsSectionListAdapter extends BaseAdapter {
     }
 
     private void buildSectionList() {
-        for(Map.Entry<String, List<AccountsModel>> iterMap : itemsMap.entrySet()) {
+        for(Map.Entry<String, List<AccountsMO>> iterMap : itemsMap.entrySet()) {
             //if there's only default Accounts then no need of showing dividers
             /*if(itemsMap.size() != 1 && "Y-DEFAULT".equalsIgnoreCase(iterMap.getKey())){
                 addSeparatorItem(iterMap);
             }*/
 
-            List<AccountsModel> accList = iterMap.getValue();
+            List<AccountsMO> accList = iterMap.getValue();
 
-            for(AccountsModel iterAccList : accList) {
+            for(AccountsMO iterAccList : accList) {
                 addItem(iterAccList);
             }
         }
@@ -146,7 +146,7 @@ public class ManageContentAccountsSectionListAdapter extends BaseAdapter {
     }
 
     private void makeListItem(int position, ViewHolder mHolder) {
-        AccountsModel accountsModelObj = (AccountsModel) mData.get(position);
+        AccountsMO accountsModelObj = (AccountsMO) mData.get(position);
 
         mHolder.manageContentAccNameTV.setText(accountsModelObj.getACC_NAME());
         mHolder.manageContentAccNoteTV.setText(accountsModelObj.getACC_NOTE());
@@ -171,7 +171,7 @@ public class ManageContentAccountsSectionListAdapter extends BaseAdapter {
     }
 
     private void makeSectionHeader(int position, ViewHolder mHolder) {
-        /*Map.Entry<String, List<AccountsModel>> accountsListMap = (Map.Entry<String, List<AccountsModel>>) mData.get(position);
+        /*Map.Entry<String, List<AccountsMO>> accountsListMap = (Map.Entry<String, List<AccountsMO>>) mData.get(position);
 
         if("USER".equalsIgnoreCase(accountsListMap.getKey())){
             mHolder.manageContentAccHeaderHeadingTV.setText(userNameStr+"'s Accounts");
