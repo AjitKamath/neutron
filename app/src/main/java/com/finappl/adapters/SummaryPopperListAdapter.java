@@ -63,7 +63,7 @@ public class SummaryPopperListAdapter extends BaseAdapter {
 
             convertView.setTag(layoutResourceId, mHolder);
         } else {
-            mHolder = (ViewHolder) convertView.getTag();
+            mHolder = (ViewHolder) convertView.getTag(layoutResourceId);
         }
 
         makeList(position, mHolder);

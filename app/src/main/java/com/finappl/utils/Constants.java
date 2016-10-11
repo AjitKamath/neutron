@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 public final class Constants{
     //DB
     public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 34;
+    public static final int DB_VERSION = 35;
 
     //DB Properties
     public static final String USERNAME = "Ajit";
@@ -44,26 +44,6 @@ public final class Constants{
     public static final String DB_DEFAULT_NOTIF_TIME = "10:00";
 
     //DB Tables
-    //OBSOLETE TABLES
-    public static final String DB_TABLE_USERSTABLE = "USERS";
-    public static final String DB_TABLE_ACCOUNTTABLE = "ACCOUNT_MASTER";
-    public static final String DB_TABLE_CATEGORYTABLE = "CATEGORY_MASTER";
-    public static final String DB_TABLE_SPENTONTABLE = "SPENT_ON_MASTER";
-    public static final String DB_TABLE_TRANSACTIONTABLE = "TRANSACTIONS";
-    public static final String DB_TABLE_SCHEDULEDTRANSACTIONSTABLE = "SCHEDULED_TRANSACTIONS";
-    public static final String DB_TABLE_BUDGETTABLE = "BUDGETS";
-    public static final String DB_TABLE_CATEGORYTAGSTABLE = "CATEGORY_TAGS";
-    public static final String DB_TABLE_TRANSFERSTABLE = "TRANSFERS";
-    public static final String DB_TABLE_SHEDULEDTRANSFERSTABLE = "SCHEDULED_TRANSFERS";
-    public static final String DB_TABLE_COUNTRYTABLE = "COUNTRY_MASTER";
-    public static final String DB_TABLE_CURRENCYTABLE = "CURRENCY_MASTER";
-    public static final String DB_TABLE_WORK_TIMELINETABLE = "WORK_TIMELINE";
-    public static final String DB_TABLE_NOTIFICATIONSTABLE = "NOTIFICATIONS";
-    public static final String DB_TABLE_SETTINGS_NOTIFICATIONS = "SETTINGS_NOTIFICATIONS";
-    public static final String DB_TABLE_SETTINGS_SOUNDS = "SETTINGS_SOUNDS";
-    public static final String DB_TABLE_SETTINGS_SECURITY = "SETTINGS_SECURITY";
-    //OBSOLETE TABLES ENDS--
-
     public static final String DB_TABLE_USER = "USERS";
     public static final String DB_TABLE_ACCOUNT = "ACCOUNTS";
     public static final String DB_TABLE_CATEGORY = "CATEGORIES";
@@ -78,12 +58,14 @@ public final class Constants{
     //DB
 
     //defaults
-    public static final String DEFAULT_CATEGORIES = "FOOD,ENTERTAINMENT,BILL,COMMUTE,SHOPPING,FUEL,HEALTH,OTHER";
+    public static final String CATEGORIES = "FOOD,ENTERTAINMENT,BILL,COMMUTE,SHOPPING,FUEL,HEALTH,OTHER";
     public static final String DEFAULT_CATEGORY = "OTHER";
-    public static final String DEFAULT_ACCOUNTS = "CASH,BANK,CREDIT CARD,DEBIT CARD";
+    public static final String ACCOUNTS = "CASH,BANK,CREDIT CARD,DEBIT CARD";
     public static final String DEFAULT_ACCOUNT = "CASH";
-    public static final String DEFAULT_SPENT_ONS = "SELF,FAMILY,FRIENDS,BUSINESS";
+    public static final String SPENT_ONS = "SELF,FAMILY,FRIENDS,BUSINESS";
     public static final String DEFAULT_SPENTON = "SELF";
+    public static final String REPEATS = "DAILY,WEEKLY,MONTHLY,YEARLY";
+    public static final String DEFAULT_REPEAT = "MONTHLY";
     public static final String DEFAULT_COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-INR,USA-1-DOLLAR-USD,AUSTRALIA-61-DOLLAR-AUD";
 
     public static final String DEFAULT_QUICK_TRANSACTION_NAME = "Quick Transaction";

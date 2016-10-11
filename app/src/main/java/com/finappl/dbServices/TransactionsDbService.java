@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Spinner;
 
 import com.finappl.models.AccountsMO;
 import com.finappl.models.CategoryMO;
@@ -15,7 +14,6 @@ import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
 import com.finappl.utils.ColumnFetcher;
 import com.finappl.utils.Constants;
-import com.finappl.utils.IdGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,13 +26,9 @@ import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 import static com.finappl.utils.Constants.DB_NAME;
 import static com.finappl.utils.Constants.DB_NONAFFIRMATIVE;
 import static com.finappl.utils.Constants.DB_TABLE_ACCOUNT;
-import static com.finappl.utils.Constants.DB_TABLE_ACCOUNTTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_CATEGORY;
-import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_SPENTON;
-import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSACTION;
-import static com.finappl.utils.Constants.DB_TABLE_TRANSACTIONTABLE;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSFER;
 import static com.finappl.utils.Constants.DB_VERSION;
 
@@ -334,18 +328,18 @@ public class TransactionsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SCH_TRAN_ID ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE + " TRAN ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTION + " TRAN ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE + " CAT ");
+        sqlQuerySB.append(DB_TABLE_CATEGORY + " CAT ");
         sqlQuerySB.append(" ON CAT.CAT_ID = TRAN.CAT_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT + " ACC ");
         sqlQuerySB.append(" ON ACC.ACC_ID = TRAN.ACC_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_SPENTONTABLE + " SPNT ");
+        sqlQuerySB.append(DB_TABLE_SPENTON + " SPNT ");
         sqlQuerySB.append(" ON SPNT.SPNT_ON_ID = TRAN.SPNT_ON_ID ");
 
         sqlQuerySB.append(" WHERE ");
@@ -389,7 +383,7 @@ public class TransactionsDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
 		// Updating an old Row
-        int result = db.update(DB_TABLE_TRANSACTIONTABLE, values,	"TRAN_ID = '" + transactionModel.getTRAN_ID() + "'", null);
+        int result = db.update(DB_TABLE_TRANSACTION, values,	"TRAN_ID = '" + transactionModel.getTRAN_ID() + "'", null);
         db.close();
 		return result;
     }
@@ -405,19 +399,17 @@ public class TransactionsDbService extends SQLiteOpenHelper {
 		values.put("CAT_ID", transactionModel.getCAT_ID());
 		values.put("SPNT_ON_ID", transactionModel.getSPNT_ON_ID());
 		values.put("ACC_ID", transactionModel.getACC_ID());
-		values.put("SCH_TRAN_ID", transactionModel.getSCH_TRAN_ID());
 		values.put("TRAN_AMT", transactionModel.getTRAN_AMT());
 		values.put("TRAN_NAME", transactionModel.getTRAN_NAME());
 		values.put("TRAN_TYPE", transactionModel.getTRAN_TYPE());
 		values.put("TRAN_NOTE", transactionModel.getTRAN_NOTE());
 		values.put("TRAN_DATE", simpleDateFormat.format(transactionModel.getTRAN_DATE()));
-		values.put("TRAN_IS_DEL", Constants.DB_NONAFFIRMATIVE);
 		values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         long result = 0;
         try {
             // Inserting a new Row
-            result =  db.insertOrThrow(DB_TABLE_TRANSACTIONTABLE, null, values);
+            result =  db.insertOrThrow(DB_TABLE_TRANSACTION, null, values);
         }
         catch(Exception e){
             Log.e(CLASS_NAME, "Error while adding transaction:"+e);

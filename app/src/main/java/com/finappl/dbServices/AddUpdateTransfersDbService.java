@@ -14,7 +14,7 @@ import java.util.Date;
 import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 import static com.finappl.utils.Constants.DB_NAME;
-import static com.finappl.utils.Constants.DB_TABLE_TRANSFERSTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSFER;
 import static com.finappl.utils.Constants.DB_VERSION;
 
 public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
@@ -37,7 +37,7 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
 		// Updating an old Row
-		int result = db.update(DB_TABLE_TRANSFERSTABLE, values,	"TRNFR_ID = '" + transferModel.getTRNFR_ID() + "'", null);
+		int result = db.update(DB_TABLE_TRANSFER, values,	"TRNFR_ID = '" + transferModel.getTRNFR_ID() + "'", null);
 
 		db.close();
         return result;
@@ -59,7 +59,7 @@ public class AddUpdateTransfersDbService extends SQLiteOpenHelper {
 		values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
 		// Inserting a new Row
-		long result =  db.insert(DB_TABLE_TRANSFERSTABLE, null, values);
+		long result =  db.insert(DB_TABLE_TRANSFER, null, values);
 		db.close();
         return result;
     }

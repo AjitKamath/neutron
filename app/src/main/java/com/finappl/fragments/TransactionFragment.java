@@ -267,7 +267,18 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
             getInputs();
 
             //if transactionModelObj contains transactionId, then its an update. if not its a new transaction
-            if(transactionModelObj.getTRAN_ID() != null && !transactionModelObj.getTRAN_ID().trim().isEmpty()){
+            if(transactionModelObj.getTRAN_ID() == null){
+                transactionModelObj.setTRAN_ID(IdGenerator.getInstance().generateUniqueId("TRAN"));
+                long result = transactionsDbService.addNewTransaction(transactionModelObj);
+
+                if(result == -1) {
+                    messageStr = "Failed to create a new Transaction !";
+                }
+                else{
+                    messageStr = "New Transaction created";
+                }
+            }
+            else{
                 long result = transactionsDbService.updateOldTransaction(transactionModelObj);
 
                 if(result == 0) {
@@ -277,17 +288,6 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
                 }
                 else{
                     messageStr = "Unknown error !";
-                }
-            }
-            else{
-                transactionModelObj.setTRAN_ID(IdGenerator.getInstance().generateUniqueId("TRAN"));
-                long result = transactionsDbService.addNewTransaction(transactionModelObj);
-
-                if(result == -1) {
-                    messageStr = "Failed to create a new Transaction !";
-                }
-                else{
-                    messageStr = "New Transaction created";
                 }
             }
         }

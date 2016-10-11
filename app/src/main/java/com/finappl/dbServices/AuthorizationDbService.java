@@ -229,7 +229,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" MAX(MOD_DTM) ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_USERSTABLE);
+        sqlQuerySB.append(DB_TABLE_USER);
 
         Log.i(CLASS_NAME, "Query to fetch last used username  :"+sqlQuerySB);
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);

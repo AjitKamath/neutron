@@ -510,8 +510,6 @@
                             android:text="SPENT ON"
                             android:textColor="@color/formHeadingTextDark"
                             android:textSize="10sp" />
-
-
                     </LinearLayout>
 
                     <LinearLayout

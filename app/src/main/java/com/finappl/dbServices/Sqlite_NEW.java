@@ -47,7 +47,7 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 
 		//Categories
 		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_CATEGORY);
-		String categoriesStrArr[] = DEFAULT_CATEGORIES.split(",");
+		String categoriesStrArr[] = CATEGORIES.split(",");
 		values = new ContentValues();
 		for(String iterCategoriesStrArr : categoriesStrArr){
 			values.put("CAT_ID", iterCategoriesStrArr);
@@ -68,7 +68,7 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 
 		//Account
 		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_ACCOUNT);
-		String accountStrArr[] = DEFAULT_ACCOUNTS.split(",");
+		String accountStrArr[] = ACCOUNTS.split(",");
 		values = new ContentValues();
 		for(String iterAccountStrArr : accountStrArr){
 			values.put("ACC_ID", iterAccountStrArr);
@@ -89,7 +89,7 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 
 		//Spent On
 		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_SPENTON);
-		String spentOnStrArr[] = DEFAULT_SPENT_ONS.split(",");
+		String spentOnStrArr[] = SPENT_ONS.split(",");
 		values = new ContentValues();
 		for(String iterSpentOnStrArr : spentOnStrArr){
 			values.put("SPNT_ON_ID", iterSpentOnStrArr);
@@ -107,6 +107,26 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 			db.insert(DB_TABLE_SPENTON, null, values);
 		}
 		Log.i(CLASS_NAME, "Inserted defaults(" + spentOnStrArr.length + ") into " + DB_TABLE_SPENTON);
+
+		//Repeats
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_REPEAT);
+		String repeatsStrArr[] = REPEATS.split(",");
+		values = new ContentValues();
+		for(String iterArr : repeatsStrArr){
+			values.put("REPEAT_ID", iterArr);
+			values.put("REPEAT_NAME", iterArr);
+
+			if(iterArr.equalsIgnoreCase(DEFAULT_REPEAT)){
+				values.put("REPEAT_IS_DEF", DB_AFFIRMATIVE);
+			}
+			else{
+				values.put("REPEAT_IS_DEF", DB_NONAFFIRMATIVE);
+			}
+
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_REPEAT, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults("+repeatsStrArr.length+") into " + DB_TABLE_REPEAT);
 	}
 
 	private void createNotificationsTable() {
@@ -172,12 +192,10 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_REPEAT);
 		sb.append(" (REPEAT_ID TEXT PRIMARY KEY, ");				//pk
-		sb.append(" USER_ID TEXT NOT NULL, ");					//fk1
-		sb.append(" REPEAT_TYPE TEXT NOT NULL, ");
-		sb.append(" REPEAT_TYPE_ID TEXT NOT NULL, ");
+		sb.append(" REPEAT_NAME TEXT NOT NULL, ");
+		sb.append(" REPEAT_IS_DEF TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sb.append(" MOD_DTM DATETIME, ");
-		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID)) ");
+		sb.append(" MOD_DTM DATETIME) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_REPEAT + " Table query:\n" + String.valueOf(sb));
 
@@ -219,9 +237,7 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" CAT_ID TEXT NOT NULL, ");					//fk2
 		sb.append(" ACC_ID TEXT NOT NULL, ");					//fk3
 		sb.append(" SPNT_ON_ID TEXT NOT NULL, ");				//fk4
-		sb.append(" TRAN_IS_SCHED TEXT NOT NULL, ");
-		sb.append(" TRAN_REPEAT TEXT, ");
-		sb.append(" TRAN_REPEAT_ID TEXT, ");
+		sb.append(" REPEAT_ID TEXT, ");							//fk5
 		sb.append(" TRAN_AMT TEXT NOT NULL, ");
 		sb.append(" TRAN_NAME TEXT NOT NULL, ");
 		sb.append(" TRAN_TYPE TEXT NOT NULL, ");
@@ -232,7 +248,8 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID), ");
 		sb.append(" FOREIGN KEY (CAT_ID) REFERENCES "+DB_TABLE_CATEGORY+" (CAT_ID), ");
 		sb.append(" FOREIGN KEY (ACC_ID) REFERENCES "+DB_TABLE_ACCOUNT+" (ACC_ID), ");
-		sb.append(" FOREIGN KEY (SPNT_ON_ID) REFERENCES " + DB_TABLE_SPENTON + " (SPNT_ON_ID)) ");
+		sb.append(" FOREIGN KEY (SPNT_ON_ID) REFERENCES " + DB_TABLE_SPENTON + " (SPNT_ON_ID), ");
+		sb.append(" FOREIGN KEY (REPEAT_ID) REFERENCES " + DB_TABLE_REPEAT + " (REPEAT_ID)) ");
 
 		Log.i(CLASS_NAME, "Create " + DB_TABLE_TRANSACTION + " Table query:\n" + String.valueOf(sb));
 

@@ -18,7 +18,7 @@ import java.util.Date;
 import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 import static com.finappl.utils.Constants.DB_NAME;
-import static com.finappl.utils.Constants.DB_TABLE_BUDGETTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_BUDGET;
 import static com.finappl.utils.Constants.DB_VERSION;
 
 public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
@@ -38,7 +38,7 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_BUDGETTABLE);
+        sqlQuerySB.append(DB_TABLE_BUDGET);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER_ID = '"+budgetModel.getUSER_ID()+"' ");
@@ -72,7 +72,7 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Updating an old Row
-        int result = db.update(DB_TABLE_BUDGETTABLE, values,	"BUDGET_ID = '" + budgetModel.getBUDGET_ID() + "'", null);
+        int result = db.update(DB_TABLE_BUDGET, values,	"BUDGET_ID = '" + budgetModel.getBUDGET_ID() + "'", null);
         db.close();
         return result;
     }
@@ -87,7 +87,7 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_BUDGETTABLE);
+        sqlQuerySB.append(DB_TABLE_BUDGET);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER_ID = '"+budgetModel.getUSER_ID()+"' ");
@@ -124,7 +124,7 @@ public class AddUpdateBudgetsDbService extends SQLiteOpenHelper {
 		values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
 		// Inserting a new Row
-		long result =  db.insert(DB_TABLE_BUDGETTABLE, null, values);
+		long result =  db.insert(DB_TABLE_BUDGET, null, values);
 
         //do not continue if insert failed
         if(result == -1){

@@ -41,7 +41,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" (SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(ACC_TOTAL), '0')  ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNT);
         sqlQuerySB.append(" WHERE  ");
         sqlQuerySB.append(" ACC_ID = '"+accountIdStr+"' ");
         sqlQuerySB.append(" AND ");
@@ -52,7 +52,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" (( SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0')  ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTION);
         sqlQuerySB.append(" WHERE  ");
         sqlQuerySB.append(" TRAN_TYPE = 'INCOME'  ");
         sqlQuerySB.append(" AND  ");
@@ -65,7 +65,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" (SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSFER);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_ID_TO = '"+accountIdStr+"' ");
         sqlQuerySB.append(" AND ");
@@ -76,7 +76,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" ((SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTIONTABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSACTION);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN_TYPE = 'EXPENSE' ");
         sqlQuerySB.append(" AND ");
@@ -89,7 +89,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" (SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_TRANSFERSTABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_TRANSFER);
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_ID_FRM = '"+accountIdStr+"' ");
         sqlQuerySB.append(" AND ");
@@ -99,7 +99,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" ACC_TOTAL ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNT);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_ID  = '" + accountIdStr + "' ");
@@ -133,7 +133,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Updating an old Row
-        int result = db.update(Constants.DB_TABLE_ACCOUNTTABLE, values, "ACC_ID = '" + accObj.getACC_ID() + "'", null);
+        int result = db.update(Constants.DB_TABLE_ACCOUNT, values, "ACC_ID = '" + accObj.getACC_ID() + "'", null);
         db.close();
         return result;
     }
@@ -146,7 +146,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNTTABLE);
+        sqlQuerySB.append(Constants.DB_TABLE_ACCOUNT);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_NAME ");
@@ -182,7 +182,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Inserting a new Row in account table
-        long result =  db.insert(Constants.DB_TABLE_ACCOUNTTABLE, null, values);
+        long result =  db.insert(Constants.DB_TABLE_ACCOUNT, null, values);
 
         //if result is not -1 insertion failed
         if(result == -1){
@@ -215,7 +215,7 @@ public class AddUpdateAccDbService extends SQLiteOpenHelper {
         long result2 = 0;
         try {
             // Inserting a new Row
-            result2 =  db.insertOrThrow(Constants.DB_TABLE_TRANSACTIONTABLE, null, values);
+            result2 =  db.insertOrThrow(Constants.DB_TABLE_TRANSACTION, null, values);
         }
         catch(Exception e){
             Log.e(CLASS_NAME, "Error while adding transaction after creating account:"+e);

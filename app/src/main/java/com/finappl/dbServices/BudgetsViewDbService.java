@@ -48,18 +48,18 @@ public class BudgetsViewDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" CAT.CAT_NAME ");
 
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(DB_TABLE_BUDGETTABLE+" BUD ");
+		sqlQuerySB.append(DB_TABLE_BUDGET+" BUD ");
 
 		sqlQuerySB.append(" LEFT OUTER JOIN ");
-		sqlQuerySB.append(DB_TABLE_SPENTONTABLE+" SPNT ");
+		sqlQuerySB.append(DB_TABLE_SPENTON+" SPNT ");
 		sqlQuerySB.append(" ON BUD.BUDGET_GRP_ID = SPNT.SPNT_ON_ID ");
 
 		sqlQuerySB.append(" LEFT OUTER JOIN ");
-		sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" ACC ");
+		sqlQuerySB.append(DB_TABLE_ACCOUNT+" ACC ");
 		sqlQuerySB.append(" ON BUD.BUDGET_GRP_ID = ACC.ACC_ID ");
 
 		sqlQuerySB.append(" LEFT OUTER JOIN ");
-		sqlQuerySB.append(DB_TABLE_CATEGORYTABLE+" CAT ");
+		sqlQuerySB.append(DB_TABLE_CATEGORY+" CAT ");
 		sqlQuerySB.append(" ON BUD.BUDGET_GRP_ID = CAT.CAT_ID ");
 
 		sqlQuerySB.append(" WHERE ");

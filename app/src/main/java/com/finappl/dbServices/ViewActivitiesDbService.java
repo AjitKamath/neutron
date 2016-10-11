@@ -45,7 +45,7 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
                     "serve the purpose of this app.. hope you know what i mean. Peace.");
 
         // Updating an old Row
-        int result = db.update(DB_TABLE_TRANSACTIONTABLE, values,	"TRAN_ID = '" + transactionIdStr + "'", null);
+        int result = db.update(DB_TABLE_TRANSACTION, values,	"TRAN_ID = '" + transactionIdStr + "'", null);
         db.close();
         return result;
     }
@@ -66,41 +66,30 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRAN.TRAN_TYPE, ");
         sqlQuerySB.append(" TRAN.CREAT_DTM AS TRAN_CREAT_DTM, ");
         sqlQuerySB.append(" TRAN.MOD_DTM, ");
-        sqlQuerySB.append(" SCH.CREAT_DTM  AS SCH_CREAT_DTM, ");
-        sqlQuerySB.append(" CUR.CUR_NAME ");
+        sqlQuerySB.append(" SCH.CREAT_DTM  AS SCH_CREAT_DTM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE + " TRAN ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTION + " TRAN ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE + " CAT ");
+        sqlQuerySB.append(DB_TABLE_CATEGORY + " CAT ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CAT.CAT_ID = TRAN.CAT_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_SPENTONTABLE + " SPNT ");
+        sqlQuerySB.append(DB_TABLE_SPENTON + " SPNT ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" SPNT.SPNT_ON_ID = TRAN.SPNT_ON_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT + " ACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" ACC.ACC_ID = TRAN.ACC_ID ");
 
-        sqlQuerySB.append(" LEFT OUTER JOIN ");
-        sqlQuerySB.append(DB_TABLE_SCHEDULEDTRANSACTIONSTABLE + " SCH ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" SCH.SCH_TRAN_ID = TRAN.SCH_TRAN_ID ");
-
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_USERSTABLE + " USER ");
+        sqlQuerySB.append(DB_TABLE_USER + " USER ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" USER.USER_ID = TRAN.USER_ID ");
-
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE + " CUR ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" USER.CUR_ID = CUR.CUR_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN.TRAN_ID = '"+transIdStr+"'");
@@ -123,7 +112,6 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
             transactionModelObj.setTRAN_NOTE(ColumnFetcher.loadString(cursor, "TRAN_NOTE"));
             transactionModelObj.setTRAN_ID(ColumnFetcher.loadString(cursor, "TRAN_ID"));
             transactionModelObj.setTRAN_TYPE(ColumnFetcher.loadString(cursor, "TRAN_TYPE"));
-            transactionModelObj.setCurrency(ColumnFetcher.loadString(cursor, "CUR_NAME"));
             transactionModelObj.setCREAT_DTM(ColumnFetcher.loadDateTime(cursor, "TRAN_CREAT_DTM"));
             transactionModelObj.setMOD_DTM(ColumnFetcher.loadDateTime(cursor, "MOD_DTM"));
             transactionModelObj.setSchCreateDate(ColumnFetcher.loadDateTime(cursor, "SCH_CREAT_DTM"));
@@ -145,36 +133,25 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TFR.TRNFR_DATE, ");
         sqlQuerySB.append(" TFR.CREAT_DTM, ");
         sqlQuerySB.append(" TFR.MOD_DTM, ");
-        sqlQuerySB.append(" SCHTRF.CREAT_DTM AS SCH_CREAT_DTM, ");
-        sqlQuerySB.append(" CUR.CUR_NAME ");
+        sqlQuerySB.append(" SCHTRF.CREAT_DTM AS SCH_CREAT_DTM ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE + " TFR ");
+        sqlQuerySB.append(DB_TABLE_TRANSFER + " TFR ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_USERSTABLE + " USER ");
+        sqlQuerySB.append(DB_TABLE_USER + " USER ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" USER.USER_ID = TFR.USER_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " FRMACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT + " FRMACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" FRMACC.ACC_ID = TFR.ACC_ID_FRM ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " TOACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT + " TOACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" TOACC.ACC_ID = TFR.ACC_ID_TO ");
-
-        sqlQuerySB.append(" LEFT OUTER JOIN ");
-        sqlQuerySB.append(DB_TABLE_SHEDULEDTRANSFERSTABLE + " SCHTRF ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" SCHTRF.SCH_TRNFR_ID = TFR.SCH_TRNFR_ID ");
-
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE + " CUR ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" USER.CUR_ID = CUR.CUR_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TFR.TRNFR_ID = '"+transferIdStr+"'");
@@ -194,7 +171,6 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
             transferModelObj.setToAccName(ColumnFetcher.loadString(cursor, "TO_ACC_NAME"));
             transferModelObj.setTRNFR_AMT(ColumnFetcher.loadDouble(cursor, "TRNFR_AMT"));
             transferModelObj.setTRNFR_DATE(ColumnFetcher.loadDate(cursor, "TRNFR_DATE"));
-            transferModelObj.setCurrency(ColumnFetcher.loadString(cursor, "CUR_NAME"));
             transferModelObj.setTRNFR_NOTE(ColumnFetcher.loadString(cursor, "TRNFR_NOTE"));
             transferModelObj.setCREAT_DTM(ColumnFetcher.loadDateTime(cursor, "CREAT_DTM"));
             transferModelObj.setMOD_DTM(ColumnFetcher.loadDateTime(cursor, "MOD_DTM"));
@@ -220,36 +196,30 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRAN.TRAN_NOTE, ");
         sqlQuerySB.append(" TRAN.TRAN_ID, ");
         sqlQuerySB.append(" TRAN.TRAN_TYPE, ");
-        sqlQuerySB.append(" TRAN.SCH_TRAN_ID, ");
-        sqlQuerySB.append(" CUR.CUR_NAME ");
+        sqlQuerySB.append(" TRAN.SCH_TRAN_ID ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE + " TRAN ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTION + " TRAN ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE + " CAT ");
+        sqlQuerySB.append(DB_TABLE_CATEGORY + " CAT ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CAT.CAT_ID = TRAN.CAT_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_SPENTONTABLE + " SPNT ");
+        sqlQuerySB.append(DB_TABLE_SPENTON + " SPNT ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" SPNT.SPNT_ON_ID = TRAN.SPNT_ON_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " ACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT + " ACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" ACC.ACC_ID = TRAN.ACC_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_USERSTABLE + " USER ");
+        sqlQuerySB.append(DB_TABLE_USER + " USER ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" USER.USER_ID = TRAN.USER_ID ");
-
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE + " CUR ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" USER.CUR_ID = CUR.CUR_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TRAN.TRAN_DATE >= '"+activityModelObj.getFromDate()+"'");
@@ -285,7 +255,6 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
             transactionModelObj.setTRAN_NOTE(ColumnFetcher.loadString(cursor, "TRAN_NOTE"));
             transactionModelObj.setTRAN_ID(ColumnFetcher.loadString(cursor, "TRAN_ID"));
             transactionModelObj.setTRAN_TYPE(ColumnFetcher.loadString(cursor, "TRAN_TYPE"));
-            transactionModelObj.setCurrency(ColumnFetcher.loadString(cursor, "CUR_NAME"));
             transactionModelObj.setSCH_TRAN_ID(ColumnFetcher.loadString(cursor, "SCH_TRAN_ID"));
 
             Double totAmt = 0.0;
@@ -326,31 +295,25 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TOACC.ACC_NAME AS TO_ACC_NAME, ");
         sqlQuerySB.append(" TFR.TRNFR_AMT, ");
         sqlQuerySB.append(" TFR.TRNFR_DATE, ");
-        sqlQuerySB.append(" TFR.SCH_TRNFR_ID, ");
-        sqlQuerySB.append(" CUR.CUR_NAME ");
+        sqlQuerySB.append(" TFR.SCH_TRNFR_ID ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE + " TFR ");
+        sqlQuerySB.append(DB_TABLE_TRANSFER + " TFR ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_USERSTABLE + " USER ");
+        sqlQuerySB.append(DB_TABLE_USER + " USER ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" USER.USER_ID = TFR.USER_ID ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " FRMACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT + " FRMACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" FRMACC.ACC_ID = TFR.ACC_ID_FRM ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE + " TOACC ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT + " TOACC ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" TOACC.ACC_ID = TFR.ACC_ID_TO ");
-
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE + " CUR ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" USER.CUR_ID = CUR.CUR_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" TFR.TRNFR_DATE >= '"+simpleDateFormat.format(activityModelObj.getFromDate())+"'");
@@ -380,7 +343,6 @@ public class ViewActivitiesDbService extends SQLiteOpenHelper {
             transferModelObj.setToAccName(ColumnFetcher.loadString(cursor, "TO_ACC_NAME"));
             transferModelObj.setTRNFR_AMT(ColumnFetcher.loadDouble(cursor, "TRNFR_AMT"));
             transferModelObj.setTRNFR_DATE(ColumnFetcher.loadDate(cursor, "TRNFR_DATE"));
-            transferModelObj.setCurrency(ColumnFetcher.loadString(cursor, "CUR_NAME"));
             transferModelObj.setCurrency(ColumnFetcher.loadString(cursor, "SCH_TRNFR_ID"));
 
             Double totalAmt;

@@ -303,7 +303,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                navigateTo(AddUpdateTransferActivity.class, "TRANSFER_OBJ", transferModelObj);
+                //navigateTo(AddUpdateTransferActivity.class, "TRANSFER_OBJ", transferModelObj);
             }
         });
 
@@ -378,7 +378,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                navigateTo(AddUpdateTransactionActivity.class, "TRANSACTION_OBJ", transactionModelObj);
+                //navigateTo(AddUpdateTransactionActivity.class, "TRANSACTION_OBJ", transactionModelObj);
             }
         });
 
@@ -930,11 +930,11 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void toEditScheduledTransaction(ScheduledTransactionModel scheduledTransactionModelObj) {
-        navigateTo(AddUpdateScheduleTransactionActivity.class, "SCHEDULED_TRANSACTION_OBJ", scheduledTransactionModelObj);
+        //navigateTo(AddUpdateScheduleTransactionActivity.class, "SCHEDULED_TRANSACTION_OBJ", scheduledTransactionModelObj);
     }
 
     private void toEditScheduledTransfer(ScheduledTransferModel scheduledTransferModelObj) {
-        navigateTo(AddUpdateScheduleTransferActivity.class, "SCHEDULED_TRANSFER_OBJ", scheduledTransferModelObj);
+        //navigateTo(AddUpdateScheduleTransferActivity.class, "SCHEDULED_TRANSFER_OBJ", scheduledTransferModelObj);
     }
 
     private void showScheduledTransferDetailsPopper(final ScheduledTransferModel scheduledTransferModelObj) {
@@ -1226,11 +1226,11 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void toEditTransaction(TransactionModel transactionModelObj) {
-        navigateTo(AddUpdateTransactionActivity.class, "TRANSACTION_OBJ", transactionModelObj);
+        //navigateTo(AddUpdateTransactionActivity.class, "TRANSACTION_OBJ", transactionModelObj);
     }
 
     private void toEditTransfer(TransferModel transferModelObj) {
-        navigateTo(AddUpdateTransferActivity.class, "TRANSFER_OBJ", transferModelObj);
+        //navigateTo(AddUpdateTransferActivity.class, "TRANSFER_OBJ", transferModelObj);
     }
 
     private void refreshActivity(){
@@ -1461,7 +1461,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void toEditBudget(BudgetModel budgetModelObj) {
-        navigateTo(AddUpdateBudgetActivity.class, "BUDGET_OBJ", budgetModelObj);
+        //navigateTo(AddUpdateBudgetActivity.class, "BUDGET_OBJ", budgetModelObj);
     }
 
     private void showAccountPopper(final AccountsMO accountsModelObj){
@@ -1631,7 +1631,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void fetchMonthLegend(){
-        //monthLegendMap = calendarDbService.getMonthLegendOnDate(currentFocusedMonthStr, loggedInUserObj.getUSER_ID());
+        monthLegendMap = calendarDbService.getMonthLegendOnDate(currentFocusedMonthStr, loggedInUserObj.getUSER_ID());
     }
 
     private void setUpTabs() {
@@ -1996,19 +1996,23 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private Intent toAddUpdateTransaction() {
-        TransactionModel tranObj = new TransactionModel();
+        /*TransactionModel tranObj = new TransactionModel();
         tranObj.setTRAN_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
         Intent intent = new Intent(mContext, AddUpdateTransactionActivity.class);
         intent.putExtra("TRANSACTION_OBJ", tranObj);
-        return intent;
+        return intent;*/
+
+        return getIntent();
     }
 
     private Intent toAddUpdateTransfer() {
-        TransferModel tranfrObj = new TransferModel();
+        /*TransferModel tranfrObj = new TransferModel();
         tranfrObj.setTRNFR_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
         Intent intent = new Intent(mContext, AddUpdateTransferActivity.class);
         intent.putExtra("TRANSFER_OBJ", tranfrObj);
-        return intent;
+        return intent;*/
+
+        return getIntent();
     }
 
     //--------------------------------Linear Layout click listener--------------------------------------------------
@@ -2031,10 +2035,10 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
                         break;
                     case R.id.transactionPopperSchedLVId :
                         killPopper();
-                        intent = new Intent(mContext, AddUpdateScheduleTransactionActivity.class);
+                        /*intent = new Intent(mContext, AddUpdateScheduleTransactionActivity.class);
                         ScheduledTransactionModel scheduledTransactionModelObj = new ScheduledTransactionModel();
                         scheduledTransactionModelObj.setSCH_TRAN_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
-                        intent.putExtra("SCHEDULED_TRANSACTION_OBJ", scheduledTransactionModelObj);
+                        intent.putExtra("SCHEDULED_TRANSACTION_OBJ", scheduledTransactionModelObj);*/
                         break;
                     case R.id.transferPopperNewLVId :  intent = toAddUpdateTransfer();
                         break;
@@ -2044,10 +2048,10 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
                         break;
                     case R.id.transferPopperSchedLVId :
                         killPopper();
-                        intent = new Intent(mContext, AddUpdateScheduleTransferActivity.class);
+                        /*intent = new Intent(mContext, AddUpdateScheduleTransferActivity.class);
                         ScheduledTransferModel scheduledTransferModelObj = new ScheduledTransferModel();
                         scheduledTransferModelObj.setSCH_TRNFR_DATE(DateTimeUtil.cleanUpDate(selectedDateStr));
-                        intent.putExtra("SCHEDULED_TRANSFER_OBJ", scheduledTransferModelObj);
+                        intent.putExtra("SCHEDULED_TRANSFER_OBJ", scheduledTransferModelObj);*/
                         break;
 
                     case R.id.msgPoprPosLLId:
@@ -2211,7 +2215,9 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
             return;
         }
 
-        onCreate(savedInstanceState);
+        initActivity();
+
+        showToast(resultStr);
     }
 
 

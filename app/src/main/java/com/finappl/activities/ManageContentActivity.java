@@ -197,7 +197,7 @@ public class ManageContentActivity extends Activity {
     public void onAddClick(View view) {
         Intent intent = null;
 
-        if(manageContentCatLL.getVisibility() == View.VISIBLE){
+        /*if(manageContentCatLL.getVisibility() == View.VISIBLE){
             intent = new Intent(ManageContentActivity.this, AddUpdateCategoryActivity.class);
         }
         else if(manageContentAccLL.getVisibility() == View.VISIBLE){
@@ -210,7 +210,7 @@ public class ManageContentActivity extends Activity {
             Log.e(CLASS_NAME, "Error !! while knowing which page to navigate to on add button click !!");
             showToast("Error !!");
             return;
-        }
+        }*/
 
         startActivity(intent);
         finish();

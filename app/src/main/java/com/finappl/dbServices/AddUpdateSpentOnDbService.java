@@ -19,7 +19,7 @@ import java.util.Date;
 import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 import static com.finappl.utils.Constants.DB_NAME;
-import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_SPENTON;
 import static com.finappl.utils.Constants.DB_VERSION;
 
 
@@ -40,7 +40,7 @@ public class AddUpdateSpentOnDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_SPENTONTABLE);
+        sqlQuerySB.append(DB_TABLE_SPENTON);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" SPNT_ON_NAME ");
@@ -76,7 +76,7 @@ public class AddUpdateSpentOnDbService extends SQLiteOpenHelper {
         values.put("CREAT_DTM", simpleDateFormat.format(new Date()));
 
         // Inserting a new Row in spent on table
-        long result =  db.insert(DB_TABLE_SPENTONTABLE, null, values);
+        long result =  db.insert(DB_TABLE_SPENTON, null, values);
 
         //if result is not -1 insertion failed
         if(result == -1){

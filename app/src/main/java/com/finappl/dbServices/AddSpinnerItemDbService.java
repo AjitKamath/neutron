@@ -16,9 +16,9 @@ import java.util.Date;
 import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 import static com.finappl.utils.Constants.DB_NAME;
-import static com.finappl.utils.Constants.DB_TABLE_ACCOUNTTABLE;
-import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTABLE;
-import static com.finappl.utils.Constants.DB_TABLE_SPENTONTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_ACCOUNT;
+import static com.finappl.utils.Constants.DB_TABLE_CATEGORY;
+import static com.finappl.utils.Constants.DB_TABLE_SPENTON;
 import static com.finappl.utils.Constants.DB_VERSION;
 
 
@@ -45,19 +45,19 @@ public class AddSpinnerItemDbService extends SQLiteOpenHelper {
 			values.put("CAT_TYPE", spnItemModel.getSpinnerItemType());
 			
 			// Updating an old Row
-			result = db.update(DB_TABLE_CATEGORYTABLE, values,	"CAT_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
+			result = db.update(DB_TABLE_CATEGORY, values,	"CAT_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
 		}
 		else if(temp.equalsIgnoreCase("spent on")){
 			values.put("SPNT_ON_NAME", spnItemModel.getSpinnerItemName());
 			
 			// Updating an old Row
-			result =  db.update(DB_TABLE_SPENTONTABLE, values,	"SPNT_ON_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
+			result =  db.update(DB_TABLE_SPENTON, values,	"SPNT_ON_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
 		}
 		else if(temp.equalsIgnoreCase("account")){
 			values.put("ACC_NAME", spnItemModel.getSpinnerItemName());
 			
 			// Updating an old Row
-			result =  db.update(DB_TABLE_ACCOUNTTABLE, values,	"ACC_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
+			result =  db.update(DB_TABLE_ACCOUNT, values,	"ACC_ID = '" + spnItemModel.getSpinnerItemTypeId() + "'", null);
 		}
 		else {
 			Log.e(CLASS_NAME, "Error : Couldnt update an old Spinner Item");

@@ -35,12 +35,12 @@ public class SettingsDbService extends SQLiteOpenHelper {
         values.put("USER_IS_DEL", DB_AFFIRMATIVE);
 
         // Updating an old Row
-        db.update(DB_TABLE_USERSTABLE, values,	"USER_IS_DEL = '" + DB_NONAFFIRMATIVE + "'", null);
+        db.update(DB_TABLE_USER, values,	"USER_IS_DEL = '" + DB_NONAFFIRMATIVE + "'", null);
         db.close();
     }
 
     public void saveNotificationSetting(SettingsNotificationModel settingsNotificationModelObj){
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
@@ -49,11 +49,11 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + settingsNotificationModelObj.getUSER_ID() + "'", null);
-        db.close();
+        db.close();*/
     }
 
     public void enableDisableSecurityOnUserId(String userIdStr, boolean isEnabled){
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
@@ -66,11 +66,11 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_SECURITY, values,	"USER_ID = '" + userIdStr + "'", null);
-        db.close();
+        db.close();*/
     }
 
     public void enableDisableNotificationOnUserId(String userIdStr, boolean isEnabled){
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
@@ -83,11 +83,11 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + userIdStr + "'", null);
-        db.close();
+        db.close();*/
     }
 
     public void enableDisableNotificationVibrationsOnUserId(String userIdStr, boolean isEnabled){
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
@@ -100,7 +100,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_NOTIFICATIONS, values,	"USER_ID = '" + userIdStr + "'", null);
-        db.close();
+        db.close();*/
     }
 
     //returns 0 on fail and 1 on success
@@ -116,7 +116,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
         values.put("MOD_DTM", simpleDateTimeFormat.format(new Date()));
 
         // Updating an old Row
-        int result = db.update(DB_TABLE_USERSTABLE, values,	"USER_ID = '" + userModelObj.getUSER_ID() + "'", null);
+        int result = db.update(DB_TABLE_USER, values,	"USER_ID = '" + userModelObj.getUSER_ID() + "'", null);
         db.close();
         return result;
     }
@@ -132,35 +132,21 @@ public class SettingsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" DOB, ");
         sqlQuerySB.append(" CNTRY.CNTRY_ID, ");
         sqlQuerySB.append(" CNTRY.CNTRY_NAME AS countryName, ");
-        sqlQuerySB.append(" TELEPHONE, ");
-        sqlQuerySB.append(" CUR.CUR_ID, ");
-        sqlQuerySB.append(" CUR.CUR_NAME AS currencyName, ");
+        sqlQuerySB.append(" TELEPHONE ");
         sqlQuerySB.append(" USER.CREAT_DTM AS userCreatDtm, ");
         sqlQuerySB.append(" USER.MOD_DTM AS userModDtm, ");
         sqlQuerySB.append(" WORK_TYPE, ");
         sqlQuerySB.append(" COMPANY, ");
         sqlQuerySB.append(" SALARY, ");
-        sqlQuerySB.append(" SAL_FREQ, ");
-        sqlQuerySB.append(" WORK.MOD_DTM AS workCreatDtm, ");
-        sqlQuerySB.append(" WORK.MOD_DTM AS workModDtm ");
+        sqlQuerySB.append(" SAL_FREQ ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_USERSTABLE+ " USER ");
+        sqlQuerySB.append(DB_TABLE_USER+ " USER ");
 
         sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_COUNTRYTABLE+" CNTRY ");
+        sqlQuerySB.append(DB_TABLE_COUNTRY+" CNTRY ");
         sqlQuerySB.append(" ON ");
         sqlQuerySB.append(" CNTRY.CNTRY_ID = USER.CNTRY_ID ");
-
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE+" CUR ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" CUR.CUR_ID = USER.CUR_ID ");
-
-        sqlQuerySB.append(" LEFT OUTER JOIN ");
-        sqlQuerySB.append(DB_TABLE_WORK_TIMELINETABLE+" WORK ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" WORK.USER_ID = USER.USER_ID ");
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" USER.USER_ID = '"+userModelObj.getUSER_ID()+"' ");
@@ -202,17 +188,10 @@ public class SettingsDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" CNTRY_ID, ");
         sqlQuerySB.append(" CNTRY_NAME, ");
-        sqlQuerySB.append(" CNTRY_FLAG, ");
-        sqlQuerySB.append(" CUR.CUR_ID, ");
-        sqlQuerySB.append(" CUR_NAME AS curNameStr ");
+        sqlQuerySB.append(" CNTRY_FLAG ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_COUNTRYTABLE+ " CNTRY ");
-
-        sqlQuerySB.append(" INNER JOIN ");
-        sqlQuerySB.append(DB_TABLE_CURRENCYTABLE+" CUR ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" CNTRY.CUR_ID = CUR.CUR_ID ");
+        sqlQuerySB.append(DB_TABLE_COUNTRY+ " CNTRY ");
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
         CountryModel countryModelObj = null;
@@ -233,7 +212,7 @@ public class SettingsDbService extends SQLiteOpenHelper {
     }
 
     public SettingsNotificationModel getNotifSettingsOnUserId(String userIdStr){
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -265,11 +244,13 @@ public class SettingsDbService extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
-        return notificationModelObj;
+        return notificationModelObj;*/
+
+        return null;
     }
 
     public void enableDisableSoundsOnUserId(String userIdStr, boolean isEnabled){
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         if(isEnabled){
@@ -281,22 +262,22 @@ public class SettingsDbService extends SQLiteOpenHelper {
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_SOUNDS, values,	"USER_ID = '" + userIdStr + "'", null);
-        db.close();
+        db.close();*/
     }
 
     public void saveSecurityKeyUserId(String userIdStr, String keyStr){
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put("SET_SEC_PIN", keyStr);
 
         // Updating an old Row
         db.update(DB_TABLE_SETTINGS_SECURITY, values,	"USER_ID = '" + userIdStr + "'", null);
-        db.close();
+        db.close();*/
     }
 
     public boolean isSoundsEnabledOnUserId(String userIdStr) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -322,12 +303,12 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This user has not enabled sounds");
-        db.close();
+        db.close();*/
         return false;
     }
 
     public boolean isSecurityEnabledOnUserId(String userIdStr) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -353,12 +334,12 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This user has not enabled security");
-        db.close();
+        db.close();*/
         return false;
     }
 
     public boolean isNotifEnabledOnUserId(String userIdStr) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -384,12 +365,12 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This user has not enabled notifications");
-        db.close();
+        db.close();*/
         return false;
     }
 
     public String getUserSecurityKeyOnUserId(String userIdStr){
-        String keyStr = "";
+        /*String keyStr = "";
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -418,11 +399,13 @@ public class SettingsDbService extends SQLiteOpenHelper {
         }
 
         db.close();
-        return keyStr;
+        return keyStr;*/
+
+        return null;
     }
 
     public boolean authenticateOnUserIdAndKey(String userIdStr, String keyStr) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -448,12 +431,12 @@ public class SettingsDbService extends SQLiteOpenHelper {
         cursor.close();
 
         Log.i(CLASS_NAME, "This user has not enabled notifications");
-        db.close();
+        db.close();*/
         return false;
     }
 
     public List<CurrencyModel> getAllCurrency(){
-        SQLiteDatabase db = this.getWritableDatabase();
+        /*SQLiteDatabase db = this.getWritableDatabase();
 
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -478,7 +461,9 @@ public class SettingsDbService extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
-        return currencyModelList;
+        return currencyModelList;*/
+
+        return new ArrayList<CurrencyModel>();
     }
 
     @Override

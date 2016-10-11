@@ -242,9 +242,9 @@ public class BudgetsViewActivity extends Activity {
     }
 
     public void onAddBudget(View view){
-        Intent intent = new Intent(this, AddUpdateBudgetActivity.class);
+        /*Intent intent = new Intent(this, AddUpdateBudgetActivity.class);
         startActivity(intent);
-        finish();
+        finish();*/
     }
 
     @Override

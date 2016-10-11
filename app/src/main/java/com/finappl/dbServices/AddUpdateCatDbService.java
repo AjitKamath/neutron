@@ -21,8 +21,7 @@ import java.util.List;
 import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 import static com.finappl.utils.Constants.DB_NAME;
-import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTABLE;
-import static com.finappl.utils.Constants.DB_TABLE_CATEGORYTAGSTABLE;
+import static com.finappl.utils.Constants.DB_TABLE_CATEGORY;
 import static com.finappl.utils.Constants.DB_VERSION;
 
 
@@ -43,7 +42,7 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" COUNT(*) AS COUNT ");
 
         sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_CATEGORYTABLE);
+        sqlQuerySB.append(DB_TABLE_CATEGORY);
 
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" CAT_NAME ");
@@ -80,7 +79,7 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
         values.put("CREAT_DTM", simpleDateFormat.format(new Date()));
 
         // Inserting a new Row in category table
-        long result =  db.insert(DB_TABLE_CATEGORYTABLE, null, values);
+        long result =  db.insert(DB_TABLE_CATEGORY, null, values);
 
         //if result is not -1 then continue inserting tags in category_tags table
         if(result == -1){
@@ -106,7 +105,7 @@ public class AddUpdateCatDbService extends SQLiteOpenHelper {
 
             Log.i(CLASS_NAME, "TAG ID:" + tagIdStr);
 
-            result =  db.insert(DB_TABLE_CATEGORYTAGSTABLE, null, values);
+            result =  db.insert(DB_TABLE_CATEGORY, null, values);
 
             if(result == -1){
                 Log.e(CLASS_NAME, "Error while inserting a new tag");

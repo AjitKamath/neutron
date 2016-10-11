@@ -33,7 +33,7 @@ public class NotificationDbService extends SQLiteOpenHelper {
         values.put("CNCL_NOTIF_DATE", simpleDateFormat.format(notificationModelObj.getCNCL_NOTIF_DATE()));
         values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
 
-        long result = db.insert(DB_TABLE_NOTIFICATIONSTABLE, null, values);
+        long result = db.insert(DB_TABLE_NOTIFICATION, null, values);
         db.close();
         return result;
     }

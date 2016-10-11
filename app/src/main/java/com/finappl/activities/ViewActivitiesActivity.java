@@ -509,10 +509,10 @@ public class ViewActivitiesActivity extends Activity {
         //TODO: this db call is the second call for the same purpose. ideally try avoiding this by utilizing the 1st call while calling the popper. just an advice.
         TransactionModel transObj = viewActivitiesDbService.getTransactionOnTransactionID(tag);
 
-        Intent intent = new Intent(ViewActivitiesActivity.this, AddUpdateTransactionActivity.class);
+        /*Intent intent = new Intent(ViewActivitiesActivity.this, AddUpdateTransactionActivity.class);
         intent.putExtra("TRANSACTION_OBJ", transObj);
         startActivity(intent);
-        finish();
+        finish();*/
     }
 
     private void toEditTransfer(String tag) {
@@ -521,10 +521,10 @@ public class ViewActivitiesActivity extends Activity {
         //TODO: this db call is the second call for the same purpose. ideally try avoiding this by utilizing the 1st call while calling the popper. just an advice.
         TransferModel transferObj = viewActivitiesDbService.getTransferOnTransferID(tag);
 
-        Intent intent = new Intent(ViewActivitiesActivity.this, AddUpdateTransferActivity.class);
+        /*Intent intent = new Intent(ViewActivitiesActivity.this, AddUpdateTransferActivity.class);
         intent.putExtra("TRANSFER_OBJ", transferObj);
         startActivity(intent);
-        finish();
+        finish();*/
     }
 
     protected void showToast(String string){

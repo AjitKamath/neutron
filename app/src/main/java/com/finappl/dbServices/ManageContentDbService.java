@@ -46,10 +46,10 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" CAT.USER_ID ");
 
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(DB_TABLE_USERSTABLE+" USR ");
+		sqlQuerySB.append(DB_TABLE_USER+" USR ");
 
 		sqlQuerySB.append(" LEFT OUTER JOIN ");
-		sqlQuerySB.append(DB_TABLE_CATEGORYTABLE+" CAT ");
+		sqlQuerySB.append(DB_TABLE_CATEGORY+" CAT ");
 		sqlQuerySB.append(" ON USR.USER_ID IN ('"+ADMIN_USERID+"', '"+userId+"')");
 
 		sqlQuerySB.append(" WHERE ");
@@ -135,7 +135,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" (SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(ACC_TOTAL), '0')  ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE);
+		sqlQuerySB.append(DB_TABLE_ACCOUNT);
 		sqlQuerySB.append(" WHERE  ");
 		sqlQuerySB.append(" ACC_ID = ACC.ACC_ID ");
 		sqlQuerySB.append(" AND ");
@@ -148,7 +148,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" (( SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0')  ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
+		sqlQuerySB.append(DB_TABLE_TRANSACTION);
 		sqlQuerySB.append(" WHERE  ");
 		sqlQuerySB.append(" TRAN_TYPE = 'INCOME'  ");
 		sqlQuerySB.append(" AND  ");
@@ -163,7 +163,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" (SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE);
+		sqlQuerySB.append(DB_TABLE_TRANSFER);
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" ACC_ID_TO = ACC.ACC_ID ");
 		sqlQuerySB.append(" AND ");
@@ -176,7 +176,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" ((SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
+		sqlQuerySB.append(DB_TABLE_TRANSACTION);
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" TRAN_TYPE = 'EXPENSE' ");
 		sqlQuerySB.append(" AND ");
@@ -191,7 +191,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" (SELECT ");
 		sqlQuerySB.append(" IFNULL(SUM(TRNFR_AMT), '0') ");
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE);
+		sqlQuerySB.append(DB_TABLE_TRANSFER);
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" ACC_ID_FRM = ACC.ACC_ID ");
 		sqlQuerySB.append(" AND ");
@@ -203,10 +203,10 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" ACC_TOTAL ");
 
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE+" ACC ");
+		sqlQuerySB.append(DB_TABLE_ACCOUNT+" ACC ");
 
 		sqlQuerySB.append(" LEFT JOIN ");
-		sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE+" TRAN ON ");
+		sqlQuerySB.append(DB_TABLE_TRANSACTION+" TRAN ON ");
 		sqlQuerySB.append(" TRAN.ACC_ID = ACC.ACC_ID ");
 
 		sqlQuerySB.append(" WHERE ");
@@ -280,7 +280,7 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		sqlQuerySB.append(" SPNT_ON_NOTE ");
 
 		sqlQuerySB.append(" FROM ");
-		sqlQuerySB.append(DB_TABLE_SPENTONTABLE);
+		sqlQuerySB.append(DB_TABLE_SPENTON);
 
 		sqlQuerySB.append(" WHERE ");
 		sqlQuerySB.append(" (USER_ID = '"+userId+"' ");
