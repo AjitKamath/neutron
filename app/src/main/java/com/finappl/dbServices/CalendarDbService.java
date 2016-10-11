@@ -1458,7 +1458,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
     //--------------------- end of method to get all accounts--------------------------//
 
 
-    public Map<String, CategoryMO> getAllCategories(String userId){
+    public List<CategoryMO> getAllCategories(String userId){
         StringBuilder sqlQuerySB = new StringBuilder(50);
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" CAT_ID, ");
@@ -1468,7 +1468,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(DB_TABLE_CATEGORY);
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" CAT_IS_DEF = '"+ Constants.DB_AFFIRMATIVE+"' ");
+        sqlQuerySB.append(" USER_ID = '"+ ADMIN_USERID +"' ");
         sqlQuerySB.append(" OR USER_ID = '"+userId+"' ");
 
         sqlQuerySB.append(" ORDER BY ");
@@ -1478,17 +1478,17 @@ public class CalendarDbService extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
-        Map<String, CategoryMO> categoryMap = new HashMap<>();
+        List<CategoryMO> categoryList = new ArrayList<>();
         while (cursor.moveToNext()){
             CategoryMO categoryMO = new CategoryMO();
             categoryMO.setCAT_ID(ColumnFetcher.getInstance().loadString(cursor, "CAT_ID"));
             categoryMO.setCAT_NAME(ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME"));
 
-            categoryMap.put(categoryMO.getCAT_ID(), categoryMO);
+            categoryList.add(categoryMO);
         }
         cursor.close();
         db.close();
-        return categoryMap;
+        return categoryList;
     }
 
     public List<SpentOnMO> getAllSpentOn(String userId){
@@ -1502,9 +1502,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(DB_TABLE_SPENTON);
 
         sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" SPNT_ON_IS_DEF = '"+Constants.DB_AFFIRMATIVE+"' ");
-        sqlQuerySB.append(" OR ");
-        sqlQuerySB.append(" USER_ID = '"+userId+"' ");
+        sqlQuerySB.append(" USER_ID = '"+ ADMIN_USERID +"' ");
+        sqlQuerySB.append(" OR USER_ID = '"+userId+"' ");
 
         sqlQuerySB.append(" ORDER BY ");
         sqlQuerySB.append(" SPNT_ON_NAME ");
@@ -1518,6 +1517,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             SpentOnMO spentOnMO = new SpentOnMO();
             spentOnMO.setSPNT_ON_ID(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_ID"));
             spentOnMO.setSPNT_ON_NAME(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_NAME"));
+
             spentOnList.add(spentOnMO);
         }
         cursor.close();

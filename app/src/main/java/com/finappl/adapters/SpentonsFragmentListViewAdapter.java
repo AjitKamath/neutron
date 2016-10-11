@@ -1,58 +1,52 @@
 package com.finappl.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.models.CategoryMO;
-import com.finappl.utils.FinappleUtility;
+import com.finappl.models.SpentOnMO;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ajit on 17/1/15.
  */
-public class CategoriesFragmentListViewAdapter extends BaseAdapter {
+public class SpentonsFragmentListViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater inflater;
-    private String selectedCategoryIdStr;
-    private List<CategoryMO> categoriesList;
+    private String selectedSpentonIdStr;
+    private List<SpentOnMO> spentonsList;
 
-    public CategoriesFragmentListViewAdapter(Context mContext, List<CategoryMO> categoriesList, String selectedCategoryIdStr) {
+    public SpentonsFragmentListViewAdapter(Context mContext, List<SpentOnMO> spentonsList, String selectedSpentonIdStr) {
         super();
 
         this.mContext = mContext;
-        this.selectedCategoryIdStr = selectedCategoryIdStr;
-        this.categoriesList = categoriesList;
+        this.selectedSpentonIdStr = selectedSpentonIdStr;
+        this.spentonsList = spentonsList;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
-        int layout = R.layout.category;
+        int layout = R.layout.spenton;
 
         if(convertView == null) {
             mHolder = new ViewHolder();
             convertView = inflater.inflate(layout, null);
 
-            mHolder.categoryRL = (RelativeLayout) convertView.findViewById(R.id.categoryRLId);
-            mHolder.categoryIV = (ImageView) convertView.findViewById(R.id.categoryIVId);
-            mHolder.categoryTV = (TextView) convertView.findViewById(R.id.categoryTVId);
-            mHolder.categorySelectedV = (View) convertView.findViewById(R.id.categorySelectedVId);
+            mHolder.spentonRL = (RelativeLayout) convertView.findViewById(R.id.spentonRLId);
+            mHolder.spentonIV = (ImageView) convertView.findViewById(R.id.spentonIVId);
+            mHolder.spentonTV = (TextView) convertView.findViewById(R.id.spentonTVId);
+            mHolder.spentonSelectedV = (View) convertView.findViewById(R.id.spentonSelectedVId);
 
             convertView.setTag(layout, mHolder);
 
@@ -60,31 +54,31 @@ public class CategoriesFragmentListViewAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag(layout);
         }
 
-        CategoryMO categoryMO = categoriesList.get(position);
-        mHolder.categoryTV.setText(categoryMO.getCAT_NAME());
-        if(selectedCategoryIdStr.equalsIgnoreCase(categoryMO.getCAT_ID())){
-            mHolder.categorySelectedV.setVisibility(View.VISIBLE);
+        SpentOnMO spentOnMO = spentonsList.get(position);
+        mHolder.spentonTV.setText(spentOnMO.getSPNT_ON_NAME());
+        if(selectedSpentonIdStr.equalsIgnoreCase(spentOnMO.getSPNT_ON_ID())){
+            mHolder.spentonSelectedV.setVisibility(View.VISIBLE);
         }
         else{
-            mHolder.categorySelectedV.setVisibility(View.INVISIBLE);
+            mHolder.spentonSelectedV.setVisibility(View.INVISIBLE);
         }
 
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont(mHolder.categoryRL, robotoCondensedLightFont);
+        setFont(mHolder.spentonRL, robotoCondensedLightFont);
 
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return categoriesList.size();
+        return spentonsList.size();
     }
 
     @Override
-    public CategoryMO getItem(int position) {
-        return categoriesList.get(position);
+    public SpentOnMO getItem(int position) {
+        return spentonsList.get(position);
     }
 
     @Override
@@ -108,10 +102,10 @@ public class CategoriesFragmentListViewAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        RelativeLayout categoryRL;
-        ImageView categoryIV;
-        TextView categoryTV;
-        View categorySelectedV;
+        RelativeLayout spentonRL;
+        ImageView spentonIV;
+        TextView spentonTV;
+        View spentonSelectedV;
     }
 
 }

@@ -55,6 +55,7 @@ import com.finappl.fragments.TransactionFragment;
 import com.finappl.fragments.TransferFragment;
 import com.finappl.models.AccountsMO;
 import com.finappl.models.BudgetModel;
+import com.finappl.models.CategoryMO;
 import com.finappl.models.ConsolidatedTransactionModel;
 import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
@@ -2482,7 +2483,6 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
             }
         };
     }
-
 
     //abstracts
     public interface ListViewItemClickListener {

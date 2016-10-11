@@ -1,58 +1,53 @@
 package com.finappl.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
+import com.finappl.models.AccountsMO;
 import com.finappl.models.CategoryMO;
-import com.finappl.utils.FinappleUtility;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ajit on 17/1/15.
  */
-public class CategoriesFragmentListViewAdapter extends BaseAdapter {
+public class AccountsFragmentListViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater inflater;
-    private String selectedCategoryIdStr;
-    private List<CategoryMO> categoriesList;
+    private String selectedAccountIdStr;
+    private List<AccountsMO> accountsList;
 
-    public CategoriesFragmentListViewAdapter(Context mContext, List<CategoryMO> categoriesList, String selectedCategoryIdStr) {
+    public AccountsFragmentListViewAdapter(Context mContext, List<AccountsMO> accountsList, String selectedAccountIdStr) {
         super();
 
         this.mContext = mContext;
-        this.selectedCategoryIdStr = selectedCategoryIdStr;
-        this.categoriesList = categoriesList;
+        this.selectedAccountIdStr = selectedAccountIdStr;
+        this.accountsList = accountsList;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
-        int layout = R.layout.category;
+        int layout = R.layout.account;
 
         if(convertView == null) {
             mHolder = new ViewHolder();
             convertView = inflater.inflate(layout, null);
 
-            mHolder.categoryRL = (RelativeLayout) convertView.findViewById(R.id.categoryRLId);
-            mHolder.categoryIV = (ImageView) convertView.findViewById(R.id.categoryIVId);
-            mHolder.categoryTV = (TextView) convertView.findViewById(R.id.categoryTVId);
-            mHolder.categorySelectedV = (View) convertView.findViewById(R.id.categorySelectedVId);
+            mHolder.accountRL = (RelativeLayout) convertView.findViewById(R.id.accountRLId);
+            mHolder.accountIV = (ImageView) convertView.findViewById(R.id.accountIVId);
+            mHolder.accountTV = (TextView) convertView.findViewById(R.id.accountTVId);
+            mHolder.accountSelectedV = (View) convertView.findViewById(R.id.accountSelectedVId);
 
             convertView.setTag(layout, mHolder);
 
@@ -60,31 +55,31 @@ public class CategoriesFragmentListViewAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag(layout);
         }
 
-        CategoryMO categoryMO = categoriesList.get(position);
-        mHolder.categoryTV.setText(categoryMO.getCAT_NAME());
-        if(selectedCategoryIdStr.equalsIgnoreCase(categoryMO.getCAT_ID())){
-            mHolder.categorySelectedV.setVisibility(View.VISIBLE);
+        AccountsMO accountMO = accountsList.get(position);
+        mHolder.accountTV.setText(accountMO.getACC_NAME());
+        if(selectedAccountIdStr.equalsIgnoreCase(accountMO.getACC_ID())){
+            mHolder.accountSelectedV.setVisibility(View.VISIBLE);
         }
         else{
-            mHolder.categorySelectedV.setVisibility(View.INVISIBLE);
+            mHolder.accountSelectedV.setVisibility(View.INVISIBLE);
         }
 
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont(mHolder.categoryRL, robotoCondensedLightFont);
+        setFont(mHolder.accountRL, robotoCondensedLightFont);
 
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return categoriesList.size();
+        return accountsList.size();
     }
 
     @Override
-    public CategoryMO getItem(int position) {
-        return categoriesList.get(position);
+    public AccountsMO getItem(int position) {
+        return accountsList.get(position);
     }
 
     @Override
@@ -108,10 +103,10 @@ public class CategoriesFragmentListViewAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        RelativeLayout categoryRL;
-        ImageView categoryIV;
-        TextView categoryTV;
-        View categorySelectedV;
+        RelativeLayout accountRL;
+        ImageView accountIV;
+        TextView accountTV;
+        View accountSelectedV;
     }
 
 }

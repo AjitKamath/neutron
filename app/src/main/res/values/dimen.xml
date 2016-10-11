@@ -60,7 +60,7 @@
     <dimen name="grid_text_size_secondary">15sp</dimen>
 
     <!--Own Spinner-->
-    <dimen name="own_spinner_text_size_primary">15sp</dimen>
+    <dimen name="own_spinner_text_size_primary">18sp</dimen>
 
     <!--Fragment props-->
     <dimen name="fragment_full_width">330dp</dimen>

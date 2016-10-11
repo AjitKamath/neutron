@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/categoryRLId"
+    android:id="@+id/spentonRLId"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -15,24 +15,24 @@
         android:padding="@dimen/screen_components_padding_from_walls">
 
         <View
-            android:id="@+id/categorySelectedVId"
+            android:id="@+id/spentonSelectedVId"
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:background="@drawable/capsule_vertical_selected_view" />
 
         <ImageView
             android:layout_marginLeft="5dp"
-            android:id="@+id/categoryIVId"
+            android:id="@+id/spentonIVId"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/version" />
+            android:background="@drawable/work" />
 
         <TextView
-            android:id="@+id/categoryTVId"
+            android:id="@+id/spentonTVId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="SHOPPING"
+            android:text="SELF"
             android:textColor="@color/formSpinnerDark"
             android:textSize="15sp" />
 

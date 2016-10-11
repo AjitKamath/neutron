@@ -57,6 +57,9 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 			if(iterCategoriesStrArr.equalsIgnoreCase(DEFAULT_CATEGORY)){
 				values.put("CAT_IS_DEF", DB_AFFIRMATIVE);
 			}
+			else{
+				values.put("CAT_IS_DEF", DB_NONAFFIRMATIVE);
+			}
 
 			values.put("CREAT_DTM", nowStr);
 			db.insert(DB_TABLE_CATEGORY, null, values);
@@ -71,7 +74,14 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 			values.put("ACC_ID", iterAccountStrArr);
 			values.put("USER_ID", ADMIN_USERID);
 			values.put("ACC_NAME", iterAccountStrArr);
-			values.put("ACC_IS_DEF", DB_AFFIRMATIVE);
+
+			if(iterAccountStrArr.equalsIgnoreCase(DEFAULT_ACCOUNT)){
+				values.put("ACC_IS_DEF", DB_AFFIRMATIVE);
+			}
+			else{
+				values.put("ACC_IS_DEF", DB_NONAFFIRMATIVE);
+			}
+
 			values.put("CREAT_DTM", nowStr);
 			db.insert(DB_TABLE_ACCOUNT, null, values);
 		}
@@ -85,7 +95,14 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 			values.put("SPNT_ON_ID", iterSpentOnStrArr);
 			values.put("USER_ID", ADMIN_USERID);
 			values.put("SPNT_ON_NAME", iterSpentOnStrArr);
-			values.put("SPNT_ON_IS_DEF", DB_AFFIRMATIVE);
+
+			if(iterSpentOnStrArr.equalsIgnoreCase(DEFAULT_SPENTON)){
+				values.put("SPNT_ON_IS_DEF", DB_AFFIRMATIVE);
+			}
+			else{
+				values.put("SPNT_ON_IS_DEF", DB_NONAFFIRMATIVE);
+			}
+
 			values.put("CREAT_DTM", nowStr);
 			db.insert(DB_TABLE_SPENTON, null, values);
 		}

@@ -9,6 +9,10 @@ import java.text.SimpleDateFormat;
  * Created by ajit on 6/1/15.
  */
 public final class Constants{
+    //DB
+    public static final String DB_NAME = "FINAPPL.db";
+    public static final int DB_VERSION = 34;
+
     //DB Properties
     public static final String USERNAME = "Ajit";
     public static final String PASSWORD = "test";
@@ -60,10 +64,6 @@ public final class Constants{
     public static final String DB_TABLE_SETTINGS_SECURITY = "SETTINGS_SECURITY";
     //OBSOLETE TABLES ENDS--
 
-    //DB
-    public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 29;
-
     public static final String DB_TABLE_USER = "USERS";
     public static final String DB_TABLE_ACCOUNT = "ACCOUNTS";
     public static final String DB_TABLE_CATEGORY = "CATEGORIES";
@@ -81,7 +81,9 @@ public final class Constants{
     public static final String DEFAULT_CATEGORIES = "FOOD,ENTERTAINMENT,BILL,COMMUTE,SHOPPING,FUEL,HEALTH,OTHER";
     public static final String DEFAULT_CATEGORY = "OTHER";
     public static final String DEFAULT_ACCOUNTS = "CASH,BANK,CREDIT CARD,DEBIT CARD";
+    public static final String DEFAULT_ACCOUNT = "CASH";
     public static final String DEFAULT_SPENT_ONS = "SELF,FAMILY,FRIENDS,BUSINESS";
+    public static final String DEFAULT_SPENTON = "SELF";
     public static final String DEFAULT_COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-INR,USA-1-DOLLAR-USD,AUSTRALIA-61-DOLLAR-AUD";
 
     public static final String DEFAULT_QUICK_TRANSACTION_NAME = "Quick Transaction";
@@ -118,12 +120,23 @@ public final class Constants{
     public static final SimpleDateFormat UI_DATE_TIME_FORMAT_SDF = new SimpleDateFormat(UI_DATE_TIME_FORMAT);
 
     //Bundle Keys, Sharde Prefs, Intent, fragment names
+    //FRAGMENT NAMES
+    public static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
     public static final String FRAGMENT_TRANSACTION = "FRAGMENT_TRANSACTION";
     public static final String FRAGMENT_CATEGORY = "FRAGMENT_CATEGORY";
-    public static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
+    public static final String FRAGMENT_ACCOUNT = "FRAGMENT_ACCOUNT";
+    public static final String FRAGMENT_SPENTON = "FRAGMENT_SPENTON";
+
+    //FRAGMENT OBJECT KEYS
     public static final String TRANSACTION_OBJECT = "TRANSACTION_OBJECT";
     public static final String CATEGORY_OBJECT = "CATEGORY_OBJECT";
+    public static final String ACCOUNT_OBJECT = "ACCOUNT_OBJECT";
+    public static final String SPENTON_OBJECT = "SPENTON_OBJECT";
     public static final String SELECTED_CATEGORY_OBJECT = "SELECTED_CATEGORY_OBJECT";
+    public static final String SELECTED_ACCOUNT_OBJECT = "SELECTED_ACCOUNT_OBJECT";
+    public static final String SELECTED_SPENTON_OBJECT = "SELECTED_SPENTON_OBJECT";
+
+    //SHARED PREFS KEYS
     public static final String SHARED_PREF = "SHARED_PREFERENCE";
     public static final String SHARED_PREF_ACTIVE_USER_ID = "ACTIVE_USER_ID";
 }

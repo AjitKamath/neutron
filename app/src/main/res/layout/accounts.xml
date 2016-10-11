@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/categoriesRLId"
+    android:id="@+id/accountsRLId"
     android:layout_width="@dimen/fragment_full_width"
     android:layout_height="@dimen/fragment_full_height"
     android:layout_gravity="center"
@@ -13,7 +13,7 @@
     <!-- header -->
 
     <LinearLayout
-        android:id="@+id/categoriesHeaderLLId"
+        android:id="@+id/accountsHeaderLLId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -24,7 +24,7 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="CATEGORIES"
+            android:text="ACCOUNTS"
             android:textColor="@color/finappleTheme"
             android:textSize="@dimen/own_spinner_text_size_primary" />
 
@@ -33,17 +33,17 @@
 
     <!--Page-->
     <LinearLayout
-        android:id="@+id/categoriesContentLLId"
+        android:id="@+id/accountsContentLLId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/categoriesHeaderLLId"
+        android:layout_below="@+id/accountsHeaderLLId"
         android:orientation="vertical"
         android:paddingLeft="@dimen/screen_components_padding_from_walls"
         android:paddingRight="@dimen/screen_components_padding_from_walls"
         android:paddingBottom="@dimen/screen_components_padding_from_walls">
 
         <ListView
-            android:id="@+id/categoriesContentLVId"
+            android:id="@+id/accountsContentLVId"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

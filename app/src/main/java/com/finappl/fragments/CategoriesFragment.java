@@ -65,38 +65,10 @@ public class CategoriesFragment extends DialogFragment {
 
     //components
     private ListView categoriesLV;
-
     //end of components
 
-    private Map<String, CategoryMO> categoriesMap;
+    private List<CategoryMO> categoriesList;
 
-
-
-    private TextView addUpdateDateTV;
-    private ImageView addUpdateTranBackImg;
-    private EditText addUpdateTranNameET;
-    private EditText addUpdateTranAmtET;
-    private Spinner addUpdateCatSpn;
-    private Spinner addUpdateAccSpn;
-    private RadioButton addUpdateTranExpRadio;
-    private RadioButton addUpdateTranIncRadio;
-    private RadioGroup addUpdateTranExpIncRadioGrp;
-    private Spinner addUpdateSpntOnSpn;
-    private EditText addUpdateNoteET;
-    private ImageView transactionSaveIV;
-    private CheckBox transactionSchedueCB;
-    private LinearLayout transactionSchedLL;
-
-    private UserMO loggedInUserObj;
-
-    private CalendarDbService calendarDbService;
-    private TransactionsDbService transactionsDbService;
-    private AuthorizationDbService authorizationDbService;
-
-    private List<AccountsMO> accountList;
-    private List<SpentOnMO> spentOnList;
-
-    private TransactionModel transactionModelObj;
     private String selectedCategoryStr;
 
     @Override
@@ -113,35 +85,13 @@ public class CategoriesFragment extends DialogFragment {
         return view;
     }
 
-    public void getInputs(){
-        try{
-            transactionModelObj.setTRAN_DATE(UI_DATE_FORMAT_SDF.parse(String.valueOf(addUpdateDateTV.getText())));
-        }
-        catch (ParseException pe){
-            Log.e(CLASS_NAME, "Parse Exception "+pe);
-            return ;
-        }
-
-        transactionModelObj.setTRAN_AMT(Double.parseDouble(String.valueOf(addUpdateTranAmtET.getText())));
-        transactionModelObj.setTRAN_NAME(String.valueOf(addUpdateTranNameET.getText()));
-        transactionModelObj.setCAT_ID(String.valueOf(addUpdateCatSpn.getSelectedView().getTag()));
-        transactionModelObj.setCategory(((SpinnerModel) addUpdateCatSpn.getSelectedItem()).getItemName());
-        transactionModelObj.setACC_ID(String.valueOf(addUpdateAccSpn.getSelectedView().getTag()));
-        transactionModelObj.setAccount(((SpinnerModel) addUpdateAccSpn.getSelectedItem()).getItemName());
-        transactionModelObj.setTRAN_TYPE(String.valueOf(getView().findViewById(addUpdateTranExpIncRadioGrp.getCheckedRadioButtonId()).getTag()));
-        transactionModelObj.setSPNT_ON_ID(String.valueOf(addUpdateSpntOnSpn.getSelectedView().getTag()));
-        transactionModelObj.setSpentOn(((SpinnerModel) addUpdateSpntOnSpn.getSelectedItem()).getItemName());
-        transactionModelObj.setTRAN_NOTE(String.valueOf(addUpdateNoteET.getText()));
-        transactionModelObj.setUSER_ID(loggedInUserObj.getUSER_ID());
-    }
-
     private void getCategoriesFromBundle() {
-        categoriesMap = (Map<String, CategoryMO>) getArguments().get(CATEGORY_OBJECT);
+        categoriesList = (List<CategoryMO>) getArguments().get(CATEGORY_OBJECT);
         selectedCategoryStr = (String) getArguments().get(SELECTED_CATEGORY_OBJECT);
     }
 
     private void setupPage() {
-        CategoriesFragmentListViewAdapter categoriesFragmentListViewAdapter = new CategoriesFragmentListViewAdapter(mContext, categoriesMap, selectedCategoryStr);
+        CategoriesFragmentListViewAdapter categoriesFragmentListViewAdapter = new CategoriesFragmentListViewAdapter(mContext, categoriesList, selectedCategoryStr);
         categoriesLV.setAdapter(categoriesFragmentListViewAdapter);
     }
 
@@ -157,7 +107,9 @@ public class CategoriesFragment extends DialogFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(CLASS_NAME, "Test");
+                TransactionFragment activity = (TransactionFragment) getTargetFragment();
+                activity.onFinishUserDialog(categoriesList.get(position));
+                dismiss();
             }
         };
     }
@@ -169,20 +121,22 @@ public class CategoriesFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getActivity().getApplicationContext();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
         Dialog d = getDialog();
         if (d!=null) {
-            int width = R.integer.fragment_options_full_width;
-            int height = R.integer.fragment_options_full_height;
+            int width = 600;
+            int height = 800;
             d.getWindow().setLayout(width, height);
         }
     }
 
     public interface DialogResultListener {
-        void onFinishUserDialog(String resultStr);
+        void onFinishUserDialog(String str);
     }
 }

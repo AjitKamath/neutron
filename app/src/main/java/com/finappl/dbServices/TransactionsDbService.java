@@ -47,6 +47,60 @@ public class TransactionsDbService extends SQLiteOpenHelper {
 
     private Context mContext;
 
+    public SpentOnMO getDefaultSpentOn(String loggedInUserIDStr) {
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" SPNT_ON_ID, ");
+        sqlQuerySB.append(" SPNT_ON_NAME ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_SPENTON);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" SPNT_ON_IS_DEF = '"+ Constants.DB_AFFIRMATIVE+"' ");
+        sqlQuerySB.append(" AND (USER_ID = '"+loggedInUserIDStr+"' OR USER_ID = '"+ADMIN_USERID+"') ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
+
+        if (cursor.moveToNext()) {
+            SpentOnMO spentOnMO = new SpentOnMO();
+            spentOnMO.setSPNT_ON_ID(ColumnFetcher.loadString(cursor, "SPNT_ON_ID"));
+            spentOnMO.setSPNT_ON_NAME(ColumnFetcher.loadString(cursor, "SPNT_ON_NAME"));
+
+            return  spentOnMO;
+        }
+
+        return null;
+    }
+
+    public AccountsMO getDefaultAccount(String loggedInUserIDStr){
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" ACC_ID, ");
+        sqlQuerySB.append(" ACC_NAME ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" ACC_IS_DEF = '"+ Constants.DB_AFFIRMATIVE+"' ");
+        sqlQuerySB.append(" AND (USER_ID = '"+loggedInUserIDStr+"' OR USER_ID = '"+ADMIN_USERID+"') ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
+
+        if (cursor.moveToNext()) {
+            AccountsMO accountsMO = new AccountsMO();
+            accountsMO.setACC_ID(ColumnFetcher.loadString(cursor, "ACC_ID"));
+            accountsMO.setACC_NAME(ColumnFetcher.loadString(cursor, "ACC_NAME"));
+
+            return  accountsMO;
+        }
+
+        return null;
+    }
+
     public CategoryMO getDefaultCategory(String loggedInUserIDStr){
         StringBuilder sqlQuerySB = new StringBuilder(50);
         sqlQuerySB.append(" SELECT ");

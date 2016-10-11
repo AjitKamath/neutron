@@ -636,6 +636,9 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 2. fetching all the accounts query has been modified as per new business.
 3. new table REPEAT to track repeated Transactions/Transfers created.
 
+10-oct-16
+1. implemented categories, accounts & spentons fragments
+
 ------------------------------------------------------------------------------------21/55-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
 2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.
