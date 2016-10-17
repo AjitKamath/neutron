@@ -1,6 +1,7 @@
 package com.finappl.models;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 public class TransactionModel implements Serializable {
@@ -12,13 +13,14 @@ public class TransactionModel implements Serializable {
 	private String CAT_ID;
 	private String SPNT_ON_ID;
 	private String ACC_ID;
-	private String SCH_TRAN_ID;
+	private String REPEAT_ID;
 	private Double TRAN_AMT;
 	private String TRAN_NAME;
 	private String TRAN_TYPE;
 	private String TRAN_NOTE;
 	private Date TRAN_DATE;
-	private String TRAN_IS_DEL;
+	private String NOTIFY;
+	private String NOTIFY_TIME;
 	private Date CREAT_DTM;
 	private Date MOD_DTM;
 
@@ -33,6 +35,10 @@ public class TransactionModel implements Serializable {
     private AccountsMO accountObj;
 
     private Date schCreateDate;
+
+	//possibly obsoletes
+	private String SCH_TRAN_ID;
+	private String TRAN_IS_DEL;
 
 	public Date getSchCreateDate() {
 		return schCreateDate;
@@ -200,5 +206,29 @@ public class TransactionModel implements Serializable {
 
 	public void setMOD_DTM(Date MOD_DTM) {
 		this.MOD_DTM = MOD_DTM;
+	}
+
+	public String getREPEAT_ID() {
+		return REPEAT_ID;
+	}
+
+	public void setREPEAT_ID(String REPEAT_ID) {
+		this.REPEAT_ID = REPEAT_ID;
+	}
+
+	public String getNOTIFY() {
+		return NOTIFY;
+	}
+
+	public void setNOTIFY(String NOTIFY) {
+		this.NOTIFY = NOTIFY;
+	}
+
+	public String getNOTIFY_TIME() {
+		return NOTIFY_TIME;
+	}
+
+	public void setNOTIFY_TIME(String NOTIFY_TIME) {
+		this.NOTIFY_TIME = NOTIFY_TIME;
 	}
 }

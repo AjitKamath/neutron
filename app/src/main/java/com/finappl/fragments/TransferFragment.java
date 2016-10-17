@@ -60,7 +60,7 @@ public class TransferFragment extends DialogFragment implements ImageButton.OnCl
 
         //page content
         addUpdateTranNameET = (EditText) view.findViewById(R.id.addUpdateTranNameETId);
-        addUpdateTranAmtET = (EditText) view.findViewById(R.id.addUpdateTranAmtETId);
+        //addUpdateMonthTV = (EditText) view.findViewById(R.id.addUpdateTranAmtETId);
         addUpdateCatSpn = (Spinner) view.findViewById(R.id.addUpdateCatSpnId);
         addUpdateAccSpn = (Spinner) view.findViewById(R.id.addUpdateAccSpnId);
         addUpdateTranExpRadio = (RadioButton) view.findViewById(R.id.addUpdateTranExpRadioId);

@@ -32,8 +32,6 @@ public class AccountsFragment extends DialogFragment {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
 
-    private RelativeLayout accountsRL;
-
     //components
     private ListView accountsLV;
     //end of components
@@ -79,7 +77,7 @@ public class AccountsFragment extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TransactionFragment activity = (TransactionFragment) getTargetFragment();
-                activity.onFinishUserDialog(accountsList.get(position));
+                activity.onFinishDialog(accountsList.get(position));
                 dismiss();
             }
         };

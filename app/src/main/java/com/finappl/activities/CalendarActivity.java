@@ -169,19 +169,20 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
         controller.getWritableDatabase();
         Log.i(CLASS_NAME, "Initializing the application database ends");
 
+        setContentView(R.layout.calendar);
+
         //get the Active user
         loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
-        if(loggedInUserObj == null){
-            forceLogin();
-            return;
-        }
-
-        setContentView(R.layout.calendar);
 
         initActivity();
 
         //set font for all the text view
         setFont((ViewGroup) this.findViewById(R.id.calendarPageRLId));
+
+        if(loggedInUserObj == null){
+            forceLogin();
+            return;
+        }
     }
 
     private void initActivity(){
@@ -234,6 +235,10 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void setUpActionPoppers() {
+        if(viewPagerMonths == null){
+            return;
+        }
+
         if(getIntent().getExtras() == null){
             Log.i(CLASS_NAME, "No Extras in the intent.. So no intended Action Poppers");
             return;
@@ -402,6 +407,10 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void setUpFab() {
+        if(viewPagerMonths == null){
+            return;
+        }
+
         final ViewGroup calendarFabRL = (ViewGroup) findViewById(R.id.calendarFabRLId);
         calendarFabIB = (ImageButton) findViewById(R.id.calendarFabIBId);
         calendarFabTransactionLL = (LinearLayout) findViewById(R.id.calendarFabTransactionLLId);
@@ -485,6 +494,10 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
     //this returns true in case the FAB was opened
     public boolean checkAndCollapseFab(){
+        if(viewPagerMonths == null){
+            return false;
+        }
+
         if (expanded) {
             expanded = !expanded;
             collapseFab();
@@ -1564,7 +1577,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
             }
         });
 
-        if("Y".equalsIgnoreCase(accountsModelObj.getACC_IS_DEFAULT())){
+        if("Y".equalsIgnoreCase(accountsModelObj.getACC_IS_DEF())){
             accountPopperEditIV.setVisibility(View.GONE);
             accountPopperDelIV.setVisibility(View.GONE);
         }
@@ -1631,6 +1644,10 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void fetchMonthLegend(){
+        if(loggedInUserObj  == null){
+            return;
+        }
+
         monthLegendMap = calendarDbService.getMonthLegendOnDate(currentFocusedMonthStr, loggedInUserObj.getUSER_ID());
     }
 
@@ -1708,6 +1725,10 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     private void setUpCalendar() {
+        if(viewPagerMonths == null){
+            return;
+        }
+
         setUpHeader();
         fetchMonthLegend();
         setUpTabs();
@@ -1969,6 +1990,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
     private void setUpHeader() {
         String tempSelectedDateStrArr[] = currentFocusedMonthStr.split("-");
+
         calendarMonthTV.setText(Constants.MONTHS_ARRAY[Integer.parseInt(tempSelectedDateStrArr[0])-1]);
         yearTV.setText(tempSelectedDateStrArr[1]);
 
@@ -2215,6 +2237,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
             return;
         }
 
+        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
         initActivity();
 
         showToast(resultStr);

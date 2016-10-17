@@ -61,8 +61,6 @@ public class CategoriesFragment extends DialogFragment {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
 
-    private RelativeLayout categoriesRL;
-
     //components
     private ListView categoriesLV;
     //end of components
@@ -108,7 +106,7 @@ public class CategoriesFragment extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TransactionFragment activity = (TransactionFragment) getTargetFragment();
-                activity.onFinishUserDialog(categoriesList.get(position));
+                activity.onFinishDialog(categoriesList.get(position));
                 dismiss();
             }
         };

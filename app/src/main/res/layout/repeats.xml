@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/repeatsRLId"
+    android:layout_width="@dimen/fragment_full_width"
+    android:layout_height="@dimen/fragment_full_height"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/screen_components_padding_from_walls"
+    android:background="@color/white"
+    android:gravity="right"
+    android:orientation="vertical"
+    app:theme="@style/FinappleTheme">
+
+    <!-- header -->
+
+    <LinearLayout
+        android:id="@+id/repeatsHeaderLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/screen_components_padding_from_walls"
+        android:visibility="visible">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="REPEAT EVERY"
+            android:textColor="@color/finappleTheme"
+            android:textSize="@dimen/own_spinner_text_size_primary" />
+
+
+    </LinearLayout>
+
+    <!--Page-->
+    <LinearLayout
+        android:id="@+id/repeatsContentLLId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/repeatsHeaderLLId"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/screen_components_padding_from_walls"
+        android:paddingRight="@dimen/screen_components_padding_from_walls"
+        android:paddingBottom="@dimen/screen_components_padding_from_walls">
+
+        <ListView
+            android:id="@+id/repeatsContentLVId"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+    </LinearLayout>
+</RelativeLayout>

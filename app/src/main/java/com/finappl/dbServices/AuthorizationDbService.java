@@ -66,6 +66,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put("USER_ID", userModelObj.getUSER_ID());
             values.put("CNTRY_ID", userModelObj.getCNTRY_ID());
+            values.put("METRIC", "INDIAN"); //TODO: hard coded
             values.put("NAME", userModelObj.getNAME());
             values.put("PASS", EncryptionUtil.encrypt(userModelObj.getPASS()));
             values.put("EMAIL", userModelObj.getEMAIL());
@@ -166,6 +167,7 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         StringBuilder sqlQuerySB = new StringBuilder(50);
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" USR.USER_ID, ");
+        sqlQuerySB.append(" METRIC, ");
         sqlQuerySB.append(" NAME, ");
         sqlQuerySB.append(" EMAIL, ");
         sqlQuerySB.append(" DOB, ");

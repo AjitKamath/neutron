@@ -92,6 +92,10 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     }
 
     private void checkMonthLegend() {
+        if(loggedInUserObj == null){
+            return;
+        }
+
         //Accounts check
         accountsList = calendarDbService.getAllAccounts(loggedInUserObj.getUSER_ID());
         if (accountsList != null && !accountsList.isEmpty()) {

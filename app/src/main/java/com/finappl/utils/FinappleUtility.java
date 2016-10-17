@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.StringBuilderPrinter;
 
 import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
@@ -24,6 +25,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.finappl.utils.Constants.DECIMAL_AFTER_LIMIT;
+import static com.finappl.utils.Constants.DECIMAL_BEFORE_LIMIT;
 import static com.finappl.utils.Constants.SHARED_PREF;
 import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
 
@@ -47,6 +50,156 @@ public class FinappleUtility extends Activity{
         }
 		return instance;
 	}
+
+    private static String formatDecimals(String inputStr){
+        if(inputStr.contains(".")){
+            String inputStrArr[] = inputStr.split("\\.");
+
+            if(inputStrArr.length == 0){
+                return "0.";
+            }
+            else if(inputStrArr.length > 1){
+                String afterDeimalsStr = inputStrArr[1];
+
+                if(afterDeimalsStr.length() >= DECIMAL_AFTER_LIMIT){
+                    return inputStr.substring(0, inputStr.indexOf(".")+DECIMAL_AFTER_LIMIT+1);
+                }
+            }
+        }
+        return inputStr;
+    }
+
+    public static String cleanUpAmount(String amountStr){
+        if(amountStr.startsWith(".")){
+            return "0"+amountStr.substring(0, DECIMAL_AFTER_LIMIT);
+        }
+
+        if(amountStr.endsWith(".")){
+            return amountStr.substring(0, amountStr.lastIndexOf("\\."));
+        }
+        return amountStr;
+    }
+
+    public static String formatAmount(String numberSystemStr, String amountStr){
+        if("AMERICAN".equalsIgnoreCase(numberSystemStr)){
+            return formatAmountAmerican(amountStr);
+        }
+        else{
+            return formatAmountIndian(amountStr);
+        }
+    }
+
+    private static String formatAmountIndian(String amountStr) {
+        amountStr = amountStr.replace(",", "");
+
+        amountStr = formatDecimals(amountStr);
+
+        //check if exceeds the upper limit
+        String beforeDecStr = "";
+        String afterDecStr = "";
+
+        boolean hasDot = false;
+
+        if(amountStr.contains(".") && !amountStr.endsWith(".")){
+            beforeDecStr = amountStr.split("\\.")[0];
+            afterDecStr = amountStr.split("\\.")[1];
+        }
+        else if(amountStr.contains(".")){
+            beforeDecStr = amountStr.replace(".", "");
+            hasDot = true;
+        }
+        else {
+            beforeDecStr = amountStr;
+        }
+
+        if(Float.parseFloat(beforeDecStr) >= DECIMAL_BEFORE_LIMIT){
+            beforeDecStr = beforeDecStr.substring(0, beforeDecStr.length()-1);
+        }
+
+        //99,99,99,999
+        //formatting with commas
+        switch(beforeDecStr.length()){
+            case 4: beforeDecStr = beforeDecStr.substring(0, 1)+","+beforeDecStr.substring(1);
+                break;
+            case 5: beforeDecStr = beforeDecStr.substring(0, 2)+","+beforeDecStr.substring(2);
+                break;
+            case 6: beforeDecStr = beforeDecStr.substring(0, 1)+","+beforeDecStr.substring(1,3)+","+beforeDecStr.substring(3);
+                break;
+            case 7: beforeDecStr = beforeDecStr.substring(0, 2)+","+beforeDecStr.substring(2,4)+","+beforeDecStr.substring(4);
+                break;
+            case 8: beforeDecStr = beforeDecStr.substring(0, 1)+","+beforeDecStr.substring(1,3)+","+beforeDecStr.substring(3,5)+","+beforeDecStr.substring(5);
+                break;
+            case 9: beforeDecStr = beforeDecStr.substring(0, 2)+","+beforeDecStr.substring(2,4)+","+beforeDecStr.substring(4,6)+","+beforeDecStr.substring(6);
+                break;
+        }
+
+        if(hasDot){
+            beforeDecStr += ".";
+        }
+
+        if(!afterDecStr.isEmpty()){
+            return beforeDecStr+"."+afterDecStr;
+        }
+        else{
+            return beforeDecStr;
+        }
+    }
+
+    private static String formatAmountAmerican(String amountStr) {
+        amountStr = amountStr.replace(",", "");
+
+        amountStr = formatDecimals(amountStr);
+
+        //check if exceeds the upper limit
+        String beforeDecStr = "";
+        String afterDecStr = "";
+
+        boolean hasDot = false;
+
+        if(amountStr.contains(".") && !amountStr.endsWith(".")){
+            beforeDecStr = amountStr.split("\\.")[0];
+            afterDecStr = amountStr.split("\\.")[1];
+        }
+        else if(amountStr.contains(".")){
+            beforeDecStr = amountStr.replace(".", "");
+            hasDot = true;
+        }
+        else {
+            beforeDecStr = amountStr;
+        }
+
+        if(Float.parseFloat(beforeDecStr) >= DECIMAL_BEFORE_LIMIT){
+            beforeDecStr = beforeDecStr.substring(0, beforeDecStr.length()-1);
+        }
+
+        //999,999,999
+        //formatting with commas
+        switch(beforeDecStr.length()){
+            case 4: beforeDecStr = beforeDecStr.substring(0, 1)+","+beforeDecStr.substring(1);
+                break;
+            case 5: beforeDecStr = beforeDecStr.substring(0, 2)+","+beforeDecStr.substring(2);
+                break;
+            case 6: beforeDecStr = beforeDecStr.substring(0, 3)+","+beforeDecStr.substring(3);
+                break;
+            case 7: beforeDecStr = beforeDecStr.substring(0, 1)+","+beforeDecStr.substring(1,4)+","+beforeDecStr.substring(4);
+                break;
+            case 8: beforeDecStr = beforeDecStr.substring(0, 2)+","+beforeDecStr.substring(2,5)+","+beforeDecStr.substring(5);
+                break;
+            case 9: beforeDecStr = beforeDecStr.substring(0, 3)+","+beforeDecStr.substring(3,6)+","+beforeDecStr.substring(6);
+                break;
+        }
+
+        if(hasDot){
+            beforeDecStr += ".";
+        }
+
+        if(!afterDecStr.isEmpty()){
+            return beforeDecStr+"."+afterDecStr;
+        }
+        else{
+            return beforeDecStr;
+        }
+    }
 
     public List<Integer> getRandomPleasantColorList(Integer resourcesCount){
         List<Integer> colorList = new ArrayList<Integer>();
@@ -166,4 +319,5 @@ public class FinappleUtility extends Activity{
     public static String getDeviceId(Context context){
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
+
 }

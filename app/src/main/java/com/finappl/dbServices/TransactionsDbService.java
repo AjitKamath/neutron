@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.finappl.models.AccountsMO;
 import com.finappl.models.CategoryMO;
+import com.finappl.models.RepeatMO;
 import com.finappl.models.SpentOnMO;
 import com.finappl.models.SpinnerModel;
 import com.finappl.models.TransactionModel;
@@ -27,6 +28,7 @@ import static com.finappl.utils.Constants.DB_NAME;
 import static com.finappl.utils.Constants.DB_NONAFFIRMATIVE;
 import static com.finappl.utils.Constants.DB_TABLE_ACCOUNT;
 import static com.finappl.utils.Constants.DB_TABLE_CATEGORY;
+import static com.finappl.utils.Constants.DB_TABLE_REPEAT;
 import static com.finappl.utils.Constants.DB_TABLE_SPENTON;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSACTION;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSFER;
@@ -40,6 +42,32 @@ public class TransactionsDbService extends SQLiteOpenHelper {
     private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
 
     private Context mContext;
+
+    public RepeatMO getDefaultRepeat(){
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" REPEAT_ID, ");
+        sqlQuerySB.append(" REPEAT_NAME ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_REPEAT);
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" REPEAT_IS_DEF = '"+ Constants.DB_AFFIRMATIVE+"' ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(String.valueOf(sqlQuerySB), null);
+
+        if (cursor.moveToNext()) {
+            RepeatMO repeatMO = new RepeatMO();
+            repeatMO.setREPEAT_ID(ColumnFetcher.loadString(cursor, "REPEAT_ID"));
+            repeatMO.setREPEAT_NAME(ColumnFetcher.loadString(cursor, "REPEAT_NAME"));
+
+            return  repeatMO;
+        }
+
+        return null;
+    }
 
     public SpentOnMO getDefaultSpentOn(String loggedInUserIDStr) {
         StringBuilder sqlQuerySB = new StringBuilder(50);
@@ -399,6 +427,7 @@ public class TransactionsDbService extends SQLiteOpenHelper {
 		values.put("CAT_ID", transactionModel.getCAT_ID());
 		values.put("SPNT_ON_ID", transactionModel.getSPNT_ON_ID());
 		values.put("ACC_ID", transactionModel.getACC_ID());
+        values.put("REPEAT_ID", transactionModel.getREPEAT_ID());
 		values.put("TRAN_AMT", transactionModel.getTRAN_AMT());
 		values.put("TRAN_NAME", transactionModel.getTRAN_NAME());
 		values.put("TRAN_TYPE", transactionModel.getTRAN_TYPE());

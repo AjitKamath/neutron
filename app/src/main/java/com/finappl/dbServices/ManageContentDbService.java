@@ -230,14 +230,14 @@ public class ManageContentDbService extends SQLiteOpenHelper {
 		while (cursor.moveToNext()) {
 			String accIdStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_ID");
 			String accNameStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_NAME");
-			String accIsDefStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_IS_DEFAULT");
+			String accIsDefStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_IS_DEF");
 			String accNoteStr = ColumnFetcher.getInstance().loadString(cursor, "ACC_NOTE");
 			Double accTotal = ColumnFetcher.getInstance().loadDouble(cursor, "ACC_TOTAL");
 
 			AccountsMO accountsModelObj = new AccountsMO();
 			accountsModelObj.setACC_ID(accIdStr);
 			accountsModelObj.setACC_NAME(accNameStr);
-			accountsModelObj.setACC_IS_DEFAULT(accIsDefStr);
+			accountsModelObj.setACC_IS_DEF(accIsDefStr);
 			accountsModelObj.setACC_NOTE(accNoteStr);
 			accountsModelObj.setACC_TOTAL(accTotal);
 

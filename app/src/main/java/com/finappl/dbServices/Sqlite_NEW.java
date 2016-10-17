@@ -238,11 +238,15 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" ACC_ID TEXT NOT NULL, ");					//fk3
 		sb.append(" SPNT_ON_ID TEXT NOT NULL, ");				//fk4
 		sb.append(" REPEAT_ID TEXT, ");							//fk5
+		sb.append(" PARENT_TRAN_ID TEXT, ");
 		sb.append(" TRAN_AMT TEXT NOT NULL, ");
 		sb.append(" TRAN_NAME TEXT NOT NULL, ");
 		sb.append(" TRAN_TYPE TEXT NOT NULL, ");
 		sb.append(" TRAN_DATE DATE NOT NULL, ");
 		sb.append(" TRAN_NOTE TEXT, ");
+		sb.append(" NOTIFY TEXT, ");
+		sb.append(" NOTIFY_TIME TEXT, ");
+		sb.append(" SCHD_UPTO_DATE TEXT, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
 		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID), ");
@@ -313,6 +317,7 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(DB_TABLE_USER);
 		sb.append(" (USER_ID TEXT PRIMARY KEY, ");			//pk
 		sb.append(" CNTRY_ID TEXT NOT NULL, ");				//fk 1
+		sb.append(" METRIC TEXT NOT NULL, ");
 		sb.append(" NAME TEXT NOT NULL, ");
 		sb.append(" PASS TEXT NOT NULL, ");
 		sb.append(" EMAIL TEXT NOT NULL, ");

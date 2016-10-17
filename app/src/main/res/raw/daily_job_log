@@ -649,7 +649,34 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 2. cleaned up few unnecessary activities.
 3. ability to see transactions in calendar grid and summary tab
 
-------------------------------------------------------------------------------------21/55-----------------------------------------------------------------------------------
+<--Git Push on 12-oct-2016-->
+
+13-oct-16
+1. added repeat in transaction fragment UI
+2. implemented the repeat fragment
+3. added PARENT_TRAN_ID in transaction table in order to track the parent transaction of a repeated transaction.
+4. Added NOTIFY, NOTIFY_TIME to transaction table to add notifying features to a transaction.
+
+14-oct-16
+1. Added SCHD_UPTO_DATE column in TRANSACTIONS table to add ability to schedule repeats upto certain date.
+2. added Schedule in the transaction UI
+
+15-oct-16
+1. UI for amount.
+2. Custom popup to enter Amount implemented.
+3. Re usable logic to format amount to Indian numbering system implemented.
+4. Re usable logic to format amount to American numbering system implemented.
+
+16-oct-16
+1. issue fixed for null pointer on registering the user and landing to the calandar screen for the first time.
+2. set Account total in Transaction fragment.
+3. DatePickerFragment implemented for transaction date.
+
+17-oct-16
+1. DatePickerFragment implemented for sched from date & sched upto date.
+2. TimePickerFragment implemented for notify add & auto add time.
+
+------------------------------------------------------------------------------------28/55-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
 2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.
    warn they will all be moved to others..same for all)
@@ -671,10 +698,10 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 17. Swipeable calendar.------------------------------------------------------------------------------------------------------------------------------------------------------DONE
 18. Swipeable tabs(everywhere !!).
 19. Material buttons(everywhere !!).
-20. Custom Textpad for number entry as a popup(everywhere !!).
+20. Custom Textpad for number entry as a popup(everywhere !!).---------------------------------------------------------------------------------------------------------------DONE
 21. Provide a switch in scheduled transaction/transfer details popper to delete the whole schedule(DELETE & DELETE ALL button has been implemented).-------------------------DONE
-22. Decision has been made to implement Hard delete Vs. the soft delete(everywhere !!).
-23. Remove (now)unnecessary column such as *IS_DEL. 
+22. Decision has been made to implement Hard delete Vs. the soft delete(everywhere !!). -------------------------------------------------------------------------------------DONE
+23. Remove (now)unnecessary column such as *IS_DEL. -------------------------------------------------------------------------------------------------------------------------DONE
 24. Auto cancel or remove the old scheduled transfer/transaction notification when a day passes. 
 25. Remove the concept of showing currency symbols. Not all countries have them. Instead go for the country code like INR, USD, GBP------------------------------------------DONE
 26. Generate Brief report on Impact on Account Deletion. Eg: Deleted 2 Transactions, 3 Transfers, 2 Scheduled Transactions, 5 Scheduled Transfers & 1 Budget
@@ -684,7 +711,7 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 30. finish() causes problems. Override back button instead.(OBSOLETE)--------------------------------------------------------------------------------------------------------DONE
 31. Use the Generic method navigateTo(Class) in all the Activities to navigate to other Activities.(OBSOLETE)----------------------------------------------------------------DONE
 32. Use the Generic method setFont(ViewGroup) in all the Activities to set font in.
-33. MoneyFormatter Class.
+33. MoneyFormatter Class.----------------------------------------------------------------------------------------------------------------------------------------------------DONE
 34. HIGH SEVERITY ISSUE WITH HOW THE LISTVIEW BEHAVES IN ANDROID !!! URGENT FIX REQUIRED ALL OVER THE APP !!!----------------------------------------------------------------DONE
 35. Animations Babay !!!
 36. access constants across the classes in a static way.---------------------------------------------------------------------------------------------------------------------DONE
@@ -695,8 +722,8 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 41. Ability to schedule from date 1 to date 2
 42. Grand plan to make the App- ONE SCREEN APP
 43. encrypt the FINAPPL.DB file
-44. Arrive at a standard way to display a currency. (INR 250 or 250 INR ???)
-45. Custom popup to choose category/account/spent on
+44. Arrive at a standard way to display a currency. (INR 250 or 250 INR ???)-------------------------------------------------------------------------------------------------DONE
+45. Custom popup to choose category/account/spent on-------------------------------------------------------------------------------------------------------------------------DONE
 46. Database re-design(consolidation of transaction/transfer & schedule transaction/transfer)--------------------------------------------------------------------------------DONE
 47. get live account balance in transaction/transfer screen.
 48. simple tick preferred over FABs
@@ -706,7 +733,7 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 52. security check (check active user id in sharedprefs on each button action)(obsolete)-------------------------------------------------------------------------------------DONE
 53. disable back button for login popper.------------------------------------------------------------------------------------------------------------------------------------DONE
 54. check for logged in user and show login popper before loading the calendar.xml-------------------------------------------------------------------------------------------DONE
-55. a flag in category/account/spent on tables to indicate they must be selected by default
+55. a flag in category/account/spent on tables to indicate they must be selected by default----------------------------------------------------------------------------------DONE
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 CORE FUNCTIONALITY CHECK:	0/22

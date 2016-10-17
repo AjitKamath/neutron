@@ -13,6 +13,7 @@ import com.finappl.models.CategoryMO;
 import com.finappl.models.ConsolidatedTransactionModel;
 import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
+import com.finappl.models.RepeatMO;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.SpentOnMO;
@@ -40,6 +41,7 @@ import static com.finappl.utils.Constants.DB_TABLE_ACCOUNT;
 import static com.finappl.utils.Constants.DB_TABLE_BUDGET;
 import static com.finappl.utils.Constants.DB_TABLE_CATEGORY;
 import static com.finappl.utils.Constants.DB_TABLE_NOTIFICATION;
+import static com.finappl.utils.Constants.DB_TABLE_REPEAT;
 import static com.finappl.utils.Constants.DB_TABLE_SPENTON;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSACTION;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSFER;
@@ -1450,6 +1452,31 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
     //--------------------- end of method to get all accounts--------------------------//
 
+    public List<RepeatMO> getAllRepeats(){
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" REPEAT_ID, ");
+        sqlQuerySB.append(" REPEAT_NAME ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_REPEAT);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        List<RepeatMO> repeatMOList = new ArrayList<>();
+        while (cursor.moveToNext()){
+            RepeatMO repeatMO = new RepeatMO();
+            repeatMO.setREPEAT_ID(ColumnFetcher.getInstance().loadString(cursor, "REPEAT_ID"));
+            repeatMO.setREPEAT_NAME(ColumnFetcher.getInstance().loadString(cursor, "REPEAT_NAME"));
+
+            repeatMOList.add(repeatMO);
+        }
+        cursor.close();
+        db.close();
+        return repeatMOList;
+    }
+
 
     public List<CategoryMO> getAllCategories(String userId){
         StringBuilder sqlQuerySB = new StringBuilder(50);
@@ -1623,14 +1650,14 @@ public class CalendarDbService extends SQLiteOpenHelper {
             accountNameStr = ColumnFetcher.loadString(cursor, "ACC_NAME");
             accountTotal = ColumnFetcher.loadDouble(cursor, "ACC_TOTAL");
             currecyStr = ColumnFetcher.loadString(cursor, "CUR_NAME");
-            accountIsDefaultStr = ColumnFetcher.loadString(cursor, "ACC_IS_DEFAULT");
+            accountIsDefaultStr = ColumnFetcher.loadString(cursor, "ACC_IS_DEF");
 
             accountsModel = new AccountsMO();
             accountsModel.setACC_ID(accountIdStr);
             accountsModel.setACC_NAME(accountNameStr);
             accountsModel.setACC_TOTAL(accountTotal);
             accountsModel.setCurrency(currecyStr);
-            accountsModel.setACC_IS_DEFAULT(accountIsDefaultStr);
+            accountsModel.setACC_IS_DEF(accountIsDefaultStr);
             accountsList.add(accountsModel);
         }
         cursor.close();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="image_header_size">20dp</dimen>
-    <dimen name="text_header_title_size">15sp</dimen>
+    <dimen name="image_header_size">25dp</dimen>
+    <dimen name="text_header_title_size">18sp</dimen>
     <dimen name="text_button_big_text_size">15sp</dimen>
     <dimen name="text_tab_big_size">15sp</dimen>
     <dimen name="text_tab_small_size">12sp</dimen>
@@ -34,7 +34,7 @@
     <dimen name="login_form_component_space">35dp</dimen>
 
     <dimen name="divider_height">0.5dp</dimen>
-    <dimen name="divider_margin">15dp</dimen>
+    <dimen name="divider_margin">10dp</dimen>
 
     <dimen name="component_line_height">0.5dp</dimen>
 
@@ -69,4 +69,9 @@
     <integer name="fragment_options_full_height">800</integer>
     <!--Fragment props ends-->
 
+    <!--Amount Fragment-->
+    <dimen name="fragment_amount_number_cell_dimension">60dp</dimen>
+    <dimen name="fragment_amount_input_image_dimension">20dp</dimen>
+    <dimen name="fragment_amount_number_cell_text_size">20sp</dimen>
+    <!--Amount Fragment ends-->
 </resources>

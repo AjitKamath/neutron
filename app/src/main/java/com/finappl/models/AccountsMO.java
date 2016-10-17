@@ -9,7 +9,7 @@ public class AccountsMO implements Serializable {
     private String USER_ID;
     private String ACC_NAME;
     private String ACC_IS_DEL;
-    private String ACC_IS_DEFAULT;
+    private String ACC_IS_DEF;
     private Double ACC_BUDGET;
     private Date CREAT_DTM;
     private Date MOD_DTM;
@@ -107,11 +107,11 @@ public class AccountsMO implements Serializable {
         MOD_DTM = mOD_DTM;
     }
 
-    public String getACC_IS_DEFAULT() {
-        return ACC_IS_DEFAULT;
+    public String getACC_IS_DEF() {
+        return ACC_IS_DEF;
     }
 
-    public void setACC_IS_DEFAULT(String ACC_IS_DEFAULT) {
-        this.ACC_IS_DEFAULT = ACC_IS_DEFAULT;
+    public void setACC_IS_DEF(String ACC_IS_DEF) {
+        this.ACC_IS_DEF = ACC_IS_DEF;
     }
 }

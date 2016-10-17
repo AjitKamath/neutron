@@ -8,6 +8,7 @@ import java.util.Date;
 public class UserMO {
     private String USER_ID;
     private String CNTRY_ID;
+    private String METRIC;
     private String NAME;
     private String PASS;
     private String EMAIL;
@@ -159,5 +160,13 @@ public class UserMO {
 
     public void setCNTRY_CODE(String CNTRY_CODE) {
         this.CNTRY_CODE = CNTRY_CODE;
+    }
+
+    public String getMETRIC() {
+        return METRIC;
+    }
+
+    public void setMETRIC(String METRIC) {
+        this.METRIC = METRIC;
     }
 }
