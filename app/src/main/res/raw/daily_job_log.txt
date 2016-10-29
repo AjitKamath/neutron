@@ -672,15 +672,34 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 2. set Account total in Transaction fragment.
 3. DatePickerFragment implemented for transaction date.
 
+<--Git Push on 17-oct-2016-->
+
 17-oct-16
 1. DatePickerFragment implemented for sched from date & sched upto date.
 2. TimePickerFragment implemented for notify add & auto add time.
 
-------------------------------------------------------------------------------------28/55-----------------------------------------------------------------------------------
+18-oct-16
+1. Validations on Transaction Schedule from and upto dates.
+2. removed Transaction Sched From date.(Transaction date itself serves the purpose).
+
+24-oct-2016
+1. Replaced back and save icons with save and close texts.
+2. No animation and text watcher on amount and label
+3. implemented text view click effect
+
+25-oct-2016
+1. implemented close confirm fragment for transaction.
+
+29-oct-2016
+1. added CAT_IMG, ACC_IMG, SPNT_ON_IMG, REPEAT_IMG in category, account, spent on, repeat tables to store image id's for them respectively.
+2. implemented images from database(no hardcodes) for account, category, spent on & repeat spinners.
+3. Added new images for the categories, accounts, spent on & repeat from the icon8.com.
+
+------------------------------------------------------------------------------------29/57-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
 2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.
    warn they will all be moved to others..same for all)
-4. replace back button with discard icon when user starts typing(OLA app feature)---------------------------------------------------------------------------------------------DONE
+4. replace back button with discard icon when user starts typing(OLA app feature)(OBSOLETE)-----------------------------------------------------------------------------------DONE
 5. GAME CHANGER: tabs in view Activity (transaction/ transfer)... impl tabs (for transactions/ transfers) in view activity----------------------------------------------------DONE
 6. UNIFY is the mantra !!:  unify transaction / transfer ...unify category / spent on / accounts as tabs----------------------------------------------------------------------DONE
 7. ability to set budget while creating category, account, spent on..make it optional
@@ -697,7 +716,7 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
     month wise transaction/transfer graphs etc. think on this.
 17. Swipeable calendar.------------------------------------------------------------------------------------------------------------------------------------------------------DONE
 18. Swipeable tabs(everywhere !!).
-19. Material buttons(everywhere !!).
+19. Material buttons(everywhere !!)(OBSOLETE)--------------------------------------------------------------------------------------------------------------------------------DONE
 20. Custom Textpad for number entry as a popup(everywhere !!).---------------------------------------------------------------------------------------------------------------DONE
 21. Provide a switch in scheduled transaction/transfer details popper to delete the whole schedule(DELETE & DELETE ALL button has been implemented).-------------------------DONE
 22. Decision has been made to implement Hard delete Vs. the soft delete(everywhere !!). -------------------------------------------------------------------------------------DONE
@@ -734,6 +753,8 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 53. disable back button for login popper.------------------------------------------------------------------------------------------------------------------------------------DONE
 54. check for logged in user and show login popper before loading the calendar.xml-------------------------------------------------------------------------------------------DONE
 55. a flag in category/account/spent on tables to indicate they must be selected by default----------------------------------------------------------------------------------DONE
+56. Progress bar on time intensive tasks
+57. Avoid multiple fetchMonthLegend calls on first time register user.
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 CORE FUNCTIONALITY CHECK:	0/22

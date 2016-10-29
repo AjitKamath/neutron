@@ -3,6 +3,7 @@ package com.finappl.fragments;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ public class AmountFragment extends DialogFragment implements View.OnClickListen
     private Context mContext;
 
     //components
+    private LinearLayout amountLL;
     private LinearLayout amountOneLL;
     private LinearLayout amountTwoLL;
     private LinearLayout amountThreeLL;
@@ -87,6 +89,8 @@ public class AmountFragment extends DialogFragment implements View.OnClickListen
     }
 
     private void initComps(View view){
+        amountLL = (LinearLayout) view.findViewById(R.id.amountLLId);
+
         amountOneLL = (LinearLayout) view.findViewById(R.id.amountOneLLId);
         amountTwoLL = (LinearLayout) view.findViewById(R.id.amountTwoLLId);
         amountThreeLL = (LinearLayout) view.findViewById(R.id.amountThreeLLId);
@@ -115,6 +119,8 @@ public class AmountFragment extends DialogFragment implements View.OnClickListen
         amountDotLL.setOnClickListener(this);
         amountOKLL.setOnClickListener(this);
         amountDeleteIV.setOnClickListener(this);
+
+        setFont(amountLL);
     }
 
     @Override
@@ -220,5 +226,22 @@ public class AmountFragment extends DialogFragment implements View.OnClickListen
         }
     }
 
+    //method iterates over each component in the activity and when it finds a text view..sets its font
+    public void setFont(ViewGroup group) {
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
 
+        int count = group.getChildCount();
+        View v;
+
+        for(int i = 0; i < count; i++) {
+            v = group.getChildAt(i);
+            if(v instanceof TextView) {
+                ((TextView) v).setTypeface(robotoCondensedLightFont);
+            }
+            else if(v instanceof ViewGroup) {
+                setFont((ViewGroup) v);
+            }
+        }
+    }
 }

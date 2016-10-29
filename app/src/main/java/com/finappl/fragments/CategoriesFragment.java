@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -62,6 +63,7 @@ public class CategoriesFragment extends DialogFragment {
     private Context mContext;
 
     //components
+    private RelativeLayout categoriesRL;
     private ListView categoriesLV;
     //end of components
 
@@ -94,9 +96,12 @@ public class CategoriesFragment extends DialogFragment {
     }
 
     private void initComps(View view){
+        categoriesRL = (RelativeLayout) view.findViewById(R.id.categoriesRLId);
         categoriesLV = (ListView) view.findViewById(R.id.categoriesContentLVId);
 
         categoriesLV.setOnItemClickListener(listViewItemClickListener);
+
+        setFont(categoriesRL);
     }
 
     AdapterView.OnItemClickListener listViewItemClickListener;
@@ -134,7 +139,22 @@ public class CategoriesFragment extends DialogFragment {
         }
     }
 
-    public interface DialogResultListener {
-        void onFinishUserDialog(String str);
+    //method iterates over each component in the activity and when it finds a text view..sets its font
+    public void setFont(ViewGroup group) {
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+
+        int count = group.getChildCount();
+        View v;
+
+        for(int i = 0; i < count; i++) {
+            v = group.getChildAt(i);
+            if(v instanceof TextView) {
+                ((TextView) v).setTypeface(robotoCondensedLightFont);
+            }
+            else if(v instanceof ViewGroup) {
+                setFont((ViewGroup) v);
+            }
+        }
     }
 }

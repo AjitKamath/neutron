@@ -4,17 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
-import android.util.StringBuilderPrinter;
+import android.view.View;
+import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
-import com.finappl.models.CategoryMO;
-import com.finappl.models.SpinnerModel;
 import com.finappl.models.UserMO;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 import static com.finappl.utils.Constants.DECIMAL_AFTER_LIMIT;
@@ -50,6 +51,32 @@ public class FinappleUtility extends Activity{
         }
 		return instance;
 	}
+
+    public static byte[] imageBitmapToByte(Resources resources, Integer imageId){
+        Bitmap b = BitmapFactory.decodeResource(resources, imageId);
+        ByteArrayOutputStream bos=new ByteArrayOutputStream();
+        b.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        return bos.toByteArray();
+    }
+
+    public static Bitmap byteToImageBitmap(byte[] img){
+        return BitmapFactory.decodeByteArray(img, 0, img.length);
+    }
+
+    public static TextView formatAmountView(TextView amountTV, UserMO userMO, Double amount){
+        if(amount <= 0){
+            if(amount < 0) {
+                amount = amount * -1;
+            }
+            amountTV.setTextColor(amountTV.getResources().getColor(R.color.finappleCurrencyNegColor));
+        }
+        else{
+            amountTV.setTextColor(amountTV.getResources().getColor(R.color.finappleCurrencyPosColor));
+        }
+        amountTV.setText(FinappleUtility.formatAmount(userMO.getMETRIC(), String.valueOf(amount)));
+
+        return amountTV;
+    }
 
     private static String formatDecimals(String inputStr){
         if(inputStr.contains(".")){

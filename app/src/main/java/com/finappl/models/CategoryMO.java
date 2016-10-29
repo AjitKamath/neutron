@@ -8,6 +8,7 @@ public class CategoryMO {
 	private String CAT_ID;
 	private String USER_ID;
 	private String CAT_NAME;
+	private String CAT_IMG;
 	private String CAT_IS_DEF;
 	private Date CREAT_DTM;
 	private Date MOD_DTM;
@@ -58,5 +59,13 @@ public class CategoryMO {
 
 	public void setMOD_DTM(Date MOD_DTM) {
 		this.MOD_DTM = MOD_DTM;
+	}
+
+	public String getCAT_IMG() {
+		return CAT_IMG;
+	}
+
+	public void setCAT_IMG(String CAT_IMG) {
+		this.CAT_IMG = CAT_IMG;
 	}
 }

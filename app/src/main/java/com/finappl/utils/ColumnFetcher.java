@@ -37,6 +37,13 @@ public class ColumnFetcher{
 	    return cursor.getInt(cursor.getColumnIndex(column));
 	}
 
+	public static byte[] loadBlob(Cursor cursor, String column){
+		if (cursor.isNull(cursor.getColumnIndex(column))){
+			return null;
+		}
+		return cursor.getBlob(cursor.getColumnIndex(column));
+	}
+
     public static Double loadDouble(Cursor cursor, String column){
         if (cursor.isNull(cursor.getColumnIndex(column))){
             return 0.0;

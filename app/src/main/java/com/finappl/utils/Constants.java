@@ -3,6 +3,8 @@ package com.finappl.utils;
 import android.app.Activity;
 import android.content.Context;
 
+import com.finappl.R;
+
 import java.text.SimpleDateFormat;
 
 /**
@@ -11,7 +13,7 @@ import java.text.SimpleDateFormat;
 public final class Constants{
     //DB
     public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 53;
+    public static final int DB_VERSION = 68;
 
     //DB Properties
     public static final String USERNAME = "Ajit";
@@ -53,17 +55,18 @@ public final class Constants{
     public static final String DB_TABLE_TRANSFER = "TRANSFERS";
     public static final String DB_TABLE_REPEAT = "REPEATS";
     public static final String DB_TABLE_COUNTRY = "COUNTRIES";
-    public static final String DB_TABLE_NOTIFICATION = "NOTIFICATIONS";public static final String DB_TABLE_SETTING = "SETTINGS";
+    public static final String DB_TABLE_NOTIFICATION = "NOTIFICATIONS";
+    public static final String DB_TABLE_SETTING = "SETTINGS";
     //DB
 
     //defaults
-    public static final String CATEGORIES = "FOOD,ENTERTAINMENT,BILL,COMMUTE,SHOPPING,FUEL,HEALTH,OTHER";
+    public static final String CATEGORIES = "TRAVEL-"+R.drawable.travel+",SHOPPING-"+R.drawable.shopping+",SALARY-"+R.drawable.salary+",MORTGAGE-"+R.drawable.mortgage+",INVESTMENT-"+R.drawable.investment+",GIFT-"+R.drawable.gift+",FUEL-"+R.drawable.fuel+",COMMUTE-"+R.drawable.commute+",BILL-"+R.drawable.bill+",FOOD-"+ R.drawable.food+",ENTERTAINMENT-"+ R.drawable.entertainment+",HEALTH-"+R.drawable.health+",GROCERY-"+R.drawable.grocery+",OTHER-"+ R.drawable.other;
     public static final String DEFAULT_CATEGORY = "OTHER";
-    public static final String ACCOUNTS = "CASH,BANK,CREDIT CARD,DEBIT CARD";
+    public static final String ACCOUNTS = "CASH-"+R.drawable.cash+",BANK-"+R.drawable.bank+",CREDIT CARD-"+R.drawable.credit_card+",DEBIT CARD-"+R.drawable.debit_card;
     public static final String DEFAULT_ACCOUNT = "CASH";
-    public static final String SPENT_ONS = "SELF,FAMILY,FRIENDS,BUSINESS";
-    public static final String DEFAULT_SPENTON = "SELF";
-    public static final String REPEATS = "DAY,WEEK,MONTH,YEAR";
+    public static final String SPENT_ONS = "MYSELF-"+R.drawable.myself+",FAMILY-"+R.drawable.family+",FRIENDS-"+R.drawable.friends+",WORK-"+R.drawable.work;
+    public static final String DEFAULT_SPENTON = "MYSELF";
+    public static final String REPEATS = "DAY-"+R.drawable.day+",WEEK-"+R.drawable.week+",MONTH-"+R.drawable.month+",YEAR-"+R.drawable.year;
     public static final String DEFAULT_REPEAT = "MONTH";
     public static final String DEFAULT_COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-INR,USA-1-DOLLAR-USD,AUSTRALIA-61-DOLLAR-AUD";
 
@@ -116,9 +119,12 @@ public final class Constants{
     public static final String FRAGMENT_CATEGORY = "FRAGMENT_CATEGORY";
     public static final String FRAGMENT_ACCOUNT = "FRAGMENT_ACCOUNT";
     public static final String FRAGMENT_SPENTON = "FRAGMENT_SPENTON";
+    public static final String FRAGMENT_CONFIRM_CLOSE = "FRAGMENT_CONFIRM_CLOSE";
 
     //FRAGMENT OBJECT KEYS
+    public static final String CONFIRM_CLOSE_MESSAGE = "CONFIRM_CLOSE_MESSAGE";
     public static final String TRANSACTION_OBJECT = "TRANSACTION_OBJECT";
+    public static final String LOGGED_IN_OBJECT = "LOGGED_IN_OBJECT";
     public static final String REPEAT_OBJECT = "REPEAT_OBJECT";
     public static final String AMOUNT_OBJECT = "AMOUNT_OBJECT";
     public static final String CATEGORY_OBJECT = "CATEGORY_OBJECT";

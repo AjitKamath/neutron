@@ -1456,7 +1456,9 @@ public class CalendarDbService extends SQLiteOpenHelper {
         StringBuilder sqlQuerySB = new StringBuilder(50);
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" REPEAT_ID, ");
-        sqlQuerySB.append(" REPEAT_NAME ");
+        sqlQuerySB.append(" REPEAT_NAME, ");
+        sqlQuerySB.append(" REPEAT_IS_DEF, ");
+        sqlQuerySB.append(" REPEAT_IMG ");
 
         sqlQuerySB.append(" FROM ");
         sqlQuerySB.append(DB_TABLE_REPEAT);
@@ -1469,6 +1471,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
             RepeatMO repeatMO = new RepeatMO();
             repeatMO.setREPEAT_ID(ColumnFetcher.getInstance().loadString(cursor, "REPEAT_ID"));
             repeatMO.setREPEAT_NAME(ColumnFetcher.getInstance().loadString(cursor, "REPEAT_NAME"));
+            repeatMO.setREPEAT_IS_DEF(ColumnFetcher.getInstance().loadString(cursor, "REPEAT_IS_DEF"));
+            repeatMO.setREPEAT_IMG(ColumnFetcher.getInstance().loadString(cursor, "REPEAT_IMG"));
 
             repeatMOList.add(repeatMO);
         }
@@ -1482,7 +1486,9 @@ public class CalendarDbService extends SQLiteOpenHelper {
         StringBuilder sqlQuerySB = new StringBuilder(50);
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" CAT_ID, ");
-        sqlQuerySB.append(" CAT_NAME ");
+        sqlQuerySB.append(" CAT_NAME, ");
+        sqlQuerySB.append(" CAT_IS_DEF, ");
+        sqlQuerySB.append(" CAT_IMG ");
 
         sqlQuerySB.append(" FROM ");
         sqlQuerySB.append(DB_TABLE_CATEGORY);
@@ -1503,6 +1509,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
             CategoryMO categoryMO = new CategoryMO();
             categoryMO.setCAT_ID(ColumnFetcher.getInstance().loadString(cursor, "CAT_ID"));
             categoryMO.setCAT_NAME(ColumnFetcher.getInstance().loadString(cursor, "CAT_NAME"));
+            categoryMO.setCAT_IMG(ColumnFetcher.getInstance().loadString(cursor, "CAT_IMG"));
+            categoryMO.setCAT_IS_DEF(ColumnFetcher.getInstance().loadString(cursor, "CAT_IS_DEF"));
 
             categoryList.add(categoryMO);
         }
@@ -1516,7 +1524,9 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" SPNT_ON_ID, ");
-        sqlQuerySB.append(" SPNT_ON_NAME ");
+        sqlQuerySB.append(" SPNT_ON_NAME, ");
+        sqlQuerySB.append(" SPNT_ON_IMG, ");
+        sqlQuerySB.append(" SPNT_ON_IS_DEF ");
 
         sqlQuerySB.append(" FROM ");
         sqlQuerySB.append(DB_TABLE_SPENTON);
@@ -1537,6 +1547,8 @@ public class CalendarDbService extends SQLiteOpenHelper {
             SpentOnMO spentOnMO = new SpentOnMO();
             spentOnMO.setSPNT_ON_ID(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_ID"));
             spentOnMO.setSPNT_ON_NAME(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_NAME"));
+            spentOnMO.setSPNT_ON_IMG(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_IMG"));
+            spentOnMO.setSPNT_ON_IS_DEF(ColumnFetcher.getInstance().loadString(cursor, "SPNT_ON_IS_DEF"));
 
             spentOnList.add(spentOnMO);
         }
@@ -1561,6 +1573,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" ACC.ACC_NAME, ");
         sqlQuerySB.append(" ACC.ACC_ID, ");
         sqlQuerySB.append(" ACC.ACC_IS_DEF, ");
+        sqlQuerySB.append(" ACC.ACC_IMG, ");
 
         sqlQuerySB.append(" (( SELECT ");
         sqlQuerySB.append(" IFNULL(SUM(TRAN_AMT), '0') ");
@@ -1642,7 +1655,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
 
-        String accountIdStr, accountNameStr, currecyStr, accountIsDefaultStr;
+        String accountIdStr, accountNameStr, currecyStr, accountIsDefaultStr, accountImgStr;
         Double accountTotal;
         AccountsMO accountsModel = null;
         while (cursor.moveToNext()){
@@ -1651,6 +1664,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             accountTotal = ColumnFetcher.loadDouble(cursor, "ACC_TOTAL");
             currecyStr = ColumnFetcher.loadString(cursor, "CUR_NAME");
             accountIsDefaultStr = ColumnFetcher.loadString(cursor, "ACC_IS_DEF");
+            accountImgStr = ColumnFetcher.loadString(cursor, "ACC_IMG");
 
             accountsModel = new AccountsMO();
             accountsModel.setACC_ID(accountIdStr);
@@ -1658,6 +1672,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             accountsModel.setACC_TOTAL(accountTotal);
             accountsModel.setCurrency(currecyStr);
             accountsModel.setACC_IS_DEF(accountIsDefaultStr);
+            accountsModel.setACC_IMG(accountImgStr);
             accountsList.add(accountsModel);
         }
         cursor.close();

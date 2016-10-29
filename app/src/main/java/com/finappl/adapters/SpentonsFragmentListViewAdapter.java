@@ -56,6 +56,7 @@ public class SpentonsFragmentListViewAdapter extends BaseAdapter {
 
         SpentOnMO spentOnMO = spentonsList.get(position);
         mHolder.spentonTV.setText(spentOnMO.getSPNT_ON_NAME());
+        mHolder.spentonIV.setBackgroundResource(Integer.parseInt(spentOnMO.getSPNT_ON_IMG()));
         if(selectedSpentonIdStr.equalsIgnoreCase(spentOnMO.getSPNT_ON_ID())){
             mHolder.spentonSelectedV.setVisibility(View.VISIBLE);
         }

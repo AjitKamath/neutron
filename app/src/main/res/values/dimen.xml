@@ -19,7 +19,7 @@
     <dimen name="text_form_text_size">18sp</dimen>
     <dimen name="text_form_text_height">30dp</dimen>
 
-    <dimen name="screen_components_padding_from_walls">10dp</dimen>
+    <dimen name="screen_components_padding_from_walls">15dp</dimen>
     <dimen name="spinner_padding_from_walls">5dp</dimen>
     <dimen name="screen_half_width">140dp</dimen>
     <dimen name="screen_full_width">330dp</dimen>
@@ -64,6 +64,7 @@
 
     <!--Fragment props-->
     <dimen name="fragment_full_width">330dp</dimen>
+    <dimen name="fragment_half_width">165dp</dimen>
     <dimen name="fragment_full_height">535dp</dimen>
     <integer name="fragment_options_full_width">600</integer>
     <integer name="fragment_options_full_height">800</integer>

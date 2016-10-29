@@ -293,4 +293,10 @@
     <color name="numeric_popper_text">#040404</color>
     <color name="numeric_popper_text_disabled">#727272</color>
 
+    <!--Text View Click-->
+    <color name="textview_click_light">#B6B6B6</color>
+    <color name="textview_bg_light">#FFFFFF</color>
+    <color name="textview_click_dark">#FF6347</color>
+    <color name="textview_bg_dark">#727272</color>
+
 </resources>

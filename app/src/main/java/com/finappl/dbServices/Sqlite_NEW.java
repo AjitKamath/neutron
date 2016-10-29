@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 
 import com.finappl.utils.ColumnFetcher;
@@ -50,11 +52,17 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		String categoriesStrArr[] = CATEGORIES.split(",");
 		values = new ContentValues();
 		for(String iterCategoriesStrArr : categoriesStrArr){
-			values.put("CAT_ID", iterCategoriesStrArr);
-			values.put("USER_ID", ADMIN_USERID);
-			values.put("CAT_NAME", iterCategoriesStrArr);
+			String iterCategoriesStrArrArr[] = iterCategoriesStrArr.split("-");
 
-			if(iterCategoriesStrArr.equalsIgnoreCase(DEFAULT_CATEGORY)){
+			String categoryImageStr = iterCategoriesStrArrArr[1];
+			String categoryNameStr = iterCategoriesStrArrArr[0];
+
+			values.put("CAT_ID", categoryNameStr);
+			values.put("USER_ID", ADMIN_USERID);
+			values.put("CAT_NAME", categoryNameStr);
+			values.put("CAT_IMG", categoryImageStr);
+
+			if(categoryNameStr.equalsIgnoreCase(DEFAULT_CATEGORY)){
 				values.put("CAT_IS_DEF", DB_AFFIRMATIVE);
 			}
 			else{
@@ -71,11 +79,17 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		String accountStrArr[] = ACCOUNTS.split(",");
 		values = new ContentValues();
 		for(String iterAccountStrArr : accountStrArr){
-			values.put("ACC_ID", iterAccountStrArr);
-			values.put("USER_ID", ADMIN_USERID);
-			values.put("ACC_NAME", iterAccountStrArr);
+			String iterAccountStrArrArr[] = iterAccountStrArr.split("-");
 
-			if(iterAccountStrArr.equalsIgnoreCase(DEFAULT_ACCOUNT)){
+			String accountImageStr = iterAccountStrArrArr[1];
+			String accountNameStr = iterAccountStrArrArr[0];
+
+			values.put("ACC_ID", accountNameStr);
+			values.put("USER_ID", ADMIN_USERID);
+			values.put("ACC_NAME", accountNameStr);
+			values.put("ACC_IMG", accountImageStr);
+
+			if(accountNameStr.equalsIgnoreCase(DEFAULT_ACCOUNT)){
 				values.put("ACC_IS_DEF", DB_AFFIRMATIVE);
 			}
 			else{
@@ -92,11 +106,17 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		String spentOnStrArr[] = SPENT_ONS.split(",");
 		values = new ContentValues();
 		for(String iterSpentOnStrArr : spentOnStrArr){
-			values.put("SPNT_ON_ID", iterSpentOnStrArr);
-			values.put("USER_ID", ADMIN_USERID);
-			values.put("SPNT_ON_NAME", iterSpentOnStrArr);
+			String iterSpentOnStrArrArr[] = iterSpentOnStrArr.split("-");
 
-			if(iterSpentOnStrArr.equalsIgnoreCase(DEFAULT_SPENTON)){
+			String spentOnImageStr = iterSpentOnStrArrArr[1];
+			String spentOnNameStr = iterSpentOnStrArrArr[0];
+
+			values.put("SPNT_ON_ID", spentOnNameStr);
+			values.put("USER_ID", ADMIN_USERID);
+			values.put("SPNT_ON_NAME", spentOnNameStr);
+			values.put("SPNT_ON_IMG", spentOnImageStr);
+
+			if(spentOnNameStr.equalsIgnoreCase(DEFAULT_SPENTON)){
 				values.put("SPNT_ON_IS_DEF", DB_AFFIRMATIVE);
 			}
 			else{
@@ -113,10 +133,16 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		String repeatsStrArr[] = REPEATS.split(",");
 		values = new ContentValues();
 		for(String iterArr : repeatsStrArr){
-			values.put("REPEAT_ID", iterArr);
-			values.put("REPEAT_NAME", iterArr);
+			String iterArrArr[] = iterArr.split("-");
 
-			if(iterArr.equalsIgnoreCase(DEFAULT_REPEAT)){
+			String repeatImageStr = iterArrArr[1];
+			String repeatNameStr = iterArrArr[0];
+
+			values.put("REPEAT_ID", repeatNameStr);
+			values.put("REPEAT_NAME", repeatNameStr);
+			values.put("REPEAT_IMG", repeatImageStr);
+
+			if(repeatNameStr.equalsIgnoreCase(DEFAULT_REPEAT)){
 				values.put("REPEAT_IS_DEF", DB_AFFIRMATIVE);
 			}
 			else{
@@ -194,6 +220,7 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" (REPEAT_ID TEXT PRIMARY KEY, ");				//pk
 		sb.append(" REPEAT_NAME TEXT NOT NULL, ");
 		sb.append(" REPEAT_IS_DEF TEXT NOT NULL, ");
+		sb.append(" REPEAT_IMG TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME) ");
 
@@ -268,6 +295,7 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" USER_ID TEXT NOT NULL, ");					//fk1
 		sb.append(" SPNT_ON_NAME TEXT NOT NULL, ");
 		sb.append(" SPNT_ON_IS_DEF TEXT NOT NULL, ");
+		sb.append(" SPNT_ON_IMG TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
 		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
@@ -285,6 +313,7 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" USER_ID TEXT NOT NULL, ");				//fk1
 		sb.append(" ACC_NAME TEXT NOT NULL, ");
 		sb.append(" ACC_IS_DEF TEXT NOT NULL, ");
+		sb.append(" ACC_IMG TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
 		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
@@ -301,6 +330,7 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" (CAT_ID TEXT PRIMARY KEY, ");			//pk
 		sb.append(" USER_ID TEXT NOT NULL, ");				//FK1
 		sb.append(" CAT_NAME TEXT NOT NULL, ");
+		sb.append(" CAT_IMG TEXT NOT NULL, ");
 		sb.append(" CAT_IS_DEF TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");

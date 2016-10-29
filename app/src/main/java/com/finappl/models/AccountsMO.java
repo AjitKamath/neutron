@@ -10,6 +10,7 @@ public class AccountsMO implements Serializable {
     private String ACC_NAME;
     private String ACC_IS_DEL;
     private String ACC_IS_DEF;
+    private String ACC_IMG;
     private Double ACC_BUDGET;
     private Date CREAT_DTM;
     private Date MOD_DTM;
@@ -113,5 +114,13 @@ public class AccountsMO implements Serializable {
 
     public void setACC_IS_DEF(String ACC_IS_DEF) {
         this.ACC_IS_DEF = ACC_IS_DEF;
+    }
+
+    public String getACC_IMG() {
+        return ACC_IMG;
+    }
+
+    public void setACC_IMG(String ACC_IMG) {
+        this.ACC_IMG = ACC_IMG;
     }
 }

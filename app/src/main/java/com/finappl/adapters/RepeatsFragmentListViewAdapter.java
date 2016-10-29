@@ -57,6 +57,7 @@ public class RepeatsFragmentListViewAdapter extends BaseAdapter {
 
         RepeatMO repeatMO = repeatsList.get(position);
         mHolder.repeatTV.setText(repeatMO.getREPEAT_NAME());
+        mHolder.repeatIV.setBackgroundResource(Integer.parseInt(repeatMO.getREPEAT_IMG()));
         if(selectedRepaetIdStr.equalsIgnoreCase(repeatMO.getREPEAT_ID())){
             mHolder.repeatSelectedV.setVisibility(View.VISIBLE);
         }

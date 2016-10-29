@@ -1,18 +1,22 @@
 package com.finappl.adapters;
 
 import android.content.Context;
+import android.graphics.LinearGradient;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.models.AccountsMO;
 import com.finappl.models.CategoryMO;
+import com.finappl.models.UserMO;
+import com.finappl.utils.FinappleUtility;
 
 import java.util.List;
 
@@ -25,13 +29,15 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private String selectedAccountIdStr;
     private List<AccountsMO> accountsList;
+    private UserMO loggedInUserMO;
 
-    public AccountsFragmentListViewAdapter(Context mContext, List<AccountsMO> accountsList, String selectedAccountIdStr) {
+    public AccountsFragmentListViewAdapter(Context mContext, List<AccountsMO> accountsList, String selectedAccountIdStr, UserMO loggedInUserMO) {
         super();
 
         this.mContext = mContext;
         this.selectedAccountIdStr = selectedAccountIdStr;
         this.accountsList = accountsList;
+        this.loggedInUserMO = loggedInUserMO;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -44,10 +50,12 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
             mHolder = new ViewHolder();
             convertView = inflater.inflate(layout, null);
 
-            mHolder.accountRL = (RelativeLayout) convertView.findViewById(R.id.accountRLId);
+            mHolder.accountLL = (LinearLayout) convertView.findViewById(R.id.accountLLId);
             mHolder.accountIV = (ImageView) convertView.findViewById(R.id.accountIVId);
             mHolder.accountTV = (TextView) convertView.findViewById(R.id.accountTVId);
-            mHolder.accountSelectedV = (View) convertView.findViewById(R.id.accountSelectedVId);
+            mHolder.accountSelectedV = convertView.findViewById(R.id.accountSelectedVId);
+            mHolder.accountCurrencyCodeTV = (TextView) convertView.findViewById(R.id.accountCurrencyCodeTVId);
+            mHolder.accountTotalTV = (TextView) convertView.findViewById(R.id.accountTotalTVId);
 
             convertView.setTag(layout, mHolder);
 
@@ -57,6 +65,10 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
 
         AccountsMO accountMO = accountsList.get(position);
         mHolder.accountTV.setText(accountMO.getACC_NAME());
+        mHolder.accountCurrencyCodeTV.setText(loggedInUserMO.getCUR_CODE().toUpperCase());
+        mHolder.accountIV.setBackgroundResource(Integer.parseInt(accountMO.getACC_IMG()));
+        mHolder.accountTotalTV = FinappleUtility.formatAmountView(mHolder.accountTotalTV, loggedInUserMO, accountMO.getACC_TOTAL());
+
         if(selectedAccountIdStr.equalsIgnoreCase(accountMO.getACC_ID())){
             mHolder.accountSelectedV.setVisibility(View.VISIBLE);
         }
@@ -67,7 +79,7 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
 
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont(mHolder.accountRL, robotoCondensedLightFont);
+        setFont(mHolder.accountLL, robotoCondensedLightFont);
 
         return convertView;
     }
@@ -103,9 +115,11 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        RelativeLayout accountRL;
+        LinearLayout accountLL;
         ImageView accountIV;
         TextView accountTV;
+        TextView accountCurrencyCodeTV;
+        TextView accountTotalTV;
         View accountSelectedV;
     }
 

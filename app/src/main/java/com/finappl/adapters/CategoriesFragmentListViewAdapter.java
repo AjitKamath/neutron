@@ -62,6 +62,7 @@ public class CategoriesFragmentListViewAdapter extends BaseAdapter {
 
         CategoryMO categoryMO = categoriesList.get(position);
         mHolder.categoryTV.setText(categoryMO.getCAT_NAME());
+        mHolder.categoryIV.setBackgroundResource(Integer.parseInt(categoryMO.getCAT_IMG()));
         if(selectedCategoryIdStr.equalsIgnoreCase(categoryMO.getCAT_ID())){
             mHolder.categorySelectedV.setVisibility(View.VISIBLE);
         }

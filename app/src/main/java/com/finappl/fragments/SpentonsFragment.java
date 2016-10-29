@@ -3,6 +3,7 @@ package com.finappl.fragments;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.adapters.AccountsFragmentListViewAdapter;
@@ -33,6 +35,7 @@ public class SpentonsFragment extends DialogFragment {
     private Context mContext;
 
     //components
+    private RelativeLayout spentonsRL;
     private ListView spentonsLV;
     //end of components
 
@@ -65,9 +68,12 @@ public class SpentonsFragment extends DialogFragment {
     }
 
     private void initComps(View view){
+        spentonsRL =(RelativeLayout) view.findViewById(R.id.spentonsRLId);
         spentonsLV = (ListView) view.findViewById(R.id.spentonsContentLVId);
 
         spentonsLV.setOnItemClickListener(listViewItemClickListener);
+
+        setFont(spentonsRL);
     }
 
     AdapterView.OnItemClickListener listViewItemClickListener;
@@ -100,12 +106,27 @@ public class SpentonsFragment extends DialogFragment {
         Dialog d = getDialog();
         if (d!=null) {
             int width = 600;
-            int height = 800;
+            int height = 650;
             d.getWindow().setLayout(width, height);
         }
     }
 
-    public interface DialogResultListener {
-        void onFinishUserDialog(String str);
+    //method iterates over each component in the activity and when it finds a text view..sets its font
+    public void setFont(ViewGroup group) {
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+
+        int count = group.getChildCount();
+        View v;
+
+        for(int i = 0; i < count; i++) {
+            v = group.getChildAt(i);
+            if(v instanceof TextView) {
+                ((TextView) v).setTypeface(robotoCondensedLightFont);
+            }
+            else if(v instanceof ViewGroup) {
+                setFont((ViewGroup) v);
+            }
+        }
     }
 }

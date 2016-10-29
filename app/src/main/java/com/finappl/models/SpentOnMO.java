@@ -8,6 +8,7 @@ public class SpentOnMO
 	private String USER_ID;
 	private String SPNT_ON_NAME;
 	private String SPNT_ON_IS_DEF;
+	private String SPNT_ON_IMG;
 	private Date CREAT_DTM;
 	private Date MOD_DTM;
 
@@ -57,5 +58,13 @@ public class SpentOnMO
 
 	public void setMOD_DTM(Date MOD_DTM) {
 		this.MOD_DTM = MOD_DTM;
+	}
+
+	public String getSPNT_ON_IMG() {
+		return SPNT_ON_IMG;
+	}
+
+	public void setSPNT_ON_IMG(String SPNT_ON_IMG) {
+		this.SPNT_ON_IMG = SPNT_ON_IMG;
 	}
 }

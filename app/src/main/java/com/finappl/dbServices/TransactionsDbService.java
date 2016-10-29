@@ -127,7 +127,8 @@ public class TransactionsDbService extends SQLiteOpenHelper {
         StringBuilder sqlQuerySB = new StringBuilder(50);
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" CAT_ID, ");
-        sqlQuerySB.append(" CAT_NAME ");
+        sqlQuerySB.append(" CAT_NAME, ");
+        sqlQuerySB.append(" CAT_IMG ");
 
         sqlQuerySB.append(" FROM ");
         sqlQuerySB.append(DB_TABLE_CATEGORY);
@@ -143,6 +144,7 @@ public class TransactionsDbService extends SQLiteOpenHelper {
             CategoryMO categoryMO = new CategoryMO();
             categoryMO.setCAT_ID(ColumnFetcher.loadString(cursor, "CAT_ID"));
             categoryMO.setCAT_NAME(ColumnFetcher.loadString(cursor, "CAT_NAME"));
+            categoryMO.setCAT_IMG(ColumnFetcher.loadString(cursor, "CAT_IMG"));
 
             return  categoryMO;
         }

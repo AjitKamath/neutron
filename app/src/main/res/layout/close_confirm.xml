@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/closeConfirmLLId"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/finappleBackground"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/screen_components_padding_from_walls">
+
+    <TextView
+        android:id="@+id/closeConfirmMessageTVId"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Discard Transaction ?"
+        android:textColor="@color/tertiaryText"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/closeConfirmOKTVId"
+            android:gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:text="OK"
+            android:textColor="@drawable/positive_tv_touch_dark"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/closeConfirmCancelTVId"
+            android:gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:text="CANCEL"
+            android:textColor="@drawable/nagative_tv_touch_dark"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

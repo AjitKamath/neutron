@@ -7,6 +7,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -43,6 +46,7 @@ import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
@@ -50,15 +54,18 @@ import java.util.List;
 
 import static com.finappl.utils.Constants.ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.CATEGORY_OBJECT;
+import static com.finappl.utils.Constants.CONFIRM_CLOSE_MESSAGE;
 import static com.finappl.utils.Constants.DB_AFFIRMATIVE;
 import static com.finappl.utils.Constants.DB_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.DB_TIME_FORMAT_SDF;
 import static com.finappl.utils.Constants.FRAGMENT_ACCOUNT;
 import static com.finappl.utils.Constants.FRAGMENT_AMOUNT;
 import static com.finappl.utils.Constants.FRAGMENT_CATEGORY;
+import static com.finappl.utils.Constants.FRAGMENT_CONFIRM_CLOSE;
 import static com.finappl.utils.Constants.FRAGMENT_REPEAT;
 import static com.finappl.utils.Constants.FRAGMENT_SPENTON;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION;
+import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.REPEAT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_AMOUNT_OBJECT;
@@ -73,13 +80,14 @@ import static com.finappl.utils.Constants.UI_TIME_FORMAT_SDF;
 /**
  * Created by ajit on 21/3/16.
  */
-public class TransactionFragment extends DialogFragment implements ImageButton.OnClickListener {
+public class TransactionFragment extends DialogFragment {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
 
     //components
+    private RelativeLayout addUpdateTransactionRL;
     private TextView addUpdateDateTV;
-    private ImageView addUpdateTranBackImg;
+    private TextView transactionHeaderCloseTV;
     private EditText addUpdateTranNameET;
     private TextView transactionContentCurrencyTV;
     private TextView transactionContentAmountTV;
@@ -93,9 +101,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     private RadioButton addUpdateTranIncRadio;
     private RadioGroup addUpdateTranExpIncRadioGrp;
     private EditText addUpdateNoteET;
-    private ImageView transactionSaveIV;
-    private CheckBox transactionSchedueCB;
-    private LinearLayout transactionSchedLL;
+    private TextView transactionHeaderSaveTV;
     private LinearLayout transactionContentRepeatLL;
     private CheckBox transactionContentRepeatCB;
     private View transactionContentNotifyDivider;
@@ -107,7 +113,6 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     private TextView transactionContentAutoAddTimeTV;
     private View transactionContentScheduleDivider;
     private LinearLayout transactionContentScheduleLL;
-    private TextView transactionContentScheduleFromDateTV;
     private TextView transactionContentScheduleUptoDateTV;
 
     private UserMO loggedInUserObj;
@@ -131,7 +136,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         Dialog d = getDialog();
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        getTransactionFromBundle();
+        getDataFromBundle();
         initComps(view);
         setupPage();
 
@@ -173,8 +178,9 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         }
     }
 
-    private void getTransactionFromBundle() {
+    private void getDataFromBundle() {
         transactionModelObj = (TransactionModel) getArguments().get(TRANSACTION_OBJECT);
+        loggedInUserObj = (UserMO) getArguments().get(LOGGED_IN_OBJECT);
     }
 
     private void setupPage() {
@@ -195,19 +201,16 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
             addUpdateDateTV.setText(dateStr);
 
             //set default category to be set
-            CategoryMO categoryMO = transactionsDbService.getDefaultCategory(loggedInUserObj.getUSER_ID());
-            setCategory(categoryMO);
+            setCategory(getDefaultCategory(categoriesList));
 
             //set default account to be set
             setAccount(getDefaultAccount(accountList));
 
             //set default spenton to be set
-            SpentOnMO spentOnMO = transactionsDbService.getDefaultSpentOn(loggedInUserObj.getUSER_ID());
-            setSpenton(spentOnMO);
+            setSpenton(getDefaultSpenton(spentOnList));
 
             //set default Repeat to be set
-            RepeatMO repeatMO = transactionsDbService.getDefaultRepeat();
-            setRepeat(repeatMO);
+            setRepeat(getDefaultRepeat(repeatsList));
 
             //REPEAT
             transactionContentRepeatLL.setVisibility(View.GONE);
@@ -221,8 +224,57 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
             //SCHEDULE
             transactionContentScheduleDivider.setVisibility(View.GONE);
             transactionContentScheduleLL.setVisibility(View.GONE);
-            transactionContentScheduleFromDateTV.setText(dateStr);
         }
+    }
+
+    private void saveUpdateTransaction(){
+        String messageStr = "Error !!";
+
+        getInputs();
+
+        if(transactionModelObj == null){
+            showToast("Error !!");
+            return;
+        }
+        else if(transactionModelObj.getTRAN_AMT() == null || transactionModelObj.getTRAN_AMT().equals(0.0)){
+            showToast("Enter Transaction Amount");
+            return;
+        }
+        else if(transactionModelObj.getTRAN_NAME() == null || transactionModelObj.getTRAN_NAME().trim().isEmpty()){
+            showToast("Enter Transaction Title");
+            return;
+        }
+
+         //if transactionModelObj contains transactionId, then its an update. if not its a new transaction
+         if(transactionModelObj.getTRAN_ID() == null) {
+             transactionModelObj.setTRAN_ID(IdGenerator.getInstance().generateUniqueId("TRAN"));
+             long result = transactionsDbService.addNewTransaction(transactionModelObj);
+
+             if (result == -1) {
+                 messageStr = "Failed to create a new Transaction !";
+             } else {
+                 messageStr = "New Transaction created";
+             }
+         }
+         else{
+            long result = transactionsDbService.updateOldTransaction(transactionModelObj);
+            if(result == 0) {
+                messageStr = "Failed to update Transaction/Account !";
+            } else if(result == 1){
+                messageStr = "Transaction updated";
+            }
+            else{
+                messageStr = "Unknown error !";
+            }
+         }
+
+        closeFragment(messageStr);
+    }
+
+    private void closeFragment(String messageStr){
+        CalendarActivity activity = (CalendarActivity) this.getActivity();
+        activity.onFinishUserDialog(messageStr);
+        this.dismiss();
     }
 
     private void getMasterData() {
@@ -250,24 +302,6 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         date.show(getFragmentManager(), "Date Picker");
     }
 
-    private void showScheduleFromDatePicker(int year, int month, int day) {
-        DatePickerFragment date = new DatePickerFragment();
-        /**
-         * Set Up Current Date Into dialog
-         */
-        Bundle args = new Bundle();
-        args.putInt("year", year);
-        args.putInt("month", month-1);
-        args.putInt("day", day);
-        date.setArguments(args);
-        /**
-         * Set Call back to capture selected date
-         */
-        date.setCallBack(tranDateListener);
-        date.show(getFragmentManager(), "Date Picker");
-    }
-
-
     private void showScheduleUptoDatePicker(int year, int month, int day) {
         DatePickerFragment date = new DatePickerFragment();
         /**
@@ -281,7 +315,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         /**
          * Set Call back to capture selected date
          */
-        date.setCallBack(tranDateListener);
+        date.setCallBack(scheduleUptoDateListener);
         date.show(getFragmentManager(), "Date Picker");
     }
 
@@ -320,8 +354,9 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     }
 
     private void initComps(View view){
+        addUpdateTransactionRL = (RelativeLayout) view.findViewById(R.id.addUpdateTransactionRLId);
         addUpdateDateTV = (TextView) view.findViewById(R.id.addUpdateDateTVId);
-        addUpdateTranBackImg = (ImageView) view.findViewById(R.id.addUpdateTranBackImgId);
+        transactionHeaderCloseTV = (TextView) view.findViewById(R.id.transactionHeaderCloseTVId);
         addUpdateTranNameET = (EditText) view.findViewById(R.id.addUpdateTranNameETId);
         transactionContentCurrencyTV = (TextView) view.findViewById(R.id.transactionContentCurrencyTVId);
         transactionContentAmountTV = (TextView) view.findViewById(R.id.transactionContentAmountTVId);
@@ -339,7 +374,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         addUpdateTranIncRadio = (RadioButton) view.findViewById(R.id.addUpdateTranIncRadioId);
         addUpdateTranExpIncRadioGrp = (RadioGroup) view.findViewById(R.id.addUpdateTranExpIncRadioGrpId);
         addUpdateNoteET = (EditText) view.findViewById(R.id.addUpdateNoteETId);
-        transactionSaveIV = (ImageView) view.findViewById(R.id.transactionSaveIVId);
+        transactionHeaderSaveTV = (TextView) view.findViewById(R.id.transactionHeaderSaveTVId);
 
         transactionContentRepeatLL = (LinearLayout) view.findViewById(R.id.transactionContentRepeatLLId);
         transactionContentRepeatCB = (CheckBox) view.findViewById(R.id.transactionContentRepeatCBId);
@@ -357,7 +392,6 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         transactionContentScheduleDivider = view.findViewById(R.id.transactionContentScheduleDividerId);
         transactionContentScheduleLL = (LinearLayout) view.findViewById(R.id.transactionContentScheduleLLId);
 
-        transactionContentScheduleFromDateTV = (TextView) view.findViewById(R.id.transactionContentScheduleFromDateTVId);
         transactionContentScheduleUptoDateTV = (TextView) view.findViewById(R.id.transactionContentScheduleUptoDateTVId);
 
         addUpdateDateTV.setOnClickListener(new View.OnClickListener() {
@@ -381,27 +415,6 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
             }
         });
 
-        transactionContentScheduleFromDateTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    String dateStr = DB_DATE_FORMAT_SDF.format(UI_DATE_FORMAT_SDF.parse(String.valueOf(((TextView)v).getText())));
-                    String dateStrArr[] = dateStr.split("-");
-
-                    int year = Integer.parseInt(dateStrArr[0]);
-                    int month = Integer.parseInt(dateStrArr[1]);
-                    int day = Integer.parseInt(dateStrArr[2]);
-
-                    showScheduleFromDatePicker(year, month, day);
-
-                }
-                catch(ParseException e){
-                    Log.e(CLASS_NAME, "Error while parsing the date : "+String.valueOf(((TextView)v).getText())+ " : "+e);
-                }
-
-            }
-        });
-
         transactionContentScheduleUptoDateTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -409,7 +422,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
                     String dateStr = String.valueOf(((TextView)v).getText());
 
                     if("FOREVER".equalsIgnoreCase(dateStr)){
-                        dateStr = DB_DATE_FORMAT_SDF.format(UI_DATE_FORMAT_SDF.parse(String.valueOf(transactionContentScheduleFromDateTV.getText())));
+                        dateStr = DB_DATE_FORMAT_SDF.format(UI_DATE_FORMAT_SDF.parse(String.valueOf(addUpdateDateTV.getText())));
                     }
                     else{
                         dateStr = DB_DATE_FORMAT_SDF.format(UI_DATE_FORMAT_SDF.parse(String.valueOf(((TextView)v).getText())));
@@ -470,8 +483,36 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
             }
         });
 
-        transactionSaveIV.setOnClickListener(this);
-        addUpdateTranBackImg.setOnClickListener(this);
+        transactionHeaderSaveTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveUpdateTransaction();
+            }
+        });
+
+        transactionHeaderCloseTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getInputs();
+
+                boolean hasInput = false;
+                if(transactionModelObj != null){
+                    if(transactionModelObj.getTRAN_NAME() != null && !transactionModelObj.getTRAN_NAME().trim().isEmpty()){
+                        hasInput = true;
+                    }
+                    else if(transactionModelObj.getTRAN_AMT() != null && !transactionModelObj.getTRAN_AMT().equals(0.0)){
+                        hasInput = true;
+                    }
+                }
+
+                if(hasInput){
+                    showConfirmCloseFragment();
+                }
+                else{
+                    closeFragment(null);
+                }
+            }
+        });
 
         transactionContentAmountTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -543,13 +584,39 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
             }
         });
 
-        addUpdateTranNameET.addTextChangedListener(fieldTextWatcher);
-        transactionContentAmountTV.addTextChangedListener(fieldTextWatcher);
+        setFont(addUpdateTransactionRL);
     }
 
     private AccountsMO getDefaultAccount(List<AccountsMO> accountList){
         for(AccountsMO iterList : accountList){
             if(iterList.getACC_IS_DEF().equalsIgnoreCase(DB_AFFIRMATIVE)){
+                return iterList;
+            }
+        }
+        return null;
+    }
+
+    private CategoryMO getDefaultCategory(List<CategoryMO> categoriesList){
+        for(CategoryMO iterList : categoriesList){
+            if(iterList.getCAT_IS_DEF().equalsIgnoreCase(DB_AFFIRMATIVE)){
+                return iterList;
+            }
+        }
+        return null;
+    }
+
+    private SpentOnMO getDefaultSpenton(List<SpentOnMO> spentOnList){
+        for(SpentOnMO iterList : spentOnList){
+            if(iterList.getSPNT_ON_IS_DEF().equalsIgnoreCase(DB_AFFIRMATIVE)){
+                return iterList;
+            }
+        }
+        return null;
+    }
+
+    private RepeatMO getDefaultRepeat(List<RepeatMO> repeatMOList){
+        for(RepeatMO iterList : repeatMOList){
+            if(iterList.getREPEAT_IS_DEF().equalsIgnoreCase(DB_AFFIRMATIVE)){
                 return iterList;
             }
         }
@@ -623,6 +690,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         Bundle bundle = new Bundle();
         bundle.putSerializable(ACCOUNT_OBJECT, (Serializable) accountList);
         bundle.putSerializable(SELECTED_ACCOUNT_OBJECT, ((AccountsMO)transactionContentAccountLL.getTag()).getACC_ID());
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
 
@@ -651,101 +719,28 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         spentonsFragment.show(manager, FRAGMENT_SPENTON);
     }
 
-    private void getLoggedInUser(){
-        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
-    }
-
-    @Override
-    public void onClick(View v) {
-        String messageStr = "Error !!";
-        if(v.getId() == transactionSaveIV.getId()){
-            getInputs();
-
-            //if transactionModelObj contains transactionId, then its an update. if not its a new transaction
-            if(transactionModelObj.getTRAN_ID() == null){
-                transactionModelObj.setTRAN_ID(IdGenerator.getInstance().generateUniqueId("TRAN"));
-                long result = transactionsDbService.addNewTransaction(transactionModelObj);
-
-                if(result == -1) {
-                    messageStr = "Failed to create a new Transaction !";
-                }
-                else{
-                    messageStr = "New Transaction created";
-                }
-            }
-            else{
-                long result = transactionsDbService.updateOldTransaction(transactionModelObj);
-
-                if(result == 0) {
-                    messageStr = "Failed to update Transaction/Account !";
-                } else if(result == 1){
-                    messageStr = "Transaction updated";
-                }
-                else{
-                    messageStr = "Unknown error !";
-                }
-            }
+    private void showConfirmCloseFragment(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_CONFIRM_CLOSE);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
         }
 
-        CalendarActivity activity = (CalendarActivity) this.getActivity();
-        activity.onFinishUserDialog(messageStr);
-        this.dismiss();
-    }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CONFIRM_CLOSE_MESSAGE, "Discard Transaction ?");
 
-    private void setUpSaveButton(){
-        LinearLayout transactionsButtonLL = (LinearLayout) getView().findViewById(R.id.transactionsButtonLLId);
-        if("HIDDEN".equalsIgnoreCase(String.valueOf(transactionSaveIV.getTag()))){
-            transactionsButtonLL.animate().setDuration(250).translationX(-80);
-            transactionSaveIV.setTag("SHOWN");
+        Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
 
-        } else{
-            transactionsButtonLL.animate().setDuration(250).translationX(0);
-            transactionSaveIV.setTag("HIDDEN");
-        }
-    }
-
-    TextWatcher fieldTextWatcher;
-    {
-        fieldTextWatcher = new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                String amountStr = String.valueOf(transactionContentAmountTV.getText());
-
-                if(!String.valueOf(addUpdateTranNameET.getText()).trim().isEmpty() && !(amountStr.equalsIgnoreCase("0") || amountStr.equalsIgnoreCase("0.0"))){
-                    if("HIDDEN".equalsIgnoreCase(String.valueOf(transactionSaveIV.getTag()))){
-                        setUpSaveButton();
-                    }
-                }
-                else{
-                    if("SHOWN".equalsIgnoreCase(String.valueOf(transactionSaveIV.getTag()))){
-                        setUpSaveButton();
-                    }
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-        };
+        CloseConfirmFragment confirmFragment = new CloseConfirmFragment();
+        confirmFragment.setArguments(bundle);
+        confirmFragment.setTargetFragment(currentFrag, 0);
+        confirmFragment.show(manager, FRAGMENT_CONFIRM_CLOSE);
     }
 
     private DatePickerDialog.OnDateSetListener tranDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker arg0, int year, int month, int day) {
             setDate(year, month+1, day, "TRANSACTION_DATE");
-        }
-    };
-
-    private DatePickerDialog.OnDateSetListener scheduleFromDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker arg0, int year, int month, int day) {
-            setDate(year, month+1, day, "SCHEDULE_FROM");
         }
     };
 
@@ -773,15 +768,22 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     private void setDate(int year, int month, int day, String uiComponentStr) {
         try {
             String dateStr = year + "-" + month + "-" + day;
-            dateStr = UI_DATE_FORMAT_SDF.format(DB_DATE_FORMAT_SDF.parseObject(dateStr));
+            dateStr = UI_DATE_FORMAT_SDF.format(DB_DATE_FORMAT_SDF.parse(dateStr));
 
             if("TRANSACTION_DATE".equalsIgnoreCase(uiComponentStr)){
                 addUpdateDateTV.setText(dateStr.toUpperCase());
             }
-            if("SCHEDULE_FROM".equalsIgnoreCase(uiComponentStr)){
-                transactionContentScheduleFromDateTV.setText(dateStr.toUpperCase());
-            }
-            if("SCHEDULE_UPTO".equalsIgnoreCase(uiComponentStr)){
+            else if("SCHEDULE_UPTO".equalsIgnoreCase(uiComponentStr)){
+                String fromDateStr = String.valueOf(addUpdateDateTV.getText());
+
+                Date fromDate = UI_DATE_FORMAT_SDF.parse(fromDateStr);
+                Date uptoDate = UI_DATE_FORMAT_SDF.parse(dateStr);
+
+                if(uptoDate.before(fromDate)){
+                    showToast("Schedule Upto cannot be before Transaction date");
+                    return;
+                }
+
                 transactionContentScheduleUptoDateTV.setText(dateStr.toUpperCase());
             }
         }
@@ -820,8 +822,6 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
         mContext = getActivity().getApplicationContext();
 
         initDb();
-
-        getLoggedInUser();
     }
 
     @Override
@@ -833,7 +833,7 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             d.getWindow().setLayout(width, height);
 
-            //addUpdateTranAmtET.requestFocus();
+            addUpdateTranNameET.requestFocus();
         }
     }
 
@@ -858,36 +858,34 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
     public void onFinishDialog(String amountStr) {
         setAmount(amountStr);
     }
+    public void onFinishDialog() {
+        closeFragment(null);
+    }
 
     private void setCategory(CategoryMO categoryMO){
         ((TextView)transactionContentCategoryLL.findViewById(R.id.transactionContentCategoryTVId)).setText(categoryMO.getCAT_NAME());
+        transactionContentCategoryLL.findViewById(R.id.transactionContentCategoryIVId).setBackgroundResource(Integer.parseInt(categoryMO.getCAT_IMG()));
         transactionContentCategoryLL.setTag(categoryMO);
     }
 
     private void setAccount(AccountsMO accountsMO){
         ((TextView)transactionContentAccountLL.findViewById(R.id.transactionContentAccountTVId)).setText(accountsMO.getACC_NAME());
+        transactionContentAccountLL.findViewById(R.id.transactionContentAccountIVId).setBackgroundResource(Integer.parseInt(accountsMO.getACC_IMG()));
 
-        Double accountTotal = accountsMO.getACC_TOTAL();
-        if(accountTotal <= 0){
-            if(accountTotal < 0) {
-                accountTotal = accountTotal * -1;
-            }
-            transactionContentAccountTotalTV.setTextColor(transactionContentAccountTotalTV.getResources().getColor(R.color.finappleCurrencyNegColor));
-        }
-        else{
-            transactionContentAccountTotalTV.setTextColor(transactionContentAccountTotalTV.getResources().getColor(R.color.finappleCurrencyPosColor));
-        }
-        transactionContentAccountTotalTV.setText(FinappleUtility.formatAmount(loggedInUserObj.getMETRIC(), String.valueOf(accountTotal)));
+        transactionContentAccountTotalTV = FinappleUtility.formatAmountView(transactionContentAccountTotalTV, loggedInUserObj, accountsMO.getACC_TOTAL());
 
         transactionContentAccountLL.setTag(accountsMO);
     }
 
     private void setSpenton(SpentOnMO spentOnMO){
         ((TextView)transactionContentSpentonLL.findViewById(R.id.transactionContentSpentonTVId)).setText(spentOnMO.getSPNT_ON_NAME());
+        transactionContentSpentonLL.findViewById(R.id.transactionContentSpentonIVId).setBackgroundResource(Integer.parseInt(spentOnMO.getSPNT_ON_IMG()));
+
         transactionContentSpentonLL.setTag(spentOnMO);
     }
     private void setRepeat(RepeatMO repeatMo){
         ((TextView)transactionContentRepeatLL.findViewById(R.id.transactionContentRepeatTVId)).setText(repeatMo.getREPEAT_NAME());
+        
         transactionContentRepeatLL.setTag(repeatMo);
     }
 
@@ -897,5 +895,24 @@ public class TransactionFragment extends DialogFragment implements ImageButton.O
 
     public interface DialogResultListener {
         void onFinishUserDialog(String str);
+    }
+
+    //method iterates over each component in the activity and when it finds a text view..sets its font
+    public void setFont(ViewGroup group) {
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+
+        int count = group.getChildCount();
+        View v;
+
+        for(int i = 0; i < count; i++) {
+            v = group.getChildAt(i);
+            if(v instanceof TextView) {
+                ((TextView) v).setTypeface(robotoCondensedLightFont);
+            }
+            else if(v instanceof ViewGroup) {
+                setFont((ViewGroup) v);
+            }
+        }
     }
 }

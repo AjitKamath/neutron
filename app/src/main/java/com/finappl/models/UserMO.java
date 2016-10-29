@@ -1,11 +1,12 @@
 package com.finappl.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by ajit on 9/4/16.
  */
-public class UserMO {
+public class UserMO implements Serializable {
     private String USER_ID;
     private String CNTRY_ID;
     private String METRIC;

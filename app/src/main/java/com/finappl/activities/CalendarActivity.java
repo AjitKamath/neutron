@@ -82,6 +82,7 @@ import java.util.Map;
 import static com.finappl.utils.Constants.FRAGMENT_LOGIN;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
+import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
 import static com.finappl.utils.Constants.UI_DATE_FORMAT;
 import static com.finappl.utils.Constants.UI_DATE_TIME_FORMAT;
@@ -2223,6 +2224,7 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(TRANSACTION_OBJECT, transactionModelObj);
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
         TransactionFragment editNameDialog = new TransactionFragment();
         editNameDialog.setArguments(bundle);
@@ -2287,6 +2289,11 @@ public class CalendarActivity extends LockerActivity implements TransactionFragm
     }
 
     protected void showToast(String string){
+        if(string == null || (string != null && string.trim().isEmpty())){
+            return;
+        }
+
+
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
     }
 
