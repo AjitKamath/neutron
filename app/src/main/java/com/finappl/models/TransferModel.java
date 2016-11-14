@@ -21,11 +21,19 @@ public class TransferModel  implements Serializable {
     private Date TRNFR_DATE;
     private Date CREAT_DTM;
     private Date MOD_DTM;
+    private String REPEAT_ID;
+    private String NOTIFY;
+    private String NOTIFY_TIME;
+    private String SCHD_UPTO_DATE;
 
     private String fromAccName;
+    private String fromAccImg;
     private String toAccName;
+    private String toAccImg;
     private String currency;
     private Date schCreateDate;
+    private String transferDate;
+    private String creatDtm;
 
     public String getCurrency() {
         return currency;
@@ -145,5 +153,69 @@ public class TransferModel  implements Serializable {
 
     public void setTRNFR_DATE(Date TRNFR_DATE) {
         this.TRNFR_DATE = TRNFR_DATE;
+    }
+
+    public String getFromAccImg() {
+        return fromAccImg;
+    }
+
+    public void setFromAccImg(String fromAccImg) {
+        this.fromAccImg = fromAccImg;
+    }
+
+    public String getToAccImg() {
+        return toAccImg;
+    }
+
+    public void setToAccImg(String toAccImg) {
+        this.toAccImg = toAccImg;
+    }
+
+    public String getTransferDate() {
+        return transferDate;
+    }
+
+    public void setTransferDate(String transferDate) {
+        this.transferDate = transferDate;
+    }
+
+    public String getCreatDtm() {
+        return creatDtm;
+    }
+
+    public void setCreatDtm(String creatDtm) {
+        this.creatDtm = creatDtm;
+    }
+
+    public String getREPEAT_ID() {
+        return REPEAT_ID;
+    }
+
+    public void setREPEAT_ID(String REPEAT_ID) {
+        this.REPEAT_ID = REPEAT_ID;
+    }
+
+    public String getNOTIFY() {
+        return NOTIFY;
+    }
+
+    public void setNOTIFY(String NOTIFY) {
+        this.NOTIFY = NOTIFY;
+    }
+
+    public String getNOTIFY_TIME() {
+        return NOTIFY_TIME;
+    }
+
+    public void setNOTIFY_TIME(String NOTIFY_TIME) {
+        this.NOTIFY_TIME = NOTIFY_TIME;
+    }
+
+    public String getSCHD_UPTO_DATE() {
+        return SCHD_UPTO_DATE;
+    }
+
+    public void setSCHD_UPTO_DATE(String SCHD_UPTO_DATE) {
+        this.SCHD_UPTO_DATE = SCHD_UPTO_DATE;
     }
 }

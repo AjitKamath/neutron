@@ -43,7 +43,7 @@ public class LoginActivity extends Activity {
         setUpPageOnLoad();
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "qRoboto-Light.ttf");
         setFont((ViewGroup) this.findViewById(R.id.loginRLId), robotoCondensedLightFont);*/
     }
 

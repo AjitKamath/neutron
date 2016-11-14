@@ -17,7 +17,7 @@ import com.finappl.models.RepeatMO;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.SpentOnMO;
-import com.finappl.models.SummaryModel;
+import com.finappl.models.ActivitiesMO;
 import com.finappl.models.TransactionModel;
 import com.finappl.models.TransferModel;
 import com.finappl.utils.ColumnFetcher;
@@ -599,221 +599,18 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return 0.0;
     }
 
-    public Map<String, MonthLegend> getConsolidatedTransactions(Map<String, MonthLegend> monthLegendMap, String[] dateStrArr, String userId){
-        SQLiteDatabase db = this.getWritableDatabase();
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" CAT.CAT_NAME, ");
-        sqlQuerySB.append(" TRAN.TRAN_AMT, ");
-        sqlQuerySB.append(" TRAN.TRAN_TYPE, ");
-        sqlQuerySB.append(" TRAN.TRAN_DATE ");
-
-        sqlQuerySB.append(" FROM ");
-        sqlQuerySB.append(DB_TABLE_TRANSACTION + " TRAN ");
-        sqlQuerySB.append(" JOIN ");
-        sqlQuerySB.append(DB_TABLE_CATEGORY + " CAT ");
-        sqlQuerySB.append(" ON ");
-        sqlQuerySB.append(" CAT.CAT_ID = TRAN.CAT_ID ");
-
-        sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" TRAN.TRAN_DATE ");
-        sqlQuerySB.append(" BETWEEN ");
-        sqlQuerySB.append(" '"+dateStrArr[0]+"' ");
-        sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" '"+dateStrArr[1]+"' ");
-
-        sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRAN.USER_ID = '"+userId+"' ");
-
-        Log.i(CLASS_NAME, "Query to fetch Transactions : " + sqlQuerySB);
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-
-        while (cursor.moveToNext()){
-            String catNameStr = ColumnFetcher.loadString(cursor, "CAT_NAME");
-            Double amt = ColumnFetcher.loadDouble(cursor, "TRAN_AMT");
-            String tranTypeStr = ColumnFetcher.loadString(cursor, "TRAN_TYPE");
-            String tempDateStrArr[] = ColumnFetcher.loadString(cursor, "TRAN_DATE").split("-");
-
-            String tranDateStr = tempDateStrArr[2]+"-"+tempDateStrArr[1]+"-"+tempDateStrArr[0];
-
-            MonthLegend monthLegendObj = null;
-            SummaryModel summaryModel = null;
-            Map<String, ConsolidatedTransactionModel> consolidatedTransactionModelMap = null;
-            ConsolidatedTransactionModel consolidatedTransactionModel = null;
-
-            try{
-                SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
-
-                //if the legend map already contains an entry for this date
-                if(monthLegendMap.containsKey(tranDateStr)){
-                    monthLegendObj = monthLegendMap.get(tranDateStr);
-                    summaryModel = monthLegendObj.getSummaryModel();
-                    consolidatedTransactionModelMap = summaryModel.getConsolidatedTransactionModelMap();
-
-                    //consolidation of repeated same category transactions
-                    if(consolidatedTransactionModelMap.containsKey(catNameStr)){
-                        consolidatedTransactionModel = consolidatedTransactionModelMap.get(catNameStr);
-                        consolidatedTransactionModel.setCount(consolidatedTransactionModel.getCount() + 1);
-
-                        if(tranTypeStr.equalsIgnoreCase("EXPENSE")){
-                            consolidatedTransactionModel.setTotal(consolidatedTransactionModel.getTotal() - amt);
-                        }
-                        else if(tranTypeStr.equalsIgnoreCase("INCOME")){
-                            consolidatedTransactionModel.setTotal(consolidatedTransactionModel.getTotal() + amt);
-                        }
-                        else{
-                            Log.e(CLASS_NAME, "TRAN_TYPE in db expected to be either 'EXPENSE' or 'INCOME'..but found neither");
-                        }
-                    }
-                    else{
-                        consolidatedTransactionModel = new ConsolidatedTransactionModel();
-                        int count = 0;
-                        Double total = 0.0;
-
-                        if(tranTypeStr.equalsIgnoreCase("EXPENSE")){
-                            total -= amt;
-                        }
-                        else if(tranTypeStr.equalsIgnoreCase("INCOME")){
-                            total += amt;
-                        }
-                        else{
-                            Log.e(CLASS_NAME,"TRAN_TYPE in db expected to be either 'EXPENSE' or 'INCOME'..but found neither");
-                        }
-
-                        consolidatedTransactionModel.setCategory(catNameStr);
-                        consolidatedTransactionModel.setDate(sdf.parse(tranDateStr));
-                        consolidatedTransactionModel.setTotal(total);
-                        consolidatedTransactionModel.setCount(++count);
-                    }
-                }
-                //if the legend map doesnt contains an entry for this date
-                else{
-                    consolidatedTransactionModel = new ConsolidatedTransactionModel();
-                    monthLegendObj = new MonthLegend();
-                    summaryModel = new SummaryModel();
-                    consolidatedTransactionModelMap = new HashMap<String, ConsolidatedTransactionModel>();
-
-                    Double total = 0.0;
-
-                    if(tranTypeStr.equalsIgnoreCase("EXPENSE")){
-                        total -= amt;
-                    }
-                    else if(tranTypeStr.equalsIgnoreCase("INCOME")){
-                        total += amt;
-                    }
-                    else{
-                        Log.e(CLASS_NAME,"TRAN_TYPE in db expected to be either 'EXPENSE' or 'INCOME'..but found neither");
-                    }
-
-
-                    consolidatedTransactionModel.setCategory(catNameStr);
-                    consolidatedTransactionModel.setDate(sdf.parse(tranDateStr));
-                    consolidatedTransactionModel.setTotal(total);
-                    consolidatedTransactionModel.setCount(1);
-                }
-
-            }
-            catch(ParseException pe){
-                Log.e(CLASS_NAME, "Parse Error !!: "+tranDateStr+":"+pe);
-            }
-            consolidatedTransactionModelMap.put(catNameStr, consolidatedTransactionModel);
-            summaryModel.setConsolidatedTransactionModelMap(consolidatedTransactionModelMap);
-            monthLegendObj.setSummaryModel(summaryModel);
-            monthLegendMap.put(tranDateStr, monthLegendObj);
-        }
-        cursor.close();
-        db.close();
-        return monthLegendMap;
-    }
-
-    public Map<String, MonthLegend> getMonthLegendOnDate(String dateStr, String userId){
-        Map<String, MonthLegend> monthLegendMap = new HashMap<>();
-
-        //get start and end dates based on the passed date
-        String dateStrArr[] = DateTimeUtil.getStartAndEndMonthDates(dateStr, MONTHS_RANGE/2);
-
-        //get consolidated transactions for the monh
-        monthLegendMap = getConsolidatedTransactions(monthLegendMap, dateStrArr, userId);
-
-        //get all the transfers for the month
-        monthLegendMap = getConsolidatedTransfers(monthLegendMap, dateStrArr, userId);
-
-        //get the all the scheduled transaction (daily, weekly, monthly & yearly) scheduled to be happening in this month
-        //get the 1st scheduled transactiondate
-        dateStrArr[0] = getFirstSchdTransactionOnUserId(userId);
-        monthLegendMap = getScheduledTransactions(monthLegendMap, dateStrArr, userId);
-
-        //get the all the scheduled transfers (daily, weekly, monthly & yearly) scheduled to be happening in this month
-        //get the 1st scheduled transfer date
-        dateStrArr[0] = getFirstSchdTransferOnUserId(userId);
-        monthLegendMap = getScheduledTransfers(monthLegendMap, dateStrArr, userId);
-
-        return monthLegendMap;
-    }
-
-    private String getFirstSchdTransactionOnUserId(String userId) {
-        /*SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
-
-        StringBuffer sqlQuerySB = new StringBuffer(50);
-        sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" MIN(SCH_TRAN_DATE) AS SCH_TRAN_DATE");
-        sqlQuerySB.append(" FROM "+DB_TABLE_SCHEDULEDTRANSACTION);
-        sqlQuerySB.append(" WHERE USER_ID = '" + userId + "' ");
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-
-        String dateStr = "";
-        if(cursor.moveToNext()){
-             dateStr = ColumnFetcher.loadString(cursor, "SCH_TRAN_DATE");
-        }
-
-        if(dateStr == null || (dateStr != null && dateStr.isEmpty())){
-            dateStr = sdf.format(new Date());
-        }
-        db.close();
-        return dateStr;*/
-        
-        return null;
-    }
-
-    private String getFirstSchdTransferOnUserId(String userId) {
-        /*SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
-
-        StringBuffer sqlQuerySB = new StringBuffer(50);
-        sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" MIN(SCH_TRNFR_DATE) AS SCH_TRNFR_DATE");
-        sqlQuerySB.append(" FROM "+DB_TABLE_SHEDULEDTRANSFERSTABLE);
-        sqlQuerySB.append(" WHERE USER_ID = '" + userId + "' ");
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-
-        String dateStr = "";
-        if(cursor.moveToNext()){
-            dateStr = ColumnFetcher.loadString(cursor, "SCH_TRNFR_DATE");
-        }
-
-        if(dateStr == null || (dateStr != null && dateStr.isEmpty())){
-            dateStr = sdf.format(new Date());
-        }
-        db.close();
-        return dateStr;*/
-        
-        return null;
-    }
-
-    private Map<String, MonthLegend> getConsolidatedTransfers(Map<String, MonthLegend> monthLegendMap, String dateStrArr[], String userId) {
+    private Map<String, MonthLegend> getTransfers(Map<String, MonthLegend> monthLegendMap, String dateStrArr[], String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
         sqlQuerySB.append(" SELECT ");
         sqlQuerySB.append(" FRM_ACC.ACC_NAME AS ACC_FROM, ");
+        sqlQuerySB.append(" FRM_ACC.ACC_IMG AS ACC_FROM_IMG, ");
         sqlQuerySB.append(" TO_ACC.ACC_NAME AS ACC_TO, ");
+        sqlQuerySB.append(" TO_ACC.ACC_IMG AS ACC_TO_IMG, ");
         sqlQuerySB.append(" TRFR.TRNFR_AMT, ");
+        sqlQuerySB.append(" TRFR.TRNFR_ID, ");
+        sqlQuerySB.append(" TRFR.CREAT_DTM, ");
         sqlQuerySB.append(" TRFR.TRNFR_DATE ");
 
         sqlQuerySB.append(" FROM ");
@@ -842,66 +639,259 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
         while (cursor.moveToNext()){
             String fromAccStr = ColumnFetcher.loadString(cursor, "ACC_FROM");
+            String fromAccImgStr = ColumnFetcher.loadString(cursor, "ACC_FROM_IMG");
             String toAccStr = ColumnFetcher.loadString(cursor, "ACC_TO");
+            String toAccImgStr = ColumnFetcher.loadString(cursor, "ACC_TO_IMG");
             Double amt = ColumnFetcher.loadDouble(cursor, "TRNFR_AMT");
-            String tempDateStrArr[] = ColumnFetcher.loadString(cursor, "TRNFR_DATE").split("-");
+            String tranDatetr = ColumnFetcher.loadString(cursor, "TRNFR_DATE");
+            String tranIdStr = ColumnFetcher.loadString(cursor, "TRNFR_ID");
+            String creatDtmStr = ColumnFetcher.loadString(cursor, "CREAT_DTM");
+            String tempDateStrArr[] = tranDatetr.split("-");
 
-            String transferCombinationStr = fromAccStr+"-"+toAccStr;
+            String transferDateStr = tempDateStrArr[2]+"-"+tempDateStrArr[1]+"-"+tempDateStrArr[0];
+
+            MonthLegend monthLegendObj;
+            ActivitiesMO activities;
+            List<TransferModel> transfersList;
+            TransferModel transfer;
+
+            transfer = new TransferModel();
+            transfer.setFromAccName(fromAccStr);
+            transfer.setFromAccImg(fromAccImgStr);
+            transfer.setToAccName(toAccStr);
+            transfer.setToAccImg(toAccImgStr);
+            transfer.setTRNFR_AMT(amt);
+            transfer.setTransferDate(tranDatetr);
+            transfer.setTRNFR_ID(tranIdStr);
+            transfer.setCreatDtm(creatDtmStr);
+
+            //if the legend map already contains an entry for this date
+            if(monthLegendMap.containsKey(transferDateStr)){
+                monthLegendObj = monthLegendMap.get(transferDateStr);
+
+                if(monthLegendObj == null){
+                    monthLegendObj = new MonthLegend();
+                }
+
+                activities = monthLegendObj.getActivities();
+
+                if(activities == null){
+                    activities = new ActivitiesMO();
+                }
+
+                transfersList = activities.getTransfersList();
+
+                if(transfersList == null){
+                    transfersList = new ArrayList<>();
+                }
+            }
+            //if the legend map doesnt contains an entry for this date
+            else{
+                monthLegendObj = new MonthLegend();
+                activities = new ActivitiesMO();
+                transfersList = new ArrayList<>();
+            }
+
+            transfersList.add(transfer);
+            activities.setTransfersList(transfersList);
+            monthLegendObj.setActivities(activities);
+
+            monthLegendMap.put(transferDateStr, monthLegendObj);
+        }
+        cursor.close();
+        db.close();
+        return monthLegendMap;
+    }
+
+    public Map<String, MonthLegend> getTransactions(Map<String, MonthLegend> monthLegendMap, String[] dateStrArr, String userId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        StringBuilder sqlQuerySB = new StringBuilder(50);
+
+        sqlQuerySB.append(" SELECT ");
+        sqlQuerySB.append(" CAT.CAT_ID, ");
+        sqlQuerySB.append(" CAT.CAT_NAME, ");
+        sqlQuerySB.append(" CAT.CAT_IMG, ");
+        sqlQuerySB.append(" TRAN.TRAN_AMT, ");
+        sqlQuerySB.append(" TRAN.TRAN_ID, ");
+        sqlQuerySB.append(" TRAN.TRAN_TYPE, ");
+        sqlQuerySB.append(" TRAN.TRAN_DATE, ");
+        sqlQuerySB.append(" TRAN.TRAN_NAME, ");
+        sqlQuerySB.append(" TRAN.CREAT_DTM, ");
+        sqlQuerySB.append(" TRAN.SCHD_UPTO_DATE, ");
+        sqlQuerySB.append(" TRAN.NOTIFY, ");
+        sqlQuerySB.append(" TRAN.NOTIFY_TIME, ");
+        sqlQuerySB.append(" TRAN.TRAN_NOTE, ");
+        sqlQuerySB.append(" ACC.ACC_ID, ");
+        sqlQuerySB.append(" ACC.ACC_NAME, ");
+        sqlQuerySB.append(" ACC.ACC_IMG, ");
+        sqlQuerySB.append(" SPN.SPNT_ON_ID, ");
+        sqlQuerySB.append(" SPN.SPNT_ON_NAME, ");
+        sqlQuerySB.append(" SPN.SPNT_ON_IMG, ");
+        sqlQuerySB.append(" RPT.REPEAT_ID, ");
+        sqlQuerySB.append(" RPT.REPEAT_NAME, ");
+        sqlQuerySB.append(" RPT.REPEAT_IMG ");
+
+        sqlQuerySB.append(" FROM ");
+        sqlQuerySB.append(DB_TABLE_TRANSACTION + " TRAN ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(DB_TABLE_CATEGORY + " CAT ");
+        sqlQuerySB.append(" ON ");
+        sqlQuerySB.append(" CAT.CAT_ID = TRAN.CAT_ID ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(DB_TABLE_ACCOUNT + " ACC ");
+        sqlQuerySB.append(" ON ");
+        sqlQuerySB.append(" ACC.ACC_ID = TRAN.ACC_ID ");
+
+        sqlQuerySB.append(" INNER JOIN ");
+        sqlQuerySB.append(DB_TABLE_SPENTON + " SPN ");
+        sqlQuerySB.append(" ON ");
+        sqlQuerySB.append(" SPN.SPNT_ON_ID = TRAN.SPNT_ON_ID ");
+
+        sqlQuerySB.append(" LEFT OUTER JOIN ");
+        sqlQuerySB.append(DB_TABLE_REPEAT + " RPT ");
+        sqlQuerySB.append(" ON ");
+        sqlQuerySB.append(" RPT.REPEAT_ID = TRAN.REPEAT_ID ");
+
+        sqlQuerySB.append(" WHERE ");
+        sqlQuerySB.append(" TRAN.TRAN_DATE ");
+        sqlQuerySB.append(" BETWEEN ");
+        sqlQuerySB.append(" '"+dateStrArr[0]+"' ");
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" '"+dateStrArr[1]+"' ");
+
+        sqlQuerySB.append(" AND ");
+        sqlQuerySB.append(" TRAN.USER_ID = '"+userId+"' ");
+
+        Log.i(CLASS_NAME, "Query to fetch Transactions : " + sqlQuerySB);
+        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+
+        while (cursor.moveToNext()){
+            String tranNoteStr = ColumnFetcher.loadString(cursor, "TRAN_NOTE");
+            String schedDateStr = ColumnFetcher.loadString(cursor, "SCHD_UPTO_DATE");
+            String notifyStr = ColumnFetcher.loadString(cursor, "NOTIFY");
+            String notifyTimeStr = ColumnFetcher.loadString(cursor, "NOTIFY_TIME");
+            String repeatIdStr = ColumnFetcher.loadString(cursor, "REPEAT_ID");
+            String repeatStr = ColumnFetcher.loadString(cursor, "REPEAT_NAME");
+            String repeatImgStr = ColumnFetcher.loadString(cursor, "REPEAT_IMG");
+            String spntOnIdStr = ColumnFetcher.loadString(cursor, "SPNT_ON_ID");
+            String spntOnStr = ColumnFetcher.loadString(cursor, "SPNT_ON_NAME");
+            String spntImgStr = ColumnFetcher.loadString(cursor, "SPNT_ON_IMG");
+            String accountIdStr = ColumnFetcher.loadString(cursor, "ACC_ID");
+            String accountStr = ColumnFetcher.loadString(cursor, "ACC_NAME");
+            String accountImgStr = ColumnFetcher.loadString(cursor, "ACC_IMG");
+            String nameStr = ColumnFetcher.loadString(cursor, "TRAN_NAME");
+            String catIdStr = ColumnFetcher.loadString(cursor, "CAT_ID");
+            String catNameStr = ColumnFetcher.loadString(cursor, "CAT_NAME");
+            String catImgStr = ColumnFetcher.loadString(cursor, "CAT_IMG");
+            Double amt = ColumnFetcher.loadDouble(cursor, "TRAN_AMT");
+            String tranTypeStr = ColumnFetcher.loadString(cursor, "TRAN_TYPE");
+            String tranIdStr = ColumnFetcher.loadString(cursor, "TRAN_ID");
+            String transactionDateStr = ColumnFetcher.loadString(cursor, "TRAN_DATE");
+            Date transactionDate = ColumnFetcher.loadDate(cursor, "TRAN_DATE");
+            String creatDtmStr = ColumnFetcher.loadString(cursor, "CREAT_DTM");
+            String tempDateStrArr[] = transactionDateStr.split("-");
 
             String tranDateStr = tempDateStrArr[2]+"-"+tempDateStrArr[1]+"-"+tempDateStrArr[0];
 
-            MonthLegend monthLegendObj = null;
-            SummaryModel summaryModel = null;
-            Map<String, ConsolidatedTransferModel> consolidatedTransferModelMap = null;
-            ConsolidatedTransferModel consolidatedTransferModel = null;
+            TransactionModel transaction = new TransactionModel();
+            transaction.setCategory(catNameStr);
+            transaction.setCAT_ID(catIdStr);
+            transaction.setACC_ID(accountIdStr);
+            transaction.setSPNT_ON_ID(spntOnIdStr);
+            transaction.setREPEAT_ID(repeatIdStr);
+            transaction.setTRAN_AMT(amt);
+            transaction.setTRAN_NAME(nameStr);
+            transaction.setCategoryImg(catImgStr);
+            transaction.setAccount(accountStr);
+            transaction.setTRAN_TYPE(tranTypeStr);
+            transaction.setTRAN_ID(tranIdStr);
+            transaction.setTransactionDate(transactionDateStr);
+            transaction.setTRAN_DATE(transactionDate);
+            transaction.setCreatDtm(creatDtmStr);
+            transaction.setSCHD_UPTO_DATE(schedDateStr);
+            transaction.setNOTIFY(notifyStr);
+            transaction.setNOTIFY_TIME(notifyTimeStr);
+            transaction.setRepeat(repeatStr);
+            transaction.setRepeatImg(repeatImgStr);
+            transaction.setSpentOn(spntOnStr);
+            transaction.setSpentOnImg(spntImgStr);
+            transaction.setAccountImg(accountImgStr);
+            transaction.setTRAN_NOTE(tranNoteStr);
 
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+            MonthLegend monthLegendObj;
+            Double totalAmount;
+            ActivitiesMO activities;
+            List<TransactionModel> transactionsList;
 
-                //if the legend map already contains an entry for this date
-                if (monthLegendMap.containsKey(tranDateStr)) {
-                    monthLegendObj = monthLegendMap.get(tranDateStr);
-                    summaryModel = monthLegendObj.getSummaryModel();
-                    consolidatedTransferModelMap = summaryModel.getConsolidatedTransferModelMap();
+            //if the legend map already contains an entry for this date
+            if(monthLegendMap.containsKey(tranDateStr)){
+                monthLegendObj = monthLegendMap.get(tranDateStr);
 
-                    //consolidation of repeated same transfers
-                    if (consolidatedTransferModelMap.containsKey(transferCombinationStr)) {
-                        consolidatedTransferModel = consolidatedTransferModelMap.get(transferCombinationStr);
-                        consolidatedTransferModel.setCount(consolidatedTransferModel.getCount() + 1);
-                        consolidatedTransferModel.setAmount(consolidatedTransferModel.getAmount() + amt);
-                    } else {
-                        consolidatedTransferModel = new ConsolidatedTransferModel();
-                        consolidatedTransferModel.setFromAccountStr(fromAccStr);
-                        consolidatedTransferModel.setToAccountStr(toAccStr);
-                        consolidatedTransferModel.setAmount(amt);
-                        consolidatedTransferModel.setCount(1);
-                        consolidatedTransferModel.setDate(sdf.parse(tranDateStr));
-                    }
-                }
-                //if the legend map doesnt contains an entry for this date
-                else {
-                    consolidatedTransferModel = new ConsolidatedTransferModel();
+                if(monthLegendObj == null){
                     monthLegendObj = new MonthLegend();
-                    summaryModel = new SummaryModel();
-                    consolidatedTransferModelMap = new HashMap<>();
+                }
 
-                    consolidatedTransferModel.setFromAccountStr(fromAccStr);
-                    consolidatedTransferModel.setToAccountStr(toAccStr);
-                    consolidatedTransferModel.setAmount(amt);
-                    consolidatedTransferModel.setCount(1);
-                    consolidatedTransferModel.setDate(sdf.parse(tranDateStr));
+                totalAmount = monthLegendObj.getTotalAmount();
+                if("EXPENSE".equalsIgnoreCase(tranTypeStr)){
+                    totalAmount -= amt;
+                }
+                else{
+                    totalAmount += amt;
+                }
+
+                activities = monthLegendObj.getActivities();
+
+                if(activities == null){
+                    activities = new ActivitiesMO();
+                }
+
+                transactionsList = activities.getTransactionsList();
+
+                if(transactionsList == null){
+                    transactionsList = new ArrayList<>();
                 }
             }
-            catch(ParseException pe){
-                Log.e(CLASS_NAME, "Parse Error !! : "+tranDateStr+": "+pe);
+            //if the legend map doesnt contains an entry for this date
+            else{
+                totalAmount = 0.0;
+                if("EXPENSE".equalsIgnoreCase(tranTypeStr)){
+                    totalAmount -= amt;
+                }
+                else{
+                    totalAmount += amt;
+                }
+
+                monthLegendObj = new MonthLegend();
+                activities = new ActivitiesMO();
+                transactionsList = new ArrayList<>();
             }
-            consolidatedTransferModelMap.put(transferCombinationStr, consolidatedTransferModel);
-            summaryModel.setConsolidatedTransferModelMap(consolidatedTransferModelMap);
-            monthLegendObj.setSummaryModel(summaryModel);
+
+            transactionsList.add(transaction);
+            activities.setTransactionsList(transactionsList);
+            monthLegendObj.setActivities(activities);
+            monthLegendObj.setTotalAmount(totalAmount);
+
             monthLegendMap.put(tranDateStr, monthLegendObj);
         }
         cursor.close();
         db.close();
+        return monthLegendMap;
+    }
+
+    public Map<String, MonthLegend> getMonthLegendOnDate(String dateStr, String userId){
+        Map<String, MonthLegend> monthLegendMap = new HashMap<>();
+
+        //get start and end dates based on the passed date
+        String dateStrArr[] = DateTimeUtil.getStartAndEndMonthDates(dateStr, MONTHS_RANGE/2);
+
+        //get all the transactions on the passed date
+        monthLegendMap = getTransactions(monthLegendMap, dateStrArr, userId);
+
+        //get all the transfers on the passed date
+        monthLegendMap = getTransfers(monthLegendMap, dateStrArr, userId);
+
         return monthLegendMap;
     }
 
@@ -1358,13 +1348,6 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return monthLegendMap;
     }
 
-    public boolean deleteTransaction(String transactionIdStr){
-        SQLiteDatabase db = this.getWritableDatabase();
-        boolean result = db.delete(DB_TABLE_TRANSACTION, "TRAN_ID = '" + transactionIdStr+"'", null) > 0;
-        db.close();
-        return result;
-    }
-
     public boolean deleteAllSched(Object object){
         /*SQLiteDatabase db = this.getWritableDatabase();
 
@@ -1597,12 +1580,6 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" WHERE ");
         sqlQuerySB.append(" ACC_ID_TO = ACC.ACC_ID ");
         sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRNFR_IS_SCHED ");
-        sqlQuerySB.append(" = ");
-        sqlQuerySB.append(" '"+DB_NONAFFIRMATIVE+"' ");
-        sqlQuerySB.append(" AND ");
-        sqlQuerySB.append(" TRNFR_REPEAT is null ");
-        sqlQuerySB.append(" AND ");
         sqlQuerySB.append(" TRIM(UPPER(ACC.USER_ID)) ");
         sqlQuerySB.append(" IN ");
         sqlQuerySB.append(" ('" + userId+"','"+ADMIN_USERID+"') ))");
@@ -1657,7 +1634,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
         String accountIdStr, accountNameStr, currecyStr, accountIsDefaultStr, accountImgStr;
         Double accountTotal;
-        AccountsMO accountsModel = null;
+        AccountsMO accountsModel;
         while (cursor.moveToNext()){
             accountIdStr = ColumnFetcher.loadString(cursor, "ACC_ID");
             accountNameStr = ColumnFetcher.loadString(cursor, "ACC_NAME");

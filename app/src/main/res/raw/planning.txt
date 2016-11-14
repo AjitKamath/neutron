@@ -1,9 +1,9 @@
 ---------------------PLANNING---------------------
-1. End 2 End Adding of a Transaction (must include scheduling & repeating)                                      (10-oct-16 to 31-oct-16).
-2. End 2 End of List, Display, Edit & Delete a Transaction from Calendar Summary                                (01-nov-16 to 13-nov-16).
+1. End 2 End Adding of a Transaction (must include scheduling & repeating)                                      (10-oct-16 to 31-oct-16).    (COMPLETED on 31-oct-16)
+2. End 2 End of List, Display, Edit & Delete a Transaction from Calendar Summary                                (01-nov-16 to 13-nov-16).    (COMPLETED on 8-nov-16)
 3. End 2 End Adding of a Transfer (must include scheduling & repeating)                                         (14-nov-16 to 20-nov-16).
-2. End 2 End of List, Display, Edit & Delete a Transfer from Calendar Summary                                   (21-nov-16 to 27-nov-16).
-
+4. End 2 End of List, Display, Edit & Delete a Transfer from Calendar Summary                                   (21-nov-16 to 27-nov-16).
+5. Login using external DB                                                                                      (28-nov-16 to 4-dec-16)
 
 
 

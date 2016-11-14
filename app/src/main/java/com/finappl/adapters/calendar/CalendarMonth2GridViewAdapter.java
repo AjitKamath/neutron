@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.models.MonthLegend;
+import com.finappl.models.UserMO;
+import com.finappl.utils.FinappleUtility;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
+import static com.finappl.utils.Constants.UI_FONT;
 
 /**
  * Created by ajit on 8/1/15.
@@ -31,16 +36,11 @@ import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
 public class CalendarMonth2GridViewAdapter extends BaseAdapter {
     private final String CLASS_NAME = this.getClass().getName();
 
-    private final Context _context;
+    private final Context mContext;
     public static List<String> list;
     private static final int DAY_OFFSET = 1;
     private final int[] daysOfMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     private int daysInMonth;
-    private int currentDayOfMonth;
-    private int currentWeekDay;
-    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-
-    private final String today = dateFormatter.format(new Date());
 
     public static int currMonth, preMonth, nexMonth;
 
@@ -50,30 +50,47 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
     private Map<String, MonthLegend> monthLegendDataMap;
     private LayoutInflater inflater;
 
+    private final int layoutResourceId = R.layout.calendar_grid_cell;
+    private final int noTapCircle = R.drawable.circle_calendar_no_tap;
+    private final int oneTapCircle = R.drawable.circle_calendar_one_tap;
+    private static int pastFutureDateColor;
+    private static int todayDateColor;
+    private static int monthInFocusColor;
+    private static int cellSize;
+
     public int month, year;
 
     public View todaysView;
 
+    private UserMO loggedInUser;
+
     // Days in Current Month
-    public CalendarMonth2GridViewAdapter(Context context, Map<String, MonthLegend> monthLegendMap, int month, int year, Date dateToPreselect) {
+    public CalendarMonth2GridViewAdapter(Context context, Map<String, MonthLegend> monthLegendMap, int month, int year, Date dateToPreselect, UserMO loggedInUser) {
         super();
-        this._context = context;
+        this.mContext = context;
         this.list = new ArrayList<>();
 
         this.month = month;
         this.year = year;
 
-        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
         this.toSelectDate = dateToPreselect;
-        this.dateToPreSelect = sdf.format(dateToPreselect);
+        this.dateToPreSelect = JAVA_DATE_FORMAT_SDF.format(dateToPreselect);
         this.monthLegendDataMap = monthLegendMap;
-        this.inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        Log.d(CLASS_NAME, "CalendarAdapter Class is called with date to pre select:" + dateToPreSelect);
+        this.loggedInUser = loggedInUser;
+        this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //prepare constants. This is to improve performance as object properties have to be read for each cell of the grid in the calendar
+        prepareConstants();
 
         // Print Month
-        Log.i(CLASS_NAME, "PERFORMANCE TEST BEGIN-CURR MONTH");
         printMonth(month, year);
-        Log.i(CLASS_NAME, "PERFORMANCE TEST ENDS-CURR MONTH");
+    }
+
+    private void prepareConstants() {
+        pastFutureDateColor = mContext.getResources().getColor(R.color.calendarNextPrevMonthDate);
+        todayDateColor = mContext.getResources().getColor(R.color.calendarTodayDate);
+        monthInFocusColor = mContext.getResources().getColor(R.color.calendarThisMonthDate);
+        cellSize = mContext.getResources().getInteger(R.integer.calendar_grid_cell_size);
     }
 
     private int getNumberOfDaysOfMonth(int i) {
@@ -97,15 +114,14 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
      */
     public void printMonth(int mm, int yy) {
         int trailingSpaces = 0;
-        int daysInPrevMonth = 0;
-        int prevMonth = 0;
-        int prevYear = 0;
-        int nextMonth = 0;
-        int nextYear = 0;
+        int daysInPrevMonth;
+        int prevMonth;
+        int prevYear;
+        int nextMonth;
+        int nextYear;
         int currentMonth = mm;
         currMonth = currentMonth;
 
-        //String currentMonthName = getMonthAsString(currentMonth);
         daysInMonth = getNumberOfDaysOfMonth(currentMonth);
         GregorianCalendar cal = new GregorianCalendar(yy, currentMonth-1, 1);
 
@@ -151,15 +167,19 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             default: Log.i(CLASS_NAME, "Calendar is gonna look ugly because the date cell border setting Algo just died !");
         }
 
-        if(cal.isLeapYear(cal.get(Calendar.YEAR)))
-            if(mm == 2)
+        if(cal.isLeapYear(cal.get(Calendar.YEAR))) {
+            if (mm == 2) {
                 ++daysInMonth;
-            else if(mm == 3)
+            } else if (mm == 3) {
                 ++daysInPrevMonth;
-
+            }
+        }
 
         //converting single digit month to double digit..1 as 01..2 as 02
-        String preMonthStr = null, currMonthStr = null, nextMonthStr = null;
+        String preMonthStr;
+        String currMonthStr;
+        String nextMonthStr;
+
         if(prevMonth<10){
             preMonthStr = "0"+prevMonth;
         }
@@ -200,11 +220,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
                 dayAsStr = "0"+i;
             }
 
-            if(i == getCurrentDayOfMonth() && Integer.parseInt(today.split("-")[1]) == currMonth && Integer.parseInt(today.split("-")[2]) == yy) {
-                list.add(dayAsStr+ "-"+ currMonthStr + "-" + yy);
-            } else {
-                list.add(dayAsStr  + "-"+ currMonthStr + "-" + yy);
-            }
+            list.add(dayAsStr  + "-"+ currMonthStr + "-" + yy);
         }
         // Leading Month days
         for(int i = 0; (i < (list.size() % 7) + 7) && (list.size() < 42); i++) {
@@ -219,49 +235,33 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    /**
-     * NOTE: YOU NEED TO IMPLEMENT THIS PART Given the YEAR, MONTH, retrieve
-     * ALL entries from a SQLite database for that month. Iterate over the
-     * List of All entries, and get the dateCreated, which is converted into
-     * day.
-     *
-     * @param year
-     * @param month
-     * @return
-     */
-    private Map<String, Integer> findNumberOfEventsPerMonth(int year, int month) {
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        return map;
-    }
-
     @Override
     public long getItemId(int position) {
         return position;
     }
 
     public class ViewHolder {
-        TextView gridcell_date_TV;
-        GridLayout grid_cell_GL;
-        GridLayout calendarGridDayContentGL;
-        TextView calendarCellSchTransactionIndicatorTV;
-        TextView calendarCellTransactionIndicatorTV;
-        TextView calendarCellTransferIndicatorTV;
-        TextView calendarCellSchTransferIndicatorTV;
+        private LinearLayout calendarGridDayContentLL;
+        private TextView gridcell_date_TV;
+        private TextView calendarDayAmountTV;
+        private TextView calendarCellSchTransactionIndicatorTV;
+        private TextView calendarCellTransactionIndicatorTV;
+        private TextView calendarCellTransferIndicatorTV;
+        private TextView calendarCellSchTransferIndicatorTV;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
-        int layoutResourceId = R.layout.calendar_grid_cell;
 
         if(convertView == null) {
             mHolder = new ViewHolder();
             convertView = inflater.inflate(layoutResourceId, null);
 
             // Get a reference to the Day gridcell
+            mHolder.calendarGridDayContentLL = (LinearLayout) convertView.findViewById(R.id.calendarGridDayContentLLId);
             mHolder.gridcell_date_TV = (TextView) convertView.findViewById(R.id.calendarDayTVId);
-            mHolder.grid_cell_GL = (GridLayout) convertView.findViewById(R.id.calendarGridDayGL);
-            mHolder.calendarGridDayContentGL = (GridLayout) convertView.findViewById(R.id.calendarGridDayContentGL);
+            mHolder.calendarDayAmountTV = (TextView) convertView.findViewById(R.id.calendarDayAmountTVId);
             mHolder.calendarCellSchTransactionIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellSchTransactionIndicatorTVId);
             mHolder.calendarCellTransactionIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellTransactionIndicatorTVId);
             mHolder.calendarCellTransferIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellTransferIndicatorTVId);
@@ -272,16 +272,24 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag(layoutResourceId);
         }
 
-        // ACCOUNT FOR SPACING-
         String theDatsStr = list.get(position);
 
-        mHolder.calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_no_tap);
+        mHolder.calendarGridDayContentLL.setBackgroundResource(noTapCircle);
 
         if(monthLegendDataMap != null && monthLegendDataMap.containsKey(theDatsStr)) {
+            MonthLegend monthLegend = monthLegendDataMap.get(theDatsStr);
+
+            //for day total amount
+            if(monthLegend.getTotalAmount().equals(null) || monthLegend.getTotalAmount().equals(0.0)){
+                mHolder.calendarDayAmountTV.setText("");
+            }
+            else{
+                mHolder.calendarDayAmountTV = FinappleUtility.shortenAmountView(mHolder.calendarDayAmountTV, loggedInUser, monthLegend.getTotalAmount());
+            }
 
             //for transaction indicator
-            if(monthLegendDataMap.get(theDatsStr).getSummaryModel() != null
-                        && !monthLegendDataMap.get(theDatsStr).getSummaryModel().getConsolidatedTransactionModelMap().isEmpty()){
+            if(monthLegend.getActivities() != null && monthLegend.getActivities() != null
+                    && monthLegend.getActivities().getTransactionsList() != null && !monthLegend.getActivities().getTransactionsList().isEmpty()){
                 mHolder.calendarCellTransactionIndicatorTV.setVisibility(View.VISIBLE);
             }
             else{
@@ -289,8 +297,8 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             }
 
             //for transfer indicator
-            if(monthLegendDataMap.get(theDatsStr).getSummaryModel() != null
-                    && !monthLegendDataMap.get(theDatsStr).getSummaryModel().getConsolidatedTransferModelMap().isEmpty()){
+            if(monthLegend.getActivities() != null && monthLegend.getActivities() != null
+                    && monthLegend.getActivities().getTransfersList() != null && !monthLegend.getActivities().getTransfersList().isEmpty()){
                 mHolder.calendarCellTransferIndicatorTV.setVisibility(View.VISIBLE);
             }
             else{
@@ -298,7 +306,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             }
 
             //for scheduled transaction indicator
-            if(monthLegendDataMap.get(theDatsStr).isHasScheduledTransaction()){
+            if(monthLegend.isHasScheduledTransaction()){
                 mHolder.calendarCellSchTransactionIndicatorTV.setVisibility(View.VISIBLE);
             }
             else{
@@ -306,7 +314,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             }
 
             //for scheduled transfers indicator
-            if(monthLegendDataMap.get(theDatsStr).isHasScheduledTransfer()){
+            if(monthLegend.isHasScheduledTransfer()){
                 mHolder.calendarCellSchTransferIndicatorTV.setVisibility(View.VISIBLE);
             }
             else{
@@ -318,63 +326,51 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             mHolder.calendarCellTransferIndicatorTV.setVisibility(View.GONE);
             mHolder.calendarCellSchTransactionIndicatorTV.setVisibility(View.GONE);
             mHolder.calendarCellSchTransferIndicatorTV.setVisibility(View.GONE);
+            mHolder.calendarDayAmountTV.setVisibility(View.GONE);
         }
 
         Integer theDayDigit = Integer.parseInt(theDatsStr.split("-")[0]);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         // Set the Day GridCell
         mHolder.gridcell_date_TV.setText(String.valueOf(theDayDigit));
 
         if((theDayDigit > 22 && position < 7) || (theDayDigit < 14 && position > 27)) {
-            mHolder.gridcell_date_TV.setTextColor(_context.getResources().getColor(R.color.calendarNextPrevMonthDate));
+            mHolder.gridcell_date_TV.setTextColor(pastFutureDateColor);
         }
-        else if(sdf.format(new Date()).equalsIgnoreCase(theDatsStr)) {
-            mHolder.gridcell_date_TV.setTextColor(_context.getResources().getColor(R.color.calendarTodayDate));
+        else if(JAVA_DATE_FORMAT_SDF.format(new Date()).equalsIgnoreCase(theDatsStr)) {
+            mHolder.gridcell_date_TV.setTextColor(todayDateColor);
         }
         else{
-            mHolder.gridcell_date_TV.setTextColor(_context.getResources().getColor(R.color.calendarThisMonthDate));
+            mHolder.gridcell_date_TV.setTextColor(monthInFocusColor);
         }
 
-        //by default all cell except the date passed in this adapter must have this as background
-        int gridDrawable = R.drawable.circle_calendar_no_tap;
+        int gridDrawable = noTapCircle;
 
         if(dateToPreSelect.equalsIgnoreCase(theDatsStr)) {
-            mHolder.calendarGridDayContentGL.setBackgroundResource(R.drawable.circle_calendar_one_tap);
-            gridDrawable = R.drawable.circle_calendar_one_tap;
-            todaysView = mHolder.calendarGridDayContentGL;
+            mHolder.calendarGridDayContentLL.setBackgroundResource(oneTapCircle);
+            gridDrawable = oneTapCircle;
+            todaysView = mHolder.calendarGridDayContentLL;
         }
 
-        GridLayout.LayoutParams params = (GridLayout.LayoutParams) mHolder.calendarGridDayContentGL.getLayoutParams();
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mHolder.calendarGridDayContentLL.getLayoutParams();
         // Changes the height and width to the specified *pixels*
-        params.height = 90;
-        params.width = 90;
+        params.height = cellSize;
+        params.width = cellSize;
 
         //this is for changing grid cell color on click purpose...do not delete
-        mHolder.calendarGridDayContentGL.setTag(gridDrawable);
-        mHolder.calendarGridDayContentGL.setTag(R.id.calendarGridDayContentGL, theDatsStr);
+        mHolder.calendarGridDayContentLL.setTag(gridDrawable);
+        mHolder.calendarGridDayContentLL.setTag(mHolder.calendarGridDayContentLL.getId(), theDatsStr);
 
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(_context.getAssets(), "Roboto-Light.ttf");
-        setFont((ViewGroup) convertView.findViewById(R.id.calendarGridDayGL), robotoCondensedLightFont);
+        setFont(mHolder.calendarGridDayContentLL);
 
         return convertView;
     }
 
-    public int getCurrentDayOfMonth() {
-        return currentDayOfMonth;
-    }
-
-    private void setCurrentDayOfMonth(int currentDayOfMonth) {
-        this.currentDayOfMonth = currentDayOfMonth;
-    }
-
-    public void setCurrentWeekDay(int currentWeekDay) {
-        this.currentWeekDay = currentWeekDay;
-    }
-
     //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group, Typeface font) {
+    public void setFont(ViewGroup group) {
+        final Typeface font = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
+
         int count = group.getChildCount();
         View v;
 
@@ -384,7 +380,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
                 ((TextView) v).setTypeface(font);
             }
             else if(v instanceof ViewGroup) {
-                setFont((ViewGroup) v, font);
+                setFont((ViewGroup) v);
             }
         }
     }

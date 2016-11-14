@@ -245,11 +245,11 @@
 
     <!--Currency colors-->
     <color name="finappleCurrencyApproxColor">#000000</color>
-    <color name="finappleCurrencyNegColor">#F44336</color>
-    <color name="finappleCurrencyPosColor">#4CAF50</color>
+    <color name="finappleCurrencyNegColor">#FF6347</color>
+    <color name="finappleCurrencyPosColor">#006400</color>
     <color name="finappleCurrencyDividerColor">#000000</color>
     <color name="finappleLimitCrossColor">#FFEFD5</color>
-    <color name="finappleCurrencyCodeColor">#000000</color>
+    <color name="finappleCurrencyCodeColor">#A9A9A9</color>
     <color name="finappleCurrencyCodeColorLight">#FFFFFF</color>
 
     <!--Budget View Heading Colors -->

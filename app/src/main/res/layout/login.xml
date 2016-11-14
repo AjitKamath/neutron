@@ -532,9 +532,9 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="@dimen/text_form_text_height"
                                         android:gravity="center"
-                                        android:hint="17 Jul '90"
+                                        android:hint="17 Jul 1990"
                                         android:inputType="textCapWords"
-                                        android:text="17 Jul '90"
+                                        android:text="17 Jul 1990"
                                         android:textColor="@color/formTextLight"
                                         android:textColorHint="@color/formHintTextDark"
                                         android:textSize="15sp" />

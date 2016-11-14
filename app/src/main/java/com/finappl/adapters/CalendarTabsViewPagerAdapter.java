@@ -21,15 +21,14 @@ import com.finappl.dbServices.Sqlite;
 import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.models.AccountsMO;
 import com.finappl.models.BudgetModel;
-import com.finappl.models.ConsolidatedTransactionModel;
-import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
-import com.finappl.models.SummaryModel;
+import com.finappl.models.ActivitiesMO;
+import com.finappl.models.TransactionModel;
+import com.finappl.models.TransferModel;
 import com.finappl.models.UserMO;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +63,8 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     private boolean hasBudgets;
     private boolean hasSchedules;
 
-    private Map<String, ConsolidatedTransactionModel> consolidatedTransactionModelMap;
-    private Map<String, ConsolidatedTransferModel> consolidatedTransferModelMap;
+    private List<TransactionModel> transactionsList;
+    private List<TransferModel> transfersList;
     private List<AccountsMO> accountsList;
     private List<BudgetModel> budgetsList;
     private List<ScheduledTransactionModel> scheduledTransactionModelList;
@@ -116,28 +115,18 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        //Summary check
-        SummaryModel summaryModelObj = monthLegendObj.getSummaryModel();
-        if (summaryModelObj != null) {
-            consolidatedTransactionModelMap = summaryModelObj.getConsolidatedTransactionModelMap();
-            consolidatedTransferModelMap = summaryModelObj.getConsolidatedTransferModelMap();
+        //Activities check
+        ActivitiesMO activities = monthLegendObj.getActivities();
+        if (activities != null) {
+            transactionsList = activities.getTransactionsList();
+            transfersList = activities.getTransfersList();
 
-            if ((consolidatedTransactionModelMap != null && !consolidatedTransactionModelMap.isEmpty())
-                    || (consolidatedTransferModelMap != null && !consolidatedTransferModelMap.isEmpty())) {
+            if ((transactionsList != null && !transactionsList.isEmpty())
+                    || (transfersList != null && !transfersList.isEmpty())) {
                 hasSummary = true;
             }
         }
         //summary check ends
-
-        //Schedules Check
-        scheduledTransactionModelList = monthLegendObj.getScheduledTransactionModelList();
-        scheduledTransferModelList = monthLegendObj.getScheduledTransferModelList();
-
-        if ((scheduledTransactionModelList != null && !scheduledTransactionModelList.isEmpty())
-                || (scheduledTransferModelList != null && !scheduledTransferModelList.isEmpty())) {
-            hasSchedules = true;
-        }
-        //Schedules Check ends
     }
 
     @Override
@@ -148,8 +137,8 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         checkMonthLegend();
 
         switch (layoutsList.get(position)) {
-            case R.layout.calendar_tab_summary:
-                setUpSummaryTab(layout);
+            case R.layout.calendar_activity:
+                setUpActivitiesTab(layout);
                 activePageIndex = 0;
                 break;
 
@@ -178,33 +167,31 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         return layout;
     }
 
-    private void setUpSummaryTab(ViewGroup layout) {
-        TextView calendarNoTransTV = (TextView) layout.findViewById(R.id.calendarNoTransTVId);
-        ListView consolTranLV = (ListView) layout.findViewById(R.id.consolTranLVId);
-
-        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
+    private void setUpActivitiesTab(ViewGroup layout) {
+        TextView calendarNoActivityTV = (TextView) layout.findViewById(R.id.calendarNoActivityTVId);
+        ListView calendarActivityLV = (ListView) layout.findViewById(R.id.calendarActivityLVId);
 
         if (!hasSummary) {
-            Log.i(CLASS_NAME, "No summary to show on this day(" + sdf.format(selectedDate) + ")");
+            Log.i(CLASS_NAME, "No activities to show on this day(" + JAVA_DATE_FORMAT_SDF.format(selectedDate) + ")");
 
-            calendarNoTransTV.setText("No Transactions/Transfers");
-            calendarNoTransTV.setTextColor(mContext.getResources().getColor(R.color.DarkGray));
-            consolTranLV.setVisibility(View.GONE);
+            calendarNoActivityTV.setText("No Activities");
+            calendarNoActivityTV.setTextColor(mContext.getResources().getColor(R.color.DarkGray));
+            calendarActivityLV.setVisibility(View.GONE);
             return;
         }
 
-        CalendarSummarySectionListViewAdapter consolAdapter =
-                new CalendarSummarySectionListViewAdapter(mContext, R.layout.calendar_summary_list_view, monthLegendMap.get(sdf.format(selectedDate)).getSummaryModel());
-        consolTranLV.setAdapter(consolAdapter);
-        consolTranLV.setOnItemClickListener(listViewClickListener);
+        CalendarActivitiesSectionListViewAdapter consolAdapter =
+                new CalendarActivitiesSectionListViewAdapter(mContext, monthLegendMap.get(JAVA_DATE_FORMAT_SDF.format(selectedDate)).getActivities(), loggedInUserObj);
+        calendarActivityLV.setAdapter(consolAdapter);
+        calendarActivityLV.setOnItemClickListener(listViewClickListener);
 
         //if there are no summary on the selected date then show no transaction/transfer text
         if (consolAdapter != null & consolAdapter.getCount() != 0) {
-            calendarNoTransTV.setVisibility(View.GONE);
-            consolTranLV.setVisibility(View.VISIBLE);
+            calendarNoActivityTV.setVisibility(View.GONE);
+            calendarActivityLV.setVisibility(View.VISIBLE);
         } else {
-            calendarNoTransTV.setVisibility(View.VISIBLE);
-            consolTranLV.setVisibility(View.GONE);
+            calendarNoActivityTV.setVisibility(View.VISIBLE);
+            calendarActivityLV.setVisibility(View.GONE);
         }
     }
 

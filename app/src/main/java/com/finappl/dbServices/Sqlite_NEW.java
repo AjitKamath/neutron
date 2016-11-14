@@ -237,16 +237,18 @@ public class Sqlite_NEW extends SQLiteOpenHelper{
 		sb.append(" USER_ID TEXT NOT NULL, ");					//fk1
 		sb.append(" ACC_ID_FRM TEXT NOT NULL, ");				//fk2
 		sb.append(" ACC_ID_TO TEXT NOT NULL, ");				//fk3
-		sb.append(" TRNFR_IS_SCHED TEXT NOT NULL, ");
-		sb.append(" TRNFR_REPEAT TEXT, ");
-		sb.append(" TRNFR_REPEAT_ID TEXT, ");
+		sb.append(" REPEAT_ID TEXT, ");							//fk4
+		sb.append(" PARENT_TRNFR_ID TEXT, ");
+		sb.append(" NOTIFY TEXT, ");
+		sb.append(" NOTIFY_TIME TEXT, ");
+		sb.append(" SCHD_UPTO_DATE TEXT, ");
 		sb.append(" TRNFR_AMT TEXT NOT NULL, ");
-		sb.append(" TRNFR_NAME TEXT NOT NULL, ");
 		sb.append(" TRNFR_DATE DATE NOT NULL, ");
 		sb.append(" TRNFR_NOTE TEXT, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
 		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID), ");
+		sb.append(" FOREIGN KEY (REPEAT_ID) REFERENCES "+DB_TABLE_REPEAT+" (REPEAT_ID), ");
 		sb.append(" FOREIGN KEY (ACC_ID_FRM) REFERENCES "+DB_TABLE_ACCOUNT+" (ACC_ID), ");
 		sb.append(" FOREIGN KEY (ACC_ID_TO) REFERENCES " + DB_TABLE_ACCOUNT + " (ACC_ID)) ");
 

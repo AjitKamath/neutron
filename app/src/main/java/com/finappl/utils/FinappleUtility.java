@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,6 +62,109 @@ public class FinappleUtility extends Activity{
 
     public static Bitmap byteToImageBitmap(byte[] img){
         return BitmapFactory.decodeByteArray(img, 0, img.length);
+    }
+
+    private static String shortenAmountAmerican(String amountStr) {
+        String resultStr = "";
+
+        Double amount = Double.parseDouble(amountStr);
+
+        //0 - 999 -> 9, 99, 999
+        if(amount < 1000) {
+            resultStr = String.valueOf(amount);
+        }
+        //1,000 - 9,999 -> 1K, 9.9K
+        else if (amount >= 1000 && amount < 10000) {
+            resultStr = shortenDoubleWithDecimal(amount/1000)+"K";
+        }
+        //10,000 - 99,999 -> 10K, 99K
+        else if (amount >= 10000 && amount < 100000) {
+            resultStr = shortenDoubleWithoutDecimal(amount/1000)+"K";
+        }
+        //100,000 - 999,999 -> 0.1M, 0.9M
+        else if (amount >= 100000 && amount < 1000000) {
+            resultStr = shortenDoubleWithDecimal(amount/1000000)+"M";
+        }
+        //1,000,000 - 9,999,999 -> 1M, 9.9M
+        else if (amount >= 1000000 && amount < 10000000) {
+            resultStr = shortenDoubleWithDecimal(amount/1000000)+"M";
+        }
+        //10,000,000 - 99,999,999 -> 10M, 99M
+        else if (amount >= 10000000 && amount < 100000000) {
+            resultStr = shortenDoubleWithoutDecimal(amount/1000000)+"M";
+        }
+        else {
+            resultStr = "ERR";
+        }
+
+        resultStr = resultStr.replace(".0", "");
+        resultStr = resultStr.replace(".00", "");
+
+        return resultStr;
+    }
+
+    private static String shortenAmountIndian(String amountStr) {
+        String resultStr = "";
+
+        Double amount = Double.parseDouble(amountStr);
+
+        //0 - 999 -> 9, 99, 999
+        if(amount < 1000) {
+            resultStr = String.valueOf(amount);
+        }
+        //1,000 - 9,999 -> 1K, 9.9K
+        else if (amount >= 1000 && amount < 10000) {
+            resultStr = shortenDoubleWithDecimal(amount/1000)+"K";
+        }
+        //10,000 - 99,999 -> 10K, 99K
+        else if (amount >= 10000 && amount < 100000) {
+            resultStr = shortenDoubleWithoutDecimal(amount/1000)+"K";
+        }
+        //1,00,000 - 9,99,999 -> 1L, 9.9L
+        else if (amount >= 100000 && amount < 1000000) {
+            resultStr = shortenDoubleWithDecimal(amount/100000)+"L";
+        }
+        //10,00,000 - 99,99,999 -> 10L, 99L
+        else if (amount >= 1000000 && amount < 10000000) {
+            resultStr = shortenDoubleWithoutDecimal(amount/100000)+"L";
+        }
+        //1,00,00,000 - 9,99,99,999 -> 1C, 9.9C
+        else if (amount >= 10000000 && amount < 100000000) {
+            resultStr = shortenDoubleWithDecimal(amount/10000000)+"C";
+        }
+        else {
+            resultStr = "ERR";
+        }
+
+        resultStr = resultStr.replace(".0", "");
+        resultStr = resultStr.replace(".00", "");
+
+        return resultStr;
+    }
+
+    private static String shortenDoubleWithDecimal(Double value) {
+        DecimalFormat df = new DecimalFormat("0.0");
+        return df.format(value);
+    }
+
+    private static String shortenDoubleWithoutDecimal(Double value) {
+        DecimalFormat df = new DecimalFormat("0");
+        return df.format(value);
+    }
+
+    public static TextView shortenAmountView(TextView amountTV, UserMO userMO, Double amount){
+        if(amount <= 0){
+            if(amount < 0) {
+                amount = amount * -1;
+            }
+            amountTV.setTextColor(amountTV.getResources().getColor(R.color.finappleCurrencyNegColor));
+        }
+        else{
+            amountTV.setTextColor(amountTV.getResources().getColor(R.color.finappleCurrencyPosColor));
+        }
+        amountTV.setText(FinappleUtility.shortenAmount(userMO.getMETRIC(), String.valueOf(amount)));
+
+        return amountTV;
     }
 
     public static TextView formatAmountView(TextView amountTV, UserMO userMO, Double amount){
@@ -116,6 +220,19 @@ public class FinappleUtility extends Activity{
         }
     }
 
+    public static String shortenAmount(String numberSystemStr, String amountStr){
+        if(amountStr.equalsIgnoreCase("0.0")){
+            return "";
+        }
+
+        if("AMERICAN".equalsIgnoreCase(numberSystemStr)){
+            return shortenAmountAmerican(amountStr);
+        }
+        else{
+            return shortenAmountIndian(amountStr);
+        }
+    }
+
     private static String formatAmountIndian(String amountStr) {
         amountStr = amountStr.replace(",", "");
 
@@ -164,11 +281,22 @@ public class FinappleUtility extends Activity{
             beforeDecStr += ".";
         }
 
+        String result;
         if(!afterDecStr.isEmpty()){
-            return beforeDecStr+"."+afterDecStr;
+            result = beforeDecStr+"."+afterDecStr;
         }
         else{
-            return beforeDecStr;
+            result = beforeDecStr;
+        }
+
+        if(result.endsWith(".0")){
+            return result.substring(0, result.lastIndexOf(".0"));
+        }
+        else if(result.endsWith(".00")){
+            return result.substring(0, result.lastIndexOf(".00"));
+        }
+        else{
+            return result;
         }
     }
 

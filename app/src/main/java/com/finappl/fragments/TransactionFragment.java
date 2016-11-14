@@ -8,33 +8,26 @@ import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
-import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.models.AccountsMO;
@@ -46,22 +39,22 @@ import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
 
-import java.io.File;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import static com.finappl.utils.Constants.ACCOUNT_LOW_BALANCE_LIMIT;
 import static com.finappl.utils.Constants.ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.CATEGORY_OBJECT;
-import static com.finappl.utils.Constants.CONFIRM_CLOSE_MESSAGE;
+import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
 import static com.finappl.utils.Constants.DB_AFFIRMATIVE;
 import static com.finappl.utils.Constants.DB_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.DB_TIME_FORMAT_SDF;
 import static com.finappl.utils.Constants.FRAGMENT_ACCOUNT;
 import static com.finappl.utils.Constants.FRAGMENT_AMOUNT;
 import static com.finappl.utils.Constants.FRAGMENT_CATEGORY;
-import static com.finappl.utils.Constants.FRAGMENT_CONFIRM_CLOSE;
+import static com.finappl.utils.Constants.FRAGMENT_CONFIRM;
 import static com.finappl.utils.Constants.FRAGMENT_REPEAT;
 import static com.finappl.utils.Constants.FRAGMENT_SPENTON;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION;
@@ -75,6 +68,7 @@ import static com.finappl.utils.Constants.SELECTED_SPENTON_OBJECT;
 import static com.finappl.utils.Constants.SPENTON_OBJECT;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
 import static com.finappl.utils.Constants.UI_DATE_FORMAT_SDF;
+import static com.finappl.utils.Constants.UI_FONT;
 import static com.finappl.utils.Constants.UI_TIME_FORMAT_SDF;
 
 /**
@@ -97,18 +91,15 @@ public class TransactionFragment extends DialogFragment {
     private LinearLayout transactionContentSpentonLL;
     private TextView transactionContentAccountCurrencyTV;
     private TextView transactionContentAccountTotalTV;
-    private RadioButton addUpdateTranExpRadio;
-    private RadioButton addUpdateTranIncRadio;
+    private TextView transactionContentAccountStatusTV;
     private RadioGroup addUpdateTranExpIncRadioGrp;
     private EditText addUpdateNoteET;
     private TextView transactionHeaderSaveTV;
     private LinearLayout transactionContentRepeatLL;
-    private CheckBox transactionContentRepeatCB;
+    private Switch transactionContentRepeatSwitch;
     private View transactionContentNotifyDivider;
     private LinearLayout transactionContentNotifyLL;
     private RadioGroup transactionContentNotifyRG;
-    private RadioButton transactionContentNotifyAddRB;
-    private RadioButton transactionContentAutoAddRB;
     private TextView transactionContentNotifyAddTimeTV;
     private TextView transactionContentAutoAddTimeTV;
     private View transactionContentScheduleDivider;
@@ -119,7 +110,6 @@ public class TransactionFragment extends DialogFragment {
 
     private CalendarDbService calendarDbService;
     private TransactionsDbService transactionsDbService;
-    private AuthorizationDbService authorizationDbService;
 
     private List<CategoryMO> categoriesList;
     private List<AccountsMO> accountList;
@@ -163,7 +153,7 @@ public class TransactionFragment extends DialogFragment {
         transactionModelObj.setTRAN_NOTE(String.valueOf(addUpdateNoteET.getText()));
         transactionModelObj.setUSER_ID(loggedInUserObj.getUSER_ID());
 
-        if(transactionContentRepeatCB.isChecked()){
+        if(transactionContentRepeatSwitch.isChecked()){
             transactionModelObj.setREPEAT_ID(((RepeatMO)transactionContentRepeatLL.getTag()).getREPEAT_ID());
             transactionModelObj.setNOTIFY(String.valueOf(getView().findViewById(transactionContentNotifyRG.getCheckedRadioButtonId()).getTag()));
 
@@ -174,7 +164,7 @@ public class TransactionFragment extends DialogFragment {
                 transactionModelObj.setNOTIFY_TIME(String.valueOf(transactionContentAutoAddTimeTV.getText()));
             }
 
-
+            transactionModelObj.setSCHD_UPTO_DATE(String.valueOf(transactionContentScheduleUptoDateTV.getText()));
         }
     }
 
@@ -192,14 +182,65 @@ public class TransactionFragment extends DialogFragment {
         //set up account currency code
         transactionContentAccountCurrencyTV.setText(loggedInUserObj.getCUR_CODE());
 
+        String dateStr = (UI_DATE_FORMAT_SDF.format(transactionModelObj.getTRAN_DATE())).toUpperCase();
+        addUpdateDateTV.setText(dateStr);
+
+        //hide repeat by default
+        transactionContentRepeatLL.setVisibility(View.GONE);
+        transactionContentNotifyDivider.setVisibility(View.GONE);
+        transactionContentNotifyLL.setVisibility(View.GONE);
+        transactionContentScheduleDivider.setVisibility(View.GONE);
+        transactionContentScheduleLL.setVisibility(View.GONE);
+
         if(transactionModelObj.getTRAN_ID() != null){
-            //this transaction is being edited
+            //set name
+            addUpdateTranNameET.setText(transactionModelObj.getTRAN_NAME());
+
+            //set amount
+            transactionContentAmountTV.setText(FinappleUtility.formatAmount(loggedInUserObj.getMETRIC(), String.valueOf(transactionModelObj.getTRAN_AMT())));
+
+            //set category
+            setCategory(getCategoryOnId(categoriesList, transactionModelObj.getCAT_ID()));
+
+            //set Account
+            setAccount(getAccountOnId(accountList, transactionModelObj.getACC_ID()));
+
+            //set Spent On
+            setSpenton(getSpentonOnId(spentOnList, transactionModelObj.getSPNT_ON_ID()));
+
+            //set transaction type
+            if("EXPENSE".equalsIgnoreCase(transactionModelObj.getTRAN_TYPE())){
+                addUpdateTranExpIncRadioGrp.check(addUpdateTransactionRL.findViewWithTag("EXPENSE").getId());
+            }
+            else{
+                addUpdateTranExpIncRadioGrp.check(addUpdateTransactionRL.findViewWithTag("INCOME").getId());
+            }
+
+            //set notes
+            addUpdateNoteET.setText(transactionModelObj.getTRAN_NOTE());
+
+            //repeat
+            if(transactionModelObj.getREPEAT_ID() != null && !transactionModelObj.getREPEAT_ID().isEmpty()){
+                transactionContentRepeatSwitch.setChecked(true);
+
+                //set repeat
+                setRepeat(getRepeatOnId(repeatsList, transactionModelObj.getREPEAT_ID()));
+
+                //set notify & add
+                if("NOTIFY".equalsIgnoreCase(transactionModelObj.getNOTIFY())){
+                    transactionContentNotifyRG.check(addUpdateTransactionRL.findViewWithTag("NOTIFY").getId());
+                    transactionContentNotifyAddTimeTV.setText(transactionModelObj.getNOTIFY_TIME());
+                }
+                else{
+                    transactionContentNotifyRG.check(addUpdateTransactionRL.findViewWithTag("AUTO").getId());
+                    transactionContentAutoAddTimeTV.setText(transactionModelObj.getNOTIFY_TIME());
+                }
+
+                //schedule untill
+                transactionContentScheduleUptoDateTV.setText(transactionModelObj.getSCHD_UPTO_DATE());
+            }
         }
         else{
-            String dateStr = (UI_DATE_FORMAT_SDF.format(transactionModelObj.getTRAN_DATE())).toUpperCase();
-
-            addUpdateDateTV.setText(dateStr);
-
             //set default category to be set
             setCategory(getDefaultCategory(categoriesList));
 
@@ -369,22 +410,19 @@ public class TransactionFragment extends DialogFragment {
 
         transactionContentAccountCurrencyTV = (TextView) view.findViewById(R.id.transactionContentAccountCurrencyTVId);
         transactionContentAccountTotalTV = (TextView) view.findViewById(R.id.transactionContentAccountTotalTVId);
+        transactionContentAccountStatusTV = (TextView) view.findViewById(R.id.transactionContentAccountStatusTVId);
 
-        addUpdateTranExpRadio = (RadioButton) view.findViewById(R.id.addUpdateTranExpRadioId);
-        addUpdateTranIncRadio = (RadioButton) view.findViewById(R.id.addUpdateTranIncRadioId);
         addUpdateTranExpIncRadioGrp = (RadioGroup) view.findViewById(R.id.addUpdateTranExpIncRadioGrpId);
         addUpdateNoteET = (EditText) view.findViewById(R.id.addUpdateNoteETId);
         transactionHeaderSaveTV = (TextView) view.findViewById(R.id.transactionHeaderSaveTVId);
 
         transactionContentRepeatLL = (LinearLayout) view.findViewById(R.id.transactionContentRepeatLLId);
-        transactionContentRepeatCB = (CheckBox) view.findViewById(R.id.transactionContentRepeatCBId);
+        transactionContentRepeatSwitch = (Switch) view.findViewById(R.id.transactionContentRepeatSwitchId);
 
         transactionContentNotifyDivider = view.findViewById(R.id.transactionContentNotifyDividerId);
         transactionContentNotifyLL = (LinearLayout) view.findViewById(R.id.transactionContentNotifyLLId);
 
         transactionContentNotifyRG = (RadioGroup) view.findViewById(R.id.transactionContentNotifyRGId);
-        transactionContentNotifyAddRB = (RadioButton) view.findViewById(R.id.transactionContentNotifyAddRBId);
-        transactionContentAutoAddRB = (RadioButton) view.findViewById(R.id.transactionContentAutoAddRBId);
 
         transactionContentNotifyAddTimeTV = (TextView) view.findViewById(R.id.transactionContentNotifyAddTimeTVId);
         transactionContentAutoAddTimeTV = (TextView) view.findViewById(R.id.transactionContentAutoAddTimeTVId);
@@ -422,7 +460,7 @@ public class TransactionFragment extends DialogFragment {
                     String dateStr = String.valueOf(((TextView)v).getText());
 
                     if("FOREVER".equalsIgnoreCase(dateStr)){
-                        dateStr = DB_DATE_FORMAT_SDF.format(UI_DATE_FORMAT_SDF.parse(String.valueOf(addUpdateDateTV.getText())));
+                        dateStr = DB_DATE_FORMAT_SDF.format(UI_DATE_FORMAT_SDF.parse(String.valueOf(((TextView)v).getText())));
                     }
                     else{
                         dateStr = DB_DATE_FORMAT_SDF.format(UI_DATE_FORMAT_SDF.parse(String.valueOf(((TextView)v).getText())));
@@ -545,7 +583,7 @@ public class TransactionFragment extends DialogFragment {
             }
         });
 
-        transactionContentRepeatCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        transactionContentRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
@@ -585,6 +623,42 @@ public class TransactionFragment extends DialogFragment {
         });
 
         setFont(addUpdateTransactionRL);
+    }
+
+    private AccountsMO getAccountOnId(List<AccountsMO> accountList, String accountIdStr){
+        for(AccountsMO iterList : accountList){
+            if(iterList.getACC_ID().equalsIgnoreCase(accountIdStr)){
+                return iterList;
+            }
+        }
+        return null;
+    }
+
+    private CategoryMO getCategoryOnId(List<CategoryMO> categoriesList, String cateforyIdStr){
+        for(CategoryMO iterList : categoriesList){
+            if(iterList.getCAT_ID().equalsIgnoreCase(cateforyIdStr)){
+                return iterList;
+            }
+        }
+        return null;
+    }
+
+    private SpentOnMO getSpentonOnId(List<SpentOnMO> spentOnList, String spentonIdStr){
+        for(SpentOnMO iterList : spentOnList){
+            if(iterList.getSPNT_ON_ID().equalsIgnoreCase(spentonIdStr)){
+                return iterList;
+            }
+        }
+        return null;
+    }
+
+    private RepeatMO getRepeatOnId(List<RepeatMO> repeatMOList, String repeatIdStr){
+        for(RepeatMO iterList : repeatMOList){
+            if(iterList.getREPEAT_ID().equalsIgnoreCase(repeatIdStr)){
+                return iterList;
+            }
+        }
+        return null;
     }
 
     private AccountsMO getDefaultAccount(List<AccountsMO> accountList){
@@ -721,20 +795,20 @@ public class TransactionFragment extends DialogFragment {
 
     private void showConfirmCloseFragment(){
         FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_CONFIRM_CLOSE);
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_CONFIRM);
         if (frag != null) {
             manager.beginTransaction().remove(frag).commit();
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CONFIRM_CLOSE_MESSAGE, "Discard Transaction ?");
+        bundle.putSerializable(CONFIRM_MESSAGE, "Discard Transaction ?");
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
 
-        CloseConfirmFragment confirmFragment = new CloseConfirmFragment();
+        ConfirmFragment confirmFragment = new ConfirmFragment();
         confirmFragment.setArguments(bundle);
         confirmFragment.setTargetFragment(currentFrag, 0);
-        confirmFragment.show(manager, FRAGMENT_CONFIRM_CLOSE);
+        confirmFragment.show(manager, FRAGMENT_CONFIRM);
     }
 
     private DatePickerDialog.OnDateSetListener tranDateListener = new DatePickerDialog.OnDateSetListener() {
@@ -840,7 +914,6 @@ public class TransactionFragment extends DialogFragment {
     private void initDb() {
         calendarDbService = new CalendarDbService(mContext);
         transactionsDbService = new TransactionsDbService(mContext);
-        authorizationDbService = new AuthorizationDbService(mContext);
     }
 
     public void onFinishDialog(CategoryMO categoryMO) {
@@ -874,6 +947,13 @@ public class TransactionFragment extends DialogFragment {
 
         transactionContentAccountTotalTV = FinappleUtility.formatAmountView(transactionContentAccountTotalTV, loggedInUserObj, accountsMO.getACC_TOTAL());
 
+        if(accountsMO.getACC_TOTAL() < ACCOUNT_LOW_BALANCE_LIMIT){
+            transactionContentAccountStatusTV.setVisibility(View.VISIBLE);
+        }
+        else{
+            transactionContentAccountStatusTV.setVisibility(View.GONE);
+        }
+
         transactionContentAccountLL.setTag(accountsMO);
     }
 
@@ -900,7 +980,7 @@ public class TransactionFragment extends DialogFragment {
     //method iterates over each component in the activity and when it finds a text view..sets its font
     public void setFont(ViewGroup group) {
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
 
         int count = group.getChildCount();
         View v;

@@ -2,50 +2,20 @@ package com.finappl.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.finappl.R;
-import com.finappl.adapters.SettingsProfilePersonalCountryAdapter;
-import com.finappl.adapters.SettingsProfilePersonalCurrencyAdapter;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.NotificationDbService;
-import com.finappl.dbServices.SettingsDbService;
-import com.finappl.models.CountryModel;
-import com.finappl.models.CurrencyModel;
 import com.finappl.models.NotificationModel;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
-import com.finappl.models.SettingsNotificationModel;
-import com.finappl.models.SpinnerModel;
 import com.finappl.models.UserMO;
-import com.finappl.models.UsersModel;
-import com.finappl.utils.Constants;
 import com.finappl.utils.FinappleUtility;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 @SuppressLint("NewApi")
 public class NotificationsHandlerActivity extends Activity {

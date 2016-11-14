@@ -1,77 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
-<GridLayout
-    android:id="@+id/calendarGridDayGL"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="45dp"
-    android:layout_height="45dp"
-    android:orientation="horizontal">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center" >
 
-    <GridLayout
-        android:id="@+id/calendarGridDayContentGL"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <LinearLayout android:id="@+id/calendarGridDayContentLLId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@drawable/circle_calendar_no_tap"
-        android:columnCount="1"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <TextView
+            android:id="@+id/calendarDayAmountTVId"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center">
+            android:layout_gravity="center"
+            android:text="3.5K"
+            android:textColor="@color/finappleCurrencyNegColor"
+            android:textSize="8sp" />
 
-            <TextView
-                android:id="@+id/calendarDayTVId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="30"
-                android:textColor="@color/Black"
-                android:textSize="17sp">
-            </TextView>
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/calendarDayTVId"
+            android:text="30"
+            android:textColor="@color/Black"
+            android:textSize="17sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
         <LinearLayout
-            android:paddingTop="3dp"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/calendarCellSchTransactionIndicatorTVId"
-                android:layout_width="4dp"
-                android:layout_height="4dp"
+                android:layout_width="@dimen/calendar_grid_cell_activity_indicator_size"
+                android:layout_height="@dimen/calendar_grid_cell_activity_indicator_size"
                 android:background="@drawable/circle_calendar_schedule_transaction_indicator"
                 android:visibility="visible" />
 
             <TextView
                 android:id="@+id/calendarCellTransactionIndicatorTVId"
-                android:layout_width="4dp"
-                android:layout_height="4dp"
+                android:layout_width="@dimen/calendar_grid_cell_activity_indicator_size"
+                android:layout_height="@dimen/calendar_grid_cell_activity_indicator_size"
                 android:layout_marginLeft="2dp"
                 android:background="@drawable/circle_calendar_transaction_indicator"
                 android:visibility="visible" />
 
             <TextView
                 android:id="@+id/calendarCellSchTransferIndicatorTVId"
-                android:layout_width="4dp"
-                android:layout_height="4dp"
+                android:layout_width="@dimen/calendar_grid_cell_activity_indicator_size"
+                android:layout_height="@dimen/calendar_grid_cell_activity_indicator_size"
                 android:layout_marginLeft="2dp"
                 android:background="@drawable/circle_calendar_schedule_transfer_indicator"
                 android:visibility="visible" />
 
             <TextView
                 android:id="@+id/calendarCellTransferIndicatorTVId"
-                android:layout_width="4dp"
-                android:layout_height="4dp"
+                android:layout_width="@dimen/calendar_grid_cell_activity_indicator_size"
+                android:layout_height="@dimen/calendar_grid_cell_activity_indicator_size"
                 android:layout_marginLeft="2dp"
                 android:background="@drawable/circle_calendar_transfer_indicator"
                 android:visibility="visible" />
         </LinearLayout>
 
-    </GridLayout>
+    </LinearLayout>
 
-</GridLayout>
+
+</LinearLayout>

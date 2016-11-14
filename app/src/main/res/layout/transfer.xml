@@ -1,32 +1,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/addUpdateTrnfrRLId"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
+    android:id="@+id/transferRLId"
+    android:layout_width="@dimen/fragment_full_width"
+    android:layout_height="@dimen/fragment_full_height"
+    android:layout_gravity="center"
     android:layout_margin="@dimen/screen_components_padding_from_walls"
-    android:background="@color/white"
     android:gravity="right"
-    app:theme="@style/FinappleTheme"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:theme="@style/FinappleTheme">
 
     <!-- header -->
 
     <LinearLayout
-        android:visibility="visible"
-        android:id="@+id/addUpdateTrnfrHeaderLLId"
+        android:id="@+id/transferHeaderLLId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/finappleTheme"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="@dimen/screen_components_padding_from_walls">
+        android:padding="@dimen/screen_components_padding_from_walls"
+        android:visibility="visible">
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -36,47 +35,43 @@
                 android:gravity="left|center_vertical"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/addUpdateTrnfrBackImgId"
-                    android:layout_width="@dimen/image_header_size"
-                    android:layout_height="@dimen/image_header_size"
-                    android:background="@drawable/cross_white" />
+                <TextView
+                    android:id="@+id/transferCloseTVId"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="CLOSE"
+                    android:textColor="@drawable/textview_touch_light"
+                    android:textSize="10sp" />
 
                 <TextView
-                    android:id="@+id/addUpdateDateTVId"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/transferDateTVId"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:text="28 SEPTEMBER '16"
-                    android:textColor="@color/white"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="@dimen/text_header_title_size" />
+                    android:gravity="center"
+                    android:text="28 SEP '16"
+                    android:textColor="@drawable/textview_touch_light"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/TrnfrsButtonLLId"
-                android:layout_marginRight="-40dp"
+                android:id="@+id/transferSaveLLId"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="right|center"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/TrnfrSchedIVId"
-                    android:layout_width="@dimen/image_header_size"
-                    android:layout_height="@dimen/image_header_size"
-                    android:background="@drawable/sched_set_white" />
-
-                <ImageView
-                    android:layout_marginLeft="20dp"
-                    android:id="@+id/TrnfrSaveIVId"
-                    android:layout_width="@dimen/image_header_size"
-                    android:layout_height="@dimen/image_header_size"
-                    android:tag="HIDDEN"
-                    android:background="@drawable/tick_white_small"/>
+                <TextView
+                    android:id="@+id/transferHeaderSaveTVId"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:gravity="right|center_vertical"
+                    android:text="SAVE"
+                    android:textColor="@drawable/textview_touch_light"
+                    android:textSize="10sp" />
 
             </LinearLayout>
-
 
         </LinearLayout>
 
@@ -113,75 +108,28 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/transferCurrencyTVId"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="@drawable/edit_text_border_light"
                         android:clickable="false"
-                        android:editable="false"
                         android:gravity="bottom"
-                        android:hint="INR"
+                        android:tag="CURRENCY"
+                        android:text="USD"
                         android:textColorHint="@color/finappleCurrencyCodeColorLight"
                         android:textSize="15sp" />
 
-                    <EditText
-                        android:id="@+id/addUpdateTrnfrAmtETId"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_border_light"
-                        android:gravity="center"
-                        android:hint="0"
-                        android:inputType="numberDecimal"
-                        android:textColor="@color/formTextLight"
-                        android:textColorHint="@color/formHintTextLight"
-                        android:textSize="@dimen/text_form_text_size" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TITLE"
-                        android:textColor="@color/formHeadingTextLight"
-                        android:textSize="@dimen/text_form_header_size" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="@dimen/input_indicator_image_size"
-                        android:layout_height="@dimen/input_indicator_image_size"
-                        android:background="@drawable/write_white" />
-
-                    <EditText
-                        android:id="@+id/addUpdateTrnfrNameETId"
+                        android:id="@+id/transferAmountTVId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_border_light"
                         android:gravity="center"
-                        android:inputType="textCapWords"
-                        android:maxLength="25"
-                        android:maxLines="1"
-                        android:textColor="@color/formTextLight"
+                        android:inputType="numberDecimal"
+                        android:text="0"
+                        android:textColor="@drawable/textview_touch_light"
+                        android:textColorHint="@color/formHintTextLight"
                         android:textSize="@dimen/text_form_text_size" />
                 </LinearLayout>
 
@@ -194,14 +142,14 @@
 
     <!--Page-->
     <ScrollView
-        android:id="@+id/addUpdatePageSVId"
+        android:id="@+id/transferSVId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/addUpdateTrnfrHeaderLLId"
+        android:layout_below="@+id/transferHeaderLLId"
         android:background="@color/finappleBackground">
 
         <LinearLayout
-            android:id="@+id/addUpdateTrnfrPageLLId"
+            android:id="@+id/transferPageLLId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -228,23 +176,90 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="FROM"
+                            android:text="FROM ACCOUNT"
                             android:textColor="@color/formHeadingTextDark"
                             android:textSize="10sp" />
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/transferFromAccountLLId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
 
-                        <Spinner
-                            android:backgroundTint="@color/finappleThemeDark"
-                            android:spinnerMode="dropdown"
-                            android:id="@+id/addUpdateCatSpnId"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="35dp" />
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/spinner_image_dimen"
+                                android:layout_height="@dimen/spinner_image_dimen"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/slider" />
+
+                            <ImageView
+                                android:id="@+id/transferFromAccountIVId"
+                                android:layout_width="@dimen/spinner_image_dimen"
+                                android:layout_height="@dimen/spinner_image_dimen"
+                                android:background="@drawable/debit_card" />
+
+                            <TextView
+                                android:id="@+id/transferFromAccountTVId"
+                                android:layout_width="110dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:text="DEBIT CARD"
+                                android:textColor="@drawable/textview_touch_dark"
+                                android:textSize="@dimen/spinner_text_size" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:orientation="horizontal"
+                            android:paddingLeft="32dp">
+
+                            <TextView
+                                android:id="@+id/transferFromAccountCurrencyTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="INR"
+                                android:textColor="@color/finappleCurrencyCodeColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+
+                            <TextView
+                                android:id="@+id/transferFromAccountTotalTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:text="27,854.80"
+                                android:textColor="@color/finappleCurrencyPosColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:orientation="horizontal"
+                            android:paddingLeft="32dp">
+
+                            <TextView
+                                android:id="@+id/transferFromAccountStatusTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="(low on balance)"
+                                android:textColor="@color/negativeButtonColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -266,44 +281,107 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="TO"
+                            android:text="TO ACCOUNT"
                             android:textColor="@color/formHeadingTextDark"
                             android:textSize="10sp" />
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/transferToAccountLLId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
 
-                        <Spinner
-                            android:backgroundTint="@color/finappleThemeDark"
-                            android:spinnerMode="dropdown"
-                            android:id="@+id/addUpdateAccSpnId"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="35dp" />
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
+                            <ImageView
+                                android:layout_width="@dimen/spinner_image_dimen"
+                                android:layout_height="@dimen/spinner_image_dimen"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/slider" />
+
+                            <ImageView
+                                android:id="@+id/transferToAccountIVId"
+                                android:layout_width="@dimen/spinner_image_dimen"
+                                android:layout_height="@dimen/spinner_image_dimen"
+                                android:background="@drawable/cash" />
+
+                            <TextView
+                                android:id="@+id/transferToAccountTVId"
+                                android:layout_width="110dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:text="CASH"
+                                android:textColor="@drawable/textview_touch_dark"
+                                android:textSize="@dimen/spinner_text_size" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:orientation="horizontal"
+                            android:paddingLeft="32dp">
+
+                            <TextView
+                                android:id="@+id/transferToAccountCurrencyTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="INR"
+                                android:textColor="@color/finappleCurrencyCodeColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+
+                            <TextView
+                                android:id="@+id/transferToAccountTotalTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:text="440"
+                                android:textColor="@color/finappleCurrencyPosColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:orientation="horizontal"
+                            android:paddingLeft="32dp">
+
+                            <TextView
+                                android:id="@+id/transferToAccountStatusTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="(low on balance)"
+                                android:textColor="@color/negativeButtonColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+
+                        </LinearLayout>
                     </LinearLayout>
-
                 </LinearLayout>
-
-
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_height"
-                android:layout_marginTop="@dimen/divider_margin"
                 android:layout_marginBottom="@dimen/divider_margin"
+                android:layout_marginTop="@dimen/divider_margin"
                 android:background="@color/divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/fab_size_normal"
-                android:padding="@dimen/screen_components_padding_from_walls">
+                android:padding="@dimen/screen_components_padding_from_walls"
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -339,20 +417,20 @@
                             android:background="@drawable/write_grey" />
 
                         <EditText
-                            android:id="@+id/addUpdateNoteETId"
+                            android:id="@+id/transferNoteETId"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_border"
                             android:gravity="center"
                             android:inputType="textCapWords"
-                            android:textColor="@color/formTextDark"
+                            android:textColor="@color/tertiaryText"
                             android:textSize="@dimen/text_form_text_size" />
                     </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
 
-            <!--<View
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginBottom="@dimen/divider_margin"
@@ -363,7 +441,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="25dp"
                 android:padding="@dimen/screen_components_padding_from_walls">
 
                 <LinearLayout
@@ -374,180 +451,244 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginBottom="15dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <CheckBox
-                            android:layout_marginLeft="-4dp"
-                            android:id="@+id/TrnfrSchedueCBId"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="SCHEDULE"
-                            android:textColor="@color/formTextDark"
-                            android:textSize="@dimen/text_form_header_size" />
+                            android:text="REPEAT"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                        <Switch
+                            android:id="@+id/transferRepeatSwitchId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="5dp"
+                            android:buttonTint="@color/finappleTheme"
+                            android:checked="false" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_marginBottom="@dimen/fab_size_normal"
-                        android:id="@+id/TrnfrSchedLLId"
+                        android:id="@+id/transferRepeatLLId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:layout_width="@dimen/spinner_image_dimen"
+                            android:layout_height="@dimen/spinner_image_dimen"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/slider" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="2dp"
+                            android:text="EVERY"
+                            android:textColor="@color/finappleThemeDark"
+                            android:textSize="@dimen/spinner_text_size" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:text="-"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/spinner_text_size" />
+
+                        <TextView
+                            android:id="@+id/transferRepeatTVId"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:text="MONTH"
+                            android:textColor="@drawable/textview_touch_dark"
+                            android:textSize="@dimen/spinner_text_size" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/transferNotifyDividerId"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="@dimen/divider_margin"
+                android:layout_marginTop="@dimen/divider_margin"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:id="@+id/transferNotifyLLId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/screen_components_padding_from_walls">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NOTIFY"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
                             <RadioGroup
-                                android:id="@+id/schedTrnfrSchedRadioGrpId"
-                                android:layout_width="match_parent"
+                                android:id="@+id/transferNotifyRGId"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="left"
                                 android:orientation="horizontal">
 
                                 <RadioButton
-                                    android:layout_marginLeft="-4dp"
-                                    android:id="@+id/schedTrnfrOnceAddRadioId"
+                                    android:id="@+id/transferNotifyAddRBId"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:buttonTint="@color/finappleTheme"
                                     android:checked="true"
-                                    android:tag="ONCE"
-                                    android:text="ONCE"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
+                                    android:tag="NOTIFY"
+                                    android:text="NOTIFY &amp; ADD"
+                                    android:textColor="@drawable/textview_touch_dark"
+                                    android:textSize="12sp" />
 
                                 <RadioButton
-                                    android:id="@+id/schedTrnfrDailyAddRadioId"
+                                    android:id="@+id/transferAutoAddRBId"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:tag="DAILY"
-                                    android:text="DAILY"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
-
-                                <RadioButton
-                                    android:id="@+id/schedTrnfrWeeklyAddRadioId"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:tag="WEEKLY"
-                                    android:text="WEEKLY"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
-
-                                <RadioButton
-                                    android:id="@+id/schedTrnfrMonthlyAddRadioId"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:tag="MONTHLY"
-                                    android:text="MONTHLY"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
-
-                                <RadioButton
-                                    android:id="@+id/schedTrnfrYearlyAddRadioId"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:tag="YEARLY"
-                                    android:text="YEARLY"
-                                    android:textColor="@color/finappleTheme"
-                                    android:textSize="8sp" />
+                                    android:layout_marginLeft="10dp"
+                                    android:buttonTint="@color/finappleTheme"
+                                    android:tag="AUTO"
+                                    android:text="AUTO ADD"
+                                    android:textColor="@drawable/textview_touch_dark"
+                                    android:textSize="12sp" />
                             </RadioGroup>
-
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:orientation="horizontal">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                                android:orientation="horizontal">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginBottom="5dp"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="NOTIFICATION"
-                                        android:textColor="@color/formHeadingTextDark"
-                                        android:textSize="10sp" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <TextView
+                                    android:id="@+id/transferNotifyAddTimeTVId"
+                                    android:layout_width="125dp"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
+                                    android:gravity="center"
+                                    android:text="10:00 AM"
+                                    android:textColor="@drawable/textview_touch_dark"
+                                    android:textSize="12sp" />
 
-                                    <RadioGroup
-                                        android:id="@+id/schedTrnfrAutoRadioGrpId"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-
-                                        <RadioButton
-                                            android:id="@+id/schedTrnfrAutoAddRadioId"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:checked="true"
-                                            android:tag="AUTO_ADD"
-                                            android:text="AUTO ADD"
-                                            android:textColor="@color/finappleTheme"
-                                            android:textSize="12sp" />
-
-                                        <RadioButton
-                                            android:id="@+id/schedTrnfrAutoAddNotifyRadioId"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="10dp"
-                                            android:tag="NOTIFY_ADD"
-                                            android:text="NOTIFY &amp; ADD"
-                                            android:textColor="@color/finappleTheme"
-                                            android:textSize="12sp" />
-                                    </RadioGroup>
-
-                                </LinearLayout>
-
+                                <TextView
+                                    android:id="@+id/transferAutoAddTimeTVId"
+                                    android:layout_width="70dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="10:00 AM"
+                                    android:textColor="@drawable/textview_touch_dark"
+                                    android:textSize="12sp" />
                             </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/transferScheduleDividerId"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="@dimen/divider_margin"
+                android:layout_marginTop="@dimen/divider_margin"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:id="@+id/transferScheduleLLId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:orientation="horizontal"
+                android:padding="@dimen/screen_components_padding_from_walls">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SCHEDULE UNTIL"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/input_indicator_image_size"
+                                android:layout_height="@dimen/input_indicator_image_size"
+                                android:layout_marginRight="5dp"
+                                android:background="@drawable/scheduled_grey" />
+
+                            <TextView
+                                android:id="@+id/transferScheduleUptoDateTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="FOREVER"
+                                android:textColor="@drawable/textview_touch_dark"
+                                android:textSize="@dimen/spinner_text_size" />
 
                         </LinearLayout>
                     </LinearLayout>
-
                 </LinearLayout>
-
-            </LinearLayout>-->
-
-
-
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-    <!--<ImageButton
-        android:id="@+id/addUpdatePageFabIBId"
-        style="@style/FloatingActionButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="20dp"
-        android:clickable="true"
-        android:contentDescription="@null"
-        android:onClick="onDone"
-        android:src="@drawable/tick_white_small"
-        android:tag="ADD" />-->
-
 </RelativeLayout>

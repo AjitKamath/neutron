@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Calendar dimensions-->
+    <dimen name="calendar_week_name_width">51dp</dimen>
+    <dimen name="calendar_week_name_text_size">12sp</dimen>
+    <dimen name="calendar_grid_cell_activity_indicator_size">3dp</dimen>
+
     <dimen name="image_header_size">25dp</dimen>
     <dimen name="text_header_title_size">18sp</dimen>
     <dimen name="text_button_big_text_size">15sp</dimen>
     <dimen name="text_tab_big_size">15sp</dimen>
-    <dimen name="text_tab_small_size">12sp</dimen>
+    <dimen name="text_tab_small_size">10sp</dimen>
     <dimen name="text_bubble_counter_small_size">8sp</dimen>
 
     <dimen name="layout_header_size">40dp</dimen>

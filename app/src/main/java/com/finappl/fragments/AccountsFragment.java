@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,12 @@ import com.finappl.models.UserMO;
 import java.util.List;
 
 import static com.finappl.utils.Constants.ACCOUNT_OBJECT;
+import static com.finappl.utils.Constants.ACCOUNT_TYPE_FLAG;
 import static com.finappl.utils.Constants.CATEGORY_OBJECT;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_CATEGORY_OBJECT;
+import static com.finappl.utils.Constants.UI_FONT;
 
 /**
  * Created by ajit on 21/3/16.
@@ -44,6 +47,7 @@ public class AccountsFragment extends DialogFragment {
     private List<AccountsMO> accountsList;
 
     private String selectedAccountStr;
+    private String whichAccountStr;
 
     private UserMO loggedInUserMo;
 
@@ -65,6 +69,7 @@ public class AccountsFragment extends DialogFragment {
         accountsList = (List<AccountsMO>) getArguments().get(ACCOUNT_OBJECT);
         selectedAccountStr = (String) getArguments().get(SELECTED_ACCOUNT_OBJECT);
         loggedInUserMo = (UserMO) getArguments().get(LOGGED_IN_OBJECT);
+        whichAccountStr = (String) getArguments().get(ACCOUNT_TYPE_FLAG);
     }
 
     private void setupPage() {
@@ -87,8 +92,18 @@ public class AccountsFragment extends DialogFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TransactionFragment activity = (TransactionFragment) getTargetFragment();
-                activity.onFinishDialog(accountsList.get(position));
+                if(getTargetFragment() instanceof TransactionFragment){
+                    TransactionFragment activity = (TransactionFragment) getTargetFragment();
+                    activity.onFinishDialog(accountsList.get(position));
+                }
+                else if(getTargetFragment() instanceof TransferFragment){
+                    TransferFragment activity = (TransferFragment) getTargetFragment();
+                    activity.onFinishDialog(accountsList.get(position), whichAccountStr);
+                }
+                else{
+                    Log.e(CLASS_NAME, "Fragment dismissed from unknown parent fragment");
+                }
+
                 dismiss();
             }
         };
@@ -119,7 +134,7 @@ public class AccountsFragment extends DialogFragment {
     //method iterates over each component in the activity and when it finds a text view..sets its font
     public void setFont(ViewGroup group) {
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
 
         int count = group.getChildCount();
         View v;

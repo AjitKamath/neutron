@@ -3,4 +3,8 @@
     <integer name="cat_acc_spnt_max_count">15</integer>
     <integer name="input_max_count_small">15</integer>
     <integer name="input_max_count_big">50</integer>
+
+    <integer name="fragmentAnimationTime">5000</integer>
+
+    <integer name="calendar_grid_cell_size">90</integer>
 </resources>

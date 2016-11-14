@@ -28,62 +28,6 @@
             android:name=".activities.LoginActivity"
             android:label="Login"/>
 
-        <!--Registration-->
-        <activity
-            android:name=".activities.RegisterUserActivity"
-            android:label="Register User"/>
-        <activity
-            android:name=".activities.RegisterProfilePersonalActivity"
-            android:label="Register Profile - Personal"/>
-        <activity
-            android:name=".activities.RegisterProfileWorkActivity"
-            android:label="Register Profile - Work"/>
-        <activity
-            android:name=".activities.RegisterProfileContactActivity"
-            android:label="Register Profile - Contact"/>
-
-        <!--Add's-->
-        <activity
-            android:name=".activities.AddUpdateTransactionActivity"
-            android:label="Transaction Add/Update"/>
-        <activity
-            android:name=".activities.AddUpdateCategoryActivity"
-            android:label="Category Add/Update"/>
-        <activity
-            android:name=".activities.AddUpdateAccountActivity"
-            android:label="Account Add/Update"/>
-        <activity
-            android:name=".activities.AddUpdateSpentOnActivity"
-            android:label="Spent On Add/Update"/>
-        <activity
-            android:name=".activities.AddUpdateTransferActivity"
-            android:label="Transfer Add/Update"/>
-        <activity
-            android:name=".activities.AddUpdateBudgetActivity"
-            android:label="Budget Add/Update"/>
-        <activity
-            android:name=".activities.AddUpdateScheduleTransactionActivity"
-            android:label="Schedule Transaction Add/Update"/>
-        <activity
-            android:name=".activities.AddUpdateScheduleTransferActivity"
-            android:label="Schedule Transfer Add/Update"/>
-
-        <!--View's-->
-        <activity
-            android:name=".activities.ViewActivitiesActivity"
-            android:label="View Activities"/>
-
-        <!--Setting's-->
-        <activity
-            android:name=".activities.SettingsActivity"
-            android:label="Settings"/>
-        <activity
-            android:name=".activities.ManageContentActivity"
-            android:label="Manage Content"/>
-        <activity
-            android:name=".activities.BudgetsViewActivity"
-            android:label="Budgets"/>
-
         <!--Notifications-->
         <activity
             android:name=".activities.NotificationScheduledTransactionActivity"

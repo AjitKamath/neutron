@@ -26,6 +26,7 @@ import static com.finappl.utils.Constants.ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_SPENTON_OBJECT;
 import static com.finappl.utils.Constants.SPENTON_OBJECT;
+import static com.finappl.utils.Constants.UI_FONT;
 
 /**
  * Created by ajit on 21/3/16.
@@ -114,7 +115,7 @@ public class SpentonsFragment extends DialogFragment {
     //method iterates over each component in the activity and when it finds a text view..sets its font
     public void setFont(ViewGroup group) {
         //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
 
         int count = group.getChildCount();
         View v;

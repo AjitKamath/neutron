@@ -1,8 +1,5 @@
 package com.finappl.utils;
 
-import android.app.Activity;
-import android.content.Context;
-
 import com.finappl.R;
 
 import java.text.SimpleDateFormat;
@@ -13,37 +10,22 @@ import java.text.SimpleDateFormat;
 public final class Constants{
     //DB
     public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 68;
-
-    //DB Properties
-    public static final String USERNAME = "Ajit";
-    public static final String PASSWORD = "test";
+    public static final int DB_VERSION = 73;
 
     //Admin properties
     public static final String ADMIN_USERID = "ADMIN";
-
-    //Test Constants
-    //public static final String TEST_USERID = "USER";
-    public static final String TEST_USERNAME = "Ajit";
-    public static final String TEST_USERPASS = "Password";
-    public static final String TEST_USEREMAIL = "ajitkamathk@gmail.com";
-    public static final String TEST_USERGEND = "M";
-    public static final String TEST_USERDOB = "17 Jul 1990";
-    public static final String TEST_USERCOUNTRY = "CNTRY1";
-    public static final String TEST_USERDEVICEID = "MotoG";
-    public static final String TEST_USERISDELETED = "N";
-
-    public static final String TEST_USERCURRENCY = "CUR1";
-    public static final String TEST_DAILYLIMIT = "100";
-    public static final String TEST_MONTHLYLIMIT = "3000";
-    public static final String TEST_YEARLYLIMIT = "250000";
 
     //DB flag value for affirmative/non affirmative
     public static final String DB_AFFIRMATIVE = "Y";
     public static final String DB_NONAFFIRMATIVE = "N";
 
+    public static final String UI_FONT = "Roboto-Light.ttf";
+
     //This is the default time at which notifications will be shown to the user
-    public static final String DB_DEFAULT_NOTIF_TIME = "10:00";
+    public static final String DB_DEFAULT_NOTIF_TIME = "21:00";
+
+    //limits
+    public static final Double ACCOUNT_LOW_BALANCE_LIMIT = 100.0;
 
     //DB Tables
     public static final String DB_TABLE_USER = "USERS";
@@ -72,20 +54,8 @@ public final class Constants{
 
     public static final String DEFAULT_QUICK_TRANSACTION_NAME = "Quick Transaction";
 
-    //weekdays order
-    public static final String[] WEEK_ARRAY = new String[]{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-
     //months
-    public static final String[] MONTHS_ARRAY = new String[]{"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
-
-    //date super scripts
-    public static final String[] DATE_SUPERSCRIPT_ARRAY = new String[]{"", "st", "nd", "rd", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th",
-                "th", "th", "th", "st", "nd", "rd", "th", "th", "th", "th", "th",  "th", "th", "st"};
-
-    //SETTINGS_ARRAY  PARENT1-child1_child2_child3|PARENT2-child1_child2_child3
-    public static final String SETTINGS_ARRAY = "Manage-Categories_Accounts_Spent On|Budgets-Create_View|" +
-                "Schedules-Transactions_Transfers|Profile-Profile Info_Notifications_Widget|Security-Lock Application_Pin|Backup & Restore-Backup_Restore_Backup " +
-                "Interval|Stats-Usage Statistics";
+    public static final String[] MONTHS_ARRAY = new String[]{"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"};
 
     //Month Range to fetch data in one shot
     public static final int MONTHS_RANGE = 11;  //always keep it odd
@@ -96,13 +66,15 @@ public final class Constants{
 
     //Date formats
     public static final String JAVA_DATE_FORMAT = "dd-MM-yyyy";
+    public static final String JAVA_DATE_FORMAT_1 = "MM-yyyy";
     public static final String DB_DATE_FORMAT = "yyyy-MM-dd";
     public static final String DB_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String DB_TIME_FORMAT = "HH:mm";
     public static final String UI_DATE_TIME_FORMAT = "d MMM ''yy H:mm:ss a";
-    public static final String UI_DATE_FORMAT = "d MMM ''yy";
+    public static final String UI_DATE_FORMAT = "d MMM yyyy";
     public static final String UI_TIME_FORMAT = "hh:mm a";
     public static final SimpleDateFormat JAVA_DATE_FORMAT_SDF = new SimpleDateFormat(JAVA_DATE_FORMAT);
+    public static final SimpleDateFormat JAVA_DATE_FORMAT_SDF_1 = new SimpleDateFormat(JAVA_DATE_FORMAT_1);
     public static final SimpleDateFormat DB_DATE_FORMAT_SDF = new SimpleDateFormat(DB_DATE_FORMAT);
     public static final SimpleDateFormat DB_TIME_FORMAT_SDF = new SimpleDateFormat(DB_TIME_FORMAT);
     public static final SimpleDateFormat DB_DATE_TIME_FORMAT_SDF = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
@@ -114,17 +86,23 @@ public final class Constants{
     //FRAGMENT NAMES
     public static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
     public static final String FRAGMENT_TRANSACTION = "FRAGMENT_TRANSACTION";
+    public static final String FRAGMENT_TRANSACTION_DETAILS = "FRAGMENT_TRANSACTION_DETAILS";
+    public static final String FRAGMENT_TRANSFER = "FRAGMENT_TRANSFER";
+    public static final String FRAGMENT_TRANSFER_DETAILS = "FRAGMENT_TRANSFER_DETAILS";
     public static final String FRAGMENT_REPEAT = "FRAGMENT_REPEAT";
     public static final String FRAGMENT_AMOUNT = "FRAGMENT_AMOUNT";
     public static final String FRAGMENT_CATEGORY = "FRAGMENT_CATEGORY";
     public static final String FRAGMENT_ACCOUNT = "FRAGMENT_ACCOUNT";
     public static final String FRAGMENT_SPENTON = "FRAGMENT_SPENTON";
-    public static final String FRAGMENT_CONFIRM_CLOSE = "FRAGMENT_CONFIRM_CLOSE";
+    public static final String FRAGMENT_CONFIRM = "FRAGMENT_CONFIRM";
+    public static final String ADD_ACTIVITY = "ADD_ACTIVITY";
 
     //FRAGMENT OBJECT KEYS
-    public static final String CONFIRM_CLOSE_MESSAGE = "CONFIRM_CLOSE_MESSAGE";
+    public static final String CONFIRM_MESSAGE = "CONFIRM_MESSAGE";
     public static final String TRANSACTION_OBJECT = "TRANSACTION_OBJECT";
+    public static final String TRANSFER_OBJECT = "TRANSFER_OBJECT";
     public static final String LOGGED_IN_OBJECT = "LOGGED_IN_OBJECT";
+    public static final String SELECTED_DATE = "SELECTED_DATE";
     public static final String REPEAT_OBJECT = "REPEAT_OBJECT";
     public static final String AMOUNT_OBJECT = "AMOUNT_OBJECT";
     public static final String CATEGORY_OBJECT = "CATEGORY_OBJECT";
@@ -135,6 +113,7 @@ public final class Constants{
     public static final String SELECTED_SPENTON_OBJECT = "SELECTED_SPENTON_OBJECT";
     public static final String SELECTED_REPEAT_OBJECT = "SELECTED_REPEAT_OBJECT";
     public static final String SELECTED_AMOUNT_OBJECT = "SELECTED_AMOUNT_OBJECT";
+    public static final String ACCOUNT_TYPE_FLAG = "ACCOUNT_TYPE_FLAG";
 
     //SHARED PREFS KEYS
     public static final String SHARED_PREF = "SHARED_PREFERENCE";

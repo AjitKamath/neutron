@@ -695,7 +695,51 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 2. implemented images from database(no hardcodes) for account, category, spent on & repeat spinners.
 3. Added new images for the categories, accounts, spent on & repeat from the icon8.com.
 
-------------------------------------------------------------------------------------29/57-----------------------------------------------------------------------------------
+<--Git Push on 29-oct-2016-->
+
+30-oct-2016
+1. design and implementation of Add Activity fragment.
+2. Cosmetic changes in calendar header.
+3. removal of FAB from calendar screen.
+
+3-nov-2016
+1. cosmetic beautification of calendar screen.
+
+4-nov-2016
+1. design and implementation of activities in calendar screen.
+
+5-nov-2016
+1. account balance low warning in transaction screen.
+2. design of transaction details fragment.
+
+6-nov-2016
+1. partial implementation of transaction details fragment.
+
+7-11-2016
+1. design and implementation of transaction details fragment.
+2. partial implementation of edit transaction.
+
+8-11-2016
+1. full implementation of edit transaction.
+2. full implementation of delete transaction.
+
+9-11-2016
+1. performance improvements in calendarAdapters.
+2. day total amount can be now seen in the calendar day grid cell.
+3. generic code to shorten the amount from 1,23,235 to 1.2L or 123K depending upon the metric.
+
+10-nov-2016
+1. fixed the daily total expense color in calendar grid cell.
+2. cleaned up unwanted code in calendar activity.
+3. re designed the transfer table.
+4. ui design for transfer.
+
+14-nov-2016
+1. TransferFragment partially implemented.
+2. transfer ui design.
+3. InjectView in TransferFragment.
+
+------------------------------------------------------------------------------------36/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
 2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.
    warn they will all be moved to others..same for all)
@@ -713,7 +757,7 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 14. make sure the scheduled activity which is scheduled to happen only once, is not set in the past. It'll never happen. Finapple isn't time machine.
 15. cannot disable sound for the notifications. remove the concept.
 16. need to implement activity graphs in transactions/transfers options popper showing things like recent transaction/transfer. Total transactions in a day/week/month/year/lifetime. 
-    month wise transaction/transfer graphs etc. think on this.
+    month wise transaction/transfer graphs etc. think on this.(OBSOLETE)-----------------------------------------------------------------------------------------------------DONE
 17. Swipeable calendar.------------------------------------------------------------------------------------------------------------------------------------------------------DONE
 18. Swipeable tabs(everywhere !!).
 19. Material buttons(everywhere !!)(OBSOLETE)--------------------------------------------------------------------------------------------------------------------------------DONE
@@ -729,23 +773,23 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 29. Encrypt & Store the PIN--------------------------------------------------------------------------------------------------------------------------------------------------DONE
 30. finish() causes problems. Override back button instead.(OBSOLETE)--------------------------------------------------------------------------------------------------------DONE
 31. Use the Generic method navigateTo(Class) in all the Activities to navigate to other Activities.(OBSOLETE)----------------------------------------------------------------DONE
-32. Use the Generic method setFont(ViewGroup) in all the Activities to set font in.
+32. Use the Generic method setFont(ViewGroup) in all the Activities to set font in.------------------------------------------------------------------------------------------DONE
 33. MoneyFormatter Class.----------------------------------------------------------------------------------------------------------------------------------------------------DONE
 34. HIGH SEVERITY ISSUE WITH HOW THE LISTVIEW BEHAVES IN ANDROID !!! URGENT FIX REQUIRED ALL OVER THE APP !!!----------------------------------------------------------------DONE
-35. Animations Babay !!!
+35. Animations Babay !!!(OBSOLETE)-------------------------------------------------------------------------------------------------------------------------------------------DONE
 36. access constants across the classes in a static way.---------------------------------------------------------------------------------------------------------------------DONE
 37. DO NOT CALL get All accounts and Budgets in CalendarTabsViewPagerAdapter class, checkMonthLegend method.(OBSOLETE)-------------------------------------------------------DONE
 38. STOP Database Leaks !!
 39. Fetching Schedules are insanely in effecient(Check ONE NOTE)
 40. Find out why fetchMonthLegend is called twice.---------------------------------------------------------------------------------------------------------------------------DONE
-41. Ability to schedule from date 1 to date 2
-42. Grand plan to make the App- ONE SCREEN APP
+41. Ability to schedule from date 1 to date 2--------------------------------------------------------------------------------------------------------------------------------DONE
+42. Grand plan to make the App- ONE SCREEN APP-------------------------------------------------------------------------------------------------------------------------------DONE
 43. encrypt the FINAPPL.DB file
 44. Arrive at a standard way to display a currency. (INR 250 or 250 INR ???)-------------------------------------------------------------------------------------------------DONE
 45. Custom popup to choose category/account/spent on-------------------------------------------------------------------------------------------------------------------------DONE
 46. Database re-design(consolidation of transaction/transfer & schedule transaction/transfer)--------------------------------------------------------------------------------DONE
-47. get live account balance in transaction/transfer screen.
-48. simple tick preferred over FABs
+47. get live account balance in transaction/transfer screen.-----------------------------------------------------------------------------------------------------------------DONE
+48. simple tick preferred over FABs------------------------------------------------------------------------------------------------------------------------------------------DONE
 49. POC on threads for intensive tasks(db, adapters)
 50. if the user has chosen a future date while adding a new transaction/transfer, and if it isn't a scheduled transaction/transfer, then ask whether to add the transaction/transfer now or on the particular day
 51. POC on Property Row mapper
@@ -755,16 +799,19 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 55. a flag in category/account/spent on tables to indicate they must be selected by default----------------------------------------------------------------------------------DONE
 56. Progress bar on time intensive tasks
 57. Avoid multiple fetchMonthLegend calls on first time register user.
+58. Loading screen when the app is launched.
+59. Date validations in transaction/transfer screen.
+60. InjectView and OnClick annotations in all the fragments and activity
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-CORE FUNCTIONALITY CHECK:	0/22
+CORE FUNCTIONALITY CHECK:	3/22
 
-TRANSACTION: 			    0/5
-1. NEW TRANSACTION		    (N)
-2. UPDATE TRANSACTION		(N)
+TRANSACTION: 			    3/5
+1. NEW TRANSACTION		    (Y)
+2. UPDATE TRANSACTION		(Y)
 3. QUICK TRANSACTION		(N)
-4. DELETE TRANSACTION		(N)
-5. SCHEDULE TRANSACTION		(N)
+4. DELETE TRANSACTION		(Y)
+5. SCHEDULE TRANSACTION		(Y)
 
 TRANSFER:			        0/5
 1. NEW TRANSFER		    	(N)

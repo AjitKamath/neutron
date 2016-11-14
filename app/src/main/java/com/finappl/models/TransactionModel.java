@@ -23,10 +23,18 @@ public class TransactionModel implements Serializable {
 	private String NOTIFY_TIME;
 	private Date CREAT_DTM;
 	private Date MOD_DTM;
+	private String SCHD_UPTO_DATE;
 
     private String category;
     private String spentOn;
     private String account;
+
+	private String repeat;
+
+	private String categoryImg;
+	private String accountImg;
+	private String spentOnImg;
+	private String repeatImg;
 
     private String currency;
 
@@ -39,6 +47,9 @@ public class TransactionModel implements Serializable {
 	//possibly obsoletes
 	private String SCH_TRAN_ID;
 	private String TRAN_IS_DEL;
+
+	private String transactionDate;
+	private String creatDtm;
 
 	public Date getSchCreateDate() {
 		return schCreateDate;
@@ -230,5 +241,70 @@ public class TransactionModel implements Serializable {
 
 	public void setNOTIFY_TIME(String NOTIFY_TIME) {
 		this.NOTIFY_TIME = NOTIFY_TIME;
+	}
+
+	public String getCategoryImg() {
+		return categoryImg;
+	}
+
+	public void setCategoryImg(String categoryImg) {
+		this.categoryImg = categoryImg;
+	}
+
+	public String getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(String transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+
+	public String getCreatDtm() {
+
+		return creatDtm;
+	}
+
+	public void setCreatDtm(String creatDtm) {
+		this.creatDtm = creatDtm;
+	}
+
+	public String getAccountImg() {
+		return accountImg;
+	}
+
+	public void setAccountImg(String accountImg) {
+		this.accountImg = accountImg;
+	}
+
+	public String getSpentOnImg() {
+		return spentOnImg;
+	}
+
+	public void setSpentOnImg(String spentOnImg) {
+		this.spentOnImg = spentOnImg;
+	}
+
+	public String getRepeatImg() {
+		return repeatImg;
+	}
+
+	public void setRepeatImg(String repeatImg) {
+		this.repeatImg = repeatImg;
+	}
+
+	public String getRepeat() {
+		return repeat;
+	}
+
+	public void setRepeat(String repeat) {
+		this.repeat = repeat;
+	}
+
+	public String getSCHD_UPTO_DATE() {
+		return SCHD_UPTO_DATE;
+	}
+
+	public void setSCHD_UPTO_DATE(String SCHD_UPTO_DATE) {
+		this.SCHD_UPTO_DATE = SCHD_UPTO_DATE;
 	}
 }

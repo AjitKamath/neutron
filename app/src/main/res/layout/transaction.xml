@@ -38,7 +38,7 @@
                 <TextView
                     android:id="@+id/transactionHeaderCloseTVId"
                     android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="CLOSE"
                     android:textColor="@drawable/textview_touch_light"
@@ -51,7 +51,7 @@
                     android:text="28 SEP '16"
                     android:gravity="center"
                     android:textColor="@drawable/textview_touch_light"
-                    android:textSize="10sp" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
@@ -66,7 +66,7 @@
                     android:gravity="right|center_vertical"
                     android:id="@+id/transactionHeaderSaveTVId"
                     android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="SAVE"
                     android:textColor="@drawable/textview_touch_light"
                     android:textSize="10sp" />
@@ -347,6 +347,23 @@
                                 android:textSize="@dimen/spinner_text_size_secondary" />
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:orientation="horizontal"
+                            android:paddingLeft="32dp">
+
+                            <TextView
+                                android:id="@+id/transactionContentAccountStatusTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="(low on balance)"
+                                android:textColor="@color/negativeButtonColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
                 </LinearLayout>
@@ -481,7 +498,7 @@
                             android:id="@+id/transactionContentSpentonIVId"
                             android:layout_width="@dimen/spinner_image_dimen"
                             android:layout_height="@dimen/spinner_image_dimen"
-                            android:background="@drawable/work" />
+                            android:background="@drawable/myself" />
 
                         <TextView
                             android:id="@+id/transactionContentSpentonTVId"
@@ -489,7 +506,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="2dp"
                             android:layout_marginRight="2dp"
-                            android:text="SELF"
+                            android:text="MYSELF"
                             android:textColor="@drawable/textview_touch_dark"
                             android:textSize="@dimen/spinner_text_size" />
 
@@ -553,12 +570,12 @@
                             android:background="@drawable/edit_text_border"
                             android:gravity="center"
                             android:inputType="textCapWords"
-                            android:textColor="@drawable/textview_touch_dark"
+                            android:textColor="@color/tertiaryText"
                             android:textSize="@dimen/text_form_text_size" />
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:layout_gravity="center"
                         android:layout_width="@dimen/input_indicator_image_size"
                         android:layout_height="@dimen/input_indicator_image_size"
@@ -599,9 +616,10 @@
                             android:textColor="@color/formHeadingTextDark"
                             android:textSize="10sp" />
 
-                        <CheckBox
-                            android:id="@+id/transactionContentRepeatCBId"
-                            android:layout_width="25dp"
+                        <Switch
+                            android:layout_marginLeft="5dp"
+                            android:id="@+id/transactionContentRepeatSwitchId"
+                            android:layout_width="wrap_content"
                             android:layout_height="25dp"
                             android:buttonTint="@color/finappleTheme"
                             android:checked="false" />
@@ -795,7 +813,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="SCHEDULE UPTO"
+                            android:text="SCHEDULE UNTIL"
                             android:textColor="@color/formHeadingTextDark"
                             android:textSize="10sp" />
 

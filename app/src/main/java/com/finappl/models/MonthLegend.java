@@ -1,15 +1,14 @@
 package com.finappl.models;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ajit on 18/1/15.
  */
 public class MonthLegend {
     private String date;
-    private SummaryModel summaryModel;
+    private ActivitiesMO activities;
+    private Double totalAmount;
 
     private List<ScheduledTransactionModel> scheduledTransactionModelList;
     private boolean hasScheduledTransaction;
@@ -58,11 +57,19 @@ public class MonthLegend {
         this.date = date;
     }
 
-    public SummaryModel getSummaryModel() {
-        return summaryModel;
+    public ActivitiesMO getActivities() {
+        return activities;
     }
 
-    public void setSummaryModel(SummaryModel summaryModel) {
-        this.summaryModel = summaryModel;
+    public void setActivities(ActivitiesMO activities) {
+        this.activities = activities;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }
