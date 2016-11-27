@@ -184,6 +184,10 @@
     <color name="Navy">#000080</color>
     <color name="Black">#000000</color>
 
+    <!--Login Fragment-->
+    <color name="login_button_bg">#A5D6A7</color>
+    <color name="login_bg">#3CB371</color>
+
     <!-- fin orb colors -->
     <color name="finOrb1">#00FF00</color>
     <color name="finOrb2">#00CC00</color>
@@ -212,7 +216,7 @@
     <!--Calendar grid colors-->
     <color name="calendarThisMonthDate">#000000</color>
     <color name="calendarNextPrevMonthDate">#A0A0A9</color>
-    <color name="calendarTodayDate">#d50000</color>
+    <color name="calendarTodayDate">#9932CC</color>
     <color name="calendarOneTap">@color/finappleTheme</color>
     <color name="calendarTwoTap">#64B5F6</color>
     <color name="calendarNoTap">#FFFFFF</color>
@@ -229,7 +233,7 @@
     <color name="greyDays">#696969</color>
     <color name="saturday">#000000</color>
     <color name="sunday">#9966CC</color>
-    <color name="today">#FF3200</color>
+    <color name="today">#9932CC</color>
 
     <!--finapple color-->
     <color name="finappleTheme">#536dfe</color>

@@ -1,7 +1,6 @@
 package com.finappl.adapters;
 
 import android.content.Context;
-import android.graphics.LinearGradient;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +8,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.models.AccountsMO;
-import com.finappl.models.CategoryMO;
+import com.finappl.models.AccountMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
 import java.util.List;
+
+import static com.finappl.utils.Constants.UI_FONT;
 
 /**
  * Created by ajit on 17/1/15.
@@ -28,10 +27,10 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater inflater;
     private String selectedAccountIdStr;
-    private List<AccountsMO> accountsList;
+    private List<AccountMO> accountsList;
     private UserMO loggedInUserMO;
 
-    public AccountsFragmentListViewAdapter(Context mContext, List<AccountsMO> accountsList, String selectedAccountIdStr, UserMO loggedInUserMO) {
+    public AccountsFragmentListViewAdapter(Context mContext, List<AccountMO> accountsList, String selectedAccountIdStr, UserMO loggedInUserMO) {
         super();
 
         this.mContext = mContext;
@@ -63,7 +62,7 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag(layout);
         }
 
-        AccountsMO accountMO = accountsList.get(position);
+        AccountMO accountMO = accountsList.get(position);
         mHolder.accountTV.setText(accountMO.getACC_NAME());
         mHolder.accountCurrencyCodeTV.setText(loggedInUserMO.getCUR_CODE().toUpperCase());
         mHolder.accountIV.setBackgroundResource(Integer.parseInt(accountMO.getACC_IMG()));
@@ -76,10 +75,7 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
             mHolder.accountSelectedV.setVisibility(View.INVISIBLE);
         }
 
-
-        //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont(mHolder.accountLL, robotoCondensedLightFont);
+        setFont(mHolder.accountLL);
 
         return convertView;
     }
@@ -90,7 +86,7 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public AccountsMO getItem(int position) {
+    public AccountMO getItem(int position) {
         return accountsList.get(position);
     }
 
@@ -100,7 +96,9 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group, Typeface font) {
+    public void setFont(ViewGroup group) {
+        final Typeface font = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
+
         int count = group.getChildCount();
         View v;
 
@@ -109,7 +107,7 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
             if(v instanceof TextView) {
                 ((TextView) v).setTypeface(font);
             } else if(v instanceof ViewGroup) {
-                setFont((ViewGroup) v, font);
+                setFont((ViewGroup) v);
             }
         }
     }

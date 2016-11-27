@@ -2,58 +2,26 @@ package com.finappl.fragments;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
 import com.finappl.adapters.CategoriesFragmentListViewAdapter;
-import com.finappl.dbServices.AuthorizationDbService;
-import com.finappl.dbServices.CalendarDbService;
-import com.finappl.dbServices.TransactionsDbService;
-import com.finappl.models.AccountsMO;
 import com.finappl.models.CategoryMO;
-import com.finappl.models.SpentOnMO;
-import com.finappl.models.SpinnerModel;
-import com.finappl.models.TransactionModel;
-import com.finappl.models.UserMO;
-import com.finappl.utils.FinappleUtility;
-import com.finappl.utils.IdGenerator;
 
-import java.io.Serializable;
-import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 
 import static com.finappl.utils.Constants.CATEGORY_OBJECT;
-import static com.finappl.utils.Constants.FRAGMENT_CATEGORY;
-import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION;
 import static com.finappl.utils.Constants.SELECTED_CATEGORY_OBJECT;
-import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
-import static com.finappl.utils.Constants.UI_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.UI_FONT;
 
 /**

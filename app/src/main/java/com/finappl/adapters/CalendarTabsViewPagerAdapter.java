@@ -14,26 +14,21 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
-import com.finappl.dbServices.AddUpdateTransfersDbService;
-import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
-import com.finappl.dbServices.Sqlite;
-import com.finappl.dbServices.TransactionsDbService;
-import com.finappl.models.AccountsMO;
-import com.finappl.models.BudgetModel;
-import com.finappl.models.MonthLegend;
-import com.finappl.models.ScheduledTransactionModel;
-import com.finappl.models.ScheduledTransferModel;
+import com.finappl.models.AccountMO;
 import com.finappl.models.ActivitiesMO;
-import com.finappl.models.TransactionModel;
-import com.finappl.models.TransferModel;
+import com.finappl.models.BudgetMO;
+import com.finappl.models.MonthLegend;
+import com.finappl.models.TransactionMO;
+import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.finappl.utils.Constants.*;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
+import static com.finappl.utils.Constants.UI_FONT;
 
 /**
  * Created by ajit on 30/9/15.
@@ -48,11 +43,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     private CalendarActivity.ListViewItemClickListener listViewItemClickListener;
 
     //db services
-    private Sqlite controller;
     private CalendarDbService calendarDbService;
-    private AuthorizationDbService authorizationDbService;
-    private TransactionsDbService addUpdateTransactionsDbService;
-    private AddUpdateTransfersDbService addUpdateTransfersDbService;
 
     //User
     private UserMO loggedInUserObj;
@@ -61,14 +52,11 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     private boolean hasSummary;
     private boolean hasAccounts;
     private boolean hasBudgets;
-    private boolean hasSchedules;
 
-    private List<TransactionModel> transactionsList;
-    private List<TransferModel> transfersList;
-    private List<AccountsMO> accountsList;
-    private List<BudgetModel> budgetsList;
-    private List<ScheduledTransactionModel> scheduledTransactionModelList;
-    private List<ScheduledTransferModel> scheduledTransferModelList;
+    private List<TransactionMO> transactionsList;
+    private List<TransferMO> transfersList;
+    private List<AccountMO> accountsList;
+    private List<BudgetMO> budgetsList;
 
     public int activePageIndex = 0;
 
@@ -83,11 +71,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         this.monthLegendMap = monthLegendMap;
         this.listViewItemClickListener = listViewItemClickListener;
 
-        controller = new Sqlite(mContext);
         calendarDbService = new CalendarDbService(mContext);
-        authorizationDbService = new AuthorizationDbService(mContext);
-        addUpdateTransactionsDbService = new TransactionsDbService(mContext);
-        addUpdateTransfersDbService = new AddUpdateTransfersDbService(mContext);
     }
 
     private void checkMonthLegend() {
@@ -158,9 +142,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
                 break;
         }
 
-        //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont(layout, robotoCondensedLightFont);
+        setFont(layout);
 
         collection.addView(layout);
 
@@ -208,7 +190,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        CalendarAccountsListViewAdapter accAdapter = new CalendarAccountsListViewAdapter(mContext, R.layout.calendar_accounts_list_view, accountsList);
+        CalendarAccountsListViewAdapter accAdapter = new CalendarAccountsListViewAdapter(mContext, R.layout.calendar_accounts_list_view, accountsList, loggedInUserObj);
         accountsLV.setAdapter(accAdapter);
         accountsLV.setOnItemClickListener(listViewClickListener);
 
@@ -250,7 +232,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     }
 
     private void setUpSchedulesTab(ViewGroup layout) {
-        TextView calendarTransHeaderOrMsgTV = (TextView) layout.findViewById(R.id.calendarTransHeaderOrMsgTVId);
+        /*TextView calendarTransHeaderOrMsgTV = (TextView) layout.findViewById(R.id.calendarTransHeaderOrMsgTVId);
         ListView schedulesLV = (ListView) layout.findViewById(R.id.schedulesLVId);
 
         CalendarSchedulesSectionListViewAdapter schedulesListAdapter =
@@ -268,7 +250,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             calendarTransHeaderOrMsgTV.setText("No Scheduled Transactions/Transfers");
             calendarTransHeaderOrMsgTV.setTextColor(calendarTransHeaderOrMsgTV.getResources().getColor(R.color.DarkGray));
             schedulesLV.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     protected void showToast(String string) {
@@ -295,29 +277,21 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         return mContext.getString(layoutsList.get(position));
     }
 
-    public int getActivePageIndexByLayoutId(int layoutId) {
-        int pageId = 0;
-
-        for (int iterLayouts : layoutsList) {
-            if (iterLayouts == layoutId) {
-                pageId = iterLayouts;
-                break;
-            }
-        }
-        return pageId;
-    }
-
     //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group, Typeface font) {
+    public void setFont(ViewGroup group) {
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
+
         int count = group.getChildCount();
         View v;
 
-        for (int i = 0; i < count; i++) {
+        for(int i = 0; i < count; i++) {
             v = group.getChildAt(i);
-            if (v instanceof TextView) {
-                ((TextView) v).setTypeface(font);
-            } else if (v instanceof ViewGroup) {
-                setFont((ViewGroup) v, font);
+            if(v instanceof TextView) {
+                ((TextView) v).setTypeface(robotoCondensedLightFont);
+            }
+            else if(v instanceof ViewGroup) {
+                setFont((ViewGroup) v);
             }
         }
     }

@@ -15,21 +15,20 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
-import com.finappl.dbServices.TransactionsDbService;
-import com.finappl.dbServices.AddUpdateTransfersDbService;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.NotificationDbService;
+import com.finappl.dbServices.TransactionsDbService;
+import com.finappl.dbServices.TransfersDbService;
 import com.finappl.models.MonthLegend;
 import com.finappl.models.NotificationActionModel;
 import com.finappl.models.NotificationModel;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.TodaysNotifications;
-import com.finappl.models.TransactionModel;
-import com.finappl.models.TransferModel;
+import com.finappl.models.TransactionMO;
+import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
-import com.finappl.models.UsersModel;
 import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
 
@@ -40,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.finappl.utils.Constants.*;
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
 
 /**
  * Created by ajit on 15/8/15.
@@ -99,7 +98,7 @@ public class NotificationsService extends Service {
         if("CANCEL".equalsIgnoreCase(notificationActionModelObj.getNotificationActionStr())){
             Log.i(CLASS_NAME, "User Performed 'CANCEL' action on a notification");
             Log.i(CLASS_NAME, "Attempting to cancel the Notification..");
-            NotificationManager manager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
+            NotificationManager manager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
             manager.cancel(String.valueOf(notificationActionModelObj.getNotificationIdStr()), Integer.parseInt(String.valueOf(notificationActionModelObj.getNotificationIdStr())));
             Log.i(CLASS_NAME, "Attempting is completed. Notification must have disappeared by now");
 
@@ -306,8 +305,8 @@ public class NotificationsService extends Service {
 
         //get all schedules from the db
         CalendarDbService calendarDbService = new CalendarDbService(getApplicationContext());
-        monthLegendMap = calendarDbService.getScheduledTransactions(monthLegendMap, todayStrArr, loggedInUserObj.getUSER_ID());
-        monthLegendMap = calendarDbService.getScheduledTransfers(monthLegendMap, todayStrArr, loggedInUserObj.getUSER_ID());
+        /*monthLegendMap = calendarDbService.getScheduledTransactions(monthLegendMap, todayStrArr, loggedInUserObj.getUSER_ID());
+        monthLegendMap = calendarDbService.getScheduledTransfers(monthLegendMap, todayStrArr, loggedInUserObj.getUSER_ID());*/
 
         //get all the scheduled Transactions/Transfers from the month legend
         List<ScheduledTransactionModel> schedTransactionModelObjList = null;
@@ -367,7 +366,7 @@ public class NotificationsService extends Service {
                     Log.i(CLASS_NAME, "Automatically adding a transaction starts");
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
-                    TransactionModel transactionModelObj = new TransactionModel();
+                    TransactionMO transactionModelObj = new TransactionMO();
                     transactionModelObj.setUSER_ID(todaysNotificationsObj.getLoggedInUser().getUSER_ID());
                     transactionModelObj.setCAT_ID(iterSchedTransactionsList.getSCH_TRAN_CAT_ID());
                     transactionModelObj.setSPNT_ON_ID(iterSchedTransactionsList.getSCH_TRAN_SPNT_ON_ID());
@@ -428,7 +427,7 @@ public class NotificationsService extends Service {
                     Log.i(CLASS_NAME, "Automatically adding a transfer starts");
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
-                    TransferModel transferModelObj = new TransferModel();
+                    TransferMO transferModelObj = new TransferMO();
                     transferModelObj.setUSER_ID(todaysNotificationsObj.getLoggedInUser().getUSER_ID());
                     transferModelObj.setACC_ID_FRM(iterSchedTranfersList.getSCH_TRNFR_ACC_ID_FRM());
                     transferModelObj.setACC_ID_TO(iterSchedTranfersList.getSCH_TRNFR_ACC_ID_TO());
@@ -437,7 +436,7 @@ public class NotificationsService extends Service {
                     transferModelObj.setTRNFR_DATE(iterSchedTranfersList.getScheduledDate());
 
 
-                    if((new AddUpdateTransfersDbService(getApplicationContext())).addNewTransfer(transferModelObj) != -1){
+                    if((new TransfersDbService(getApplicationContext())).addNewTransfer(transferModelObj) != -1){
                         Log.e(CLASS_NAME, "Building a notification just to notify the user of the automatically added scheduled transfer");
                         buildSchTransferJustNotification(iterSchedTranfersList, todaysNotificationsObj.getLoggedInUser());
 

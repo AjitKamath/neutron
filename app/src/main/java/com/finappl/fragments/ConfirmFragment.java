@@ -14,9 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
+import com.finappl.activities.CalendarActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
 import static com.finappl.utils.Constants.UI_FONT;
+import static com.finappl.utils.Constants.UN_IDENTIFIED_PARENT_FRAGMENT;
 
 /**
  * Created by ajit on 21/3/16.
@@ -71,8 +74,21 @@ public class ConfirmFragment extends DialogFragment {
                     TransactionDetailsFragment fragment = (TransactionDetailsFragment) getTargetFragment();
                     fragment.onFinishDialog("Transaction Deleted !");
                 }
+                if(getTargetFragment() instanceof TransferFragment){
+                    TransferFragment fragment = (TransferFragment) getTargetFragment();
+                    fragment.onFinishDialog();
+                }
+                else if(getTargetFragment() instanceof TransferDetailsFragment){
+                    TransferDetailsFragment fragment = (TransferDetailsFragment) getTargetFragment();
+                    fragment.onFinishDialog("Transfer Deleted !");
+                }
+                else if(getTargetFragment() instanceof OptionsFragment){
+                    FirebaseAuth user = FirebaseAuth.getInstance();
+                    user.signOut();
+                    ((CalendarActivity)getActivity()).forceLogin();
+                }
                 else{
-                    Log.e(CLASS_NAME, "Disaster !! No Target Fragment set during the calling of Confirm Fragment ");
+                    Log.e(CLASS_NAME, UN_IDENTIFIED_PARENT_FRAGMENT);
                     return;
                 }
 

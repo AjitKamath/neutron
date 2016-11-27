@@ -26,10 +26,7 @@
             android:id="@+id/accountsLVId"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@color/white"
-            android:divider="@null"
-            android:dividerHeight="8dp"
-            android:paddingBottom="5dp"
+            android:dividerHeight="0.5dp"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:paddingTop="5dp" />

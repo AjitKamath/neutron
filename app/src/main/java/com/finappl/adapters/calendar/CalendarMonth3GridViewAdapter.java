@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,16 +15,13 @@ import com.finappl.models.MonthLegend;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.UI_FONT;
 
@@ -68,7 +64,7 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
     public CalendarMonth3GridViewAdapter(Context context, Map<String, MonthLegend> monthLegendMap, int month, int year, Date dateToPreselect, UserMO loggedInUser) {
         super();
         this.mContext = context;
-        this.list = new ArrayList<>();
+        list = new ArrayList<>();
 
         this.month = month;
         this.year = year;
@@ -280,10 +276,11 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
             MonthLegend monthLegend = monthLegendDataMap.get(theDatsStr);
 
             //for day total amount
-            if(monthLegend.getTotalAmount().equals(null) || monthLegend.getTotalAmount().equals(0.0)){
-                mHolder.calendarDayAmountTV.setText("");
+            if(monthLegend.getTotalAmount() == null || monthLegend.getTotalAmount().equals(0.0)){
+                mHolder.calendarDayAmountTV.setVisibility(View.GONE);
             }
             else{
+                mHolder.calendarDayAmountTV.setVisibility(View.VISIBLE);
                 mHolder.calendarDayAmountTV = FinappleUtility.shortenAmountView(mHolder.calendarDayAmountTV, loggedInUser, monthLegend.getTotalAmount());
             }
 

@@ -6,14 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.models.AccountsMO;
+import com.finappl.models.AccountMO;
+import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
 import java.util.List;
+
+import static com.finappl.utils.Constants.UI_FONT;
 
 /**
  * Created by ajit on 17/1/15.
@@ -22,16 +26,19 @@ public class CalendarAccountsListViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private int layoutResourceId;
-    private List<AccountsMO> dataList;
+    private List<AccountMO> dataList;
     private List<Integer> colorList;
     private LayoutInflater inflater;
 
-    public CalendarAccountsListViewAdapter(Context mContext, int layoutResourceId, List<AccountsMO> data) {
+    private UserMO user;
+
+    public CalendarAccountsListViewAdapter(Context mContext, int layoutResourceId, List<AccountMO> data, UserMO user) {
         super();
 
         this.layoutResourceId = layoutResourceId;
         this.mContext = mContext;
         this.dataList = data;
+        this.user = user;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //get random colors in a list
@@ -47,9 +54,11 @@ public class CalendarAccountsListViewAdapter extends BaseAdapter {
             convertView = inflater.inflate(layoutResourceId, null);
 
             mHolder.summayAccountsLL = (LinearLayout) convertView.findViewById(R.id.summayAccountsLLId);
+            mHolder.accountIV = (ImageView) convertView.findViewById(R.id.accountIVId);
+            mHolder.accountsCurrTV = (TextView) convertView.findViewById(R.id.accountsCurrTVId);
             mHolder.accountNameTV = (TextView) convertView.findViewById(R.id.accountsNameTVId);
+            mHolder.accountsCurrTV = (TextView) convertView.findViewById(R.id.accountsCurrTVId);
             mHolder.accountTotalTV = (TextView) convertView.findViewById(R.id.accountsTotalTVId);
-            mHolder.accountsAmtStatView = convertView.findViewById(R.id.accountsAmtStatViewId);
 
             convertView.setTag(layoutResourceId, mHolder);
 
@@ -58,34 +67,17 @@ public class CalendarAccountsListViewAdapter extends BaseAdapter {
         }
 
         // object item based on the position
-        AccountsMO accountItem = dataList.get(position);
+        AccountMO accountItem = dataList.get(position);
 
         mHolder.summayAccountsLL.setTag(accountItem);
-        mHolder.accountTotalTV.setText(String.valueOf(accountItem.getACC_TOTAL()));
+
+        mHolder.accountIV.setBackgroundResource(Integer.parseInt(accountItem.getACC_IMG()));
         mHolder.accountNameTV.setText(accountItem.getACC_NAME());
 
-        if(accountItem.getACC_TOTAL() <= 0){
-            mHolder.accountTotalTV.setTextColor(mHolder.accountTotalTV.getResources().getColor(R.color.finappleCurrencyNegColor));
-            mHolder.accountsAmtStatView.setBackgroundResource(R.drawable.capsule_vertical_negative_view);
-        }
-        else{
-            mHolder.accountTotalTV.setTextColor(mHolder.accountTotalTV.getResources().getColor(R.color.finappleCurrencyPosColor));
-            mHolder.accountsAmtStatView.setBackgroundResource(R.drawable.capsule_vertical_positive_view);
-        }
+        mHolder.accountsCurrTV.setText(user.getCUR_CODE());
+        mHolder.accountTotalTV = FinappleUtility.formatAmountView(mHolder.accountTotalTV, user, accountItem.getACC_TOTAL());
 
-        //TODO: Approximatization required
-
-        //this is to offset the last item to allow its content to be viewed by scrolling
-        if(position == dataList.size()-1){
-            mHolder.summayAccountsLL.setPadding(FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 10),
-                    FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 10),
-                    FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 10),
-                    FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 65));
-        }
-
-        //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont(mHolder.summayAccountsLL, robotoCondensedLightFont);
+        setFont(mHolder.summayAccountsLL);
 
         return convertView;
     }
@@ -96,7 +88,7 @@ public class CalendarAccountsListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public AccountsMO getItem(int position) {
+    public AccountMO getItem(int position) {
         return dataList.get(position);
     }
 
@@ -106,25 +98,30 @@ public class CalendarAccountsListViewAdapter extends BaseAdapter {
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group, Typeface font) {
+    public void setFont(ViewGroup group) {
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
+
         int count = group.getChildCount();
         View v;
 
         for(int i = 0; i < count; i++) {
             v = group.getChildAt(i);
             if(v instanceof TextView) {
-                ((TextView) v).setTypeface(font);
-            } else if(v instanceof ViewGroup) {
-                setFont((ViewGroup) v, font);
+                ((TextView) v).setTypeface(robotoCondensedLightFont);
+            }
+            else if(v instanceof ViewGroup) {
+                setFont((ViewGroup) v);
             }
         }
     }
 
     private class ViewHolder {
         LinearLayout summayAccountsLL;
+        ImageView accountIV;
         TextView accountNameTV;
+        TextView accountsCurrTV;
         TextView accountTotalTV;
-        View accountsAmtStatView;
     }
 
 }

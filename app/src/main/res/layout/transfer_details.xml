@@ -1,0 +1,284 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/transferDetailsLLId"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/screen_components_padding_from_walls"
+    android:paddingLeft="@dimen/screen_components_padding_from_walls"
+    android:paddingRight="@dimen/screen_components_padding_from_walls"
+    android:paddingTop="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/transferDetailsDeleteTVId"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:text="DELETE"
+            android:textColor="@color/finappleCurrencyNegColor"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/transferDetailsDateTVId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="-50dp"
+            android:text="4 NOV 2016"
+            android:textColor="@color/finappleThemeDark"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/transferDetailsEditTVId"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="-60dp"
+            android:gravity="center_vertical|right"
+            android:text="EDIT"
+            android:textColor="@color/finappleCurrencyPosColor"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal">
+            
+            <ImageView
+                android:id="@+id/transferDetailsAccountFromIVId"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/bank"/>
+            
+            <TextView
+                android:id="@+id/transferDetailsAccountFromTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:text="BANK"/>
+            
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textSize="8sp"
+            android:textColor="@color/tertiaryText"
+            android:text="TRANSFERRED TO"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/transferDetailsAccountToIVId"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/cash"/>
+
+            <TextView
+                android:id="@+id/transferDetailsAccountToTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:text="CASH"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/transferDetailsAmountCurrencyCodeTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/finappleCurrencyCodeColor"
+                android:text="INR"/>
+
+            <TextView
+                android:id="@+id/transferDetailsAmountTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:textSize="12sp"
+                android:textColor="@color/finappleCurrencyPosColor"
+                android:text="27,256.95"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/transferDetailsRepeatLLId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="REPEATS EVERY"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/transferDetailsRepeatTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="DAY"
+                    android:textColor="@color/finappleThemeDark"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="SCHEDULED UNTIL"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/transferDetailsScheduleTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="FOREVER"
+                    android:textColor="@color/finappleThemeDark"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/transferDetailsNotifyAddTVId"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="NOTIFY &amp; ADD AT"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/transferDetailsNotifyAddTimeTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="10:30 PM"
+                    android:textColor="@color/finappleThemeDark"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/transferDetailsNoteLLId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:tag="NOTE">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/transferDetailsNoteTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Once Upon A Time There Lived A King"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="italic" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

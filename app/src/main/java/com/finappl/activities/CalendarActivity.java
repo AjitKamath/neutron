@@ -1,22 +1,23 @@
 package com.finappl.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,17 +26,20 @@ import com.finappl.adapters.CalendarMonthsViewPagerAdapter;
 import com.finappl.adapters.CalendarTabsViewPagerAdapter;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
-import com.finappl.dbServices.Sqlite_NEW;
+import com.finappl.dbServices.Sqlite;
 import com.finappl.fragments.AddActivityFragment;
 import com.finappl.fragments.LoginFragment;
+import com.finappl.fragments.OptionsFragment;
 import com.finappl.fragments.TransactionDetailsFragment;
-import com.finappl.fragments.TransactionFragment;
+import com.finappl.fragments.TransferDetailsFragment;
 import com.finappl.models.MonthLegend;
-import com.finappl.models.TransactionModel;
+import com.finappl.models.TransactionMO;
+import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.Constants;
 import com.finappl.utils.DateTimeUtil;
-import com.finappl.utils.FinappleUtility;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,25 +50,33 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.finappl.utils.Constants.ADD_ACTIVITY;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.finappl.utils.Constants.FRAGMENT_ADD_ACTIVITY;
 import static com.finappl.utils.Constants.FRAGMENT_LOGIN;
+import static com.finappl.utils.Constants.FRAGMENT_OPTIONS;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION_DETAILS;
+import static com.finappl.utils.Constants.FRAGMENT_TRANSFER_DETAILS;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF_1;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.SELECTED_DATE;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
+import static com.finappl.utils.Constants.TRANSFER_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
+import static com.finappl.utils.Constants.VERIFICATION_EMAIL_SENT;
+import static com.finappl.utils.Constants.VERIFY_EMAIL;
 
 @SuppressLint("NewApi")
-public class CalendarActivity extends Activity implements TransactionFragment.DialogResultListener, TransferFragment.DialogResultListener {
+public class CalendarActivity extends FragmentActivity{
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext = this;
 
     //header
     private TextView yearTV,  calendarMonthTV;
-    private ImageView calendarHeaderAddIV;
 
     //calendar
     private String selectedDateStr = JAVA_DATE_FORMAT_SDF.format(new Date());
@@ -80,7 +92,7 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
     private Integer backButtonCounter = 0;
 
     //db services
-    private Sqlite_NEW controller = new Sqlite_NEW(mContext);
+    private Sqlite controller = new Sqlite(mContext);
     private CalendarDbService calendarDbService = new CalendarDbService(mContext);
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
@@ -99,20 +111,25 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
 
     private boolean ignore = false;
 
+    //progress bar
+    private ProgressDialog mProgressDialog;
+
+
+    private static boolean isInBackground;
+    private static boolean isAwakeFromBackground;
+    private static final int backgroundAllowance = 10000;
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.calendar);
+        ButterKnife.inject(this);
 
         //this is to ensure the tables are in the db...actually calls the Sqlite class constructor..importance of this line is known only when the db is deleted and the app is run
         Log.i(CLASS_NAME, "Initializing the application database starts");
         controller.getWritableDatabase();
         Log.i(CLASS_NAME, "Initializing the application database ends");
-
-        setContentView(R.layout.calendar);
-
-        //get the Active user
-        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
 
         initActivity();
 
@@ -125,7 +142,36 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
         }
     }
 
-    private void initActivity(){
+    public void getLoggedInUser() {
+        FirebaseAuth user = FirebaseAuth.getInstance();
+        if(user != null && user.getCurrentUser() != null && user.getCurrentUser().getUid() != null){
+            loggedInUserObj = authorizationDbService.getActiveUser(user.getCurrentUser().getUid());
+
+            //set if the user has verified his email
+            //loggedInUserObj.setEmailVerified(user.getCurrentUser().isEmailVerified());
+        }
+    }
+
+    //progress bar
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(CalendarActivity.this);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setCancelable(false);
+        }
+
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    public void initActivity(){
+        getLoggedInUser();
+
         //Check if Obsolete since the app is going to be single screen app
         if(getIntent().getExtras() != null && getIntent().getExtras().get("SELECTED_DATE") != null){
             selectedDateStr = String.valueOf(getIntent().getExtras().get("SELECTED_DATE"));
@@ -148,15 +194,12 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
         currentFocusedMonthStr = selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
         setUpCalendar();
 
-        //set up FAB
-        //setUpFab();
-
         //call notification service
         //TODO: this might not be required in production
         setUpServices();
     }
 
-    private void forceLogin() {
+    public void forceLogin() {
         // close existing dialog fragments
         FragmentManager manager = getFragmentManager();
         Fragment frag = manager.findFragmentByTag(FRAGMENT_LOGIN);
@@ -166,6 +209,12 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
 
         LoginFragment fragment = new LoginFragment();
         fragment.show(manager, FRAGMENT_LOGIN);
+
+        loggedInUserObj = null;
+        monthLegendMap = null;
+
+        setUpCalendar();
+        setUpTabs();
     }
 
     private void fetchMonthLegend(){
@@ -186,7 +235,7 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
                         new ListViewItemClickListener() {
                             @Override
                             public void onListItemClick(Object listItemObject) {
-                                if(listItemObject instanceof TransactionModel){
+                                if(listItemObject instanceof TransactionMO){
                                     FragmentManager manager = getFragmentManager();
                                     Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSACTION_DETAILS);
 
@@ -195,12 +244,28 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
                                     }
 
                                     Bundle bundle = new Bundle();
-                                    bundle.putSerializable(TRANSACTION_OBJECT, (TransactionModel)listItemObject);
+                                    bundle.putSerializable(TRANSACTION_OBJECT, (TransactionMO)listItemObject);
                                     bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
                                     TransactionDetailsFragment fragment = new TransactionDetailsFragment();
                                     fragment.setArguments(bundle);
                                     fragment.show(manager, FRAGMENT_TRANSACTION_DETAILS);
+                                }
+                                else if(listItemObject instanceof TransferMO){
+                                    FragmentManager manager = getFragmentManager();
+                                    Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSFER_DETAILS);
+
+                                    if (frag != null) {
+                                        manager.beginTransaction().remove(frag).commit();
+                                    }
+
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable(TRANSFER_OBJECT, (TransferMO)listItemObject);
+                                    bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+
+                                    TransferDetailsFragment fragment = new TransferDetailsFragment();
+                                    fragment.setArguments(bundle);
+                                    fragment.show(manager, FRAGMENT_TRANSFER_DETAILS);
                                 }
                                 else{
                                     Log.e(CLASS_NAME, "Disaster !! The list item is of type("+listItemObject.getClass()+") for which there's no code to handle");
@@ -289,7 +354,6 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
 
                     SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
                     String monthAndYear = sdf.format(new Date());
-                    String monthAndYearArr[] = monthAndYear.split("-");
 
                     Calendar cal = Calendar.getInstance(Locale.getDefault());
                     cal.set(Integer.parseInt(dateMonthStrArr[1]), Integer.parseInt(dateMonthStrArr[0]) - 1, 1);
@@ -496,38 +560,51 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
         sendBroadcast(notifIntent);
     }
 
+    @OnClick(R.id.calendarOptionsIVId)
+    public void showOptions(){
+        FragmentManager fragmentManager = getFragmentManager();
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+
+        OptionsFragment fragment = new OptionsFragment();
+        fragment.setArguments(bundle);
+
+        transaction.add(fragment, FRAGMENT_OPTIONS);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     private void initUIComponents() {
         //get UI components
 
         //header
         yearTV = (TextView) this.findViewById(R.id.calendarFullYearId);
         calendarMonthTV = (TextView) this.findViewById(R.id.calendarMonthId);
-        calendarHeaderAddIV = (ImageView) this.findViewById(R.id.calendarHeaderAddIVId);
 
         //view pager
         viewPager = (ViewPager) this.findViewById(R.id.calendarTabsVPId);
         viewPagerMonths = (ViewPager) this.findViewById(R.id.calendarDatesVPId);
+    }
 
-        calendarHeaderAddIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fragmentManager = getFragmentManager();
+    @OnClick(R.id.calendarHeaderAddIVId)
+    public void addActivity(){
+        FragmentManager fragmentManager = getFragmentManager();
 
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setCustomAnimations(R.animator.slide_in, R.animator.slide_out);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(SELECTED_DATE, selectedDateStr);
-                bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(SELECTED_DATE, selectedDateStr);
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
-                AddActivityFragment addActivityFragment = new AddActivityFragment();
-                addActivityFragment.setArguments(bundle);
+        AddActivityFragment addActivityFragment = new AddActivityFragment();
+        addActivityFragment.setArguments(bundle);
 
-                transaction.add(addActivityFragment, ADD_ACTIVITY);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
+        transaction.add(addActivityFragment, FRAGMENT_ADD_ACTIVITY);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void setUpHeader() {
@@ -535,19 +612,6 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
 
         calendarMonthTV.setText(Constants.MONTHS_ARRAY[Integer.parseInt(tempSelectedDateStrArr[0])-1]);
         yearTV.setText(tempSelectedDateStrArr[1]);
-    }
-
-    @Override
-    public void onFinishUserDialog(String resultStr) {
-        if("LOGIN".equalsIgnoreCase(resultStr)){
-            forceLogin();
-            return;
-        }
-
-        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
-        initActivity();
-
-        showToast(resultStr);
     }
 
     public void showDatePicker(View view) {
@@ -567,6 +631,32 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
 
 
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showSnacks(String messageStr, final String doWhatStr){
+        final View calendarScreenLayoutView = this.findViewById(R.id.calendarPageRLId);
+
+        Snackbar snackbar = Snackbar.make(calendarScreenLayoutView, messageStr, Snackbar.LENGTH_INDEFINITE).setAction(doWhatStr, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //verify email
+                        if(VERIFY_EMAIL.equalsIgnoreCase(doWhatStr)){
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            user.sendEmailVerification();
+
+                            showSnacks(VERIFICATION_EMAIL_SENT, OK);
+                        }
+
+                        else if(OK.equalsIgnoreCase(doWhatStr)){
+
+                        }
+                        else{
+                            showToast("Could not identify the action");
+                        }
+                    }
+                });
+
+        snackbar.show();
     }
 
     @Override
@@ -648,12 +738,30 @@ public class CalendarActivity extends Activity implements TransactionFragment.Di
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //activityResumed();
+
+        getLoggedInUser();
+
+        //TODO: enable this oce the Firebase supports email verification check
+        /*if(!loggedInUserObj.isEmailVerified()){
+            showSnacks(EMAIL_NOT_VERIFIED, VERIFY_EMAIL);
+        }*/
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
     //abstracts
     public interface ListViewItemClickListener {
-        public abstract void onListItemClick(Object position);
+        void onListItemClick(Object position);
     }
 
     public interface GridViewItemClickListener {
-        public abstract void onGridViewItemClick(Object position);
+        void onGridViewItemClick(Object position);
     }
 }

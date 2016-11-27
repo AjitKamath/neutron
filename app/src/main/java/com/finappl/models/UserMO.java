@@ -15,7 +15,6 @@ public class UserMO implements Serializable {
     private String EMAIL;
     private Date DOB;
     private String TELEPHONE;
-    private String DEV_ID;
     private Date CREAT_DTM;
     private Date MOD_DTM;
 
@@ -26,6 +25,8 @@ public class UserMO implements Serializable {
     private String SET_NOTIF_TIME;
     private String SET_NOTIF_BUZZ;
     private String SET_SEC_PIN;
+
+    private boolean emailVerified;
 
     public String getUSER_ID() {
         return USER_ID;
@@ -81,14 +82,6 @@ public class UserMO implements Serializable {
 
     public void setTELEPHONE(String TELEPHONE) {
         this.TELEPHONE = TELEPHONE;
-    }
-
-    public String getDEV_ID() {
-        return DEV_ID;
-    }
-
-    public void setDEV_ID(String DEV_ID) {
-        this.DEV_ID = DEV_ID;
     }
 
     public Date getCREAT_DTM() {
@@ -169,5 +162,13 @@ public class UserMO implements Serializable {
 
     public void setMETRIC(String METRIC) {
         this.METRIC = METRIC;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 }

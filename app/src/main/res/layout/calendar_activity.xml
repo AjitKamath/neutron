@@ -6,8 +6,8 @@
 
     <LinearLayout
         android:id="@+id/calendarActivityTabLLId"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/calendarNoActivityTVId"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
@@ -24,10 +24,9 @@
 
         <ListView
             android:id="@+id/calendarActivityLVId"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:divider="@null"
-            android:dividerHeight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="0.5dp"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:paddingTop="5dp" />

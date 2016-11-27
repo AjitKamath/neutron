@@ -1,18 +1,16 @@
 package com.finappl.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.models.BudgetModel;
+import com.finappl.models.BudgetMO;
 import com.finappl.utils.FinappleUtility;
 
 import java.util.List;
@@ -24,10 +22,10 @@ public class CalendarBudgetsListViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private int layoutResourceId;
-    private List<BudgetModel> dataList;
+    private List<BudgetMO> dataList;
     private LayoutInflater inflater;
 
-    public CalendarBudgetsListViewAdapter(Context mContext, int layoutResourceId, List<BudgetModel> data) {
+    public CalendarBudgetsListViewAdapter(Context mContext, int layoutResourceId, List<BudgetMO> data) {
         super();
 
         this.layoutResourceId = layoutResourceId;
@@ -42,7 +40,7 @@ public class CalendarBudgetsListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public BudgetModel getItem(int position) {
+    public BudgetMO getItem(int position) {
         return dataList.get(position);
     }
 
@@ -74,7 +72,7 @@ public class CalendarBudgetsListViewAdapter extends BaseAdapter {
         }
 
         // object item based on the position
-        BudgetModel budgetItem = dataList.get(position);
+        BudgetMO budgetItem = dataList.get(position);
 
         //decide color based on ACC_TOTAL
         String monthExpTotalStr = String.valueOf(budgetItem.getBudgetRangeTotal());

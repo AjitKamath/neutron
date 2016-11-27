@@ -47,19 +47,4 @@
         <item name="android:background">@color/finappleThemeDark</item>
     </style>
 
-    <style name="FloatingActionButton" parent="android:Widget.Material.Button">
-        <item name="android:background">@drawable/circle_blue_text_view</item>
-        <item name="android:imageButtonStyle">@anim/raise</item>
-        <item name="android:stateListAnimator">@anim/fab_state_list_animator</item>
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:layout_height">50dp</item>
-    </style>
-
-    <style name="FloatingActionButton.Mini">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">5dp</item>
-    </style>
 </resources>

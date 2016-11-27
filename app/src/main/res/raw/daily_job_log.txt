@@ -738,6 +738,47 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 1. TransferFragment partially implemented.
 2. transfer ui design.
 3. InjectView in TransferFragment.
+4. Design of transferDetails ui.pla
+
+<--Git Push on 14-nov-2016-->
+
+15-nov-2016
+1. Add Transfer implemented.
+2. List Transfer in Calendar.
+3. View Transfer.
+4. Delete Transfer.
+5. Edit Transfer.
+6. Cosmetic changes how activity is shown in Calendar screen.
+
+16-nov-2016
+1. new login fragment design.
+
+17-nov-2016
+1. integrated login and sign up screen into one.
+2. started to implement firebase.
+3. firebase account created.++-
+
+19-nov-2016
+1. Sign up using email implemented.
+2. Verifying email by triggering email implemented.
+3. login using email implemented.
+
+21-nov-2016
+1. handling different exceptions with different messages on an event of signup/login failure.
+2. design of options fragment.
+3. Logout implemented.
+
+22-nov-2016
+1. bug fix for incorrect data on multiple user logging in.
+2. logout confirmation popup when logging out.
+3. cosmetic beautification of account tab in calendar screen.
+4. UI design for options.
+
+27-nov-2016
+1. UI for settings
+2. Fragment for Settings implemented.
+3. removed DEV_ID column from USER table.
+4. Added CNTRY_IMG column in country table.
 
 ------------------------------------------------------------------------------------36/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers
@@ -804,21 +845,21 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 60. InjectView and OnClick annotations in all the fragments and activity
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-CORE FUNCTIONALITY CHECK:	3/22
+CORE FUNCTIONALITY CHECK:	8/22
 
-TRANSACTION: 			    3/5
+TRANSACTION: 			    4/5
 1. NEW TRANSACTION		    (Y)
 2. UPDATE TRANSACTION		(Y)
 3. QUICK TRANSACTION		(N)
 4. DELETE TRANSACTION		(Y)
 5. SCHEDULE TRANSACTION		(Y)
 
-TRANSFER:			        0/5
-1. NEW TRANSFER		    	(N)
-2. UPDATE TRANSFER		    (N)
+TRANSFER:			        4/5
+1. NEW TRANSFER		    	(Y)
+2. UPDATE TRANSFER		    (Y)
 3. QUICK TRANSFER		    (N)
-4. DELETE TRANSFER		    (N)
-5. SCHEDULE TRANSFER		(N)
+4. DELETE TRANSFER		    (Y)
+5. SCHEDULE TRANSFER		(Y)
 
 BUDGET:				        0/3
 1. NEW BUDGET			    (N)

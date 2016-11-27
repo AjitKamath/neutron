@@ -30,11 +30,11 @@ import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.TransactionsDbService;
-import com.finappl.models.AccountsMO;
+import com.finappl.models.AccountMO;
 import com.finappl.models.CategoryMO;
 import com.finappl.models.RepeatMO;
 import com.finappl.models.SpentOnMO;
-import com.finappl.models.TransactionModel;
+import com.finappl.models.TransactionMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
@@ -112,12 +112,12 @@ public class TransactionFragment extends DialogFragment {
     private TransactionsDbService transactionsDbService;
 
     private List<CategoryMO> categoriesList;
-    private List<AccountsMO> accountList;
+    private List<AccountMO> accountList;
     private List<SpentOnMO> spentOnList;
 
     private List<RepeatMO> repeatsList;
 
-    private TransactionModel transactionModelObj;
+    private TransactionMO transactionModelObj;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -146,7 +146,7 @@ public class TransactionFragment extends DialogFragment {
         transactionModelObj.setTRAN_NAME(String.valueOf(addUpdateTranNameET.getText()));
 
         transactionModelObj.setCAT_ID(((CategoryMO)transactionContentCategoryLL.getTag()).getCAT_ID());
-        transactionModelObj.setACC_ID(((AccountsMO)transactionContentAccountLL.getTag()).getACC_ID());
+        transactionModelObj.setACC_ID(((AccountMO)transactionContentAccountLL.getTag()).getACC_ID());
         transactionModelObj.setSPNT_ON_ID(((SpentOnMO)transactionContentSpentonLL.getTag()).getSPNT_ON_ID());
 
         transactionModelObj.setTRAN_TYPE(String.valueOf(getView().findViewById(addUpdateTranExpIncRadioGrp.getCheckedRadioButtonId()).getTag()));
@@ -169,7 +169,7 @@ public class TransactionFragment extends DialogFragment {
     }
 
     private void getDataFromBundle() {
-        transactionModelObj = (TransactionModel) getArguments().get(TRANSACTION_OBJECT);
+        transactionModelObj = (TransactionMO) getArguments().get(TRANSACTION_OBJECT);
         loggedInUserObj = (UserMO) getArguments().get(LOGGED_IN_OBJECT);
     }
 
@@ -313,9 +313,9 @@ public class TransactionFragment extends DialogFragment {
     }
 
     private void closeFragment(String messageStr){
-        CalendarActivity activity = (CalendarActivity) this.getActivity();
-        activity.onFinishUserDialog(messageStr);
-        this.dismiss();
+        dismiss();
+
+        ((CalendarActivity)getActivity()).initActivity();
     }
 
     private void getMasterData() {
@@ -625,8 +625,8 @@ public class TransactionFragment extends DialogFragment {
         setFont(addUpdateTransactionRL);
     }
 
-    private AccountsMO getAccountOnId(List<AccountsMO> accountList, String accountIdStr){
-        for(AccountsMO iterList : accountList){
+    private AccountMO getAccountOnId(List<AccountMO> accountList, String accountIdStr){
+        for(AccountMO iterList : accountList){
             if(iterList.getACC_ID().equalsIgnoreCase(accountIdStr)){
                 return iterList;
             }
@@ -661,8 +661,8 @@ public class TransactionFragment extends DialogFragment {
         return null;
     }
 
-    private AccountsMO getDefaultAccount(List<AccountsMO> accountList){
-        for(AccountsMO iterList : accountList){
+    private AccountMO getDefaultAccount(List<AccountMO> accountList){
+        for(AccountMO iterList : accountList){
             if(iterList.getACC_IS_DEF().equalsIgnoreCase(DB_AFFIRMATIVE)){
                 return iterList;
             }
@@ -706,6 +706,7 @@ public class TransactionFragment extends DialogFragment {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_AMOUNT_OBJECT, String.valueOf(transactionContentAmountTV.getText()));
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
 
@@ -763,7 +764,7 @@ public class TransactionFragment extends DialogFragment {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(ACCOUNT_OBJECT, (Serializable) accountList);
-        bundle.putSerializable(SELECTED_ACCOUNT_OBJECT, ((AccountsMO)transactionContentAccountLL.getTag()).getACC_ID());
+        bundle.putSerializable(SELECTED_ACCOUNT_OBJECT, ((AccountMO)transactionContentAccountLL.getTag()).getACC_ID());
         bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
@@ -919,7 +920,7 @@ public class TransactionFragment extends DialogFragment {
     public void onFinishDialog(CategoryMO categoryMO) {
         setCategory(categoryMO);
     }
-    public void onFinishDialog(AccountsMO accountsMO) {
+    public void onFinishDialog(AccountMO accountsMO) {
         setAccount(accountsMO);
     }
     public void onFinishDialog(SpentOnMO spentOnMO) {
@@ -941,7 +942,7 @@ public class TransactionFragment extends DialogFragment {
         transactionContentCategoryLL.setTag(categoryMO);
     }
 
-    private void setAccount(AccountsMO accountsMO){
+    private void setAccount(AccountMO accountsMO){
         ((TextView)transactionContentAccountLL.findViewById(R.id.transactionContentAccountTVId)).setText(accountsMO.getACC_NAME());
         transactionContentAccountLL.findViewById(R.id.transactionContentAccountIVId).setBackgroundResource(Integer.parseInt(accountsMO.getACC_IMG()));
 

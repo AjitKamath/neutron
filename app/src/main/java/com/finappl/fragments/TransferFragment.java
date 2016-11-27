@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -29,9 +30,9 @@ import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.TransfersDbService;
-import com.finappl.models.AccountsMO;
+import com.finappl.models.AccountMO;
 import com.finappl.models.RepeatMO;
-import com.finappl.models.TransferModel;
+import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.IdGenerator;
@@ -43,7 +44,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 import static com.finappl.utils.Constants.ACCOUNT_LOW_BALANCE_LIMIT;
@@ -142,11 +142,11 @@ public class TransferFragment extends DialogFragment {
     private CalendarDbService calendarDbService;
     private TransfersDbService transfersDbService;
 
-    private List<AccountsMO> accountList;
+    private List<AccountMO> accountList;
 
     private List<RepeatMO> repeatsList;
 
-    private TransferModel transfer;
+    private TransferMO transfer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -173,8 +173,8 @@ public class TransferFragment extends DialogFragment {
         }
 
         transfer.setTRNFR_AMT(Double.parseDouble(String.valueOf(transferAmountTV.getText()).replaceAll(",", "")));
-        transfer.setACC_ID_FRM(((AccountsMO)transferFromAccountLL.getTag()).getACC_ID());
-        transfer.setACC_ID_TO(((AccountsMO)transferToAccountLL.getTag()).getACC_ID());
+        transfer.setACC_ID_FRM(((AccountMO)transferFromAccountLL.getTag()).getACC_ID());
+        transfer.setACC_ID_TO(((AccountMO)transferToAccountLL.getTag()).getACC_ID());
         transfer.setTRNFR_NOTE(String.valueOf(transferNoteET.getText()));
         transfer.setUSER_ID(loggedInUserObj.getUSER_ID());
 
@@ -185,7 +185,7 @@ public class TransferFragment extends DialogFragment {
             if(R.id.transferNotifyAddRBId == transferNotifyRG.getCheckedRadioButtonId()){
                 transfer.setNOTIFY_TIME(String.valueOf(transferNotifyAddTimeTV.getText()));
             }
-            else if(R.id.transactionContentAutoAddRBId == transferNotifyRG.getCheckedRadioButtonId()){
+            else if(R.id.transferAutoAddRBId == transferNotifyRG.getCheckedRadioButtonId()){
                 transfer.setNOTIFY_TIME(String.valueOf(transferAutoAddTimeTV.getText()));
             }
 
@@ -194,7 +194,7 @@ public class TransferFragment extends DialogFragment {
     }
 
     private void getDataFromBundle() {
-        transfer = (TransferModel) getArguments().get(TRANSFER_OBJECT);
+        transfer = (TransferMO) getArguments().get(TRANSFER_OBJECT);
         loggedInUserObj = (UserMO) getArguments().get(LOGGED_IN_OBJECT);
     }
 
@@ -207,7 +207,7 @@ public class TransferFragment extends DialogFragment {
         ((TextView)transferFromAccountLL.findViewById(R.id.transferFromAccountCurrencyTVId)).setText(loggedInUserObj.getCUR_CODE());
         ((TextView)transferToAccountLL.findViewById(R.id.transferToAccountCurrencyTVId)).setText(loggedInUserObj.getCUR_CODE());
 
-        String dateStr = (UI_DATE_FORMAT_SDF.format(transfer.getTransferDate())).toUpperCase();
+        String dateStr = (UI_DATE_FORMAT_SDF.format(transfer.getTRNFR_DATE())).toUpperCase();
         transferDateTV.setText(dateStr);
 
         //hide repeat by default
@@ -278,9 +278,9 @@ public class TransferFragment extends DialogFragment {
 
 
     private void closeFragment(String messageStr){
-        CalendarActivity activity = (CalendarActivity) this.getActivity();
-        activity.onFinishUserDialog(messageStr);
-        this.dismiss();
+        ((CalendarActivity)getActivity()).initActivity();
+
+        dismiss();
     }
 
     private void getMasterData() {
@@ -447,6 +447,10 @@ public class TransferFragment extends DialogFragment {
             showToast("Enter Transfer Amount");
             return;
         }
+        else if(transfer.getACC_ID_FRM().equalsIgnoreCase(transfer.getACC_ID_TO())){
+            showToast("Cannot Transfer between the same Accounts");
+            return;
+        }
 
         //if transfer contains transfer id, then its an update. if not its a new transfer
         if(transfer.getTRNFR_ID() == null) {
@@ -493,7 +497,7 @@ public class TransferFragment extends DialogFragment {
         }
     }
 
-    @OnCheckedChanged(R.id.transferRepeatSwitchId)
+    /*@OnCheckedChanged(R.id.transferRepeatSwitchId)
     public void onRepeatSwitch(){
         if(transferRepeatSwitch.isChecked()){
             transferRepeatLL.setVisibility(View.VISIBLE);
@@ -515,7 +519,7 @@ public class TransferFragment extends DialogFragment {
         }
     }
 
-    @OnCheckedChanged(R.id.transferNotifyRGId)
+    @OnItemSelected(R.id.transferNotifyRGId)
     public void onNotifyOrAuto(){
         int checkedId = transferNotifyRG.getCheckedRadioButtonId();
 
@@ -528,14 +532,56 @@ public class TransferFragment extends DialogFragment {
             transferNotifyAddTimeTV.setVisibility(View.INVISIBLE);
             transferAutoAddTimeTV.setVisibility(View.VISIBLE);
         }
-    }
+    }*/
 
     private void initComps(){
+        //Change listeners
+        transferRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(transferRepeatSwitch.isChecked()){
+                    transferRepeatLL.setVisibility(View.VISIBLE);
+                    transferNotifyDivider.setVisibility(View.VISIBLE);
+                    transferNotifyLL.setVisibility(View.VISIBLE);
+                    transferScheduleDivider.setVisibility(View.VISIBLE);
+                    transferScheduleLL.setVisibility(View.VISIBLE);
+
+                    transferSV.post(new Runnable() { public void run() { transferSV.fullScroll(View.FOCUS_DOWN); } });
+                }
+                else{
+                    transferSV.post(new Runnable() { public void run() { transferSV.fullScroll(View.FOCUS_UP); } });
+
+                    transferRepeatLL.setVisibility(View.GONE);
+                    transferNotifyDivider.setVisibility(View.GONE);
+                    transferNotifyLL.setVisibility(View.GONE);
+                    transferScheduleDivider.setVisibility(View.GONE);
+                    transferScheduleLL.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        transferNotifyRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int checkedId = transferNotifyRG.getCheckedRadioButtonId();
+
+                if(R.id.transferNotifyAddRBId == checkedId){
+                    transferNotifyAddTimeTV.setVisibility(View.VISIBLE);
+                    transferAutoAddTimeTV.setVisibility(View.INVISIBLE);
+                }
+                else if(R.id.transferAutoAddRBId == checkedId){
+                    transfer.setNOTIFY_TIME(String.valueOf(transferAutoAddTimeTV.getText()));
+                    transferNotifyAddTimeTV.setVisibility(View.INVISIBLE);
+                    transferAutoAddTimeTV.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         setFont(transferRL);
     }
 
-    private AccountsMO getAccountOnId(List<AccountsMO> accountList, String accountIdStr){
-        for(AccountsMO iterList : accountList){
+    private AccountMO getAccountOnId(List<AccountMO> accountList, String accountIdStr){
+        for(AccountMO iterList : accountList){
             if(iterList.getACC_ID().equalsIgnoreCase(accountIdStr)){
                 return iterList;
             }
@@ -552,8 +598,8 @@ public class TransferFragment extends DialogFragment {
         return null;
     }
 
-    private AccountsMO getDefaultAccount(List<AccountsMO> accountList){
-        for(AccountsMO iterList : accountList){
+    private AccountMO getDefaultAccount(List<AccountMO> accountList){
+        for(AccountMO iterList : accountList){
             if(iterList.getACC_IS_DEF().equalsIgnoreCase(DB_AFFIRMATIVE)){
                 return iterList;
             }
@@ -580,6 +626,7 @@ public class TransferFragment extends DialogFragment {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_AMOUNT_OBJECT, String.valueOf(transferAmountTV.getText()));
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSFER);
 
@@ -620,7 +667,7 @@ public class TransferFragment extends DialogFragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ACCOUNT_OBJECT, (Serializable) accountList);
         bundle.putSerializable(ACCOUNT_TYPE_FLAG, "FROM");
-        bundle.putSerializable(SELECTED_ACCOUNT_OBJECT, ((AccountsMO)transferFromAccountLL.getTag()).getACC_ID());
+        bundle.putSerializable(SELECTED_ACCOUNT_OBJECT, ((AccountMO)transferFromAccountLL.getTag()).getACC_ID());
         bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSFER);
@@ -642,7 +689,7 @@ public class TransferFragment extends DialogFragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ACCOUNT_OBJECT, (Serializable) accountList);
         bundle.putSerializable(ACCOUNT_TYPE_FLAG, "TO");
-        bundle.putSerializable(SELECTED_ACCOUNT_OBJECT, ((AccountsMO)transferToAccountLL.getTag()).getACC_ID());
+        bundle.putSerializable(SELECTED_ACCOUNT_OBJECT, ((AccountMO)transferToAccountLL.getTag()).getACC_ID());
         bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSFER);
@@ -735,7 +782,7 @@ public class TransferFragment extends DialogFragment {
                 transferNotifyAddTimeTV.setText(timeStr.toUpperCase());
             }
             if("AUTO_ADD_TIME".equalsIgnoreCase(uiComponentStr)){
-                transferNotifyAddTimeTV.setText(timeStr.toUpperCase());
+                transferAutoAddTimeTV.setText(timeStr.toUpperCase());
             }
         }
         catch(ParseException e){
@@ -774,7 +821,7 @@ public class TransferFragment extends DialogFragment {
         transfersDbService = new TransfersDbService(mContext);
     }
 
-    public void onFinishDialog(AccountsMO accountsMO, String whichAccountStr) {
+    public void onFinishDialog(AccountMO accountsMO, String whichAccountStr) {
         if("FROM".equalsIgnoreCase(whichAccountStr)){
             setFromAccount(accountsMO);
         }
@@ -792,7 +839,7 @@ public class TransferFragment extends DialogFragment {
         closeFragment(null);
     }
 
-    private void setFromAccount(AccountsMO accountsMO){
+    private void setFromAccount(AccountMO accountsMO){
         ((TextView)transferFromAccountLL.findViewById(R.id.transferFromAccountTVId)).setText(accountsMO.getACC_NAME());
         transferFromAccountLL.findViewById(R.id.transferFromAccountIVId).setBackgroundResource(Integer.parseInt(accountsMO.getACC_IMG()));
 
@@ -808,7 +855,7 @@ public class TransferFragment extends DialogFragment {
         transferFromAccountLL.setTag(accountsMO);
     }
 
-    private void setToAccount(AccountsMO accountsMO){
+    private void setToAccount(AccountMO accountsMO){
         ((TextView)transferToAccountLL.findViewById(R.id.transferToAccountTVId)).setText(accountsMO.getACC_NAME());
         transferToAccountLL.findViewById(R.id.transferToAccountIVId).setBackgroundResource(Integer.parseInt(accountsMO.getACC_IMG()));
 

@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/countriesRLId"
+    android:layout_width="@dimen/fragment_full_width"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/screen_components_padding_from_walls"
+    android:background="@color/white"
+    android:gravity="right"
+    android:orientation="vertical"
+    app:theme="@style/FinappleTheme">
+
+    <!--Page-->
+    <LinearLayout
+        android:id="@+id/countriesContentLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/screen_components_padding_from_walls"
+        android:paddingRight="@dimen/screen_components_padding_from_walls"
+        android:paddingBottom="@dimen/screen_components_padding_from_walls">
+
+        <ListView
+            android:id="@+id/countriesContentLVId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+
+    </LinearLayout>
+</RelativeLayout>

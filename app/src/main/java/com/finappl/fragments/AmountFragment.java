@@ -10,32 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
-import com.finappl.adapters.AccountsFragmentListViewAdapter;
-import com.finappl.dbServices.AuthorizationDbService;
-import com.finappl.dbServices.CalendarDbService;
-import com.finappl.dbServices.TransactionsDbService;
-import com.finappl.models.AccountsMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
-import com.finappl.utils.IdGenerator;
 
-import java.util.List;
-
-import static com.finappl.utils.Constants.ACCOUNT_OBJECT;
-import static com.finappl.utils.Constants.AMOUNT_OBJECT;
-import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
+import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_AMOUNT_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
+import static com.finappl.utils.Constants.UN_IDENTIFIED_PARENT_FRAGMENT;
 
 /**
  * Created by ajit on 21/3/16.
@@ -66,8 +52,6 @@ public class AmountFragment extends DialogFragment implements View.OnClickListen
 
     private UserMO loggedInUserObj;
 
-    private AuthorizationDbService authorizationDbService;
-    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.amount, container);
@@ -75,15 +59,16 @@ public class AmountFragment extends DialogFragment implements View.OnClickListen
         Dialog d = getDialog();
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        getAmountFromBundle();
+        getFromBundle();
         initComps(view);
         setupPage();
 
         return view;
     }
 
-    private void getAmountFromBundle() {
+    private void getFromBundle() {
         amountStr = (String) getArguments().get(SELECTED_AMOUNT_OBJECT);
+        loggedInUserObj = (UserMO) getArguments().get(LOGGED_IN_OBJECT);
     }
 
     private void setupPage() {
@@ -186,21 +171,20 @@ public class AmountFragment extends DialogFragment implements View.OnClickListen
             case R.id.amountOKLLId :
                 amountStr = String.valueOf(amountAmountTV.getText());
 
-                TransactionFragment activity = (TransactionFragment) getTargetFragment();
-                activity.onFinishDialog(FinappleUtility.cleanUpAmount(amountStr));
+                if(getTargetFragment() instanceof TransactionFragment){
+                    TransactionFragment fragment = (TransactionFragment) getTargetFragment();
+                    fragment.onFinishDialog(FinappleUtility.cleanUpAmount(amountStr));
+                }
+                else if (getTargetFragment() instanceof TransferFragment){
+                    TransferFragment fragment = (TransferFragment) getTargetFragment();
+                    fragment.onFinishDialog(FinappleUtility.cleanUpAmount(amountStr));
+                }
+
                 dismiss();
                 break;
         }
 
         amountAmountTV.setText(amountStr);
-    }
-
-    private void getLoggedInUser(){
-        loggedInUserObj = authorizationDbService.getActiveUser(FinappleUtility.getInstance().getActiveUserId(mContext));
-    }
-
-    private void initDb() {
-        authorizationDbService = new AuthorizationDbService(mContext);
     }
 
     // Empty constructor required for DialogFragment
@@ -210,10 +194,6 @@ public class AmountFragment extends DialogFragment implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity().getApplicationContext();
-
-        initDb();
-
-        getLoggedInUser();
     }
 
     @Override
@@ -222,8 +202,17 @@ public class AmountFragment extends DialogFragment implements View.OnClickListen
 
         amountStr = String.valueOf(amountAmountTV.getText());
 
-        TransactionFragment activity = (TransactionFragment) getTargetFragment();
-        activity.onFinishDialog(FinappleUtility.cleanUpAmount(amountStr));
+        if(getTargetFragment() instanceof TransactionFragment){
+            TransactionFragment fragment = (TransactionFragment) getTargetFragment();
+            fragment.onFinishDialog(FinappleUtility.cleanUpAmount(amountStr));
+        }
+        else if(getTargetFragment() instanceof TransferFragment){
+            TransferFragment fragment = (TransferFragment) getTargetFragment();
+            fragment.onFinishDialog(FinappleUtility.cleanUpAmount(amountStr));
+        }
+        else{
+            Log.e(CLASS_NAME, UN_IDENTIFIED_PARENT_FRAGMENT);
+        }
     }
 
     @Override

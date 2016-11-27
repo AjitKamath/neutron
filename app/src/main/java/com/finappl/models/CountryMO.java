@@ -1,18 +1,18 @@
 package com.finappl.models;
 
-import java.util.Date;
+import java.io.Serializable;
 
 /**
- * Created by ajit on 15/4/16.
+ * Created by ajit on 27/11/16.
  */
-public class CountryMO {
+
+public class CountryMO implements Serializable {
     private String CNTRY_ID;
     private String CNTRY_NAME;
     private String CNTRY_CODE;
     private String CUR;
     private String CUR_CODE;
-    private Date CREAT_DTM;
-    private Date MOD_DTM;
+    private String CNTRY_IMG;
 
     public String getCNTRY_ID() {
         return CNTRY_ID;
@@ -54,19 +54,11 @@ public class CountryMO {
         this.CUR_CODE = CUR_CODE;
     }
 
-    public Date getCREAT_DTM() {
-        return CREAT_DTM;
+    public String getCNTRY_IMG() {
+        return CNTRY_IMG;
     }
 
-    public void setCREAT_DTM(Date CREAT_DTM) {
-        this.CREAT_DTM = CREAT_DTM;
-    }
-
-    public Date getMOD_DTM() {
-        return MOD_DTM;
-    }
-
-    public void setMOD_DTM(Date MOD_DTM) {
-        this.MOD_DTM = MOD_DTM;
+    public void setCNTRY_IMG(String CNTRY_IMG) {
+        this.CNTRY_IMG = CNTRY_IMG;
     }
 }

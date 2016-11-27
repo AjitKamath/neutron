@@ -6,13 +6,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.finappl.models.NotificationModel;
-import com.finappl.utils.Constants;
 import com.finappl.utils.IdGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.finappl.utils.Constants.*;
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
+import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_TABLE_NOTIFICATION;
+import static com.finappl.utils.Constants.DB_VERSION;
 
 public class NotificationDbService extends SQLiteOpenHelper {
 

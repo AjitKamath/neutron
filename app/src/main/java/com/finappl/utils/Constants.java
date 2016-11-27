@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 public final class Constants{
     //DB
     public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 73;
+    public static final int DB_VERSION = 79;
 
     //Admin properties
     public static final String ADMIN_USERID = "ADMIN";
@@ -50,7 +50,10 @@ public final class Constants{
     public static final String DEFAULT_SPENTON = "MYSELF";
     public static final String REPEATS = "DAY-"+R.drawable.day+",WEEK-"+R.drawable.week+",MONTH-"+R.drawable.month+",YEAR-"+R.drawable.year;
     public static final String DEFAULT_REPEAT = "MONTH";
-    public static final String DEFAULT_COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-INR,USA-1-DOLLAR-USD,AUSTRALIA-61-DOLLAR-AUD";
+    public static final String COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-INR-"+R.drawable.india+",USA-1-DOLLAR-USD-"+R.drawable.united_states+",AUSTRALIA-61-DOLLAR-AUD-"+R.drawable.australia;
+    public static final String DEFAULT_COUNTRY_CURRENCY = "INDIA-91-RUPEE-INR";
+    public static final String DEFAULT_METRIC = "INDIAN";
+
 
     public static final String DEFAULT_QUICK_TRANSACTION_NAME = "Quick Transaction";
 
@@ -62,7 +65,7 @@ public final class Constants{
 
     //Decimal Limit
     public static final Integer DECIMAL_AFTER_LIMIT = 2;
-    public static final Integer DECIMAL_BEFORE_LIMIT = 999999999;
+    public static final Integer DECIMAL_BEFORE_LIMIT = 99999999;
 
     //Date formats
     public static final String JAVA_DATE_FORMAT = "dd-MM-yyyy";
@@ -95,7 +98,10 @@ public final class Constants{
     public static final String FRAGMENT_ACCOUNT = "FRAGMENT_ACCOUNT";
     public static final String FRAGMENT_SPENTON = "FRAGMENT_SPENTON";
     public static final String FRAGMENT_CONFIRM = "FRAGMENT_CONFIRM";
-    public static final String ADD_ACTIVITY = "ADD_ACTIVITY";
+    public static final String FRAGMENT_ADD_ACTIVITY = "FRAGMENT_ADD_ACTIVITY";
+    public static final String FRAGMENT_OPTIONS = "FRAGMENT_OPTIONS";
+    public static final String FRAGMENT_SETTINGS = "FRAGMENT_SETTINGS";
+    public static final String FRAGMENT_COUNTRIES = "FRAGMENT_COUNTRIES";
 
     //FRAGMENT OBJECT KEYS
     public static final String CONFIRM_MESSAGE = "CONFIRM_MESSAGE";
@@ -108,14 +114,27 @@ public final class Constants{
     public static final String CATEGORY_OBJECT = "CATEGORY_OBJECT";
     public static final String ACCOUNT_OBJECT = "ACCOUNT_OBJECT";
     public static final String SPENTON_OBJECT = "SPENTON_OBJECT";
+    public static final String COUNTRY_OBJECT = "COUNTRY_OBJECT";
     public static final String SELECTED_CATEGORY_OBJECT = "SELECTED_CATEGORY_OBJECT";
     public static final String SELECTED_ACCOUNT_OBJECT = "SELECTED_ACCOUNT_OBJECT";
     public static final String SELECTED_SPENTON_OBJECT = "SELECTED_SPENTON_OBJECT";
     public static final String SELECTED_REPEAT_OBJECT = "SELECTED_REPEAT_OBJECT";
     public static final String SELECTED_AMOUNT_OBJECT = "SELECTED_AMOUNT_OBJECT";
+    public static final String SELECTED_COUNTRY_OBJECT = "SELECTED_COUNTRY_OBJECT";
     public static final String ACCOUNT_TYPE_FLAG = "ACCOUNT_TYPE_FLAG";
 
     //SHARED PREFS KEYS
     public static final String SHARED_PREF = "SHARED_PREFERENCE";
     public static final String SHARED_PREF_ACTIVE_USER_ID = "ACTIVE_USER_ID";
+
+    //Messages
+    public static final String UN_IDENTIFIED_PARENT_FRAGMENT = "Target Fragment hasn't been set before calling the current fragment";
+    public static final String UN_IDENTIFIED_OBJECT_TYPE = "Object Type could not be identified for the object : ";
+    public static final String UN_IDENTIFIED_VIEW = "Could not identify the view which has been clicked";
+    public static final String EMAIL_NOT_VERIFIED = "EMAIL NOT VERIFIED";
+    public static final String VERIFICATION_EMAIL_SENT = " VERIFICATION MAIL SENT";
+
+    //Snacks
+    public static final String VERIFY_EMAIL = "VERIFY";
+    public static final String OK = "OK";
 }

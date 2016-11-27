@@ -1,10 +1,12 @@
 package com.finappl.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ajit on 13/10/16.
  */
 
-public class RepeatMO {
+public class RepeatMO implements Serializable {
     private String REPEAT_ID;
     private String REPEAT_NAME;
     private String REPEAT_IS_DEF;

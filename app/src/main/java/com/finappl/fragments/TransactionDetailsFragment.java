@@ -18,13 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
 import com.finappl.dbServices.TransactionsDbService;
-import com.finappl.models.TransactionModel;
+import com.finappl.models.TransactionMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
-
-import java.text.ParseException;
 
 import static android.view.View.GONE;
 import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
@@ -70,7 +67,7 @@ public class TransactionDetailsFragment extends DialogFragment {
     //db services
     private TransactionsDbService transactionsDbService;
 
-    private TransactionModel transaction;
+    private TransactionMO transaction;
     private UserMO loggedInUser;
 
     @Override
@@ -88,7 +85,7 @@ public class TransactionDetailsFragment extends DialogFragment {
     }
 
     private void getDataFromBundle() {
-        transaction = (TransactionModel) getArguments().get(TRANSACTION_OBJECT);
+        transaction = (TransactionMO) getArguments().get(TRANSACTION_OBJECT);
         loggedInUser = (UserMO) getArguments().get(LOGGED_IN_OBJECT);
     }
 
@@ -270,8 +267,6 @@ public class TransactionDetailsFragment extends DialogFragment {
     }
 
     private void closeFragment(String messageStr){
-        CalendarActivity activity = (CalendarActivity) this.getActivity();
-        activity.onFinishUserDialog(messageStr);
         this.dismiss();
     }
 

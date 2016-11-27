@@ -12,29 +12,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.adapters.AccountsFragmentListViewAdapter;
-import com.finappl.models.AccountsMO;
-import com.finappl.models.TransactionModel;
+import com.finappl.models.TransactionMO;
+import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
 
 import java.text.ParseException;
-import java.util.List;
 
-import static com.finappl.utils.Constants.ACCOUNT_OBJECT;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION;
+import static com.finappl.utils.Constants.FRAGMENT_TRANSFER;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
-import static com.finappl.utils.Constants.REPEAT_OBJECT;
-import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_DATE;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
+import static com.finappl.utils.Constants.TRANSFER_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
 
 /**
@@ -54,6 +51,7 @@ public class AddActivityFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_activity, container);
+        ButterKnife.inject(this, view);
 
         Dialog d = getDialog();
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -77,7 +75,7 @@ public class AddActivityFragment extends DialogFragment {
         addActivityTransactionLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionModel transactionModelObj = new TransactionModel();
+                TransactionMO transactionModelObj = new TransactionMO();
                 try{
                     transactionModelObj.setTRAN_DATE(JAVA_DATE_FORMAT_SDF.parse(selectedDateStr));
                 }
@@ -107,6 +105,36 @@ public class AddActivityFragment extends DialogFragment {
         });
 
         setFont(addActivityLL);
+    }
+
+    @OnClick(R.id.addActivityTransferLLId)
+    public void showAddTransfer(){
+        TransferMO transfer = new TransferMO();
+        try{
+            transfer.setTRNFR_DATE(JAVA_DATE_FORMAT_SDF.parse(selectedDateStr));
+        }
+        catch (ParseException pe){
+            Log.e(CLASS_NAME, "Date Parse Error !! "+pe);
+            return;
+        }
+
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSFER);
+
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(TRANSFER_OBJECT, transfer);
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+
+        TransferFragment fragment = new TransferFragment();
+        fragment.setArguments(bundle);
+        fragment.show(manager, FRAGMENT_TRANSFER);
+
+        //close the current fragment
+        dismiss();
     }
 
     // Empty constructor required for DialogFragment

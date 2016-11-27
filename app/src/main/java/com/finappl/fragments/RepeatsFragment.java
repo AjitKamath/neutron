@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +16,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.adapters.AccountsFragmentListViewAdapter;
 import com.finappl.adapters.RepeatsFragmentListViewAdapter;
-import com.finappl.models.AccountsMO;
 import com.finappl.models.RepeatMO;
 
 import java.util.List;
 
-import static com.finappl.utils.Constants.ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.REPEAT_OBJECT;
-import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_REPEAT_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
+import static com.finappl.utils.Constants.UN_IDENTIFIED_PARENT_FRAGMENT;
 
 /**
  * Created by ajit on 21/3/16.
@@ -83,8 +81,18 @@ public class RepeatsFragment extends DialogFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TransactionFragment activity = (TransactionFragment) getTargetFragment();
-                activity.onFinishDialog(repeatsList.get(position));
+                if(getTargetFragment() instanceof TransactionFragment){
+                    TransactionFragment fragment = (TransactionFragment) getTargetFragment();
+                    fragment.onFinishDialog(repeatsList.get(position));
+                }
+                else if(getTargetFragment() instanceof TransferFragment){
+                    TransferFragment fragment = (TransferFragment) getTargetFragment();
+                    fragment.onFinishDialog(repeatsList.get(position));
+                }
+                else{
+                    Log.e(CLASS_NAME, UN_IDENTIFIED_PARENT_FRAGMENT);
+                }
+
                 dismiss();
             }
         };

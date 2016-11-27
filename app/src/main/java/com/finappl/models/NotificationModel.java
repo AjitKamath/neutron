@@ -1,11 +1,12 @@
 package com.finappl.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by ajit on 12/8/15.
  */
-public class NotificationModel {
+public class NotificationModel implements Serializable{
 
     private String CNCL_NOTIF_ID;
     private String USER_ID;

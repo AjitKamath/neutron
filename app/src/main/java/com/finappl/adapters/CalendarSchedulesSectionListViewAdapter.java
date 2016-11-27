@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.models.MonthLegend;
 import com.finappl.models.ScheduledTransactionModel;
 import com.finappl.models.ScheduledTransferModel;
 import com.finappl.utils.FinappleUtility;
@@ -109,7 +108,7 @@ public class CalendarSchedulesSectionListViewAdapter extends BaseAdapter {
                     convertView = inflater.inflate(contentLayoutId, null);
 
                     //for transaction
-                    mHolder.calendarScheduleTransactionLL = (LinearLayout) convertView.findViewById(R.id.calendarScheduleTransactionLLId);
+                    /*mHolder.calendarScheduleTransactionLL = (LinearLayout) convertView.findViewById(R.id.calendarScheduleTransactionLLId);
                     mHolder.calendarScheduleTransactionCatTV = (TextView) convertView.findViewById(R.id.calendarScheduleTransactionCatTVId);
 
                     //for transfers
@@ -120,7 +119,7 @@ public class CalendarSchedulesSectionListViewAdapter extends BaseAdapter {
                     //common
                     mHolder.calendarSchedulesLL = (LinearLayout) convertView.findViewById(R.id.calendarSchedulesLLId);
                     mHolder.calendarScheduleFreqTattooTV = (TextView) convertView.findViewById(R.id.calendarScheduleFreqTattooTVId);
-                    mHolder.calendarScheduleAmtTV = (TextView) convertView.findViewById(R.id.calendarScheduleAmtTVId);
+                    mHolder.calendarScheduleAmtTV = (TextView) convertView.findViewById(R.id.calendarScheduleAmtTVId);*/
 
                     break;
             }

@@ -13,10 +13,12 @@
         android:orientation="vertical">
 
         <TextView
+            android:layout_marginTop="-7dp"
             android:id="@+id/calendarDayAmountTVId"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center"
             android:text="3.5K"
             android:textColor="@color/finappleCurrencyNegColor"
             android:textSize="8sp" />
@@ -25,8 +27,9 @@
             android:id="@+id/calendarDayTVId"
             android:text="30"
             android:textColor="@color/Black"
-            android:textSize="17sp"
-            android:layout_width="wrap_content"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
@@ -34,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <TextView

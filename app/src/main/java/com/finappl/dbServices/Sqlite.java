@@ -2,669 +2,465 @@ package com.finappl.dbServices;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.finappl.utils.ColumnFetcher;
-import com.finappl.utils.Constants;
-import com.finappl.utils.DateTimeUtil;
-
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.finappl.utils.Constants.*;
+import static com.finappl.utils.Constants.ACCOUNTS;
+import static com.finappl.utils.Constants.ADMIN_USERID;
+import static com.finappl.utils.Constants.CATEGORIES;
+import static com.finappl.utils.Constants.COUNTRIES_CURRENCIES;
+import static com.finappl.utils.Constants.DB_AFFIRMATIVE;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT_SDF;
+import static com.finappl.utils.Constants.DB_NAME;
+import static com.finappl.utils.Constants.DB_NONAFFIRMATIVE;
+import static com.finappl.utils.Constants.DB_TABLE_ACCOUNT;
+import static com.finappl.utils.Constants.DB_TABLE_BUDGET;
+import static com.finappl.utils.Constants.DB_TABLE_CATEGORY;
+import static com.finappl.utils.Constants.DB_TABLE_COUNTRY;
+import static com.finappl.utils.Constants.DB_TABLE_NOTIFICATION;
+import static com.finappl.utils.Constants.DB_TABLE_REPEAT;
+import static com.finappl.utils.Constants.DB_TABLE_SETTING;
+import static com.finappl.utils.Constants.DB_TABLE_SPENTON;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSACTION;
+import static com.finappl.utils.Constants.DB_TABLE_TRANSFER;
+import static com.finappl.utils.Constants.DB_TABLE_USER;
+import static com.finappl.utils.Constants.DB_VERSION;
+import static com.finappl.utils.Constants.DEFAULT_ACCOUNT;
+import static com.finappl.utils.Constants.DEFAULT_CATEGORY;
+import static com.finappl.utils.Constants.DEFAULT_REPEAT;
+import static com.finappl.utils.Constants.DEFAULT_SPENTON;
+import static com.finappl.utils.Constants.REPEATS;
+import static com.finappl.utils.Constants.SPENT_ONS;
 
 public class Sqlite extends SQLiteOpenHelper{
 
 	private final String CLASS_NAME = this.getClass().getName();
-
 	private static Sqlite sInstance = null;
 
-	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DB_DATE_FORMAT);
-	private SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(DB_DATE_TIME_FORMAT);
+	private SQLiteDatabase db;
 
-	public Sqlite(Context context){
-		super(context, DB_NAME, null, DB_VERSION);
+	private void addDefaults(){
+		ContentValues values;
+		String nowStr = DB_DATE_TIME_FORMAT_SDF.format(new Date());
+
+		//Country
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_COUNTRY);
+		String countriesStrArr[] = COUNTRIES_CURRENCIES.split(",");
+		values = new ContentValues();
+		for(String iterCountriesStrArr : countriesStrArr){
+			String countryCurrencyStrArr[] = iterCountriesStrArr.split("-");
+			values.put("CNTRY_ID", countryCurrencyStrArr[0]);
+			values.put("CNTRY_NAME", countryCurrencyStrArr[0]);
+			values.put("CNTRY_CODE", countryCurrencyStrArr[1]);
+			values.put("CUR", countryCurrencyStrArr[2]);
+			values.put("CUR_CODE", countryCurrencyStrArr[3]);
+			values.put("CNTRY_IMG", countryCurrencyStrArr[4]);
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_COUNTRY, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults("+countriesStrArr.length+") into " + DB_TABLE_COUNTRY);
+
+		//Categories
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_CATEGORY);
+		String categoriesStrArr[] = CATEGORIES.split(",");
+		values = new ContentValues();
+		for(String iterCategoriesStrArr : categoriesStrArr){
+			String iterCategoriesStrArrArr[] = iterCategoriesStrArr.split("-");
+
+			String categoryImageStr = iterCategoriesStrArrArr[1];
+			String categoryNameStr = iterCategoriesStrArrArr[0];
+
+			values.put("CAT_ID", categoryNameStr);
+			values.put("USER_ID", ADMIN_USERID);
+			values.put("CAT_NAME", categoryNameStr);
+			values.put("CAT_IMG", categoryImageStr);
+
+			if(categoryNameStr.equalsIgnoreCase(DEFAULT_CATEGORY)){
+				values.put("CAT_IS_DEF", DB_AFFIRMATIVE);
+			}
+			else{
+				values.put("CAT_IS_DEF", DB_NONAFFIRMATIVE);
+			}
+
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_CATEGORY, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults("+categoriesStrArr.length+") into " + DB_TABLE_CATEGORY);
+
+		//Account
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_ACCOUNT);
+		String accountStrArr[] = ACCOUNTS.split(",");
+		values = new ContentValues();
+		for(String iterAccountStrArr : accountStrArr){
+			String iterAccountStrArrArr[] = iterAccountStrArr.split("-");
+
+			String accountImageStr = iterAccountStrArrArr[1];
+			String accountNameStr = iterAccountStrArrArr[0];
+
+			values.put("ACC_ID", accountNameStr);
+			values.put("USER_ID", ADMIN_USERID);
+			values.put("ACC_NAME", accountNameStr);
+			values.put("ACC_IMG", accountImageStr);
+
+			if(accountNameStr.equalsIgnoreCase(DEFAULT_ACCOUNT)){
+				values.put("ACC_IS_DEF", DB_AFFIRMATIVE);
+			}
+			else{
+				values.put("ACC_IS_DEF", DB_NONAFFIRMATIVE);
+			}
+
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_ACCOUNT, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults("+accountStrArr.length+") into " + DB_TABLE_ACCOUNT);
+
+		//Spent On
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_SPENTON);
+		String spentOnStrArr[] = SPENT_ONS.split(",");
+		values = new ContentValues();
+		for(String iterSpentOnStrArr : spentOnStrArr){
+			String iterSpentOnStrArrArr[] = iterSpentOnStrArr.split("-");
+
+			String spentOnImageStr = iterSpentOnStrArrArr[1];
+			String spentOnNameStr = iterSpentOnStrArrArr[0];
+
+			values.put("SPNT_ON_ID", spentOnNameStr);
+			values.put("USER_ID", ADMIN_USERID);
+			values.put("SPNT_ON_NAME", spentOnNameStr);
+			values.put("SPNT_ON_IMG", spentOnImageStr);
+
+			if(spentOnNameStr.equalsIgnoreCase(DEFAULT_SPENTON)){
+				values.put("SPNT_ON_IS_DEF", DB_AFFIRMATIVE);
+			}
+			else{
+				values.put("SPNT_ON_IS_DEF", DB_NONAFFIRMATIVE);
+			}
+
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_SPENTON, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults(" + spentOnStrArr.length + ") into " + DB_TABLE_SPENTON);
+
+		//Repeats
+		Log.i(CLASS_NAME, "Inserting defaults into " + DB_TABLE_REPEAT);
+		String repeatsStrArr[] = REPEATS.split(",");
+		values = new ContentValues();
+		for(String iterArr : repeatsStrArr){
+			String iterArrArr[] = iterArr.split("-");
+
+			String repeatImageStr = iterArrArr[1];
+			String repeatNameStr = iterArrArr[0];
+
+			values.put("REPEAT_ID", repeatNameStr);
+			values.put("REPEAT_NAME", repeatNameStr);
+			values.put("REPEAT_IMG", repeatImageStr);
+
+			if(repeatNameStr.equalsIgnoreCase(DEFAULT_REPEAT)){
+				values.put("REPEAT_IS_DEF", DB_AFFIRMATIVE);
+			}
+			else{
+				values.put("REPEAT_IS_DEF", DB_NONAFFIRMATIVE);
+			}
+
+			values.put("CREAT_DTM", nowStr);
+			db.insert(DB_TABLE_REPEAT, null, values);
+		}
+		Log.i(CLASS_NAME, "Inserted defaults("+repeatsStrArr.length+") into " + DB_TABLE_REPEAT);
 	}
-	
-	public static Sqlite getInstance(Context context) {
-	    // Use the application context, which will ensure that you
-	    // don't accidentally leak an Activity's context.
-	    // See this article for more information: http://bit.ly/6LRzfx
-	    if (sInstance == null) {
-	      sInstance = new Sqlite(context.getApplicationContext());
-	    }
-	    return sInstance;
-	  }
 
+	private void createNotificationsTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_NOTIFICATION);
+		sb.append(" (NOTIF_ID TEXT PRIMARY KEY, ");		//pk
+		sb.append(" USER_ID TEXT NOT NULL, ");          //fk1
+		sb.append(" NOTIF_TYPE TEXT NOT NULL, ");
+		sb.append(" NOTIF_EVNT_ID TEXT NOT NULL, ");
+		sb.append(" NOTIF_RSN TEXT NOT NULL, ");
+		sb.append(" NOTIF_DATE DATE NOT NULL, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_NOTIFICATION + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createSettingsTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_SETTING);
+		sb.append(" (SET_ID TEXT PRIMARY KEY, ");       //pk
+		sb.append(" USER_ID TEXT NOT NULL, ");          //fk1
+		sb.append(" SET_NOTIF_TIME TEXT NOT NULL, ");
+		sb.append(" SET_NOTIF_BUZZ TEXT NOT NULL, ");
+		sb.append(" SET_SEC_PIN TEXT, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_SETTING + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createBudgetTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_BUDGET);
+		sb.append(" (BUDGET_ID TEXT PRIMARY KEY, ");    //pk
+		sb.append(" USER_ID TEXT NOT NULL, ");          //fk1
+		sb.append(" BUDGET_NAME TEXT NOT NULL, ");
+		sb.append(" BUDGET_GRP_TYPE TEXT NOT NULL, ");
+		sb.append(" BUDGET_GRP_ID TEXT NOT NULL, ");
+		sb.append(" BUDGET_TYPE TEXT NOT NULL, ");
+		sb.append(" BUDGET_AMT TEXT NOT NULL, ");
+		sb.append(" BUDGET_NOTE TEXT, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_BUDGET + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createRepeatTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_REPEAT);
+		sb.append(" (REPEAT_ID TEXT PRIMARY KEY, ");				//pk
+		sb.append(" REPEAT_NAME TEXT NOT NULL, ");
+		sb.append(" REPEAT_IS_DEF TEXT NOT NULL, ");
+		sb.append(" REPEAT_IMG TEXT NOT NULL, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_REPEAT + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createTransferTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_TRANSFER);
+		sb.append(" (TRNFR_ID TEXT PRIMARY KEY, ");				//pk
+		sb.append(" USER_ID TEXT NOT NULL, ");					//fk1
+		sb.append(" ACC_ID_FRM TEXT NOT NULL, ");				//fk2
+		sb.append(" ACC_ID_TO TEXT NOT NULL, ");				//fk3
+		sb.append(" REPEAT_ID TEXT, ");							//fk4
+		sb.append(" PARENT_TRNFR_ID TEXT, ");
+		sb.append(" NOTIFY TEXT, ");
+		sb.append(" NOTIFY_TIME TEXT, ");
+		sb.append(" SCHD_UPTO_DATE TEXT, ");
+		sb.append(" TRNFR_AMT TEXT NOT NULL, ");
+		sb.append(" TRNFR_DATE DATE NOT NULL, ");
+		sb.append(" TRNFR_NOTE TEXT, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID), ");
+		sb.append(" FOREIGN KEY (REPEAT_ID) REFERENCES "+DB_TABLE_REPEAT+" (REPEAT_ID), ");
+		sb.append(" FOREIGN KEY (ACC_ID_FRM) REFERENCES "+DB_TABLE_ACCOUNT+" (ACC_ID), ");
+		sb.append(" FOREIGN KEY (ACC_ID_TO) REFERENCES " + DB_TABLE_ACCOUNT + " (ACC_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_TRANSFER + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createTransactionTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_TRANSACTION);
+		sb.append(" (TRAN_ID TEXT PRIMARY KEY, ");				//pk
+		sb.append(" USER_ID TEXT NOT NULL, ");					//fk1
+		sb.append(" CAT_ID TEXT NOT NULL, ");					//fk2
+		sb.append(" ACC_ID TEXT NOT NULL, ");					//fk3
+		sb.append(" SPNT_ON_ID TEXT NOT NULL, ");				//fk4
+		sb.append(" REPEAT_ID TEXT, ");							//fk5
+		sb.append(" PARENT_TRAN_ID TEXT, ");
+		sb.append(" TRAN_AMT TEXT NOT NULL, ");
+		sb.append(" TRAN_NAME TEXT NOT NULL, ");
+		sb.append(" TRAN_TYPE TEXT NOT NULL, ");
+		sb.append(" TRAN_DATE DATE NOT NULL, ");
+		sb.append(" TRAN_NOTE TEXT, ");
+		sb.append(" NOTIFY TEXT, ");
+		sb.append(" NOTIFY_TIME TEXT, ");
+		sb.append(" SCHD_UPTO_DATE TEXT, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USER+" (USER_ID), ");
+		sb.append(" FOREIGN KEY (CAT_ID) REFERENCES "+DB_TABLE_CATEGORY+" (CAT_ID), ");
+		sb.append(" FOREIGN KEY (ACC_ID) REFERENCES "+DB_TABLE_ACCOUNT+" (ACC_ID), ");
+		sb.append(" FOREIGN KEY (SPNT_ON_ID) REFERENCES " + DB_TABLE_SPENTON + " (SPNT_ON_ID), ");
+		sb.append(" FOREIGN KEY (REPEAT_ID) REFERENCES " + DB_TABLE_REPEAT + " (REPEAT_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_TRANSACTION + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createSpentOnTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_SPENTON);
+		sb.append(" (SPNT_ON_ID TEXT PRIMARY KEY, ");			//pk
+		sb.append(" USER_ID TEXT NOT NULL, ");					//fk1
+		sb.append(" SPNT_ON_NAME TEXT NOT NULL, ");
+		sb.append(" SPNT_ON_IS_DEF TEXT NOT NULL, ");
+		sb.append(" SPNT_ON_IMG TEXT NOT NULL, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_SPENTON + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createAccountTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_ACCOUNT);
+		sb.append(" (ACC_ID TEXT PRIMARY KEY, ");			//pk
+		sb.append(" USER_ID TEXT NOT NULL, ");				//fk1
+		sb.append(" ACC_NAME TEXT NOT NULL, ");
+		sb.append(" ACC_IS_DEF TEXT NOT NULL, ");
+		sb.append(" ACC_IMG TEXT NOT NULL, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_ACCOUNT + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createCategoryTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_CATEGORY);
+		sb.append(" (CAT_ID TEXT PRIMARY KEY, ");			//pk
+		sb.append(" USER_ID TEXT NOT NULL, ");				//FK1
+		sb.append(" CAT_NAME TEXT NOT NULL, ");
+		sb.append(" CAT_IMG TEXT NOT NULL, ");
+		sb.append(" CAT_IS_DEF TEXT NOT NULL, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_CATEGORY + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createUserTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_USER);
+		sb.append(" (USER_ID TEXT PRIMARY KEY, ");			//pk
+		sb.append(" CNTRY_ID TEXT NOT NULL, ");				//fk 1
+		sb.append(" METRIC TEXT NOT NULL, ");
+		sb.append(" NAME TEXT, ");
+		sb.append(" PASS TEXT, ");
+		sb.append(" EMAIL TEXT NOT NULL, ");
+		sb.append(" DOB DATE, ");
+		sb.append(" TELEPHONE TEXT, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (CNTRY_ID) REFERENCES " + DB_TABLE_COUNTRY + " (CNTRY_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_USER + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
+	private void createCountryTable() {
+		StringBuilder sb = new StringBuilder(50);
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_COUNTRY);
+		sb.append(" (CNTRY_ID TEXT PRIMARY KEY, ");			//pk
+		sb.append(" CNTRY_NAME TEXT NOT NULL, ");
+		sb.append(" CNTRY_CODE TEXT NOT NULL, ");
+		sb.append(" CUR TEXT NOT NULL, ");
+		sb.append(" CUR_CODE TEXT NOT NULL, ");
+        sb.append(" CNTRY_IMG TEXT NOT NULL, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_COUNTRY + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
 
 	//------------CREATE TABLE-----------------------//
 	@Override
 	public void onCreate(SQLiteDatabase db){
-		/*Log.i(CLASS_NAME, DB_NAME+" seems to not exist..so creating it");
+		this.db = db;
 
-		createCurrencyMastertable(db);
-		Log.i(CLASS_NAME, DB_TABLE_CURRENCYTABLE + " table created successfully");
+		Log.i(CLASS_NAME, "Creating the tables for "+DB_NAME);
+		createCountryTable();
+		createUserTable();
+		createCategoryTable();
+		createAccountTable();
+		createSpentOnTable();
+		createTransactionTable();
+		createTransferTable();
+		createRepeatTable();
+		createBudgetTable();
+		createNotificationsTable();
+		createSettingsTable();
+		Log.i(CLASS_NAME, "Creating the tables for " + DB_NAME + " is completed");
 
-		createCountryMastertable(db);
-		Log.i(CLASS_NAME, DB_TABLE_COUNTRYTABLE + " table created successfully");
+		Log.i(CLASS_NAME, "Inserting Defaults");
+		addDefaults();
+		Log.i(CLASS_NAME, "Inserted Defaults");
 
-		createUsersTable(db);
-		Log.i(CLASS_NAME, DB_TABLE_USERSTABLE + " table created successfully");
-
-		createSettingsNotificationsTable(db);
-		Log.i(CLASS_NAME, DB_TABLE_SETTINGS_NOTIFICATIONS + " table created successfully");
-
-		createSettingsSoundsTable(db);
-		Log.i(CLASS_NAME, DB_TABLE_SETTINGS_SOUNDS + " table created successfully");
-
-        createSettingsSecurityTable(db);
-        Log.i(CLASS_NAME, DB_TABLE_SETTINGS_SECURITY + " table created successfully");
-
-        createWorkTimelineTable(db);
-        Log.i(CLASS_NAME, DB_TABLE_WORK_TIMELINETABLE + " table created successfully");
-		
-		createAccountMasterTable(db);
-		Log.i(CLASS_NAME, DB_TABLE_ACCOUNTTABLE+" table created successfully");
-		
-		createCategoryMasterTable(db);
-		Log.i(CLASS_NAME, DB_TABLE_CATEGORYTABLE+" table created successfully");
-		
-		createSpentOnTable(db);
-		Log.i(CLASS_NAME, DB_TABLE_SPENTONTABLE+" table created successfully");
-		
-		createTransactionTable(db);
-		Log.i(CLASS_NAME, DB_TABLE_TRANSACTIONTABLE+" table created successfully");
-		
-		createScheduledTransactionsTable(db);
-		Log.i(CLASS_NAME, DB_TABLE_SCHEDULEDTRANSACTIONSTABLE+" table created successfully");
-
-        createBudgetTable(db);
-        Log.i(CLASS_NAME, DB_TABLE_BUDGETTABLE+" table created successfully");
-
-        createCategoryTagsTable(db);
-        Log.i(CLASS_NAME, DB_TABLE_CATEGORYTAGSTABLE+" table created successfully");
-
-        createScheduledTransfersTable(db);
-        Log.i(CLASS_NAME, DB_TABLE_SHEDULEDTRANSFERSTABLE+" table created successfully");
-
-        createTransfersTable(db);
-        Log.i(CLASS_NAME, DB_TABLE_TRANSFERSTABLE+" table created successfully");
-
-		createNotificationsTable(db);
-		Log.i(CLASS_NAME, DB_TABLE_NOTIFICATIONSTABLE+" table created successfully");
-
-		//check and add defaults
-		
-		//categories
-		String categoryDefaultsStrArr[] = DEFAULTS_CATEGORIES.split(",");
-		checkAndAddDefault(db, categoryDefaultsStrArr, DB_TABLE_CATEGORYTABLE, "CAT_NAME");
-		
-		//spentOns
-		String spentOnDefaultsStrArr[] = DEFAULTS_SPENTON.split(",");
-		checkAndAddDefault(db, spentOnDefaultsStrArr, DB_TABLE_SPENTONTABLE, "SPNT_ON_NAME");
-		
-		//accounts
-		String accountsDefaultsStrArr[] = DEFAULTS_ACCOUNTS.split(",");
-		checkAndAddDefault(db, accountsDefaultsStrArr, DB_TABLE_ACCOUNTTABLE, "ACC_NAME");
-
-		//currency
-		String currencyDefaultsStrArr[] = DEFAULTS_CURRENCIES.split(",");
-		checkAndAddDefault(db, currencyDefaultsStrArr, DB_TABLE_CURRENCYTABLE, "CUR_NAME");
-
-		//country
-		String countryDefaultsStrArr[] = DEFAULTS_COUNTRIES.split(",");
-		checkAndAddDefault(db, countryDefaultsStrArr, DB_TABLE_COUNTRYTABLE, "CNTRY_NAME");*/
+		//this.db.close();
 	}
 
-    /*private void createSettingsSecurityTable(SQLiteDatabase db) {
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-        sqlQuerySB.append(DB_TABLE_SETTINGS_SECURITY);
-        sqlQuerySB.append(" (SET_SEC_ID TEXT PRIMARY KEY, ");	            //pk
-        sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");          		    //fk1
-        sqlQuerySB.append(" SET_SEC_ACTIVE TEXT NOT NULL, ");
-		sqlQuerySB.append(" SET_SEC_PIN, ");
-        sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-        sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-        sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID)) ");
-
-        Log.i(CLASS_NAME, "Create " + DB_TABLE_SETTINGS_SECURITY + " Table query:" + sqlQuerySB.toString());
-
-        db.execSQL(sqlQuerySB.toString());
-		db.close();
-    }
-
-    private void createSettingsSoundsTable(SQLiteDatabase db) {
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_SETTINGS_SOUNDS);
-		sqlQuerySB.append(" (SET_SND_ID TEXT PRIMARY KEY, ");	            //pk
-		sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");          		    //fk1
-		sqlQuerySB.append(" SET_SND_ACTIVE TEXT NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID)) ");
-
-		Log.i(CLASS_NAME, "Create " + DB_TABLE_SETTINGS_SOUNDS + " Table query:" + sqlQuerySB.toString());
-
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-
-	private void createSettingsNotificationsTable(SQLiteDatabase db) {
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_SETTINGS_NOTIFICATIONS);
-		sqlQuerySB.append(" (SET_NOTIF_ID TEXT PRIMARY KEY, ");	            //pk
-		sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");          		    //fk1
-		sqlQuerySB.append(" SET_NOTIF_ACTIVE TEXT NOT NULL, ");
-		sqlQuerySB.append(" SET_NOTIF_TIME TEXT NOT NULL, ");
-        sqlQuerySB.append(" SET_NOTIF_BUZZ TEXT NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID)) ");
-
-		Log.i(CLASS_NAME, "Create " + DB_TABLE_SETTINGS_NOTIFICATIONS + " Table query:" + sqlQuerySB.toString());
-
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-
-	private void createNotificationsTable(SQLiteDatabase db) {
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_NOTIFICATIONSTABLE);
-		sqlQuerySB.append(" (CNCL_NOTIF_ID TEXT PRIMARY KEY, ");	    //pk
-		sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");          		//fk1
-		sqlQuerySB.append(" CNCL_NOTIF_TYPE, ");
-		sqlQuerySB.append(" CNCL_NOTIF_EVNT_ID TEXT NOT NULL, ");
-		sqlQuerySB.append(" CNCL_NOTIF_RSN TEXT NOT NULL, ");
-		sqlQuerySB.append(" CNCL_NOTIF_DATE TEXT NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID)) ");
-
-		Log.i(CLASS_NAME, "Create " + DB_TABLE_NOTIFICATIONSTABLE + " Table query:\n" + sqlQuerySB.toString());
-
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-
-	private void createWorkTimelineTable(SQLiteDatabase db) {
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-        sqlQuerySB.append(DB_TABLE_WORK_TIMELINETABLE);
-        sqlQuerySB.append(" (WORK_ID TEXT PRIMARY KEY, ");	    //pk
-        sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");          //fk1
-        sqlQuerySB.append(" WORK_TYPE TEXT NOT NULL, ");
-        sqlQuerySB.append(" COMPANY TEXT NOT NULL, ");
-        sqlQuerySB.append(" SALARY TEXT NOT NULL, ");
-        sqlQuerySB.append(" SAL_FREQ TEXT NOT NULL, ");
-        sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-        sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-        sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID)) ");
-
-        Log.i(CLASS_NAME, "Create " + DB_TABLE_WORK_TIMELINETABLE + " Table query:\n" + sqlQuerySB.toString());
-
-        db.execSQL(sqlQuerySB.toString());
-		db.close();
-    }
-
-    private void createCurrencyMastertable(SQLiteDatabase db) {
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_CURRENCYTABLE);
-		sqlQuerySB.append(" (CUR_ID TEXT PRIMARY KEY, ");	//pk
-		sqlQuerySB.append(" CUR_TXT TEXT NOT NULL, ");
-		sqlQuerySB.append(" CUR_NAME TEXT NOT NULL, ");
-		sqlQuerySB.append(" CUR_SYMB TEXT NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME) ");
-
-		Log.i(CLASS_NAME, "Create " + DB_TABLE_CURRENCYTABLE + " Table query:\n" + sqlQuerySB.toString());
-
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-
-	private void createCountryMastertable(SQLiteDatabase db) {
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_COUNTRYTABLE);
-		sqlQuerySB.append(" (CNTRY_ID TEXT PRIMARY KEY, ");	//pk
-		sqlQuerySB.append(" CUR_ID TEXT NOT NULL, ");		//fk 1
-		sqlQuerySB.append(" CNTRY_NAME TEXT NOT NULL, ");
-		sqlQuerySB.append(" CNTRY_FLAG TEXT NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-		sqlQuerySB.append(" FOREIGN KEY (CUR_ID) REFERENCES "+DB_TABLE_CURRENCYTABLE+" (CUR_ID)) ");
-
-		Log.i(CLASS_NAME, "Create " + DB_TABLE_COUNTRYTABLE + " Table query:\n" + sqlQuerySB.toString());
-
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-
-	private void createScheduledTransfersTable(SQLiteDatabase db) {
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-        sqlQuerySB.append(DB_TABLE_SHEDULEDTRANSFERSTABLE);
-		sqlQuerySB.append(" (SCH_TRNFR_ID TEXT PRIMARY KEY, ");	//pk
-        sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");		//fk1
-        sqlQuerySB.append(" SCH_TRNFR_ACC_ID_FRM TEXT NOT NULL, ");	//fk2
-        sqlQuerySB.append(" SCH_TRNFR_ACC_ID_TO TEXT NOT NULL, ");	//fk3
-        sqlQuerySB.append(" SCH_TRNFR_DATE TEXT NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRNFR_FREQ TEXT NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRNFR_AMT TEXT NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRNFR_NOTE TEXT, ");
-		sqlQuerySB.append(" SCH_TRNFR_AUTO TEXT NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRNFR_IS_DEL TEXT NOT NULL, ");
-        sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-        sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-        sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID), ");
-        sqlQuerySB.append(" FOREIGN KEY (SCH_TRNFR_ACC_ID_FRM) REFERENCES "+DB_TABLE_ACCOUNTTABLE+" (ACC_ID), ");
-        sqlQuerySB.append(" FOREIGN KEY (SCH_TRNFR_ACC_ID_TO) REFERENCES "+DB_TABLE_ACCOUNTTABLE+" (ACC_ID)) ");
-
-        Log.i(CLASS_NAME, "Create " + DB_TABLE_SHEDULEDTRANSFERSTABLE + " Table query:\n" + sqlQuerySB.toString());
-
-        db.execSQL(sqlQuerySB.toString());
-		db.close();
-    }
-
-    private void createTransfersTable(SQLiteDatabase db) {
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-        sqlQuerySB.append(DB_TABLE_TRANSFERSTABLE);
-        sqlQuerySB.append(" ( ");
-
-        sqlQuerySB.append(" TRNFR_ID TEXT PRIMARY KEY, ");	//pk
-        sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");		//fk1
-        sqlQuerySB.append(" ACC_ID_FRM TEXT NOT NULL, ");	//fk2
-        sqlQuerySB.append(" ACC_ID_TO TEXT NOT NULL, ");	//fk3
-        sqlQuerySB.append(" SCH_TRNFR_ID TEXT, ");          //fk4
-        sqlQuerySB.append(" TRNFR_AMT TEXT NOT NULL, ");
-        sqlQuerySB.append(" TRNFR_IS_DEL TEXT NOT NULL, ");
-        sqlQuerySB.append(" TRNFR_NOTE TEXT, ");
-        sqlQuerySB.append(" TRNFR_DATE TEXT NOT NULL, ");
-        sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-        sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-        sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID), ");
-        sqlQuerySB.append(" FOREIGN KEY (ACC_ID_FRM) REFERENCES "+DB_TABLE_ACCOUNTTABLE+" (ACC_ID), ");
-        sqlQuerySB.append(" FOREIGN KEY (ACC_ID_TO) REFERENCES "+DB_TABLE_ACCOUNTTABLE+" (ACC_ID), ");
-        sqlQuerySB.append(" FOREIGN KEY (SCH_TRNFR_ID) REFERENCES "+DB_TABLE_SHEDULEDTRANSFERSTABLE+" (SCH_TRNFR_ID) ");
-        sqlQuerySB.append(" ) ");
-
-        Log.i(CLASS_NAME, "Create " + DB_TABLE_TRANSFERSTABLE + " Table query:\n" + sqlQuerySB.toString());
-
-        db.execSQL(sqlQuerySB.toString());
-		db.close();
-    }
-
-    private void createCategoryTagsTable(SQLiteDatabase db) {
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-        sqlQuerySB.append(DB_TABLE_CATEGORYTAGSTABLE);
-        sqlQuerySB.append(" ( ");
-
-        sqlQuerySB.append(" TAG_ID TEXT PRIMARY KEY, ");	//pk
-        sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");		//fk1
-        sqlQuerySB.append(" CAT_ID TEXT NOT NULL, ");		//fk2
-        sqlQuerySB.append(" CAT_TAGS TEXT NOT NULL, ");
-        sqlQuerySB.append(" CAT_TAG_IS_DEL TEXT NOT NULL, ");
-        sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-        sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-        sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID), ");
-        sqlQuerySB.append(" FOREIGN KEY (CAT_ID) REFERENCES "+DB_TABLE_CATEGORYTABLE+" (CAT_ID) ");
-        sqlQuerySB.append(" ) ");
-
-        Log.i(CLASS_NAME, "Create " + DB_TABLE_CATEGORYTAGSTABLE + " Table query:\n" + sqlQuerySB.toString());
-
-        db.execSQL(sqlQuerySB.toString());
-		db.close();
-    }
-    //------------END OF CREATE TABLE-----------------------//
-	
-	public void createTransactionTable(SQLiteDatabase db){
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_TRANSACTIONTABLE);
-		sqlQuerySB.append(" ( ");
-		
-		sqlQuerySB.append(" TRAN_ID TEXT PRIMARY KEY, ");	//pk
-		sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");		//fk1
-		sqlQuerySB.append(" CAT_ID TEXT NOT NULL, ");		//fk2
-		sqlQuerySB.append(" SPNT_ON_ID TEXT NOT NULL, ");	//fk3
-		sqlQuerySB.append(" ACC_ID TEXT NOT NULL, ");		//fk4
-		sqlQuerySB.append(" SCH_TRAN_ID TEXT, ");	//fk5
-		sqlQuerySB.append(" TRAN_AMT TEXT NOT NULL, ");
-		sqlQuerySB.append(" TRAN_NAME TEXT NOT NULL, ");
-		sqlQuerySB.append(" TRAN_TYPE TEXT NOT NULL, ");
-		sqlQuerySB.append(" TRAN_NOTE TEXT, ");
-		sqlQuerySB.append(" TRAN_DATE DATE NOT NULL, ");
-		sqlQuerySB.append(" TRAN_IS_DEL TEXT NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME, ");
-		
-		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID), ");
-		sqlQuerySB.append(" FOREIGN KEY (CAT_ID) REFERENCES "+DB_TABLE_CATEGORYTABLE+" (CAT_ID), ");
-		sqlQuerySB.append(" FOREIGN KEY (SPNT_ON_ID) REFERENCES "+DB_TABLE_SPENTONTABLE+" (SPNT_ON_ID), ");
-		sqlQuerySB.append(" FOREIGN KEY (ACC_ID) REFERENCES "+DB_TABLE_ACCOUNTTABLE+" (ACC_ID), ");
-		sqlQuerySB.append(" FOREIGN KEY (SCH_TRAN_ID) REFERENCES "+DB_TABLE_SCHEDULEDTRANSACTIONSTABLE+" (SCH_TRAN_ID) ");
-		sqlQuerySB.append(" ) ");
-		
-		Log.i(CLASS_NAME, "Create " + DB_TABLE_TRANSACTIONTABLE + " Table query:\n" + sqlQuerySB.toString());
-
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-	
-	public void createSpentOnTable(SQLiteDatabase db){
-		//-----------------SPNT_ON_MSTR TABLE------------------------//
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-		
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_SPENTONTABLE);
-		sqlQuerySB.append(" ( ");
-		sqlQuerySB.append(" SPNT_ON_ID TEXT PRIMARY KEY, ");	//pk
-		sqlQuerySB.append(" USER_ID TEXT, ");	//fk1
-		sqlQuerySB.append(" SPNT_ON_NAME TEXT NOT NULL, ");
-		sqlQuerySB.append(" SPNT_ON_IS_DEFAULT TEXT NOT NULL, ");
-        sqlQuerySB.append(" SPNT_ON_NOTE TEXT, ");
-		sqlQuerySB.append(" SPNT_ON_IS_DEL TEXT NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME, ");
-		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID) ");
-		sqlQuerySB.append(" ) ");
-		
-		Log.i(CLASS_NAME, "Create SPENT_ON_MASTER Table query:" + sqlQuerySB.toString());
-			
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-	
-	public void createCategoryMasterTable(SQLiteDatabase db){
-		//-----------------CATEGORY_MASTER TABLE------------------------//
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_CATEGORYTABLE);
-		sqlQuerySB.append(" ( ");
-		sqlQuerySB.append(" CAT_ID TEXT PRIMARY KEY, ");	//pk
-		sqlQuerySB.append(" USER_ID TEXT, ");	//fk1
-		sqlQuerySB.append(" CAT_NAME TEXT NOT NULL, ");
-		sqlQuerySB.append(" CAT_TYPE TEXT NOT NULL, ");
-		//sqlQuerySB.append(" BUDGET_ID TEXT, ");
-        sqlQuerySB.append(" CAT_IS_DEFAULT TEXT NOT NULL, ");
-        sqlQuerySB.append(" CAT_NOTE TEXT, ");
-		sqlQuerySB.append(" CAT_IS_DEL DATETIME NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME, ");
-		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID) ");
-        //sqlQuerySB.append(" FOREIGN KEY (BUDGET_ID) REFERENCES "+DB_TABLE_BUDGETTABLE+" (USER_ID) ");
-		sqlQuerySB.append(" ) ");
-		
-		Log.i(CLASS_NAME, "Create CATEGORY_MASTER Table query:" + sqlQuerySB.toString());
-				
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-	
-	public void createAccountMasterTable(SQLiteDatabase db){
-		//----------------CREATE ACCOUNT_MASTER TABLE--------------//
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_ACCOUNTTABLE);
-		sqlQuerySB.append(" ( ");
-		sqlQuerySB.append(" ACC_ID TEXT PRIMARY KEY, ");	//pk
-		sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");	//fk1
-		sqlQuerySB.append(" ACC_NAME TEXT NOT NULL, ");
-		sqlQuerySB.append(" ACC_IS_DEFAULT TEXT NOT NULL, ");
-        //sqlQuerySB.append(" BUDGET_ID TEXT, ");
-        sqlQuerySB.append(" ACC_TOTAL TEXT, ");			//This column is only to save the intial amount
-        sqlQuerySB.append(" ACC_NOTE TEXT, ");
-		sqlQuerySB.append(" ACC_IS_DEL TEXT NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME, ");
-		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID) ");
-        //sqlQuerySB.append(" FOREIGN KEY (BUDGET_ID) REFERENCES "+DB_TABLE_BUDGETTABLE+" (BUDGET_ID) ");
-		sqlQuerySB.append(" ) ");
-		
-		Log.i(CLASS_NAME, "Create ACCOUNT_MASTER Table query:" + sqlQuerySB.toString());
-				
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-	
-	public void createUsersTable(SQLiteDatabase db){
-		StringBuilder sqlQuerySB = new StringBuilder(50);
-
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_USERSTABLE);
-		sqlQuerySB.append(" ( ");
-		
-		sqlQuerySB.append(" USER_ID TEXT PRIMARY KEY, "); 	// pk
-		sqlQuerySB.append(" NAME TEXT NOT NULL, ");
-		sqlQuerySB.append(" PASS TEXT, ");
-		sqlQuerySB.append(" EMAIL TEXT NOT NULL, ");
-		sqlQuerySB.append(" DOB DATE NOT NULL, ");
-		sqlQuerySB.append(" CNTRY_ID TEXT NOT NULL, ");		//fk 1
-		sqlQuerySB.append(" CUR_ID TEXT NOT NULL, ");		//fk 2
-		sqlQuerySB.append(" TELEPHONE TEXT, ");
-		sqlQuerySB.append(" DEV_ID TEXT NOT NULL, ");
-		sqlQuerySB.append(" USER_IS_DEL TEXT NOT NULL, ");
-		sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-		sqlQuerySB.append(" MOD_DTM DATETIME, ");
-		sqlQuerySB.append(" FOREIGN KEY (CNTRY_ID) REFERENCES "+DB_TABLE_COUNTRYTABLE+" (CNTRY_ID), ");
-		sqlQuerySB.append(" FOREIGN KEY (CUR_ID) REFERENCES "+DB_TABLE_CURRENCYTABLE+" (CUR_ID) ");
-		sqlQuerySB.append(" ) ");
-
-		Log.i(CLASS_NAME, "Create USERS Table Query:" + sqlQuerySB.toString());
-				
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-	
-	public void createScheduledTransactionsTable(SQLiteDatabase db){
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-		sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-		sqlQuerySB.append(DB_TABLE_SCHEDULEDTRANSACTIONSTABLE);
-		sqlQuerySB.append(" ( ");
-		sqlQuerySB.append(" SCH_TRAN_ID TEXT PRIMARY KEY, ");	    //pk
-		sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");	            //fk1
-		sqlQuerySB.append(" SCH_TRAN_CAT_ID TEXT NOT NULL, ");      //fk2
-		sqlQuerySB.append(" SCH_TRAN_SPNT_ON_ID TEXT NOT NULL, ");       //fk3
-		sqlQuerySB.append(" SCH_TRAN_ACC_ID TEXT NOT NULL, ");           //fk4
-        sqlQuerySB.append(" SCH_TRAN_NAME TEXT NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRAN_DATE DATE NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRAN_FREQ TEXT NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRAN_TYPE TEXT NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRAN_AMT TEXT NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRAN_NOTE TEXT, ");
-		sqlQuerySB.append(" SCH_TRAN_AUTO TEXT NOT NULL, ");
-        sqlQuerySB.append(" SCH_TRAN_IS_DEL TEXT NOT NULL, ");
-        sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-        sqlQuerySB.append(" MOD_DTM DATETIME, ");
-		
-		sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID) ");
-        sqlQuerySB.append(" FOREIGN KEY (SCH_TRAN_CAT_ID) REFERENCES "+DB_TABLE_CATEGORYTABLE+" (CAT_ID), ");
-        sqlQuerySB.append(" FOREIGN KEY (SCH_TRAN_SPNT_ON_ID) REFERENCES "+DB_TABLE_SPENTONTABLE+" (SPNT_ON_ID), ");
-        sqlQuerySB.append(" FOREIGN KEY (SCH_TRAN_ACC_ID) REFERENCES "+DB_TABLE_ACCOUNTTABLE+" (ACC_ID) ");
-		sqlQuerySB.append(" ) ");
-		
-		Log.i(CLASS_NAME, "Create SCHEDULED_TRANASCTIONS Table Query:" + sqlQuerySB.toString());
-				
-		db.execSQL(sqlQuerySB.toString());
-		db.close();
-	}
-
-    public void createBudgetTable(SQLiteDatabase db){
-        StringBuilder sqlQuerySB = new StringBuilder(50);
-
-        sqlQuerySB.append(" CREATE TABLE IF NOT EXISTS ");
-        sqlQuerySB.append(DB_TABLE_BUDGETTABLE);
-        sqlQuerySB.append(" ( ");
-
-        sqlQuerySB.append(" BUDGET_ID TEXT PRIMARY KEY, ");	//pk
-        sqlQuerySB.append(" USER_ID TEXT NOT NULL, ");	//fk1
-        sqlQuerySB.append(" BUDGET_NAME TEXT NOT NULL, ");
-        sqlQuerySB.append(" BUDGET_GRP_ID TEXT NOT NULL, ");
-        sqlQuerySB.append(" BUDGET_GRP_TYPE TEXT NOT NULL, ");
-        sqlQuerySB.append(" BUDGET_TYPE TEXT NOT NULL, ");
-        sqlQuerySB.append(" BUDGET_IS_DEL TEXT NOT NULL, ");
-        sqlQuerySB.append(" BUDGET_AMT TEXT NOT NULL, ");
-        sqlQuerySB.append(" BUDGET_NOTE TEXT, ");
-        sqlQuerySB.append(" CREAT_DTM DATETIME NOT NULL, ");
-        sqlQuerySB.append(" MOD_DTM DATETIME, ");
-
-        sqlQuerySB.append(" FOREIGN KEY (USER_ID) REFERENCES "+DB_TABLE_USERSTABLE+" (USER_ID) ");
-        sqlQuerySB.append(" ) ");
-
-        Log.i(CLASS_NAME, "Create " + DB_TABLE_BUDGETTABLE + " Table Query:" + sqlQuerySB.toString());
-
-        db.execSQL(sqlQuerySB.toString());
-		db.close();
-    }
-	
-	//generic method to check and add defaults only if they are not in db
-	public void checkAndAddDefault(SQLiteDatabase db, String itemStrArr[], String tableStr, String columnStr){
-		for(String iterStrArr : itemStrArr){
-			String[] iterStrArray = iterStrArr.split("-");
-
-			String itemName = iterStrArray[0];
-			String itemId = iterStrArray[1];
-			String itemExtra = null;
-			String itemAnotherExtra = null;
-
-			if(iterStrArray.length > 2) {
-				itemExtra = iterStrArray[2];    //applicable only for country and currency tables
-			}
-
-			if(iterStrArray.length > 3) {
-				itemAnotherExtra = iterStrArray[3];	//applicable only for currency tables
-			}
-
-			StringBuilder sqlQuerySB = new StringBuilder(50);
-			
-			sqlQuerySB.append(" SELECT ");
-			sqlQuerySB.append(" COUNT("+columnStr+") ");
-			sqlQuerySB.append(" AS COUNT ");
-			
-			sqlQuerySB.append(" FROM ");
-			sqlQuerySB.append(tableStr);
-			
-			sqlQuerySB.append(" WHERE ");
-			sqlQuerySB.append(columnStr +" = '"+itemName+"'");
-			
-			Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
-			
-			while (cursor.moveToNext()){
-				String countStr = ColumnFetcher.getInstance().loadString(cursor, "COUNT");
-				
-				//if 0 then that default item is not in DB..insert it
-				if(Integer.parseInt(countStr) == 0){
-					ContentValues values = new ContentValues();
-					
-					//depending on table
-					if(tableStr.equalsIgnoreCase(DB_TABLE_CATEGORYTABLE)){
-						String itemType = iterStrArr.split("-")[2];
-
-						values.put("CAT_ID", itemId);
-						values.put("USER_ID", ADMIN_USERID);
-						values.put("CAT_NAME", itemName);
-						values.put("CAT_TYPE", itemType);
-						values.put("CAT_IS_DEFAULT", DB_AFFIRMATIVE);
-						values.put("CAT_IS_DEL", DB_NONAFFIRMATIVE);
-						values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
-					}
-					else if(tableStr.equalsIgnoreCase(DB_TABLE_SPENTONTABLE)){
-						values.put("SPNT_ON_ID", itemId);
-						values.put("USER_ID", ADMIN_USERID);
-						values.put("SPNT_ON_NAME", itemName);
-						values.put("SPNT_ON_IS_DEFAULT", DB_AFFIRMATIVE);
-						values.put("SPNT_ON_IS_DEL", DB_NONAFFIRMATIVE);
-						values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
-					}
-					else if(tableStr.equalsIgnoreCase(DB_TABLE_ACCOUNTTABLE)){
-						values.put("ACC_ID", itemId);
-						values.put("USER_ID", ADMIN_USERID);
-						values.put("ACC_NAME", itemName);
-						values.put("ACC_IS_DEFAULT", DB_AFFIRMATIVE);
-						values.put("ACC_IS_DEL", DB_NONAFFIRMATIVE);
-						values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
-					}
-
-					else if(tableStr.equalsIgnoreCase(DB_TABLE_COUNTRYTABLE)){
-						values.put("CNTRY_ID", itemId);
-						values.put("CNTRY_NAME", itemName);
-						values.put("CUR_ID", itemExtra);
-						values.put("CNTRY_FLAG", itemAnotherExtra);
-						values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
-					}
-
-					else if(tableStr.equalsIgnoreCase(DB_TABLE_CURRENCYTABLE)){
-						values.put("CUR_ID", itemId);
-						values.put("CUR_TXT", itemAnotherExtra);
-						values.put("CUR_NAME", itemName);
-						values.put("CUR_SYMB", itemExtra);
-						values.put("CREAT_DTM", simpleDateTimeFormat.format(new Date()));
-					}
-
-					db.insert(tableStr, null, values);
-				}
-		    } 
-			cursor.close();
-		}
-		db.close();
-	}*/
-	
 	// Upgrading database
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.i(CLASS_NAME, DB_NAME+" version has upgraded from("+oldVersion+") to("+newVersion+")");
+
 		// Drop older table if existed
-		/*db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_USERSTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_ACCOUNTTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_CATEGORYTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SPENTONTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_TRANSACTIONTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SCHEDULEDTRANSACTIONSTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_BUDGETTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_CATEGORYTAGSTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SHEDULEDTRANSFERSTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_TRANSFERSTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_COUNTRYTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_CURRENCYTABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_WORK_TIMELINETABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_NOTIFICATIONSTABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SETTINGS_NOTIFICATIONS);
-        db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SETTINGS_SOUNDS);
-        db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SETTINGS_SECURITY);
+		Log.i(CLASS_NAME, "Dropping all the tables");
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_USER);
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_ACCOUNT);
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_CATEGORY);
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SPENTON);
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_TRANSACTION);
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_BUDGET);
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_TRANSFER);
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_REPEAT);
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_COUNTRY);
+		db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_NOTIFICATION);
+        db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SETTING);
+		Log.i(CLASS_NAME, "Dropping all the tables completed");
 
 		// Create tables again
-        onCreate(db);*/
+		Log.i(CLASS_NAME, "Recreating all the tables");
+        onCreate(db);
+		Log.i(CLASS_NAME, "Recreating all the tables completed");
+	}
+
+	public Sqlite(Context context){
+		super(context, DB_NAME, null, DB_VERSION);
+	}
+
+	public static Sqlite getInstance(Context context) {
+		// Use the application context, which will ensure that you
+		// don't accidentally leak an Activity's context.
+		// See this article for more information: http://bit.ly/6LRzfx
+		if (sInstance == null) {
+			sInstance = new Sqlite(context.getApplicationContext());
+		}
+		return sInstance;
 	}
 }

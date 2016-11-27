@@ -15,15 +15,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.adapters.AccountsFragmentListViewAdapter;
 import com.finappl.adapters.SpentonsFragmentListViewAdapter;
-import com.finappl.models.AccountsMO;
 import com.finappl.models.SpentOnMO;
 
 import java.util.List;
 
-import static com.finappl.utils.Constants.ACCOUNT_OBJECT;
-import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_SPENTON_OBJECT;
 import static com.finappl.utils.Constants.SPENTON_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;

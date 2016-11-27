@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import com.finappl.R;
@@ -138,6 +137,13 @@ public class FinappleUtility extends Activity{
 
         resultStr = resultStr.replace(".0", "");
         resultStr = resultStr.replace(".00", "");
+
+        if(resultStr.equalsIgnoreCase("100K")){
+            resultStr = "1L";
+        }
+        else if(resultStr.equalsIgnoreCase("100L")){
+            resultStr = "1C";
+        }
 
         return resultStr;
     }

@@ -1,14 +1,13 @@
 package com.finappl.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -20,31 +19,19 @@ import com.finappl.activities.CalendarActivity;
 import com.finappl.adapters.calendar.CalendarMonth1GridViewAdapter;
 import com.finappl.adapters.calendar.CalendarMonth2GridViewAdapter;
 import com.finappl.adapters.calendar.CalendarMonth3GridViewAdapter;
-import com.finappl.dbServices.TransactionsDbService;
-import com.finappl.dbServices.AddUpdateTransfersDbService;
-import com.finappl.dbServices.AuthorizationDbService;
-import com.finappl.dbServices.CalendarDbService;
-import com.finappl.dbServices.Sqlite;
-import com.finappl.models.AccountsMO;
-import com.finappl.models.ActivityModel;
-import com.finappl.models.BudgetModel;
-import com.finappl.models.ConsolidatedTransactionModel;
-import com.finappl.models.ConsolidatedTransferModel;
 import com.finappl.models.MonthLegend;
-import com.finappl.models.ScheduledTransactionModel;
-import com.finappl.models.ScheduledTransferModel;
 import com.finappl.models.UserMO;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.finappl.utils.Constants.*;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
+import static com.finappl.utils.Constants.MONTHS_RANGE;
 
 /**
  * Created by ajit on 30/9/15.
@@ -56,30 +43,8 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
     public Date selectedDate;
     private Map<String, MonthLegend> monthLegendMap;
 
-    //db services
-    private Sqlite controller;
-    private CalendarDbService calendarDbService;
-    private AuthorizationDbService authorizationDbService;
-    private TransactionsDbService addUpdateTransactionsDbService;
-    private AddUpdateTransfersDbService addUpdateTransfersDbService;
-
     //User
     private UserMO loggedInUserObj;
-
-    //month legend availability
-    private boolean hasSummary;
-    private boolean hasAccounts;
-    private boolean hasBudgets;
-    private boolean hasSchedules;
-
-    private Map<String, ConsolidatedTransactionModel> consolidatedTransactionModelMap;
-    private Map<String, ConsolidatedTransferModel> consolidatedTransferModelMap;
-    private List<AccountsMO> accountsList;
-    private List<BudgetModel> budgetsList;
-    private List<ScheduledTransactionModel> scheduledTransactionModelList;
-    private List<ScheduledTransferModel> scheduledTransferModelList;
-
-    private LinkedList<Integer> monthIndexSet;
 
     private CalendarActivity.GridViewItemClickListener gridViewItemClickListener;
 
@@ -90,11 +55,13 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
     private String centralMateMonthStr;
     public String currentFocusedMonthStr;
     public boolean doMonthChange;
-    public int currentMonthIndex;
 
     public int maxMonths = MONTHS_RANGE;
 
     public View oldMonthView;
+
+    //progress bar
+    private ProgressDialog mProgressDialog;
 
     public CalendarMonthsViewPagerAdapter(Context context, Date selectedDate, String centralMateMonthStr,
                                           UserMO loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
@@ -107,12 +74,6 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
         this.gridViewItemClickListener = gridViewItemClickListener;
 
         this.currentFocusedMonthStr = centralMateMonthStr;
-
-        controller = new Sqlite(mContext);
-        calendarDbService = new CalendarDbService(mContext);
-        authorizationDbService = new AuthorizationDbService(mContext);
-        addUpdateTransactionsDbService = new TransactionsDbService(mContext);
-        addUpdateTransfersDbService = new AddUpdateTransfersDbService(mContext);
     }
 
     @Override
@@ -130,8 +91,6 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
         String dateMonthStrArr[] = centralMateMonthStr.split("-");
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
-        String monthAndYear = sdf.format(new Date());
-        String monthAndYearArr[] = monthAndYear.split("-");
 
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         cal.set(Integer.parseInt(dateMonthStrArr[1]), Integer.parseInt(dateMonthStrArr[0]) - 1, 1);
@@ -140,12 +99,11 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
 
         int month = cal.get(Calendar.MONTH) + 1;
         int year = cal.get(Calendar.YEAR);
-        //int day = cal.get(Calendar.DAY_OF_MONTH);
 
         GridView currGrid = (GridView) layout.findViewById(R.id.calendarPageCalendarCurrGVId);
 
         SimpleDateFormat sdf1 = new SimpleDateFormat(JAVA_DATE_FORMAT);
-        Date junkDate = null;
+        Date junkDate;
         try{
             junkDate = sdf1.parse("01-01-1970");
         }
@@ -259,20 +217,5 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
                 }
             }
         };
-    }
-
-    //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group, Typeface font) {
-        int count = group.getChildCount();
-        View v;
-
-        for (int i = 0; i < count; i++) {
-            v = group.getChildAt(i);
-            if (v instanceof TextView) {
-                ((TextView) v).setTypeface(font);
-            } else if (v instanceof ViewGroup) {
-                setFont((ViewGroup) v, font);
-            }
-        }
     }
 }

@@ -1,30 +1,29 @@
 package com.finappl.models;
 
-import java.util.HashMap;
+import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ajit on 31/8/15.
  */
-public class ActivitiesMO {
+public class ActivitiesMO implements Serializable {
 
-    private List<TransactionModel> transactionsList;
-    private List<TransferModel> transfersList;
+    private List<TransactionMO> transactionsList;
+    private List<TransferMO> transfersList;
 
-    public List<TransactionModel> getTransactionsList() {
+    public List<TransactionMO> getTransactionsList() {
         return transactionsList;
     }
 
-    public void setTransactionsList(List<TransactionModel> transactionsList) {
+    public void setTransactionsList(List<TransactionMO> transactionsList) {
         this.transactionsList = transactionsList;
     }
 
-    public List<TransferModel> getTransfersList() {
+    public List<TransferMO> getTransfersList() {
         return transfersList;
     }
 
-    public void setTransfersList(List<TransferModel> transfersList) {
+    public void setTransfersList(List<TransferMO> transfersList) {
         this.transfersList = transfersList;
     }
 }

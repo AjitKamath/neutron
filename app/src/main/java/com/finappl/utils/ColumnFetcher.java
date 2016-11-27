@@ -7,7 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.finappl.utils.Constants.*;
+import static com.finappl.utils.Constants.DB_DATE_FORMAT;
+import static com.finappl.utils.Constants.DB_DATE_TIME_FORMAT;
 
 public class ColumnFetcher{
 	private static final String CLASS_NAME = getInstance().getClass().getName();

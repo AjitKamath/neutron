@@ -1,0 +1,402 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/optionsLLId"
+    android:layout_width="@dimen/fragment_full_width"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:gravity="right"
+    android:orientation="vertical"
+    android:padding="@dimen/screen_components_padding_from_walls"
+    app:theme="@style/FinappleTheme">
+
+    <!-- header -->
+
+    <LinearLayout
+        android:id="@+id/optionsHeaderLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/optionsHeaderNameTVId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:padding="5dp"
+            android:text="AJITH KAMATH"
+            android:textColor="@color/finappleThemeDark"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/optionsLogoutTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right|center_vertical"
+                android:padding="5dp"
+                android:text="LOGOUT"
+                android:textColor="@color/finappleTheme"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/divider" />
+
+    <!--Page-->
+    <ScrollView
+        android:id="@+id/optionsContentLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <GridLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2">
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/shopping" />
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/investment" />
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/grocery" />
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/health" />
+
+
+                </GridLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CATEGORIES"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ADD, MODIFY &amp; DELETE YOUR CATEGORIES"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="8sp" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <GridLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2">
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/cash" />
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/debit_card" />
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/credit_card" />
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/bank" />
+
+
+                </GridLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ACCOUNTS"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ADD, MODIFY &amp; DELETE YOUR ACCOUNTS"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="8sp" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <GridLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2">
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/myself" />
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/work" />
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/family" />
+
+                    <ImageView
+                        android:layout_width="@dimen/options_image_size"
+                        android:layout_height="@dimen/options_image_size"
+                        android:layout_margin="@dimen/options_image_margin"
+                        android:background="@drawable/friends" />
+
+
+                </GridLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SPENT ONS"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ADD, MODIFY &amp; DELETE YOUR SPENT ONS"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="8sp" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/reports" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="REPORTS"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DETAILED ANALYSIS ON YOUR EXPENDITURES"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="8sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/templates" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TEMPLATES"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SET TEMPLATES OF FREQUENTLY MADE TRANSACTIONS/TRANSFERS"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="8sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:id="@+id/optionsSettingsLLId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/settings" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SETTINGS"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MODIFY YOUR PROFILE &amp; OTHER APP SETTINGS"
+                        android:textColor="@color/formSpinnerDark"
+                        android:textSize="8sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

@@ -1,11 +1,12 @@
 package com.finappl.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by ajit on 18/1/15.
  */
-public class MonthLegend {
+public class MonthLegend implements Serializable {
     private String date;
     private ActivitiesMO activities;
     private Double totalAmount;

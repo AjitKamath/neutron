@@ -1,9 +1,9 @@
 package com.finappl.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class SpentOnMO
-{
+public class SpentOnMO implements Serializable {
 	private String SPNT_ON_ID;
 	private String USER_ID;
 	private String SPNT_ON_NAME;

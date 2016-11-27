@@ -1,9 +1,9 @@
 package com.finappl.models;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-public class CategoryMO {
+public class CategoryMO implements Serializable {
 
 	private String CAT_ID;
 	private String USER_ID;

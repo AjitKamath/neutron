@@ -17,20 +17,17 @@ import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.adapters.AccountsFragmentListViewAdapter;
-import com.finappl.adapters.CategoriesFragmentListViewAdapter;
-import com.finappl.models.AccountsMO;
-import com.finappl.models.CategoryMO;
+import com.finappl.models.AccountMO;
 import com.finappl.models.UserMO;
 
 import java.util.List;
 
 import static com.finappl.utils.Constants.ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.ACCOUNT_TYPE_FLAG;
-import static com.finappl.utils.Constants.CATEGORY_OBJECT;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
-import static com.finappl.utils.Constants.SELECTED_CATEGORY_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
+import static com.finappl.utils.Constants.UN_IDENTIFIED_PARENT_FRAGMENT;
 
 /**
  * Created by ajit on 21/3/16.
@@ -44,7 +41,7 @@ public class AccountsFragment extends DialogFragment {
     private ListView accountsLV;
     //end of components
 
-    private List<AccountsMO> accountsList;
+    private List<AccountMO> accountsList;
 
     private String selectedAccountStr;
     private String whichAccountStr;
@@ -66,7 +63,7 @@ public class AccountsFragment extends DialogFragment {
     }
 
     private void getAccountsFromBundle() {
-        accountsList = (List<AccountsMO>) getArguments().get(ACCOUNT_OBJECT);
+        accountsList = (List<AccountMO>) getArguments().get(ACCOUNT_OBJECT);
         selectedAccountStr = (String) getArguments().get(SELECTED_ACCOUNT_OBJECT);
         loggedInUserMo = (UserMO) getArguments().get(LOGGED_IN_OBJECT);
         whichAccountStr = (String) getArguments().get(ACCOUNT_TYPE_FLAG);
@@ -101,7 +98,7 @@ public class AccountsFragment extends DialogFragment {
                     activity.onFinishDialog(accountsList.get(position), whichAccountStr);
                 }
                 else{
-                    Log.e(CLASS_NAME, "Fragment dismissed from unknown parent fragment");
+                    Log.e(CLASS_NAME, UN_IDENTIFIED_PARENT_FRAGMENT);
                 }
 
                 dismiss();

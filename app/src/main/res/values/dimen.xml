@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Login screen dimensions-->
+    <dimen name="login_signup_form_height">130dp</dimen>
+    <dimen name="login_signup_form_text_size">14sp</dimen>
+
+    <!--options-->
+    <dimen name="options_image_margin">2dp</dimen>
+    <dimen name="options_image_size">10dp</dimen>
+
     <!--Calendar dimensions-->
     <dimen name="calendar_week_name_width">51dp</dimen>
     <dimen name="calendar_week_name_text_size">12sp</dimen>
     <dimen name="calendar_grid_cell_activity_indicator_size">3dp</dimen>
+    <dimen name="calendar_tab_first_column_width">90dp</dimen>
 
     <dimen name="image_header_size">25dp</dimen>
     <dimen name="text_header_title_size">18sp</dimen>
@@ -34,7 +43,6 @@
     <dimen name="login_header_height">200dp</dimen>
     <dimen name="login_header_text_size_primary">40dp</dimen>
     <dimen name="login_header_text_size_secondary">10dp</dimen>
-    <dimen name="login_form_height">450dp</dimen>
     <dimen name="login_form_button_text_size">15sp</dimen>
     <dimen name="login_form_component_space">35dp</dimen>
 
