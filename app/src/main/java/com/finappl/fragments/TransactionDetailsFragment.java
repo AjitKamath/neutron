@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,17 +19,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
+import com.finappl.activities.CalendarActivity;
 import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.models.TransactionMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 import static android.view.View.GONE;
 import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSACTION;
 import static com.finappl.utils.Constants.FRAGMENT_CONFIRM;
-import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION_DETAILS;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
 import static com.finappl.utils.Constants.UI_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.UI_FONT;
@@ -40,29 +47,61 @@ public class TransactionDetailsFragment extends DialogFragment {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
 
-    //components
-    private LinearLayout transactionDetailsLL;
-    private LinearLayout transactionDetailsRepeatLL;
-    private LinearLayout transactionDetailsNoteLL;
-    private TextView transactionDetailsDeleteTV;
-    private TextView transactionDetailsDateTV;
-    private TextView transactionDetailsEditTV;
-    private ImageView transactionDetailsCategoryIV;
-    private TextView transactionDetailsNameTV;
-    private TextView transactionDetailsCurrTV;
-    private TextView transactionDetailsAmountTV;
-    private TextView transactionDetailsCategoryTV;
-    private ImageView transactionDetailsAccountIV;
-    private TextView transactionDetailsAccountTV;
-    private ImageView transactionDetailsSpenOnIV;
-    private TextView transactionDetailsSpentOnTV;
-    private ImageView transactionDetailsRepeatIV;
-    private TextView transactionDetailsRepeatTV;
-    private TextView transactionDetailsScheduleTV;
-    private TextView transactionDetailsNotifyAddTV;
-    private TextView transactionDetailsNotifyAddTimeTV;
-    private TextView transactionDetailsNoteTV;
-    //end of components
+    /*Components*/
+    @InjectView(R.id.transactionDetailsLLId)
+    LinearLayout transactionDetailsLL;
+
+    @InjectView(R.id.transactionDetailsRepeatLLId)
+    LinearLayout transactionDetailsRepeatLL;
+
+    @InjectView(R.id.transactionDetailsNoteLLId)
+    LinearLayout transactionDetailsNoteLL;
+
+    @InjectView(R.id.transactionDetailsDateTVId)
+    TextView transactionDetailsDateTV;
+
+    @InjectView(R.id.transactionDetailsCategoryIVId)
+    ImageView transactionDetailsCategoryIV;
+
+    @InjectView(R.id.transactionDetailsNameTVId)
+    TextView transactionDetailsNameTV;
+
+    @InjectView(R.id.transactionDetailsCurrTVId)
+    TextView transactionDetailsCurrTV;
+
+    @InjectView(R.id.transactionDetailsAmountTVId)
+    TextView transactionDetailsAmountTV;
+
+    @InjectView(R.id.transactionDetailsCategoryTVId)
+    TextView transactionDetailsCategoryTV;
+
+    @InjectView(R.id.transactionDetailsAccountIVId)
+    ImageView transactionDetailsAccountIV;
+
+    @InjectView(R.id.transactionDetailsAccountTVId)
+    TextView transactionDetailsAccountTV;
+
+    @InjectView(R.id.transactionDetailsSpenOnIVId)
+    ImageView transactionDetailsSpenOnIV;
+
+    @InjectView(R.id.transactionDetailsSpentOnTVId)
+    TextView transactionDetailsSpentOnTV;
+
+    @InjectView(R.id.transactionDetailsRepeatTVId)
+    TextView transactionDetailsRepeatTV;
+
+    @InjectView(R.id.transactionDetailsScheduleTVId)
+    TextView transactionDetailsScheduleTV;
+
+    @InjectView(R.id.transactionDetailsNotifyAddTVId)
+    TextView transactionDetailsNotifyAddTV;
+
+    @InjectView(R.id.transactionDetailsNotifyAddTimeTVId)
+    TextView transactionDetailsNotifyAddTimeTV;
+
+    @InjectView(R.id.transactionDetailsNoteTVId)
+    TextView transactionDetailsNoteTV;
+    /*Components*/
 
     //db services
     private TransactionsDbService transactionsDbService;
@@ -73,12 +112,13 @@ public class TransactionDetailsFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.transaction_details, container);
+        ButterKnife.inject(this, view);
 
         Dialog d = getDialog();
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         getDataFromBundle();
-        initComps(view);
+        initComps();
         setupPage();
 
         return view;
@@ -91,7 +131,7 @@ public class TransactionDetailsFragment extends DialogFragment {
 
     private void setupPage() {
         if(transaction == null){
-            Log.e(CLASS_NAME, "Disaster !!! transaction object is null");
+            Log.e(CLASS_NAME, "Disaster !!! add_update_transaction object is null");
             showToast("Catastrophic Error !!");
             return;
         }
@@ -147,63 +187,34 @@ public class TransactionDetailsFragment extends DialogFragment {
         }
     }
 
-    private void initComps(View view){
-        transactionDetailsLL = (LinearLayout) view.findViewById(R.id.transactionDetailsLLId);
-        transactionDetailsRepeatLL = (LinearLayout) view.findViewById(R.id.transactionDetailsRepeatLLId);
-        transactionDetailsNoteLL = (LinearLayout) view.findViewById(R.id.transactionDetailsNoteLLId);
-        transactionDetailsDeleteTV = (TextView) view.findViewById(R.id.transactionDetailsDeleteTVId);
-        transactionDetailsDateTV = (TextView) view.findViewById(R.id.transactionDetailsDateTVId);
-        transactionDetailsEditTV = (TextView) view.findViewById(R.id.transactionDetailsEditTVId);
-        transactionDetailsCategoryIV = (ImageView) view.findViewById(R.id.transactionDetailsCategoryIVId);
-        transactionDetailsNameTV = (TextView) view.findViewById(R.id.transactionDetailsNameTVId);
-        transactionDetailsCurrTV = (TextView) view.findViewById(R.id.transactionDetailsCurrTVId);
-        transactionDetailsAmountTV = (TextView) view.findViewById(R.id.transactionDetailsAmountTVId);
-        transactionDetailsCategoryTV = (TextView) view.findViewById(R.id.transactionDetailsCategoryTVId);
-        transactionDetailsAccountIV = (ImageView) view.findViewById(R.id.transactionDetailsAccountIVId);
-        transactionDetailsAccountTV = (TextView) view.findViewById(R.id.transactionDetailsAccountTVId);
-        transactionDetailsSpenOnIV = (ImageView) view.findViewById(R.id.transactionDetailsSpenOnIVId);
-        transactionDetailsSpentOnTV = (TextView) view.findViewById(R.id.transactionDetailsSpentOnTVId);
-        transactionDetailsRepeatTV = (TextView) view.findViewById(R.id.transactionDetailsRepeatTVId);
-        transactionDetailsScheduleTV = (TextView) view.findViewById(R.id.transactionDetailsScheduleTVId);
-        transactionDetailsNotifyAddTV = (TextView) view.findViewById(R.id.transactionDetailsNotifyAddTVId);
-        transactionDetailsNotifyAddTimeTV = (TextView) view.findViewById(R.id.transactionDetailsNotifyAddTimeTVId);
-        transactionDetailsNoteTV = (TextView) view.findViewById(R.id.transactionDetailsNoteTVId);
-
-        transactionDetailsDeleteTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showConfirmDeleteFragment();
-            }
-        });
-
-        transactionDetailsEditTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager manager = getFragmentManager();
-                Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
-
-                if (frag != null) {
-                    manager.beginTransaction().remove(frag).commit();
-                }
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TRANSACTION_OBJECT, transaction);
-                bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUser);
-
-                TransactionFragment editNameDialog = new TransactionFragment();
-
-                editNameDialog.setArguments(bundle);
-                editNameDialog.show(manager, FRAGMENT_TRANSACTION);
-
-                //dismiss current fragment
-                dismiss();
-            }
-        });
-
+    private void initComps(){
         setFont(transactionDetailsLL);
     }
 
-    private void showConfirmDeleteFragment(){
+    @OnClick(R.id.transactionDetailsDeleteTVId)
+    public void editTransaction(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_TRANSACTION);
+
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(TRANSACTION_OBJECT, transaction);
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUser);
+
+        AddUpdateTransactionFragment fragment = new AddUpdateTransactionFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSACTION);
+
+        //dismiss current fragment
+        dismiss();
+    }
+
+    @OnClick(R.id.transactionDetailsDeleteTVId)
+    public void showConfirmDeleteFragment(){
         FragmentManager manager = getFragmentManager();
         Fragment frag = manager.findFragmentByTag(FRAGMENT_CONFIRM);
         if (frag != null) {
@@ -215,10 +226,11 @@ public class TransactionDetailsFragment extends DialogFragment {
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSACTION_DETAILS);
 
-        ConfirmFragment confirmFragment = new ConfirmFragment();
-        confirmFragment.setArguments(bundle);
-        confirmFragment.setTargetFragment(currentFrag, 0);
-        confirmFragment.show(manager, FRAGMENT_CONFIRM);
+        ConfirmFragment fragment = new ConfirmFragment();
+        fragment.setArguments(bundle);
+        fragment.setTargetFragment(currentFrag, 0);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_CONFIRM);
     }
 
     protected void showToast(String string){
@@ -267,7 +279,7 @@ public class TransactionDetailsFragment extends DialogFragment {
     }
 
     private void closeFragment(String messageStr){
-        this.dismiss();
+        dismiss();
     }
 
     public void onFinishDialog(String messageStr) {
@@ -276,5 +288,8 @@ public class TransactionDetailsFragment extends DialogFragment {
         }
 
         closeFragment(messageStr);
+
+        ((CalendarActivity)getActivity()).initActivity();
+        ((CalendarActivity)getActivity()).showSnacks(messageStr, OK, Snackbar.LENGTH_LONG);
     }
 }

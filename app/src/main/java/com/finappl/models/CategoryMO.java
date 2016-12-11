@@ -13,6 +13,9 @@ public class CategoryMO implements Serializable {
 	private Date CREAT_DTM;
 	private Date MOD_DTM;
 
+	private String tagsStr;
+	private String defaultCategoryId;
+
 	public String getCAT_ID() {
 		return CAT_ID;
 	}
@@ -67,5 +70,21 @@ public class CategoryMO implements Serializable {
 
 	public void setCAT_IMG(String CAT_IMG) {
 		this.CAT_IMG = CAT_IMG;
+	}
+
+	public String getTagsStr() {
+		return tagsStr;
+	}
+
+	public void setTagsStr(String tagsStr) {
+		this.tagsStr = tagsStr;
+	}
+
+	public String getDefaultCategoryId() {
+		return defaultCategoryId;
+	}
+
+	public void setDefaultCategoryId(String defaultCategoryId) {
+		this.defaultCategoryId = defaultCategoryId;
 	}
 }

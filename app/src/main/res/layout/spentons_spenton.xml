@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/spentonLLId"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/spentonIVId"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/cash" />
+
+    <TextView
+        android:id="@+id/spentonTVId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="CASH"
+        android:textColor="@color/formSpinnerDark"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right|center_vertical">
+
+        <ImageView
+            android:id="@+id/spentonDeleteIVId"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/delete_small_grey"
+            android:text="MODIFY" />
+
+        <ImageView
+            android:id="@+id/spentonModifyIVId"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/write_grey"
+            android:text="MODIFY" />
+
+    </LinearLayout>
+
+</LinearLayout>

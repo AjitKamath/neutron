@@ -17,33 +17,36 @@ import com.finappl.utils.FinappleUtility;
 
 import java.util.List;
 
+import static com.finappl.utils.Constants.ADMIN_USERID;
 import static com.finappl.utils.Constants.UI_FONT;
 
 /**
  * Created by ajit on 17/1/15.
  */
 public class AccountsFragmentListViewAdapter extends BaseAdapter {
-
+    private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
     private LayoutInflater inflater;
-    private String selectedAccountIdStr;
-    private List<AccountMO> accountsList;
-    private UserMO loggedInUserMO;
 
-    public AccountsFragmentListViewAdapter(Context mContext, List<AccountMO> accountsList, String selectedAccountIdStr, UserMO loggedInUserMO) {
+    private UserMO user;
+    private List<AccountMO> accountsList;
+    private View.OnClickListener clickListener;
+
+    public AccountsFragmentListViewAdapter(Context mContext, UserMO user, List<AccountMO> accountsList, View.OnClickListener clickListener) {
         super();
 
         this.mContext = mContext;
-        this.selectedAccountIdStr = selectedAccountIdStr;
-        this.accountsList = accountsList;
-        this.loggedInUserMO = loggedInUserMO;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        this.accountsList = accountsList;
+        this.clickListener = clickListener;
+        this.user = user;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
-        int layout = R.layout.account;
+        int layout = R.layout.accounts_account;
 
         if(convertView == null) {
             mHolder = new ViewHolder();
@@ -52,9 +55,10 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
             mHolder.accountLL = (LinearLayout) convertView.findViewById(R.id.accountLLId);
             mHolder.accountIV = (ImageView) convertView.findViewById(R.id.accountIVId);
             mHolder.accountTV = (TextView) convertView.findViewById(R.id.accountTVId);
-            mHolder.accountSelectedV = convertView.findViewById(R.id.accountSelectedVId);
-            mHolder.accountCurrencyCodeTV = (TextView) convertView.findViewById(R.id.accountCurrencyCodeTVId);
-            mHolder.accountTotalTV = (TextView) convertView.findViewById(R.id.accountTotalTVId);
+            mHolder.accountCurrencyTV = (TextView) convertView.findViewById(R.id.accountCurrencyTVId);
+            mHolder.accountAmountTV = (TextView) convertView.findViewById(R.id.accountAmountTVId);
+            mHolder.accountDeleteIV = (ImageView) convertView.findViewById(R.id.accountDeleteIVId);
+            mHolder.accountModifyIV = (ImageView) convertView.findViewById(R.id.accountModifyIVId);
 
             convertView.setTag(layout, mHolder);
 
@@ -62,17 +66,24 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag(layout);
         }
 
-        AccountMO accountMO = accountsList.get(position);
-        mHolder.accountTV.setText(accountMO.getACC_NAME());
-        mHolder.accountCurrencyCodeTV.setText(loggedInUserMO.getCUR_CODE().toUpperCase());
-        mHolder.accountIV.setBackgroundResource(Integer.parseInt(accountMO.getACC_IMG()));
-        mHolder.accountTotalTV = FinappleUtility.formatAmountView(mHolder.accountTotalTV, loggedInUserMO, accountMO.getACC_TOTAL());
+        AccountMO account = accountsList.get(position);
 
-        if(selectedAccountIdStr.equalsIgnoreCase(accountMO.getACC_ID())){
-            mHolder.accountSelectedV.setVisibility(View.VISIBLE);
+        mHolder.accountTV.setText(account.getACC_NAME());
+        mHolder.accountIV.setBackgroundResource(Integer.parseInt(account.getACC_IMG()));
+        mHolder.accountCurrencyTV.setText(user.getCUR_CODE());
+        mHolder.accountAmountTV = FinappleUtility.formatAmountView(mHolder.accountAmountTV, user, account.getACC_TOTAL());
+
+        mHolder.accountModifyIV.setTag(account);
+        mHolder.accountModifyIV.setOnClickListener(clickListener);
+
+        //do not enable delete if the user id of the account is admin
+        if(ADMIN_USERID.equalsIgnoreCase(account.getUSER_ID())){
+            mHolder.accountDeleteIV.setVisibility(View.INVISIBLE);
         }
         else{
-            mHolder.accountSelectedV.setVisibility(View.INVISIBLE);
+            mHolder.accountDeleteIV.setVisibility(View.VISIBLE);
+            mHolder.accountDeleteIV.setTag(account);
+            mHolder.accountDeleteIV.setOnClickListener(clickListener);
         }
 
         setFont(mHolder.accountLL);
@@ -97,7 +108,8 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
     public void setFont(ViewGroup group) {
-        final Typeface font = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
 
         int count = group.getChildCount();
         View v;
@@ -105,20 +117,22 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
         for(int i = 0; i < count; i++) {
             v = group.getChildAt(i);
             if(v instanceof TextView) {
-                ((TextView) v).setTypeface(font);
-            } else if(v instanceof ViewGroup) {
+                ((TextView) v).setTypeface(robotoCondensedLightFont);
+            }
+            else if(v instanceof ViewGroup) {
                 setFont((ViewGroup) v);
             }
         }
     }
 
     private class ViewHolder {
-        LinearLayout accountLL;
-        ImageView accountIV;
-        TextView accountTV;
-        TextView accountCurrencyCodeTV;
-        TextView accountTotalTV;
-        View accountSelectedV;
+        private LinearLayout accountLL;
+        private ImageView accountIV;
+        private TextView accountTV;
+        private TextView accountCurrencyTV;
+        private TextView accountAmountTV;
+        private ImageView accountDeleteIV;
+        private ImageView accountModifyIV;
     }
 
 }

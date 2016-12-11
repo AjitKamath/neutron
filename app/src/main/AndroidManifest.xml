@@ -26,15 +26,8 @@
         <!--Login-->
 
         <!--Notifications-->
-        <activity
-            android:name=".activities.NotificationScheduledTransactionActivity"
-            android:label="Notification Scheduled Transaction"/>
-        <activity
-            android:name=".activities.NotificationsHandlerActivity"
-            android:label="Notification Handler"/>
 
         <!--Services-->
-        <service android:name=".services.NotificationsService" />
 
         <!--Receivers-->
         <receiver android:name=".receivers.BootCompleteReceiver">
@@ -63,8 +56,8 @@
         </receiver>
 
         <!--Error page-->
-        <activity
-            android:name=".activities.JimBrokeItActivity"
-            android:label="Error Page"/>
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
     </application>
 </manifest>

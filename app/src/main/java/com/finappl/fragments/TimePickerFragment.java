@@ -1,7 +1,6 @@
 package com.finappl.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
@@ -26,7 +25,7 @@ public class TimePickerFragment extends DialogFragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
         hour = args.getInt("hour");
-        minute = args.getInt("day");
+        minute = args.getInt("calendar_day");
     }
 
     @Override

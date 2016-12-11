@@ -9,11 +9,9 @@ import java.util.Date;
 public class UserMO implements Serializable {
     private String USER_ID;
     private String CNTRY_ID;
-    private String METRIC;
     private String NAME;
     private String PASS;
     private String EMAIL;
-    private Date DOB;
     private String TELEPHONE;
     private Date CREAT_DTM;
     private Date MOD_DTM;
@@ -22,6 +20,7 @@ public class UserMO implements Serializable {
     private String CNTRY_CODE;
     private String CUR;
     private String CUR_CODE;
+    private String METRIC;
     private String SET_NOTIF_TIME;
     private String SET_NOTIF_BUZZ;
     private String SET_SEC_PIN;
@@ -66,14 +65,6 @@ public class UserMO implements Serializable {
 
     public void setEMAIL(String EMAIL) {
         this.EMAIL = EMAIL;
-    }
-
-    public Date getDOB() {
-        return DOB;
-    }
-
-    public void setDOB(Date DOB) {
-        this.DOB = DOB;
     }
 
     public String getTELEPHONE() {

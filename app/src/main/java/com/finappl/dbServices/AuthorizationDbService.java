@@ -18,8 +18,7 @@ import static com.finappl.utils.Constants.DB_NAME;
 import static com.finappl.utils.Constants.DB_TABLE_COUNTRY;
 import static com.finappl.utils.Constants.DB_TABLE_USER;
 import static com.finappl.utils.Constants.DB_VERSION;
-import static com.finappl.utils.Constants.DEFAULT_COUNTRY_CURRENCY;
-import static com.finappl.utils.Constants.DEFAULT_METRIC;
+import static com.finappl.utils.Constants.DEFAULT_COUNTRY;
 
 public class AuthorizationDbService extends SQLiteOpenHelper {
 
@@ -33,12 +32,9 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
                 return true;
             }
 
-            String defaultCountryCurrencyArr[] = DEFAULT_COUNTRY_CURRENCY.split("-");
-
             ContentValues values = new ContentValues();
             values.put("USER_ID", userModelObj.getUSER_ID());
-            values.put("CNTRY_ID", defaultCountryCurrencyArr[0]);
-            values.put("METRIC", DEFAULT_METRIC);
+            values.put("CNTRY_ID", DEFAULT_COUNTRY);
             values.put("NAME", userModelObj.getNAME());
             values.put("EMAIL", userModelObj.getEMAIL());
             values.put("CREAT_DTM", DB_DATE_TIME_FORMAT_SDF.format(new Date()));
@@ -56,6 +52,33 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             return false;
         }
         db.close();
+        return true;
+    }
+
+    public boolean updateUser(UserMO userModelObj){
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put("CNTRY_ID", userModelObj.getCNTRY_ID());
+            values.put("NAME", userModelObj.getNAME());
+            values.put("EMAIL", userModelObj.getEMAIL());
+            values.put("TELEPHONE", userModelObj.getTELEPHONE());
+            values.put("MOD_DTM", DB_DATE_TIME_FORMAT_SDF.format(new Date()));
+
+            long result = db.update(DB_TABLE_USER, values, "USER_ID = '" + userModelObj.getUSER_ID() + "'", null);
+
+            if (result == -1) {
+                Log.e(CLASS_NAME, "Something went wrong while updating the user ");
+                return false;
+            }
+        }
+        catch(Exception e){
+            Log.i(CLASS_NAME, "ERROR !! While adding a new User");
+            return false;
+        }
+        finally {
+            db.close();
+        }
         return true;
     }
 
@@ -97,21 +120,21 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
     }
 
     public boolean isUserExists(String usernameStr) {
-        StringBuilder sqlQuerySB = new StringBuilder(50);
+        StringBuilder sb = new StringBuilder();
 
-        sqlQuerySB.append(" SELECT ");
-        sqlQuerySB.append(" COUNT(USER_ID) AS COUNT ");
+        sb.append(" SELECT ");
+        sb.append(" COUNT(USER_ID) AS COUNT ");
 
-        sqlQuerySB.append(" FROM ");
+        sb.append(" FROM ");
 
-        sqlQuerySB.append(DB_TABLE_USER);
+        sb.append(DB_TABLE_USER);
 
-        sqlQuerySB.append(" WHERE ");
-        sqlQuerySB.append(" USER_ID = '" + usernameStr + "' ");
+        sb.append(" WHERE ");
+        sb.append(" USER_ID = '" + usernameStr + "' ");
 
-        Log.i(CLASS_NAME, "Query to know if user already exists  :" + sqlQuerySB);
+        Log.i(CLASS_NAME, "Query to know if user already exists  :" + sb);
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(sqlQuerySB.toString(), null);
+        Cursor cursor = db.rawQuery(String.valueOf(sb), null);
 
         if (cursor.moveToNext()){
             return ColumnFetcher.getInstance().loadInt(cursor, "COUNT") > 0;
@@ -134,7 +157,6 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" METRIC, ");
         sqlQuerySB.append(" NAME, ");
         sqlQuerySB.append(" EMAIL, ");
-        sqlQuerySB.append(" DOB, ");
         sqlQuerySB.append(" TELEPHONE, ");
         sqlQuerySB.append(" CNTRY_NAME, ");
         sqlQuerySB.append(" CUR, ");
@@ -159,7 +181,6 @@ public class AuthorizationDbService extends SQLiteOpenHelper {
             userModelObject.setUSER_ID(ColumnFetcher.loadString(cursor, "USER_ID"));
             userModelObject.setNAME(ColumnFetcher.loadString(cursor, "NAME"));
             userModelObject.setEMAIL(ColumnFetcher.loadString(cursor, "EMAIL"));
-            userModelObject.setDOB(ColumnFetcher.loadDate(cursor, "DOB"));
             userModelObject.setTELEPHONE(ColumnFetcher.loadString(cursor, "TELEPHONE"));
             userModelObject.setCNTRY_NAME(ColumnFetcher.loadString(cursor, "CNTRY_NAME"));
             userModelObject.setCUR(ColumnFetcher.loadString(cursor, "CUR"));

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <!-- Inherit from the light Material Theme -->
-    <style name="FinappleTheme" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="FinappleTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:actionBarSize">0dp</item>
+        <item name="android:windowTitleSize">0dp</item>
+
         <!-- Override the app bar color -->
         <item name="android:colorPrimaryDark">@color/finappleThemeDark</item>
         <!-- Override the color of UI controls -->
         <item name="android:colorAccent">@color/finappleTheme</item>
+
 
         <item name="android:colorPrimary">@color/finappleTheme</item>
 
@@ -19,12 +25,34 @@
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:textColorSecondary">@color/secondary_text_dark</item>
+        <item name="android:navigationBarColor">@color/finappleThemeDark</item>
+
+        <item name="android:dialogTheme">@style/Theme.AppCompat.Light</item>
     </style>
+
+    <!--Date Picker Theme-->
+    <style name="DatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">@color/finappleTheme</item>
+        <item name="android:calendarTextColor">@color/calendarThisMonthDate</item>
+        <item name="android:headerDayOfMonthTextAppearance">@color/calendarTodayDate</item>
+
+        <!-- No need to override 'datePickerStyle' -->
+        <!-- <item name="android:datePickerStyle">@style/MyDatePickerStyle</item> -->
+    </style>
+
+    <!--Date Picker Theme-->
+    <style name="PopupDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">@color/finappleTheme</item>
+        <item name="android:calendarTextColor">@color/calendarThisMonthDate</item>
+        <item name="android:headerDayOfMonthTextAppearance">@color/calendarTodayDate</item>
+
+        <!-- No need to override 'datePickerStyle' -->
+        <!-- <item name="android:datePickerStyle">@style/MyDatePickerStyle</item> -->
+    </style>
+
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
         <item name="android:popupBackground">@android:color/holo_purple</item>
     </style>
-
-    <style name="AppTheme" parent="android:Theme.Light" />
 
     <style name="finappleScrollBar">
         <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>

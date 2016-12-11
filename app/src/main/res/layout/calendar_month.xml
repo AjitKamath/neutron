@@ -11,5 +11,5 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:numColumns="7"
-        android:scrollbars="none"></GridView>
+        android:scrollbars="none" />
 </RelativeLayout>

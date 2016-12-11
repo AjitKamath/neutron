@@ -1,58 +1,56 @@
 package com.finappl.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.models.CategoryMO;
-import com.finappl.utils.FinappleUtility;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import static com.finappl.utils.Constants.ADMIN_USERID;
+import static com.finappl.utils.Constants.UI_FONT;
 
 /**
  * Created by ajit on 17/1/15.
  */
-public class CategoriesFragmentListViewAdapter extends BaseAdapter {
-
+public class  CategoriesFragmentListViewAdapter extends BaseAdapter {
+    private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
     private LayoutInflater inflater;
-    private String selectedCategoryIdStr;
     private List<CategoryMO> categoriesList;
+    private View.OnClickListener clickListener;
 
-    public CategoriesFragmentListViewAdapter(Context mContext, List<CategoryMO> categoriesList, String selectedCategoryIdStr) {
+    public CategoriesFragmentListViewAdapter(Context mContext, List<CategoryMO> categoriesList, View.OnClickListener clickListener) {
         super();
 
         this.mContext = mContext;
-        this.selectedCategoryIdStr = selectedCategoryIdStr;
         this.categoriesList = categoriesList;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.clickListener = clickListener;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
-        int layout = R.layout.category;
+        int layout = R.layout.categories_category;
 
         if(convertView == null) {
             mHolder = new ViewHolder();
             convertView = inflater.inflate(layout, null);
 
-            mHolder.categoryRL = (RelativeLayout) convertView.findViewById(R.id.categoryRLId);
+            mHolder.categoryLL = (LinearLayout) convertView.findViewById(R.id.categoryLLId);
             mHolder.categoryIV = (ImageView) convertView.findViewById(R.id.categoryIVId);
             mHolder.categoryTV = (TextView) convertView.findViewById(R.id.categoryTVId);
-            mHolder.categorySelectedV = (View) convertView.findViewById(R.id.categorySelectedVId);
+            mHolder.categoryDeleteIV = (ImageView) convertView.findViewById(R.id.categoryDeleteIVId);
+            mHolder.categoryModifyIV = (ImageView) convertView.findViewById(R.id.categoryModifyIVId);
 
             convertView.setTag(layout, mHolder);
 
@@ -61,19 +59,24 @@ public class CategoriesFragmentListViewAdapter extends BaseAdapter {
         }
 
         CategoryMO categoryMO = categoriesList.get(position);
+
         mHolder.categoryTV.setText(categoryMO.getCAT_NAME());
         mHolder.categoryIV.setBackgroundResource(Integer.parseInt(categoryMO.getCAT_IMG()));
-        if(selectedCategoryIdStr.equalsIgnoreCase(categoryMO.getCAT_ID())){
-            mHolder.categorySelectedV.setVisibility(View.VISIBLE);
+
+        mHolder.categoryModifyIV.setTag(categoryMO);
+        mHolder.categoryModifyIV.setOnClickListener(clickListener);
+
+        //do not enable delete if the user id of the category is admin
+        if(ADMIN_USERID.equalsIgnoreCase(categoryMO.getUSER_ID())){
+            mHolder.categoryDeleteIV.setVisibility(View.INVISIBLE);
         }
         else{
-            mHolder.categorySelectedV.setVisibility(View.INVISIBLE);
+            mHolder.categoryDeleteIV.setVisibility(View.VISIBLE);
+            mHolder.categoryDeleteIV.setTag(categoryMO);
+            mHolder.categoryDeleteIV.setOnClickListener(clickListener);
         }
 
-
-        //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont(mHolder.categoryRL, robotoCondensedLightFont);
+        setFont(mHolder.categoryLL);
 
         return convertView;
     }
@@ -94,25 +97,30 @@ public class CategoriesFragmentListViewAdapter extends BaseAdapter {
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group, Typeface font) {
+    public void setFont(ViewGroup group) {
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
+
         int count = group.getChildCount();
         View v;
 
         for(int i = 0; i < count; i++) {
             v = group.getChildAt(i);
             if(v instanceof TextView) {
-                ((TextView) v).setTypeface(font);
-            } else if(v instanceof ViewGroup) {
-                setFont((ViewGroup) v, font);
+                ((TextView) v).setTypeface(robotoCondensedLightFont);
+            }
+            else if(v instanceof ViewGroup) {
+                setFont((ViewGroup) v);
             }
         }
     }
 
     private class ViewHolder {
-        RelativeLayout categoryRL;
-        ImageView categoryIV;
-        TextView categoryTV;
-        View categorySelectedV;
+        private LinearLayout categoryLL;
+        private ImageView categoryIV;
+        private TextView categoryTV;
+        private ImageView categoryDeleteIV;
+        private ImageView categoryModifyIV;
     }
 
 }

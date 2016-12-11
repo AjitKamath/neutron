@@ -7,21 +7,33 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
 import com.finappl.adapters.LoginViewPagerAdapter;
 import com.finappl.customComponents.CustomLoginViewPager;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.models.UserMO;
+import com.finappl.utils.FinappleUtility;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -33,6 +45,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -41,14 +54,20 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.UN_IDENTIFIED_OBJECT_TYPE;
+
 
 /**
  * Created by ajit on 21/3/16.
@@ -58,14 +77,18 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
     private Context mContext;
 
     /*Components*/
+    @InjectView(R.id.loginRLId)
+    RelativeLayout loginRL;
+
     @InjectView(R.id.loginVPId)
     CustomLoginViewPager loginVP;
 
+    @InjectView(R.id.loginSignUpWithTVId)
+    TextView loginSignUpWithTV;
+
     @InjectView(R.id.loginSignUpTVId)
     TextView loginSignUpTV;
-
-    @InjectView(R.id.loginSignUpUsingTVId)
-    TextView loginSignUpUsingTV;
+    /*Components*/
 
     private AuthorizationDbService authorizationDbService;
     private Dialog dialog;
@@ -80,24 +103,34 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
     /* Client used to interact with Google APIs. */
     private GoogleApiClient mGoogleApiClient;
 
-    private static final int RC_SIGN_IN = 9001;
+    private static final int GOOGLE_SIGN_IN = 2548;
+    private static final int FB_SIGN_IN = 8452;
+
+    private CallbackManager callbackManager;
+
+    private LoginButton loginButton;
 
     @OnClick(R.id.loginSignUpUsingGoogleTVId)
-    public void loginWithGoogle(){
+    public void loginWithGoogle() {
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getResources().getString(R.string.OAUTH_TOKEN))
                 .requestEmail()
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
+                .enableAutoManage((CalendarActivity)getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        FinappleUtility.showSnacks(loginRL, "Connection Failed", OK, Snackbar.LENGTH_INDEFINITE);
+                    }
+                })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
     @Override
@@ -105,20 +138,61 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
-                // Google Sign In failed, update UI appropriately
-                // ...
+                FinappleUtility.showSnacks(loginRL, "Could not Login", OK, Snackbar.LENGTH_INDEFINITE);
             }
+        }
+        else{
+            // Pass the activity result back to the Facebook SDK
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void handleFacebookAccessToken(AccessToken token, final UserMO user) {
+        Log.d(CLASS_NAME, "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(CLASS_NAME, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            onLoginFailed(task, user);
+                            return;
+                        }
+                    }
+                });
+    }
+
+    public void showSnacks(String messageStr, final String doWhatStr, int duration){
+        Snackbar snackbar = Snackbar.make(loginRL, messageStr, duration).setAction(doWhatStr, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //OK
+                if(OK.equalsIgnoreCase(doWhatStr)){
+
+                }
+                else{
+                    Log.e(CLASS_NAME, "Could not identify the action of the snacks");
+                }
+            }
+        });
+
+        snackbar.show();
+    }
+
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         Log.d(CLASS_NAME, "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -133,9 +207,8 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(CLASS_NAME, "signInWithCredential", task.getException());
-                            showToast("Authentication failed.");
+                            FinappleUtility.showSnacks(loginRL, "Login Failed", OK, Snackbar.LENGTH_INDEFINITE);
                         }
-                        // ...
                     }
                 });
     }
@@ -143,8 +216,57 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FacebookSdk.sdkInitialize(mContext);
+        callbackManager = CallbackManager.Factory.create();
+
         View view = inflater.inflate(R.layout.login_signup, container);
         ButterKnife.inject(this, view);
+
+        loginButton = (LoginButton) view.findViewById(R.id.loginSignUpUsingFacebookButtonId);
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+        loginButton.setFragment(this);
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(final LoginResult loginResult) {
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("LoginActivity", response.toString());
+
+                                try {
+                                    // Application code
+                                    String email = object.getString("email");
+                                    String name = object.getString("name");
+
+                                    UserMO user = new UserMO();
+                                    user.setEMAIL(email);
+                                    user.setNAME(name);
+
+                                    handleFacebookAccessToken(loginResult.getAccessToken(), user);
+                                }
+                                catch (JSONException e){
+                                    Log.e(CLASS_NAME, "Exception while fetching facebook user details : "+e);
+                                }
+                            }
+                        });
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender,birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                Log.i(CLASS_NAME, "");
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+                Log.i(CLASS_NAME, "");
+            }
+        });
 
         dialog = getDialog();
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -162,11 +284,14 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
-                    Log.i(CLASS_NAME, "onAuthStateChanged:signed_in:" + user.getUid());
+                    UserMO userObject = new UserMO();
+                    userObject.setUSER_ID(user.getUid());
+                    userObject.setNAME(user.getDisplayName());
+                    userObject.setEMAIL(user.getEmail());
+
+                    onLoginSuccess(userObject);
                 } else {
-                    // User is signed out
-                    Log.d(CLASS_NAME, "onAuthStateChanged:signed_out");
+                    FinappleUtility.showSnacks(loginRL, "Please Login", OK, Snackbar.LENGTH_SHORT);
                 }
             }
         };
@@ -211,8 +336,8 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
             @Override
             public void onPageSelected(int position) {
                 switch(position){
-                    case 0 : loginSignUpTV.setText("SIGN UP"); loginSignUpUsingTV.setText("OR LOGIN USING"); break;
-                    case 1 : loginSignUpTV.setText("SIGN IN"); loginSignUpUsingTV.setText("OR SIGN UP USING"); break;
+                    case 0 : loginSignUpTV.setText("SIGN UP"); loginSignUpWithTV.setText("OR SIGN IN WITH"); break;
+                    case 1 : loginSignUpTV.setText("SIGN IN"); loginSignUpWithTV.setText("OR SIGN UP WITH"); break;
                 }
             }
 
@@ -221,6 +346,8 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
 
             }
         });
+
+        //setUploginWithFacebook();
     }
 
     @OnClick(R.id.loginSignUpTVId)
@@ -341,6 +468,13 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
 
         hideProgressDialog();
         dismiss();
+
+        String nameStr = user.getNAME();
+        if(nameStr == null){
+            nameStr = "";
+        }
+
+        ((CalendarActivity)getActivity()).showSnacks("Hi "+nameStr+" !", "", Snackbar.LENGTH_SHORT);
     }
 
     public void onSignUpFailed(Task<AuthResult> task, UserMO user) {
@@ -366,23 +500,27 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
     public void onLoginFailed(Task<AuthResult> task, UserMO user) {
         hideProgressDialog();
 
-        ((LoginViewPagerAdapter)loginVP.getAdapter()).setSignupEmail(user.getEMAIL());
-        loginVP.setCurrentItem(1);
-
         try {
             throw task.getException();
         }
         catch (FirebaseNetworkException e){
-            showToast("Could not connect. Check your internet !");
+            FinappleUtility.showSnacks(loginRL, "Could not connect. Check your internet !", OK, Snackbar.LENGTH_INDEFINITE);
         }
         catch(FirebaseAuthInvalidUserException e) {
-            showToast(user.getEMAIL()+" is not registered. Try Signing up !");
+            FinappleUtility.showSnacks(loginRL, user.getEMAIL()+" is not registered. Try Signing up !", OK, Snackbar.LENGTH_INDEFINITE);
+
+            ((LoginViewPagerAdapter)loginVP.getAdapter()).setSignupEmail(user.getEMAIL());
+            loginVP.setCurrentItem(1);
         }
         catch(FirebaseAuthInvalidCredentialsException e) {
-            showToast("Invalid Credentials !");
+            FinappleUtility.showSnacks(loginRL, "Invalid Credentials !", OK, Snackbar.LENGTH_LONG);
+        }
+        catch(FirebaseAuthUserCollisionException e) {
+            FinappleUtility.showSnacks(loginRL, user.getEMAIL()+" is already registered from a different provider", OK, Snackbar.LENGTH_LONG);
         }
         catch(Exception e) {
-            showToast(e.getMessage());
+            Log.e(CLASS_NAME, task.getException()+" : this exception has been not handled. Recommending to handle it.");
+            FinappleUtility.showSnacks(loginRL, e.getMessage(), OK, Snackbar.LENGTH_INDEFINITE);
         }
     }
 
@@ -419,8 +557,18 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
     @Override
     public void onStop() {
         super.onStop();
+
+        closeAuthenticators();
+    }
+
+    private void closeAuthenticators(){
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
+        }
+
+        if(mGoogleApiClient != null){
+            mGoogleApiClient.stopAutoManage((CalendarActivity)getActivity());
+            mGoogleApiClient.disconnect();
         }
     }
 

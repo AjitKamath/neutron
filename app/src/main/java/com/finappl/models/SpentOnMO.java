@@ -12,6 +12,9 @@ public class SpentOnMO implements Serializable {
 	private Date CREAT_DTM;
 	private Date MOD_DTM;
 
+	private String defaultSpentonId;
+	private String tagsStr;
+
 	public String getSPNT_ON_ID() {
 		return SPNT_ON_ID;
 	}
@@ -66,5 +69,21 @@ public class SpentOnMO implements Serializable {
 
 	public void setSPNT_ON_IMG(String SPNT_ON_IMG) {
 		this.SPNT_ON_IMG = SPNT_ON_IMG;
+	}
+
+	public String getDefaultSpentonId() {
+		return defaultSpentonId;
+	}
+
+	public void setDefaultSpentonId(String defaultSpentonId) {
+		this.defaultSpentonId = defaultSpentonId;
+	}
+
+	public String getTagsStr() {
+		return tagsStr;
+	}
+
+	public void setTagsStr(String tagsStr) {
+		this.tagsStr = tagsStr;
 	}
 }

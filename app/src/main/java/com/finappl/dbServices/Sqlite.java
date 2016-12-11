@@ -24,6 +24,7 @@ import static com.finappl.utils.Constants.DB_TABLE_NOTIFICATION;
 import static com.finappl.utils.Constants.DB_TABLE_REPEAT;
 import static com.finappl.utils.Constants.DB_TABLE_SETTING;
 import static com.finappl.utils.Constants.DB_TABLE_SPENTON;
+import static com.finappl.utils.Constants.DB_TABLE_TAGS;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSACTION;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSFER;
 import static com.finappl.utils.Constants.DB_TABLE_USER;
@@ -57,7 +58,8 @@ public class Sqlite extends SQLiteOpenHelper{
 			values.put("CNTRY_CODE", countryCurrencyStrArr[1]);
 			values.put("CUR", countryCurrencyStrArr[2]);
 			values.put("CUR_CODE", countryCurrencyStrArr[3]);
-			values.put("CNTRY_IMG", countryCurrencyStrArr[4]);
+			values.put("METRIC", countryCurrencyStrArr[4]);
+			values.put("CNTRY_IMG", countryCurrencyStrArr[5]);
 			values.put("CREAT_DTM", nowStr);
 			db.insert(DB_TABLE_COUNTRY, null, values);
 		}
@@ -171,8 +173,26 @@ public class Sqlite extends SQLiteOpenHelper{
 		Log.i(CLASS_NAME, "Inserted defaults("+repeatsStrArr.length+") into " + DB_TABLE_REPEAT);
 	}
 
+	private void createTagsTable() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(" CREATE TABLE IF NOT EXISTS ");
+		sb.append(DB_TABLE_TAGS);
+		sb.append(" (TAG_ID TEXT PRIMARY KEY, ");		//pk
+		sb.append(" USER_ID TEXT NOT NULL, ");          //fk1
+		sb.append(" TAG_TYPE TEXT NOT NULL, ");
+		sb.append(" TAG_TYPE_ID TEXT NOT NULL, ");
+		sb.append(" TAGS TEXT NOT NULL, ");
+		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
+		sb.append(" MOD_DTM DATETIME, ");
+		sb.append(" FOREIGN KEY (USER_ID) REFERENCES " + DB_TABLE_USER + " (USER_ID)) ");
+
+		Log.i(CLASS_NAME, "Create " + DB_TABLE_TAGS + " Table query:\n" + String.valueOf(sb));
+
+		db.execSQL(String.valueOf(sb));
+	}
+
 	private void createNotificationsTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_NOTIFICATION);
 		sb.append(" (NOTIF_ID TEXT PRIMARY KEY, ");		//pk
@@ -191,7 +211,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createSettingsTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_SETTING);
 		sb.append(" (SET_ID TEXT PRIMARY KEY, ");       //pk
@@ -209,7 +229,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createBudgetTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_BUDGET);
 		sb.append(" (BUDGET_ID TEXT PRIMARY KEY, ");    //pk
@@ -230,7 +250,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createRepeatTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_REPEAT);
 		sb.append(" (REPEAT_ID TEXT PRIMARY KEY, ");				//pk
@@ -246,7 +266,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createTransferTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_TRANSFER);
 		sb.append(" (TRNFR_ID TEXT PRIMARY KEY, ");				//pk
@@ -274,7 +294,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createTransactionTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_TRANSACTION);
 		sb.append(" (TRAN_ID TEXT PRIMARY KEY, ");				//pk
@@ -306,7 +326,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createSpentOnTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_SPENTON);
 		sb.append(" (SPNT_ON_ID TEXT PRIMARY KEY, ");			//pk
@@ -324,7 +344,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createAccountTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_ACCOUNT);
 		sb.append(" (ACC_ID TEXT PRIMARY KEY, ");			//pk
@@ -342,7 +362,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createCategoryTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_CATEGORY);
 		sb.append(" (CAT_ID TEXT PRIMARY KEY, ");			//pk
@@ -360,16 +380,14 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createUserTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_USER);
 		sb.append(" (USER_ID TEXT PRIMARY KEY, ");			//pk
 		sb.append(" CNTRY_ID TEXT NOT NULL, ");				//fk 1
-		sb.append(" METRIC TEXT NOT NULL, ");
 		sb.append(" NAME TEXT, ");
 		sb.append(" PASS TEXT, ");
 		sb.append(" EMAIL TEXT NOT NULL, ");
-		sb.append(" DOB DATE, ");
 		sb.append(" TELEPHONE TEXT, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME, ");
@@ -381,7 +399,7 @@ public class Sqlite extends SQLiteOpenHelper{
 	}
 
 	private void createCountryTable() {
-		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sb = new StringBuilder();
 		sb.append(" CREATE TABLE IF NOT EXISTS ");
 		sb.append(DB_TABLE_COUNTRY);
 		sb.append(" (CNTRY_ID TEXT PRIMARY KEY, ");			//pk
@@ -390,6 +408,7 @@ public class Sqlite extends SQLiteOpenHelper{
 		sb.append(" CUR TEXT NOT NULL, ");
 		sb.append(" CUR_CODE TEXT NOT NULL, ");
         sb.append(" CNTRY_IMG TEXT NOT NULL, ");
+		sb.append(" METRIC TEXT NOT NULL, ");
 		sb.append(" CREAT_DTM DATETIME NOT NULL, ");
 		sb.append(" MOD_DTM DATETIME) ");
 
@@ -413,6 +432,7 @@ public class Sqlite extends SQLiteOpenHelper{
 		createTransferTable();
 		createRepeatTable();
 		createBudgetTable();
+		createTagsTable();
 		createNotificationsTable();
 		createSettingsTable();
 		Log.i(CLASS_NAME, "Creating the tables for " + DB_NAME + " is completed");

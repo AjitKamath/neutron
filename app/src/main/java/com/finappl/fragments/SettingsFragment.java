@@ -7,17 +7,21 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
+import com.finappl.activities.CalendarActivity;
+import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.models.CountryMO;
 import com.finappl.models.UserMO;
@@ -29,10 +33,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
 import static com.finappl.utils.Constants.COUNTRY_OBJECT;
-import static com.finappl.utils.Constants.FRAGMENT_COUNTRIES;
+import static com.finappl.utils.Constants.FRAGMENT_CONFIRM;
+import static com.finappl.utils.Constants.FRAGMENT_SELECT_COUNTRIES;
 import static com.finappl.utils.Constants.FRAGMENT_SETTINGS;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.OK;
+import static com.finappl.utils.Constants.SAVED;
 import static com.finappl.utils.Constants.SELECTED_COUNTRY_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
 
@@ -59,11 +67,8 @@ public class SettingsFragment extends DialogFragment {
     @InjectView(R.id.settingsNumberETId)
     EditText settingsNumberET;
 
-    @InjectView(R.id.settingsCountryLLId)
-    LinearLayout settingsCountryLL;
-
-    @InjectView(R.id.settingsCurrencyLLId)
-    LinearLayout settingsCurrencyLL;
+    @InjectView(R.id.settingsCountryCurrencyMetricGLId)
+    GridLayout settingsCountryCurrencyMetricGL;
     /*Components*/
 
     private UserMO loggedInUserObj;
@@ -71,6 +76,7 @@ public class SettingsFragment extends DialogFragment {
 
     //database
     private CalendarDbService calendarDbService;
+    private AuthorizationDbService authorizationDbService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,24 +93,88 @@ public class SettingsFragment extends DialogFragment {
         return view;
     }
 
-    @OnClick(R.id.settingsCountryLLId)
+    @OnClick(R.id.settingsCloseTVId)
+    public void onClose(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_CONFIRM);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CONFIRM_MESSAGE, "Discard Changes ?");
+
+        Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_SETTINGS);
+
+        ConfirmFragment fragment = new ConfirmFragment();
+        fragment.setArguments(bundle);
+        fragment.setTargetFragment(currentFrag, 0);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_CONFIRM);
+    }
+
+    @OnClick(R.id.settingsSaveTVId)
+    public void saveSettings(){
+        if(validateAndGetInputs()){
+            if(authorizationDbService.updateUser(loggedInUserObj)){
+                dismiss();
+                ((CalendarActivity)getActivity()).getLoggedInUser();
+                ((CalendarActivity)getActivity()).setUpTabs();
+                ((CalendarActivity)getActivity()).showSnacks(SAVED, OK, Snackbar.LENGTH_SHORT);
+            }
+            else{
+                showSnacks("Something went wrong. Could not save.");
+            }
+        }
+    }
+
+    private boolean validateAndGetInputs() {
+        String emailStr = String.valueOf(settingsEmailET.getText());
+        String nameStr = String.valueOf(settingsNameET.getText());
+        String phoneNumberStr = String.valueOf(settingsNumberET.getText());
+        String countryIdStr = ((CountryMO)settingsCountryCurrencyMetricGL.getTag()).getCNTRY_ID();
+
+        if(emailStr == null || emailStr.trim().isEmpty()){
+            showSnacks("Email cannot be empty");
+            return false;
+        }
+        else if(!Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()){
+            showSnacks("Invalid Email");
+            return false;
+        }
+
+        if(!Patterns.PHONE.matcher(phoneNumberStr).matches()){
+            showSnacks("Invalid Phone Number");
+            return false;
+        }
+
+        loggedInUserObj.setEMAIL(emailStr.trim());
+        loggedInUserObj.setNAME(nameStr.trim());
+        loggedInUserObj.setTELEPHONE(phoneNumberStr.trim());
+        loggedInUserObj.setCNTRY_ID(countryIdStr);
+
+        return true;
+    }
+
+    @OnClick(R.id.settingsCountryCurrencyMetricGLId)
     public void showCountries(){
         FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_COUNTRIES);
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_SELECT_COUNTRIES);
         if (frag != null) {
             manager.beginTransaction().remove(frag).commit();
         }
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(COUNTRY_OBJECT, (Serializable) countriesList);
-        bundle.putSerializable(SELECTED_COUNTRY_OBJECT, ((CountryMO)settingsCountryLL.getTag()).getCNTRY_ID());
+        bundle.putSerializable(SELECTED_COUNTRY_OBJECT, ((CountryMO)settingsCountryCurrencyMetricGL.getTag()).getCNTRY_ID());
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_SETTINGS);
 
-        CountriesFragment fragment = new CountriesFragment();
+        SelectCountriesFragment fragment = new SelectCountriesFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.show(manager, FRAGMENT_COUNTRIES);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_SELECT_COUNTRIES);
     }
 
     private void setupPage() {
@@ -134,20 +204,21 @@ public class SettingsFragment extends DialogFragment {
 
     private void setCountry(CountryMO country){
         if(country == null){
-            Log.e(CLASS_NAME, "country object is null. Cannot set the country for the spinner");
+            Log.e(CLASS_NAME, "select_country_country object is null. Cannot set the select_country_country for the spinner");
             return;
         }
 
-        //set country and its currency code and currency
-        settingsCountryLL.findViewById(R.id.settingsCountryIVId).setBackgroundResource(Integer.parseInt(country.getCNTRY_IMG()));
-        ((TextView)settingsCountryLL.findViewById(R.id.settingsCountryTVId)).setText(country.getCNTRY_NAME());
-        ((TextView)settingsCurrencyLL.findViewById(R.id.settingsCurrencyCodeTVId)).setText(country.getCUR_CODE());
-        ((TextView)settingsCurrencyLL.findViewById(R.id.settingsCurrencyTVId)).setText(country.getCUR());
+        //set select_country_country and its currency code and currency
+        settingsCountryCurrencyMetricGL.findViewById(R.id.settingsCountryIVId).setBackgroundResource(Integer.parseInt(country.getCNTRY_IMG()));
+        ((TextView)settingsCountryCurrencyMetricGL.findViewById(R.id.settingsCountryTVId)).setText(country.getCNTRY_NAME());
+        ((TextView)settingsCountryCurrencyMetricGL.findViewById(R.id.settingsCurrencyCodeTVId)).setText(country.getCUR_CODE());
+        ((TextView)settingsCountryCurrencyMetricGL.findViewById(R.id.settingsCurrencyTVId)).setText(country.getCUR());
+        ((TextView)settingsCountryCurrencyMetricGL.findViewById(R.id.settingsMetricTVId)).setText(country.getMETRIC());
 
-        //set country code
+        //set select_country_country code
         settingsCountryCodeTV.setText("+"+country.getCNTRY_CODE());
 
-        settingsCountryLL.setTag(country);
+        settingsCountryCurrencyMetricGL.setTag(country);
     }
 
     private CountryMO getCountryOnCountryId(String countryIdStr){
@@ -181,6 +252,7 @@ public class SettingsFragment extends DialogFragment {
         mContext = getActivity().getApplicationContext();
 
         calendarDbService = new CalendarDbService(mContext);
+        authorizationDbService = new AuthorizationDbService(mContext);
     }
 
     @Override
@@ -193,6 +265,11 @@ public class SettingsFragment extends DialogFragment {
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             d.getWindow().setLayout(width, height);
         }
+    }
+
+    private void showSnacks(String messageStr){
+        Snackbar snackbar = Snackbar.make(settingsRL, messageStr, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font

@@ -1,0 +1,608 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/budgetRLId"
+    android:layout_width="@dimen/fragment_full_width"
+    android:layout_height="@dimen/fragment_full_height"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/screen_components_padding_from_walls"
+    android:gravity="right"
+    android:orientation="vertical"
+    app:theme="@style/FinappleTheme">
+
+    <!-- header -->
+
+    <LinearLayout
+        android:id="@+id/budgetHeaderLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/finappleTheme"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_components_padding_from_walls"
+        android:visibility="visible">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/budgetCloseTVId"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="CLOSE"
+                android:textColor="@drawable/textview_touch_light"
+                android:textSize="10sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right|center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/budgetSaveTVId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="right|center_vertical"
+                    android:text="SAVE"
+                    android:textColor="@drawable/textview_touch_light"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="@dimen/screen_half_width"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="AMOUNT"
+                        android:textColor="@color/formHeadingTextLight"
+                        android:textSize="@dimen/text_form_header_size" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/budgetAmountLLId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/budgetCurrencyTVId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/edit_text_border_light"
+                        android:clickable="false"
+                        android:gravity="bottom"
+                        android:tag="CURRENCY"
+                        android:text="USD"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/budgetAmountTVId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_text_border_light"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:text="0"
+                        android:textColor="@drawable/textview_touch_light"
+                        android:textColorHint="@color/formHintTextLight"
+                        android:textSize="@dimen/text_form_text_size" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TITLE"
+                        android:textColor="@color/formHeadingTextLight"
+                        android:textSize="@dimen/text_form_header_size" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/input_indicator_image_size"
+                        android:layout_height="@dimen/input_indicator_image_size"
+                        android:background="@drawable/write_white" />
+
+                    <EditText
+                        android:id="@+id/budgetNameETId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_text_border_light"
+                        android:gravity="center"
+                        android:inputType="textCapWords"
+                        android:maxLength="25"
+                        android:maxLines="1"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_form_text_size" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!--Page-->
+    <ScrollView
+        android:id="@+id/budgetPageSVId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/budgetHeaderLLId"
+        android:background="@color/finappleBackground">
+
+        <LinearLayout
+            android:id="@+id/budgetPageLLId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/screen_components_padding_from_walls">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="BUDGET FOR"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/budgetGroupRadioGrpId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/budgetCategoryRadioId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="@color/finappleTheme"
+                                android:checked="true"
+                                android:tag="CATEGORY"
+                                android:text="CATEGORY"
+                                android:textColor="@drawable/textview_touch_dark"
+                                android:textSize="10sp" />
+
+                            <RadioButton
+                                android:id="@+id/budgetAccountRadioId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:buttonTint="@color/finappleTheme"
+                                android:tag="ACCOUNT"
+                                android:text="ACCOUNT"
+                                android:textColor="@drawable/textview_touch_dark"
+                                android:textSize="10sp" />
+
+                            <RadioButton
+                                android:id="@+id/budgetSpentOnRadioId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:buttonTint="@color/finappleTheme"
+                                android:tag="SPENT ON"
+                                android:text="SPENT ON"
+                                android:textColor="@drawable/textview_touch_dark"
+                                android:textSize="10sp" />
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:orientation="horizontal"
+                android:padding="@dimen/screen_components_padding_from_walls">
+
+                <LinearLayout
+                    android:id="@+id/budgetCategoryLLId"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CATEGORY"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/spinner_image_dimen"
+                            android:layout_height="@dimen/spinner_image_dimen"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/slider" />
+
+                        <ImageView
+                            android:id="@+id/budgetCategoryIVId"
+                            android:layout_width="@dimen/spinner_image_dimen"
+                            android:layout_height="@dimen/spinner_image_dimen"
+                            android:background="@drawable/version" />
+
+                        <TextView
+                            android:id="@+id/budgetCategoryTVId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:text="SHOPPING"
+                            android:textColor="@drawable/textview_touch_dark"
+                            android:textSize="@dimen/spinner_text_size" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/budgetAccountLLId"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ACCOUNT"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/spinner_image_dimen"
+                                android:layout_height="@dimen/spinner_image_dimen"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/slider" />
+
+                            <ImageView
+                                android:id="@+id/budgetAccountIVId"
+                                android:layout_width="@dimen/spinner_image_dimen"
+                                android:layout_height="@dimen/spinner_image_dimen"
+                                android:background="@drawable/manage_content" />
+
+                            <TextView
+                                android:id="@+id/budgetAccountTVId"
+                                android:layout_width="110dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:text="CREDIT CARD"
+                                android:textColor="@drawable/textview_touch_dark"
+                                android:textSize="@dimen/spinner_text_size" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:orientation="horizontal"
+                            android:paddingLeft="32dp">
+
+                            <TextView
+                                android:id="@+id/budgetAccountCurrencyTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="INR"
+                                android:textColor="@color/finappleCurrencyCodeColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+
+                            <TextView
+                                android:id="@+id/budgetAccountTotalTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:text="465.75"
+                                android:textColor="@color/finappleCurrencyPosColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:orientation="horizontal"
+                            android:paddingLeft="32dp">
+
+                            <TextView
+                                android:id="@+id/budgetAccountStatusTVId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="(low on balance)"
+                                android:textColor="@color/negativeButtonColor"
+                                android:textSize="@dimen/spinner_text_size_secondary" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/budgetSpentOnLLId"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SPENT ON"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/spinner_image_dimen"
+                            android:layout_height="@dimen/spinner_image_dimen"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/slider" />
+
+                        <ImageView
+                            android:id="@+id/budgetSpentonIVId"
+                            android:layout_width="@dimen/spinner_image_dimen"
+                            android:layout_height="@dimen/spinner_image_dimen"
+                            android:background="@drawable/myself" />
+
+                        <TextView
+                            android:id="@+id/budgetSpentonTVId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:text="MYSELF"
+                            android:textColor="@drawable/textview_touch_dark"
+                            android:textSize="@dimen/spinner_text_size" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="@dimen/divider_margin"
+                android:layout_marginTop="@dimen/divider_margin"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/screen_components_padding_from_walls">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BUDGET TYPE"
+                        android:textColor="@color/formHeadingTextDark"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/budgetTypeLLId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/spinner_image_dimen"
+                        android:layout_height="@dimen/spinner_image_dimen"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/slider" />
+
+                    <TextView
+                        android:id="@+id/budgetTypeTVId"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:text="MONTH"
+                        android:textColor="@drawable/textview_touch_dark"
+                        android:textSize="@dimen/spinner_text_size" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="@dimen/divider_margin"
+                android:layout_marginTop="@dimen/divider_margin"
+                android:background="@color/divider" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/screen_components_padding_from_walls"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NOTES"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/input_indicator_image_size"
+                            android:layout_height="@dimen/input_indicator_image_size"
+                            android:background="@drawable/write_grey" />
+
+                        <EditText
+                            android:id="@+id/budgetNoteETId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_border"
+                            android:gravity="center"
+                            android:inputType="textCapWords"
+                            android:textColor="@color/tertiaryText"
+                            android:textSize="@dimen/text_form_text_size" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

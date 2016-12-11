@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 
+import com.finappl.R;
+
 /**
  * Created by ajit on 17/10/16.
  */
@@ -26,11 +28,11 @@ public class DatePickerFragment extends DialogFragment {
         super.setArguments(args);
         year = args.getInt("year");
         month = args.getInt("month");
-        day = args.getInt("day");
+        day = args.getInt("calendar_day");
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new DatePickerDialog(getActivity(), ondateSet, year, month, day);
+        return new DatePickerDialog(getActivity(), R.style.DatePickerDialogTheme, ondateSet, year, month, day);
     }
 }

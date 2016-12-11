@@ -19,6 +19,8 @@ public class AccountMO implements Serializable {
 
     private String currency;
     private Double initialAmount;
+    private String defaultAccountId;
+    private String TagsStr;
 
     public Double getInitialAmount() {
         return initialAmount;
@@ -122,5 +124,21 @@ public class AccountMO implements Serializable {
 
     public void setACC_IMG(String ACC_IMG) {
         this.ACC_IMG = ACC_IMG;
+    }
+
+    public String getDefaultAccountId() {
+        return defaultAccountId;
+    }
+
+    public void setDefaultAccountId(String defaultAccountId) {
+        this.defaultAccountId = defaultAccountId;
+    }
+
+    public String getTagsStr() {
+        return TagsStr;
+    }
+
+    public void setTagsStr(String tagsStr) {
+        TagsStr = tagsStr;
     }
 }

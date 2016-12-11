@@ -76,7 +76,7 @@ public class CalendarActivitiesSectionListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
-        int layout = R.layout.calendar_activity_list_item;
+        int layout = R.layout.calendar_tab_activity;
 
         if(convertView == null) {
             mHolder = new ViewHolder();

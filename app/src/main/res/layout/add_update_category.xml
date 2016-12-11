@@ -1,0 +1,234 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/addUpdateCategoryRLId"
+    android:layout_width="@dimen/fragment_full_width"
+    android:layout_height="@dimen/fragment_full_height"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/screen_components_padding_from_walls"
+    android:gravity="right"
+    android:orientation="vertical"
+    app:theme="@style/FinappleTheme">
+
+    <!-- header -->
+
+    <LinearLayout
+        android:id="@+id/addUpdateCategoryHeaderLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/finappleTheme"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_components_padding_from_walls"
+        android:visibility="visible">
+
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3">
+
+            <TextView
+                android:id="@+id/addUpdateCategoryHeaderCloseTVId"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="CLOSE"
+                android:textColor="@drawable/textview_touch_light"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CATEGORY"
+                android:gravity="center"
+                android:textColor="@drawable/textview_touch_light"
+                android:textSize="12sp" />
+
+            <TextView
+                android:gravity="right|center_vertical"
+                android:id="@+id/addUpdateCategoryHeaderSaveTVId"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:text="SAVE"
+                android:textColor="@drawable/textview_touch_light"
+                android:textSize="10sp" />
+
+        </GridLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/addUpdateCategoryIVId"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/shopping"/>
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TITLE"
+                        android:textColor="@color/formHeadingTextLight"
+                        android:textSize="@dimen/text_form_header_size" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/input_indicator_image_size"
+                        android:layout_height="@dimen/input_indicator_image_size"
+                        android:background="@drawable/write_white" />
+
+                    <EditText
+                        android:id="@+id/addUpdateCategoryNameETId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_text_border_light"
+                        android:gravity="center"
+                        android:inputType="textCapWords"
+                        android:maxLength="25"
+                        android:maxLines="1"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_form_text_size" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!--Page-->
+    <ScrollView
+        android:id="@+id/addUpdatePageSVId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addUpdateCategoryHeaderLLId"
+        android:background="@color/finappleBackground">
+
+        <LinearLayout
+            android:id="@+id/addUpdateCategoryPageLLId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/screen_components_padding_from_walls"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TAGS"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/input_indicator_image_size"
+                            android:layout_height="@dimen/input_indicator_image_size"
+                            android:background="@drawable/write_grey" />
+
+                        <EditText
+                            android:id="@+id/addUpdateCategoryTagsETId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_border"
+                            android:gravity="center"
+                            android:inputType="textCapWords"
+                            android:paddingRight="40dp"
+                            android:textColor="@color/tertiaryText"
+                            android:textSize="@dimen/text_form_text_size" />
+
+                        <TextView
+                            android:id="@+id/addUpdateCategoryTagsTVId"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="ADD"
+                            android:layout_marginLeft="-40dp"
+                            android:textColor="@color/tertiaryText"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textColor="@color/tertiaryText"
+                        android:text="EXAMPLE: DINNER, GYM, LAUNDRY .."/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/addUpdateCategoryNoTagsTVId"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/tertiaryText"
+                android:text="- NO TAGS YET -"/>
+
+            <GridView
+                android:numColumns="2"
+                android:padding="@dimen/screen_components_padding_from_walls"
+                android:id="@+id/addUpdateCategoryTagsGVId"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

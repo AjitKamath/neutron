@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/selectImageLLId"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/countryHeaderLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/screen_components_padding_from_walls"
+        android:visibility="visible">
+
+        <TextView
+            android:gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CHOOSE AN IMAGE"
+            android:textColor="@color/finappleTheme"
+            android:textSize="@dimen/selectors_heading_text_size" />
+
+
+    </LinearLayout>
+
+    <GridView
+        android:layout_gravity="center"
+        android:id="@+id/selectImageGVId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:numColumns="4" />
+
+</LinearLayout>

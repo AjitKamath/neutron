@@ -1,15 +1,13 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/calendarPageRLId"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:background="@color/white"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:tag="main"
-    android:transitionName="content">
+    app:theme="@style/FinappleTheme">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/calendarPageLLId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -47,23 +45,21 @@
 
                         <TextView
                             android:layout_marginRight="15dp"
-                            android:id="@+id/calendarMonthId"
+                            android:id="@+id/calendarMonthTVId"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center|right"
                             android:maxLength="9"
-                            android:onClick="showDatePicker"
                             android:text="NOVEMBER"
                             android:textColor="@drawable/textview_touch_month_year"
                             android:textSize="18sp" />
 
                         <TextView
-                            android:id="@+id/calendarFullYearId"
+                            android:id="@+id/calendarYearTVId"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:maxLength="4"
-                            android:onClick="showDatePicker"
                             android:text="2016"
                             android:textColor="@drawable/textview_touch_month_year"
                             android:textSize="18sp" />
@@ -72,18 +68,18 @@
 
                     <ImageView
                         android:id="@+id/calendarHeaderAddIVId"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="-80dp"
-                        android:padding="5dp"
+                        android:layout_marginLeft="-85dp"
+                        android:padding="10dp"
                         android:src="@drawable/plus_white" />
 
                     <ImageView
                         android:id="@+id/calendarOptionsIVId"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:padding="5dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="10dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="15dp"
                         android:src="@drawable/options_white_new" />
@@ -100,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/calendarHeaderId"
-            android:paddingTop="15dp"
+            android:paddingTop="10dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -174,18 +170,25 @@
 
         </LinearLayout>
 
-        <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/calendarFLID"
-            android:id="@+id/calendarDatesVPId"
-            android:layout_width="wrap_content"
-            android:layout_height="270dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v4.view.ViewPager
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_below="@+id/calendarFLID"
+                android:id="@+id/calendarDatesVPId"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/calendarDatesVPId"
-            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -290,7 +293,7 @@
                 android:layout_height="match_parent" />
 
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
     <!--<include layout="@layout/calendar_fab" />-->
-</FrameLayout>
+</RelativeLayout>

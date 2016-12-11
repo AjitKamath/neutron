@@ -78,7 +78,7 @@ public class DateTimeUtil {
 		
 		//get Start Date
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of calendar_day !
 	    cal.clear(Calendar.MINUTE);
 		cal.clear(Calendar.SECOND);
 		cal.clear(Calendar.MILLISECOND);
@@ -95,7 +95,7 @@ public class DateTimeUtil {
 	    	
 	    	//get End Date
 		cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of calendar_day !
 		cal.clear(Calendar.MINUTE);
 		cal.clear(Calendar.SECOND);
 		cal.clear(Calendar.MILLISECOND);
@@ -205,17 +205,12 @@ public class DateTimeUtil {
 
 	public static boolean checkBetween(Date date, Date dateStart, Date dateEnd){
 	    if (date != null && dateStart != null && dateEnd != null){
-	        if (date.after(dateStart) && date.before(dateEnd)){
-	            return true;
-	        }
-	        else{
-	            return false;
-	        }
+			return date.after(dateStart) && date.before(dateEnd);
 	    }
 	    return false;
 	}
 	
-	// get how manyth day this date is in that particular month
+	// get how manyth calendar_day this date is in that particular month
 	/*public static int getDayNumberInMonth() {
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DB_DATE);
 		String dateStr = sdf.format(new Date());
@@ -254,7 +249,7 @@ public class DateTimeUtil {
 		return days;
 	}
 	
-	//get how manyth day this date is in that particular year
+	//get how manyth calendar_day this date is in that particular year
 	/*public static int getDayNumberInYear(){
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DB_DATE);
 		String dateStr = sdf.format(new Date());

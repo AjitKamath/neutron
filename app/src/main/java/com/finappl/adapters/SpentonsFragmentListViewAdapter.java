@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
@@ -15,38 +15,42 @@ import com.finappl.models.SpentOnMO;
 
 import java.util.List;
 
+import static com.finappl.utils.Constants.ADMIN_USERID;
+import static com.finappl.utils.Constants.UI_FONT;
+
 /**
  * Created by ajit on 17/1/15.
  */
 public class SpentonsFragmentListViewAdapter extends BaseAdapter {
-
+    private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
     private LayoutInflater inflater;
-    private String selectedSpentonIdStr;
     private List<SpentOnMO> spentonsList;
+    private View.OnClickListener clickListener;
 
-    public SpentonsFragmentListViewAdapter(Context mContext, List<SpentOnMO> spentonsList, String selectedSpentonIdStr) {
+    public SpentonsFragmentListViewAdapter(Context mContext, List<SpentOnMO> spentonsList, View.OnClickListener clickListener) {
         super();
 
         this.mContext = mContext;
-        this.selectedSpentonIdStr = selectedSpentonIdStr;
         this.spentonsList = spentonsList;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.clickListener = clickListener;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
-        int layout = R.layout.spenton;
+        int layout = R.layout.spentons_spenton;
 
         if(convertView == null) {
             mHolder = new ViewHolder();
             convertView = inflater.inflate(layout, null);
 
-            mHolder.spentonRL = (RelativeLayout) convertView.findViewById(R.id.spentonRLId);
+            mHolder.spentonLL = (LinearLayout) convertView.findViewById(R.id.spentonLLId);
             mHolder.spentonIV = (ImageView) convertView.findViewById(R.id.spentonIVId);
             mHolder.spentonTV = (TextView) convertView.findViewById(R.id.spentonTVId);
-            mHolder.spentonSelectedV = (View) convertView.findViewById(R.id.spentonSelectedVId);
+            mHolder.spentonDeleteIV = (ImageView) convertView.findViewById(R.id.spentonDeleteIVId);
+            mHolder.spentonModifyIV = (ImageView) convertView.findViewById(R.id.spentonModifyIVId);
 
             convertView.setTag(layout, mHolder);
 
@@ -54,20 +58,25 @@ public class SpentonsFragmentListViewAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag(layout);
         }
 
-        SpentOnMO spentOnMO = spentonsList.get(position);
-        mHolder.spentonTV.setText(spentOnMO.getSPNT_ON_NAME());
-        mHolder.spentonIV.setBackgroundResource(Integer.parseInt(spentOnMO.getSPNT_ON_IMG()));
-        if(selectedSpentonIdStr.equalsIgnoreCase(spentOnMO.getSPNT_ON_ID())){
-            mHolder.spentonSelectedV.setVisibility(View.VISIBLE);
+        SpentOnMO spenton = spentonsList.get(position);
+
+        mHolder.spentonTV.setText(spenton.getSPNT_ON_NAME());
+        mHolder.spentonIV.setBackgroundResource(Integer.parseInt(spenton.getSPNT_ON_IMG()));
+
+        mHolder.spentonModifyIV.setTag(spenton);
+        mHolder.spentonModifyIV.setOnClickListener(clickListener);
+
+        //do not enable delete if the user id of the spenton is admin
+        if(ADMIN_USERID.equalsIgnoreCase(spenton.getUSER_ID())){
+            mHolder.spentonDeleteIV.setVisibility(View.INVISIBLE);
         }
         else{
-            mHolder.spentonSelectedV.setVisibility(View.INVISIBLE);
+            mHolder.spentonDeleteIV.setVisibility(View.VISIBLE);
+            mHolder.spentonDeleteIV.setTag(spenton);
+            mHolder.spentonDeleteIV.setOnClickListener(clickListener);
         }
 
-
-        //set font for all the text view
-        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), "Roboto-Light.ttf");
-        setFont(mHolder.spentonRL, robotoCondensedLightFont);
+        setFont(mHolder.spentonLL);
 
         return convertView;
     }
@@ -88,25 +97,30 @@ public class SpentonsFragmentListViewAdapter extends BaseAdapter {
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group, Typeface font) {
+    public void setFont(ViewGroup group) {
+        //set font for all the text view
+        final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
+
         int count = group.getChildCount();
         View v;
 
         for(int i = 0; i < count; i++) {
             v = group.getChildAt(i);
             if(v instanceof TextView) {
-                ((TextView) v).setTypeface(font);
-            } else if(v instanceof ViewGroup) {
-                setFont((ViewGroup) v, font);
+                ((TextView) v).setTypeface(robotoCondensedLightFont);
+            }
+            else if(v instanceof ViewGroup) {
+                setFont((ViewGroup) v);
             }
         }
     }
 
     private class ViewHolder {
-        RelativeLayout spentonRL;
-        ImageView spentonIV;
-        TextView spentonTV;
-        View spentonSelectedV;
+        private LinearLayout spentonLL;
+        private ImageView spentonIV;
+        private TextView spentonTV;
+        private ImageView spentonDeleteIV;
+        private ImageView spentonModifyIV;
     }
 
 }

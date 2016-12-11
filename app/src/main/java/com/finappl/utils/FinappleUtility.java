@@ -8,7 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.finappl.R;
@@ -23,17 +26,20 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import static com.finappl.utils.Constants.DECIMAL_AFTER_LIMIT;
 import static com.finappl.utils.Constants.DECIMAL_BEFORE_LIMIT;
+import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.SHARED_PREF;
 import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
 
 public class FinappleUtility extends Activity{
 
-    private final String CLASS_NAME = this.getClass().getName();
+    private static final String CLASS_NAME = FinappleUtility.class.getName();
 	private static FinappleUtility instance = null;
     private static final int[] COLOR_SET = new int[]{R.color.darkOrange, R.color.holo_blue_light, R.color.yellow, R.color.lime, R.color.Fuchsia, R.color.GreenYellow,
                 R.color.DarkViolet, R.color.MediumAquamarine, R.color.today, R.color.SaddleBrown, R.color.greyDays, R.color.finOrb2};
@@ -51,6 +57,61 @@ public class FinappleUtility extends Activity{
         }
 		return instance;
 	}
+
+    public static Set<String> csvToSet(Set<String> tagsSet, String csvStr){
+        if(tagsSet == null){
+            tagsSet =  new HashSet<>();
+        }
+        if(csvStr == null || csvStr.trim().isEmpty()){
+            return tagsSet;
+        }
+        String csvStrArr[] = csvStr.split(",");
+        for(String iterArr : csvStrArr){
+            if(iterArr.trim().isEmpty()){
+                continue;
+            }
+            tagsSet.add(iterArr.trim().toUpperCase());
+        }
+        return tagsSet;
+    }
+
+    public static String setToCSV(Set<String> set){
+        if(set == null || set.isEmpty()){
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for(String iterSet : set){
+            sb.append(iterSet+",");
+        }
+        String str = String.valueOf(sb);
+        if(str.contains(",")){
+            str = str.substring(0, str.lastIndexOf(","));
+        }
+
+        return str;
+    }
+
+    public static void showSnacks(ViewGroup viewGroup, String messageStr, final String doWhatStr, int duration){
+        Snackbar snackbar = Snackbar.make(viewGroup, messageStr, duration).setAction(doWhatStr, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //OK
+                if(OK.equalsIgnoreCase(doWhatStr)){
+
+                }
+                else{
+                    Log.e(CLASS_NAME, "Could not identify the action of the snacks");
+                }
+            }
+        });
+
+        snackbar.show();
+    }
+
+    public static boolean isAmountZero(String amountStr){
+        return amountStr == null || amountStr.trim().isEmpty() || amountStr.equalsIgnoreCase("0") || amountStr.equalsIgnoreCase("0.0") || amountStr.equalsIgnoreCase("0.00");
+    }
 
     public static byte[] imageBitmapToByte(Resources resources, Integer imageId){
         Bitmap b = BitmapFactory.decodeResource(resources, imageId);

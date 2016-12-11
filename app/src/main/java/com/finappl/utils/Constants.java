@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 public final class Constants{
     //DB
     public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 79;
+    public static final int DB_VERSION = 87;
 
     //Admin properties
     public static final String ADMIN_USERID = "ADMIN";
@@ -39,21 +39,29 @@ public final class Constants{
     public static final String DB_TABLE_COUNTRY = "COUNTRIES";
     public static final String DB_TABLE_NOTIFICATION = "NOTIFICATIONS";
     public static final String DB_TABLE_SETTING = "SETTINGS";
+    public static final String DB_TABLE_TAGS = "DB_TABLE_TAGS";
     //DB
 
-    //defaults
-    public static final String CATEGORIES = "TRAVEL-"+R.drawable.travel+",SHOPPING-"+R.drawable.shopping+",SALARY-"+R.drawable.salary+",MORTGAGE-"+R.drawable.mortgage+",INVESTMENT-"+R.drawable.investment+",GIFT-"+R.drawable.gift+",FUEL-"+R.drawable.fuel+",COMMUTE-"+R.drawable.commute+",BILL-"+R.drawable.bill+",FOOD-"+ R.drawable.food+",ENTERTAINMENT-"+ R.drawable.entertainment+",HEALTH-"+R.drawable.health+",GROCERY-"+R.drawable.grocery+",OTHER-"+ R.drawable.other;
-    public static final String DEFAULT_CATEGORY = "OTHER";
-    public static final String ACCOUNTS = "CASH-"+R.drawable.cash+",BANK-"+R.drawable.bank+",CREDIT CARD-"+R.drawable.credit_card+",DEBIT CARD-"+R.drawable.debit_card;
-    public static final String DEFAULT_ACCOUNT = "CASH";
-    public static final String SPENT_ONS = "MYSELF-"+R.drawable.myself+",FAMILY-"+R.drawable.family+",FRIENDS-"+R.drawable.friends+",WORK-"+R.drawable.work;
-    public static final String DEFAULT_SPENTON = "MYSELF";
-    public static final String REPEATS = "DAY-"+R.drawable.day+",WEEK-"+R.drawable.week+",MONTH-"+R.drawable.month+",YEAR-"+R.drawable.year;
-    public static final String DEFAULT_REPEAT = "MONTH";
-    public static final String COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-INR-"+R.drawable.india+",USA-1-DOLLAR-USD-"+R.drawable.united_states+",AUSTRALIA-61-DOLLAR-AUD-"+R.drawable.australia;
-    public static final String DEFAULT_COUNTRY_CURRENCY = "INDIA-91-RUPEE-INR";
-    public static final String DEFAULT_METRIC = "INDIAN";
+    /*Images*/
+    public static final Integer IMAGE_SELECTED_CATEGORY = R.drawable.shopping;
+    public static final Integer IMAGE_SELECTED_ACCOUNT = R.drawable.cash;
+    public static final Integer IMAGE_SELECTED_SPENTON = R.drawable.myself;
 
+    //defaults
+    public static final String CATEGORIES = "TRAVEL-"+R.drawable.travel+",SHOPPING-"+IMAGE_SELECTED_CATEGORY+",SALARY-"+R.drawable.salary+",MORTGAGE-"+R.drawable.mortgage+",INVESTMENT-"+R.drawable.investment+",GIFT-"+R.drawable.gift+",FUEL-"+R.drawable.fuel+",COMMUTE-"+R.drawable.commute+",BILL-"+R.drawable.bill+",FOOD-"+ R.drawable.food+",ENTERTAINMENT-"+ R.drawable.entertainment+",HEALTH-"+R.drawable.health+",GROCERY-"+R.drawable.grocery+",OTHER-"+ R.drawable.other;
+    public static final String DEFAULT_CATEGORY = "OTHER";
+    public static final String ACCOUNTS = "CASH-"+IMAGE_SELECTED_ACCOUNT+",BANK-"+R.drawable.bank+",CREDIT CARD-"+R.drawable.credit_card+",DEBIT CARD-"+R.drawable.debit_card;
+    public static final String DEFAULT_ACCOUNT = "CASH";
+    public static final String SPENT_ONS = "MYSELF-"+IMAGE_SELECTED_SPENTON+",FAMILY-"+R.drawable.family+",FRIENDS-"+R.drawable.friends+",WORK-"+R.drawable.work;
+    public static final String DEFAULT_SPENTON = "MYSELF";
+    public static final String REPEATS_DAY = "DAY";
+    public static final String REPEATS_WEEK = "WEEK";
+    public static final String REPEATS_MONTH = "MONTH";
+    public static final String REPEATS_YEAR = "YEAR";
+    public static final String REPEATS = REPEATS_DAY+"-"+R.drawable.day+","+REPEATS_WEEK+"-"+R.drawable.week+","+REPEATS_MONTH+"-"+R.drawable.month+","+REPEATS_YEAR+"-"+R.drawable.year;
+    public static final String DEFAULT_REPEAT = REPEATS_MONTH;
+    public static final String COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-INR-INDIAN-"+R.drawable.india+",USA-1-DOLLAR-USD-AMERICAN-"+R.drawable.united_states+",AUSTRALIA-61-DOLLAR-AUD-AMERICAN-"+R.drawable.australia;
+    public static final String DEFAULT_COUNTRY = "INDIA";
 
     public static final String DEFAULT_QUICK_TRANSACTION_NAME = "Quick Transaction";
 
@@ -87,24 +95,38 @@ public final class Constants{
 
     //Bundle Keys, Sharde Prefs, Intent, fragment names
     //FRAGMENT NAMES
-    public static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
-    public static final String FRAGMENT_TRANSACTION = "FRAGMENT_TRANSACTION";
+    public static final String FRAGMENT_ADD_UPDATE_TRANSACTION = "FRAGMENT_ADD_UPDATE_TRANSACTION";
+    public static final String FRAGMENT_ADD_UPDATE_TRANSFER = "FRAGMENT_ADD_UPDATE_TRANSFER";
+    public static final String FRAGMENT_ADD_UPDATE_BUDGET = "FRAGMENT_ADD_UPDATE_BUDGET";
+    public static final String FRAGMENT_ADD_UPDATE_CATEGORY = "FRAGMENT_ADD_UPDATE_CATEGORY";
+    public static final String FRAGMENT_ADD_UPDATE_ACCOUNT = "FRAGMENT_ADD_UPDATE_ACCOUNT";
+    public static final String FRAGMENT_ADD_UPDATE_SPENTON = "FRAGMENT_ADD_UPDATE_SPENTON";
+
+    public static final String FRAGMENT_SELECT_REPEAT = "FRAGMENT_SELECT_REPEAT";
+    public static final String FRAGMENT_SELECT_AMOUNT = "FRAGMENT_SELECT_AMOUNT";
+    public static final String FRAGMENT_SELECT_CATEGORY = "FRAGMENT_SELECT_CATEGORY";
+    public static final String FRAGMENT_SELECT_ACCOUNT = "FRAGMENT_SELECT_ACCOUNT";
+    public static final String FRAGMENT_SELECT_SPENTON = "FRAGMENT_SELECT_SPENTON";
+    public static final String FRAGMENT_SELECT_IMAGE = "FRAGMENT_SELECT_IMAGE";
+    public static final String FRAGMENT_SELECT_COUNTRIES = "FRAGMENT_SELECT_COUNTRIES";
+
     public static final String FRAGMENT_TRANSACTION_DETAILS = "FRAGMENT_TRANSACTION_DETAILS";
-    public static final String FRAGMENT_TRANSFER = "FRAGMENT_TRANSFER";
     public static final String FRAGMENT_TRANSFER_DETAILS = "FRAGMENT_TRANSFER_DETAILS";
-    public static final String FRAGMENT_REPEAT = "FRAGMENT_REPEAT";
-    public static final String FRAGMENT_AMOUNT = "FRAGMENT_AMOUNT";
-    public static final String FRAGMENT_CATEGORY = "FRAGMENT_CATEGORY";
-    public static final String FRAGMENT_ACCOUNT = "FRAGMENT_ACCOUNT";
-    public static final String FRAGMENT_SPENTON = "FRAGMENT_SPENTON";
+    public static final String FRAGMENT_BUDGET_DETAILS = "FRAGMENT_BUDGET_DETAILS";
+
+    public static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
     public static final String FRAGMENT_CONFIRM = "FRAGMENT_CONFIRM";
+    public static final String FRAGMENT_DELETE_CONFIRM = "FRAGMENT_DELETE_CONFIRM";
     public static final String FRAGMENT_ADD_ACTIVITY = "FRAGMENT_ADD_ACTIVITY";
     public static final String FRAGMENT_OPTIONS = "FRAGMENT_OPTIONS";
     public static final String FRAGMENT_SETTINGS = "FRAGMENT_SETTINGS";
-    public static final String FRAGMENT_COUNTRIES = "FRAGMENT_COUNTRIES";
+    public static final String FRAGMENT_CATEGORIES = "FRAGMENT_CATEGORIES";
+    public static final String FRAGMENT_ACCOUNTS = "FRAGMENT_ACCOUNTS";
+    public static final String FRAGMENT_SPENTONS = "FRAGMENT_SPENTONS";
 
     //FRAGMENT OBJECT KEYS
     public static final String CONFIRM_MESSAGE = "CONFIRM_MESSAGE";
+
     public static final String TRANSACTION_OBJECT = "TRANSACTION_OBJECT";
     public static final String TRANSFER_OBJECT = "TRANSFER_OBJECT";
     public static final String LOGGED_IN_OBJECT = "LOGGED_IN_OBJECT";
@@ -115,12 +137,18 @@ public final class Constants{
     public static final String ACCOUNT_OBJECT = "ACCOUNT_OBJECT";
     public static final String SPENTON_OBJECT = "SPENTON_OBJECT";
     public static final String COUNTRY_OBJECT = "COUNTRY_OBJECT";
+    public static final String BUDGET_OBJECT = "BUDGET_OBJECT";
+    public static final String IMAGE_OBJECT = "IMAGE_OBJECT";
+
     public static final String SELECTED_CATEGORY_OBJECT = "SELECTED_CATEGORY_OBJECT";
     public static final String SELECTED_ACCOUNT_OBJECT = "SELECTED_ACCOUNT_OBJECT";
     public static final String SELECTED_SPENTON_OBJECT = "SELECTED_SPENTON_OBJECT";
     public static final String SELECTED_REPEAT_OBJECT = "SELECTED_REPEAT_OBJECT";
     public static final String SELECTED_AMOUNT_OBJECT = "SELECTED_AMOUNT_OBJECT";
     public static final String SELECTED_COUNTRY_OBJECT = "SELECTED_COUNTRY_OBJECT";
+    public static final String SELECTED_IMAGE_OBJECT = "SELECTED_IMAGE_OBJECT";
+    public static final String SELECTED_GENERIC_OBJECT = "SELECTED_GENERIC_OBJECT";
+
     public static final String ACCOUNT_TYPE_FLAG = "ACCOUNT_TYPE_FLAG";
 
     //SHARED PREFS KEYS
@@ -137,4 +165,6 @@ public final class Constants{
     //Snacks
     public static final String VERIFY_EMAIL = "VERIFY";
     public static final String OK = "OK";
+    public static final String SAVED = "Saved";
+    public static final String SOMETHING_WENT_WRONG = "Something Went Wrong";
 }

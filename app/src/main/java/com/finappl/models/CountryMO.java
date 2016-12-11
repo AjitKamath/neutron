@@ -13,6 +13,15 @@ public class CountryMO implements Serializable {
     private String CUR;
     private String CUR_CODE;
     private String CNTRY_IMG;
+    private String METRIC;
+
+    public String getMETRIC() {
+        return METRIC;
+    }
+
+    public void setMETRIC(String METRIC) {
+        this.METRIC = METRIC;
+    }
 
     public String getCNTRY_ID() {
         return CNTRY_ID;

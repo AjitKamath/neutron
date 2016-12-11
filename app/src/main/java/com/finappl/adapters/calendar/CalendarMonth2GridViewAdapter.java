@@ -47,7 +47,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
     private Map<String, MonthLegend> monthLegendDataMap;
     private LayoutInflater inflater;
 
-    private final int layoutResourceId = R.layout.calendar_grid_cell;
+    private final int layoutResourceId = R.layout.calendar_day;
     private final int noTapCircle = R.drawable.circle_calendar_no_tap;
     private final int oneTapCircle = R.drawable.circle_calendar_one_tap;
     private static int pastFutureDateColor;
@@ -279,7 +279,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
         if(monthLegendDataMap != null && monthLegendDataMap.containsKey(theDatsStr)) {
             MonthLegend monthLegend = monthLegendDataMap.get(theDatsStr);
 
-            //for day total amount
+            //for calendar_day total amount
             if(monthLegend.getTotalAmount() == null || monthLegend.getTotalAmount().equals(0.0)){
                 mHolder.calendarDayAmountTV.setVisibility(View.GONE);
             }
@@ -288,7 +288,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
                 mHolder.calendarDayAmountTV = FinappleUtility.shortenAmountView(mHolder.calendarDayAmountTV, loggedInUser, monthLegend.getTotalAmount());
             }
 
-            //for transaction indicator
+            //for add_update_transaction indicator
             if(monthLegend.getActivities() != null && monthLegend.getActivities() != null
                     && monthLegend.getActivities().getTransactionsList() != null && !monthLegend.getActivities().getTransactionsList().isEmpty()){
                 mHolder.calendarCellTransactionIndicatorTV.setVisibility(View.VISIBLE);
@@ -297,7 +297,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
                 mHolder.calendarCellTransactionIndicatorTV.setVisibility(View.GONE);
             }
 
-            //for transfer indicator
+            //for add_update_transfer indicator
             if(monthLegend.getActivities() != null && monthLegend.getActivities() != null
                     && monthLegend.getActivities().getTransfersList() != null && !monthLegend.getActivities().getTransfersList().isEmpty()){
                 mHolder.calendarCellTransferIndicatorTV.setVisibility(View.VISIBLE);
@@ -306,7 +306,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
                 mHolder.calendarCellTransferIndicatorTV.setVisibility(View.GONE);
             }
 
-            //for scheduled transaction indicator
+            //for scheduled add_update_transaction indicator
             if(monthLegend.isHasScheduledTransaction()){
                 mHolder.calendarCellSchTransactionIndicatorTV.setVisibility(View.VISIBLE);
             }

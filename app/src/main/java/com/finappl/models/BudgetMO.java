@@ -12,7 +12,6 @@ public class BudgetMO implements Serializable{
     private String BUDGET_NAME;
     private String BUDGET_GRP_ID;
     private String BUDGET_TYPE;
-    private String BUDGET_IS_DEL;
     private Double BUDGET_AMT;
     private String BUDGET_NOTE;
     private Date CREAT_DTM;
@@ -23,6 +22,9 @@ public class BudgetMO implements Serializable{
     private String accountNameStr;
     private String categoryNameStr;
     private String spentOnNameStr;
+
+    private String budgetGroupImage;
+    private String budgetGroupName;
 
     public String getBUDGET_ID() {
         return BUDGET_ID;
@@ -62,14 +64,6 @@ public class BudgetMO implements Serializable{
 
     public void setBUDGET_TYPE(String BUDGET_TYPE) {
         this.BUDGET_TYPE = BUDGET_TYPE;
-    }
-
-    public String getBUDGET_IS_DEL() {
-        return BUDGET_IS_DEL;
-    }
-
-    public void setBUDGET_IS_DEL(String BUDGET_IS_DEL) {
-        this.BUDGET_IS_DEL = BUDGET_IS_DEL;
     }
 
     public Double getBUDGET_AMT() {
@@ -142,5 +136,21 @@ public class BudgetMO implements Serializable{
 
     public void setSpentOnNameStr(String spentOnNameStr) {
         this.spentOnNameStr = spentOnNameStr;
+    }
+
+    public String getBudgetGroupImage() {
+        return budgetGroupImage;
+    }
+
+    public void setBudgetGroupImage(String budgetGroupImage) {
+        this.budgetGroupImage = budgetGroupImage;
+    }
+
+    public String getBudgetGroupName() {
+        return budgetGroupName;
+    }
+
+    public void setBudgetGroupName(String budgetGroupName) {
+        this.budgetGroupName = budgetGroupName;
     }
 }

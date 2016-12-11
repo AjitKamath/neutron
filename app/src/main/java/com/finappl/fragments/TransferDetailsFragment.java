@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
+import com.finappl.activities.CalendarActivity;
 import com.finappl.dbServices.TransfersDbService;
 import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
@@ -29,10 +31,11 @@ import butterknife.OnClick;
 
 import static android.view.View.GONE;
 import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSFER;
 import static com.finappl.utils.Constants.FRAGMENT_CONFIRM;
-import static com.finappl.utils.Constants.FRAGMENT_TRANSFER;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSFER_DETAILS;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.TRANSFER_OBJECT;
 import static com.finappl.utils.Constants.UI_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.UI_FONT;
@@ -119,7 +122,7 @@ public class TransferDetailsFragment extends DialogFragment {
 
     private void setupPage() {
         if(transfer == null){
-            Log.e(CLASS_NAME, "Disaster !!! transfer object is null");
+            Log.e(CLASS_NAME, "Disaster !!! add_update_transfer object is null");
             showToast("Catastrophic Error !!");
             return;
         }
@@ -169,7 +172,7 @@ public class TransferDetailsFragment extends DialogFragment {
     @OnClick(R.id.transferDetailsEditTVId)
     public void onEdit(){
         FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSFER);
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_TRANSFER);
 
         if (frag != null) {
             manager.beginTransaction().remove(frag).commit();
@@ -179,9 +182,10 @@ public class TransferDetailsFragment extends DialogFragment {
         bundle.putSerializable(TRANSFER_OBJECT, transfer);
         bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUser);
 
-        TransferFragment fragment = new TransferFragment();
+        AddUpdateTransferFragment fragment = new AddUpdateTransferFragment();
         fragment.setArguments(bundle);
-        fragment.show(manager, FRAGMENT_TRANSFER);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSFER);
 
         //dismiss current fragment
         dismiss();
@@ -204,10 +208,11 @@ public class TransferDetailsFragment extends DialogFragment {
 
         Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_TRANSFER_DETAILS);
 
-        ConfirmFragment confirmFragment = new ConfirmFragment();
-        confirmFragment.setArguments(bundle);
-        confirmFragment.setTargetFragment(currentFrag, 0);
-        confirmFragment.show(manager, FRAGMENT_CONFIRM);
+        ConfirmFragment fragment = new ConfirmFragment();
+        fragment.setArguments(bundle);
+        fragment.setTargetFragment(currentFrag, 0);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_CONFIRM);
     }
 
     protected void showToast(String string){
@@ -265,5 +270,8 @@ public class TransferDetailsFragment extends DialogFragment {
         }
 
         closeFragment(messageStr);
+
+        ((CalendarActivity)getActivity()).initActivity();
+        ((CalendarActivity)getActivity()).showSnacks(messageStr, OK, Snackbar.LENGTH_LONG);
     }
 }

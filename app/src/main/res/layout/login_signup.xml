@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/loginRLId"
     android:background="@color/login_bg"
     android:padding="@dimen/screen_components_padding_from_walls"
     android:fitsSystemWindows="true">
@@ -40,11 +41,12 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/loginSignUpUsingTVId"
-            android:layout_marginRight="10dp"
+            android:id="@+id/loginSignUpWithTVId"
+            android:padding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OR LOGIN USING"
+            android:text="OR LOGIN WITH"
+            android:textColor="@color/white"
             android:gravity="center_vertical"
             android:textSize="14sp"/>
 
@@ -58,15 +60,11 @@
             android:gravity="center_vertical"
             android:textSize="14sp"/>
 
-        <TextView
-            android:id="@+id/loginSignUpUsingFacebookTVId"
-            android:padding="10dp"
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/loginSignUpUsingFacebookButtonId"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FACEBOOK"
-            android:textColor="@color/facebookBlue"
-            android:gravity="center_vertical"
-            android:textSize="14sp"/>
+            android:text="facebook"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

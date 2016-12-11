@@ -10,4 +10,8 @@
     <string name="notifTitleSchedTransfer">Scheduled Transfer Alert !</string>
     <string name="notifMsgSchedules">You have scheduled a YYYYY of </string>
     <string name="notifMsgSchedulesAdd">Scheduled YYYYY for WWWWW has been added automatically</string>
+
+    <!--OAuth-->
+    <string name="OAUTH_TOKEN">408563722391-slic7tpnog3085j4mvc154tal2fov7ge.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">568619596494743</string>
 </resources>

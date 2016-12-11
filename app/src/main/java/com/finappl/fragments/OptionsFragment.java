@@ -22,8 +22,12 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
+import static com.finappl.utils.Constants.FRAGMENT_ACCOUNTS;
+import static com.finappl.utils.Constants.FRAGMENT_CATEGORIES;
 import static com.finappl.utils.Constants.FRAGMENT_CONFIRM;
+import static com.finappl.utils.Constants.FRAGMENT_OPTIONS;
 import static com.finappl.utils.Constants.FRAGMENT_SETTINGS;
+import static com.finappl.utils.Constants.FRAGMENT_SPENTONS;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
 
@@ -89,9 +93,70 @@ public class OptionsFragment extends DialogFragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable(CONFIRM_MESSAGE, "Logout "+getResources().getString(R.string.app_name)+" ?");
 
-        ConfirmFragment confirmFragment = new ConfirmFragment();
-        confirmFragment.setArguments(bundle);
-        confirmFragment.show(manager, FRAGMENT_CONFIRM);
+        Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_OPTIONS);
+
+        ConfirmFragment fragment = new ConfirmFragment();
+        fragment.setArguments(bundle);
+        fragment.setTargetFragment(currentFrag, 0);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_CONFIRM);
+    }
+
+    @OnClick(R.id.optionsSpentonsLLId)
+    public void showSpentons(){
+        dismiss();
+
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_SPENTONS);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+
+        SpentonsFragment fragment = new SpentonsFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_SPENTONS);
+    }
+
+    @OnClick(R.id.optionsAccountsLLId)
+    public void showAccounts(){
+        dismiss();
+
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_ACCOUNTS);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+
+        AccountsFragment fragment = new AccountsFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_ACCOUNTS);
+    }
+
+    @OnClick(R.id.optionsCategoriesLLId)
+    public void showCategories(){
+        dismiss();
+
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_CATEGORIES);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+
+        CategoriesFragment fragment = new CategoriesFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_CATEGORIES);
     }
 
     @OnClick(R.id.optionsSettingsLLId)
@@ -109,6 +174,7 @@ public class OptionsFragment extends DialogFragment {
 
         SettingsFragment fragment = new SettingsFragment();
         fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
         fragment.show(manager, FRAGMENT_SETTINGS);
     }
 

@@ -121,7 +121,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         checkMonthLegend();
 
         switch (layoutsList.get(position)) {
-            case R.layout.calendar_activity:
+            case R.layout.calendar_tab_activities:
                 setUpActivitiesTab(layout);
                 activePageIndex = 0;
                 break;
@@ -154,7 +154,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         ListView calendarActivityLV = (ListView) layout.findViewById(R.id.calendarActivityLVId);
 
         if (!hasSummary) {
-            Log.i(CLASS_NAME, "No activities to show on this day(" + JAVA_DATE_FORMAT_SDF.format(selectedDate) + ")");
+            Log.i(CLASS_NAME, "No activities to show on this calendar_day(" + JAVA_DATE_FORMAT_SDF.format(selectedDate) + ")");
 
             calendarNoActivityTV.setText("No Activities");
             calendarNoActivityTV.setTextColor(mContext.getResources().getColor(R.color.DarkGray));
@@ -167,7 +167,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         calendarActivityLV.setAdapter(consolAdapter);
         calendarActivityLV.setOnItemClickListener(listViewClickListener);
 
-        //if there are no summary on the selected date then show no transaction/transfer text
+        //if there are no summary on the selected date then show no add_update_transaction/add_update_transfer text
         if (consolAdapter != null & consolAdapter.getCount() != 0) {
             calendarNoActivityTV.setVisibility(View.GONE);
             calendarActivityLV.setVisibility(View.VISIBLE);
@@ -190,11 +190,11 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        CalendarAccountsListViewAdapter accAdapter = new CalendarAccountsListViewAdapter(mContext, R.layout.calendar_accounts_list_view, accountsList, loggedInUserObj);
+        CalendarAccountsListViewAdapter accAdapter = new CalendarAccountsListViewAdapter(mContext, R.layout.calendar_tab_account, accountsList, loggedInUserObj);
         accountsLV.setAdapter(accAdapter);
         accountsLV.setOnItemClickListener(listViewClickListener);
 
-        //if there are no accounts
+        //if there are no select_account
         if (accAdapter != null & accAdapter.getCount() != 0) {
             calendarNoAccountsTV.setVisibility(View.GONE);
             accountsLV.setVisibility(View.VISIBLE);
@@ -209,7 +209,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         ListView budgetsLV = (ListView) layout.findViewById(R.id.budgetsLVId);
 
         if (!hasBudgets) {
-            Log.e(CLASS_NAME, "No Budgets for this day/week/month/year !!");
+            Log.e(CLASS_NAME, "No Budgets for this calendar_day/week/month/year !!");
 
             calendarNoBudgetsTV.setText("No Budgets");
             calendarNoBudgetsTV.setTextColor(mContext.getResources().getColor(R.color.DarkGray));
@@ -217,11 +217,11 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        CalendarBudgetsListViewAdapter calendarBudgetsAdapter = new CalendarBudgetsListViewAdapter(mContext, R.layout.calendar_budgets_list_view, budgetsList);
+        CalendarBudgetsListViewAdapter calendarBudgetsAdapter = new CalendarBudgetsListViewAdapter(mContext, R.layout.calendar_tab_budget, budgetsList, loggedInUserObj);
         budgetsLV.setAdapter(calendarBudgetsAdapter);
         budgetsLV.setOnItemClickListener(listViewClickListener);
 
-        //if there are budgets for this day/week/month/year
+        //if there are budgets for this calendar_day/week/month/year
         if (calendarBudgetsAdapter != null & calendarBudgetsAdapter.getCount() != 0) {
             calendarNoBudgetsTV.setVisibility(View.GONE);
             budgetsLV.setVisibility(View.VISIBLE);
@@ -302,7 +302,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         listViewClickListener = new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.i(CLASS_NAME, "MASTER !! you click hath " + view.getId() + ". You shalt go to the view transaction pageth");
+            Log.i(CLASS_NAME, "MASTER !! you click hath " + view.getId() + ". You shalt go to the view add_update_transaction pageth");
 
             Object listItemObject = view.getTag();
             if (listViewItemClickListener != null) {

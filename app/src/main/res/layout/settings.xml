@@ -272,19 +272,20 @@
             android:layout_marginTop="15dp"
             android:orientation="vertical">
 
-            <LinearLayout
+            <GridLayout
+                android:id="@+id/settingsCountryCurrencyMetricGLId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:columnCount="3"
                 android:padding="@dimen/screen_components_padding_from_walls">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="@dimen/screen_half_width"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="5dp"
                         android:gravity="center_vertical"
@@ -315,24 +316,24 @@
                             <ImageView
                                 android:layout_width="@dimen/spinner_image_dimen"
                                 android:layout_height="@dimen/spinner_image_dimen"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="5dp"
                                 android:background="@drawable/slider" />
 
                             <ImageView
                                 android:id="@+id/settingsCountryIVId"
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
                                 android:background="@drawable/india" />
 
                             <TextView
                                 android:id="@+id/settingsCountryTVId"
-                                android:layout_width="110dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="2dp"
                                 android:layout_marginRight="2dp"
                                 android:text="INDIA"
                                 android:textColor="@drawable/textview_touch_dark"
-                                android:textSize="@dimen/spinner_text_size" />
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -342,9 +343,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="5dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -382,7 +383,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="INR"
                                 android:textColor="@color/finappleCurrencyCodeColor"
-                                android:textSize="@dimen/spinner_text_size" />
+                                android:textSize="12sp" />
 
                             <TextView
                                 android:id="@+id/settingsCurrencyTVId"
@@ -391,12 +392,53 @@
                                 android:layout_marginLeft="5dp"
                                 android:text="RUPEE"
                                 android:textColor="@drawable/textview_touch_dark"
-                                android:textSize="@dimen/spinner_text_size" />
+                                android:textSize="12sp" />
 
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="METRIC"
+                            android:textColor="@color/formHeadingTextDark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/settingsMetricLLId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/settingsMetricTVId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="INDIAN"
+                            android:textColor="@drawable/textview_touch_dark"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </GridLayout>
 
             <View
                 android:layout_width="match_parent"

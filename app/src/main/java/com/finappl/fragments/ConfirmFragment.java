@@ -15,9 +15,11 @@ import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.activities.CalendarActivity;
+import com.finappl.models.CategoryMO;
 import com.google.firebase.auth.FirebaseAuth;
 
 import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
+import static com.finappl.utils.Constants.SELECTED_CATEGORY_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
 import static com.finappl.utils.Constants.UN_IDENTIFIED_PARENT_FRAGMENT;
 
@@ -66,16 +68,16 @@ public class ConfirmFragment extends DialogFragment {
         closeConfirmOKTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getTargetFragment() instanceof TransactionFragment){
-                    TransactionFragment fragment = (TransactionFragment) getTargetFragment();
+                if(getTargetFragment() instanceof AddUpdateTransactionFragment){
+                    AddUpdateTransactionFragment fragment = (AddUpdateTransactionFragment) getTargetFragment();
                     fragment.onFinishDialog();
                 }
                 else if(getTargetFragment() instanceof TransactionDetailsFragment){
                     TransactionDetailsFragment fragment = (TransactionDetailsFragment) getTargetFragment();
                     fragment.onFinishDialog("Transaction Deleted !");
                 }
-                if(getTargetFragment() instanceof TransferFragment){
-                    TransferFragment fragment = (TransferFragment) getTargetFragment();
+                if(getTargetFragment() instanceof AddUpdateTransferFragment){
+                    AddUpdateTransferFragment fragment = (AddUpdateTransferFragment) getTargetFragment();
                     fragment.onFinishDialog();
                 }
                 else if(getTargetFragment() instanceof TransferDetailsFragment){
@@ -86,6 +88,19 @@ public class ConfirmFragment extends DialogFragment {
                     FirebaseAuth user = FirebaseAuth.getInstance();
                     user.signOut();
                     ((CalendarActivity)getActivity()).forceLogin();
+                }
+                else if(getTargetFragment() instanceof SettingsFragment){
+                    SettingsFragment fragment = (SettingsFragment) getTargetFragment();
+                    fragment.dismiss();
+                }
+                else if(getTargetFragment() instanceof BudgetDetailsFragment){
+                    BudgetDetailsFragment fragment = (BudgetDetailsFragment) getTargetFragment();
+                    fragment.onFinishDialog("Budget Deleted !");
+                }
+                else if(getTargetFragment() instanceof CategoriesFragment){
+                    CategoriesFragment fragment = (CategoriesFragment) getTargetFragment();
+                    CategoryMO category = (CategoryMO) getArguments().get(SELECTED_CATEGORY_OBJECT);
+                    fragment.deleteCategory(category);
                 }
                 else{
                     Log.e(CLASS_NAME, UN_IDENTIFIED_PARENT_FRAGMENT);
@@ -140,8 +155,8 @@ public class ConfirmFragment extends DialogFragment {
 
         Dialog d = getDialog();
         if (d!=null) {
-            int width = 500;
-            int height = 300;
+            int width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             d.getWindow().setLayout(width, height);
         }
     }

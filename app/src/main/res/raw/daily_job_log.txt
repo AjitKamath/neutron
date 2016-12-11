@@ -756,7 +756,7 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 17-nov-2016
 1. integrated login and sign up screen into one.
 2. started to implement firebase.
-3. firebase account created.++-
+3. firebase account created.
 
 19-nov-2016
 1. Sign up using email implemented.
@@ -780,9 +780,58 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 3. removed DEV_ID column from USER table.
 4. Added CNTRY_IMG column in country table.
 
-------------------------------------------------------------------------------------36/60-----------------------------------------------------------------------------------
-1. ability to do a transfer from view transfers
-2. impl delete transaction, cat, spent on, account, transfer(softly ofcourse...take care of things like..impacts..should check for existing transactions with the same cat.
+<--Git Push on 27-nov-2016-->
+
+28-nov-2016
+1. moved METRIC column from User table to COUNTRY table.
+2. displaying metric in settings fragment.
+3. ability to save settings.
+4. budget UI.
+
+29-nov-2016
+1. dynamically change budget for on selection of budget for in budget fragment.
+
+1-dec-2016
+1. ability to create a budget
+2. listing out budgets in calendar screen tabs.
+
+2-dec-2016
+1. view budget.
+2. edit budget.
+3. delete budget.
+4. login using gmail.
+
+4-dec-2016
+1. login using facebook.
+
+6-dec-2016
+1. view categories implemented.
+2. partial implemented add category.
+
+7-dec-2016
+1. added new table TAGS to store tags for category, account and spentons
+2. updated data model document on the same.
+3. service methods to add and update categories along with their tags.
+
+9-dec-2016
+1. add category implemented.
+2. update category implemented.
+3. delete category implemented.
+
+10-dec-2016
+1. impact analysis and normalization on category delete.
+
+11-dec-2016
+1. add account implemented.
+2. update account implemented.
+3. delete account implemented.
+4. add spenton implemented.
+5. update spenton implemented.
+6. delete spenton implemented.
+
+------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
+1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE
+2. impl delete transaction, cat, spent on, account, transfer(take care of things like..impacts..should check for existing transactions with the same cat.
    warn they will all be moved to others..same for all)
 4. replace back button with discard icon when user starts typing(OLA app feature)(OBSOLETE)-----------------------------------------------------------------------------------DONE
 5. GAME CHANGER: tabs in view Activity (transaction/ transfer)... impl tabs (for transactions/ transfers) in view activity----------------------------------------------------DONE
@@ -800,7 +849,7 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 16. need to implement activity graphs in transactions/transfers options popper showing things like recent transaction/transfer. Total transactions in a day/week/month/year/lifetime. 
     month wise transaction/transfer graphs etc. think on this.(OBSOLETE)-----------------------------------------------------------------------------------------------------DONE
 17. Swipeable calendar.------------------------------------------------------------------------------------------------------------------------------------------------------DONE
-18. Swipeable tabs(everywhere !!).
+18. Swipeable tabs(everywhere !!).-------------------------------------------------------------------------------------------------------------------------------------------DONE
 19. Material buttons(everywhere !!)(OBSOLETE)--------------------------------------------------------------------------------------------------------------------------------DONE
 20. Custom Textpad for number entry as a popup(everywhere !!).---------------------------------------------------------------------------------------------------------------DONE
 21. Provide a switch in scheduled transaction/transfer details popper to delete the whole schedule(DELETE & DELETE ALL button has been implemented).-------------------------DONE
@@ -845,38 +894,36 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 60. InjectView and OnClick annotations in all the fragments and activity
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-CORE FUNCTIONALITY CHECK:	8/22
+CORE FUNCTIONALITY CHECK:	13/20
 
-TRANSACTION: 			    4/5
+TRANSACTION: 			    4/4
 1. NEW TRANSACTION		    (Y)
 2. UPDATE TRANSACTION		(Y)
-3. QUICK TRANSACTION		(N)
-4. DELETE TRANSACTION		(Y)
-5. SCHEDULE TRANSACTION		(Y)
+3. DELETE TRANSACTION		(Y)
+4. SCHEDULE TRANSACTION		(Y)
 
-TRANSFER:			        4/5
+TRANSFER:			        4/4
 1. NEW TRANSFER		    	(Y)
 2. UPDATE TRANSFER		    (Y)
-3. QUICK TRANSFER		    (N)
-4. DELETE TRANSFER		    (Y)
-5. SCHEDULE TRANSFER		(Y)
+3. DELETE TRANSFER		    (Y)
+4. SCHEDULE TRANSFER		(Y)
 
-BUDGET:				        0/3
-1. NEW BUDGET			    (N)
-2. UPDATE BUDGET		    (N)
-3. DELETE BUDGET		    (N)
+BUDGET:				        3/3
+1. NEW BUDGET			    (Y)
+2. UPDATE BUDGET		    (Y)
+3. DELETE BUDGET		    (Y)
 				
 ACCOUNT:        			0/3
-1. NEW BUDGET	    		(N)
-2. UPDATE BUDGET	    	(N)
-3. DELETE BUDGET	    	(N)
+1. NEW ACCOUNT	    		(N)
+2. UPDATE ACCOUNT	    	(N)
+3. DELETE ACCOUNT	    	(N)
 
 CATEGORY:		        	0/3
-1. NEW BUDGET	    		(N)
-2. UPDATE BUDGET	    	(N)
-3. DELETE BUDGET	    	(N)
+1. NEW CATEGORY	    		(Y)
+2. UPDATE CATEGORY	    	(Y)
+3. DELETE CATEGORY	    	(N)
 
 SPENT ON:			        0/3
-1. NEW BUDGET			    (N)
-2. UPDATE BUDGET		    (N)
-3. DELETE BUDGET		    (N)
+1. NEW SPENT ON			    (N)
+2. UPDATE SPENT ON		    (N)
+3. DELETE SPENT ON		    (N)

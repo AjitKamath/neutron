@@ -27,7 +27,7 @@ public class TransactionsDbService extends SQLiteOpenHelper {
         return result;
     }
 
-    //	method to update an already created transaction.. returns 0 for fail, 1 for success
+    //	method to update an already created add_update_transaction.. returns 0 for fail, 1 for success
     public int updateOldTransaction(TransactionMO transactionModel){
 		SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -52,7 +52,7 @@ public class TransactionsDbService extends SQLiteOpenHelper {
 		return result;
     }
 
-    //	method to add a new transaction..returns -1 on fail to add new transaction. row id on success
+    //	method to add a new add_update_transaction..returns -1 on fail to add new add_update_transaction. row id on success
     public long addNewTransaction(TransactionMO transactionModel){
 		SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -79,7 +79,7 @@ public class TransactionsDbService extends SQLiteOpenHelper {
             result =  db.insertOrThrow(DB_TABLE_TRANSACTION, null, values);
         }
         catch(Exception e){
-            Log.e(CLASS_NAME, "Error while adding transaction:"+e);
+            Log.e(CLASS_NAME, "Error while adding add_update_transaction:"+e);
         }
         db.close();
         return result;

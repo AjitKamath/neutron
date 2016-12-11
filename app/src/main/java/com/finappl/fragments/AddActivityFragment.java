@@ -25,8 +25,9 @@ import java.text.ParseException;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION;
-import static com.finappl.utils.Constants.FRAGMENT_TRANSFER;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_BUDGET;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSACTION;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSFER;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_DATE;
@@ -50,7 +51,7 @@ public class AddActivityFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.add_activity, container);
+        View view = inflater.inflate(R.layout.activity, container);
         ButterKnife.inject(this, view);
 
         Dialog d = getDialog();
@@ -84,7 +85,7 @@ public class AddActivityFragment extends DialogFragment {
                 }
 
                 FragmentManager manager = getFragmentManager();
-                Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSACTION);
+                Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_TRANSACTION);
 
                 if (frag != null) {
                     manager.beginTransaction().remove(frag).commit();
@@ -94,10 +95,10 @@ public class AddActivityFragment extends DialogFragment {
                 bundle.putSerializable(TRANSACTION_OBJECT, transactionModelObj);
                 bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
-                TransactionFragment editNameDialog = new TransactionFragment();
-
-                editNameDialog.setArguments(bundle);
-                editNameDialog.show(manager, FRAGMENT_TRANSACTION);
+                AddUpdateTransactionFragment fragment = new AddUpdateTransactionFragment();
+                fragment.setArguments(bundle);
+                fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+                fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSACTION);
 
                 //close the current fragment
                 dismiss();
@@ -119,7 +120,7 @@ public class AddActivityFragment extends DialogFragment {
         }
 
         FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSFER);
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_TRANSFER);
 
         if (frag != null) {
             manager.beginTransaction().remove(frag).commit();
@@ -129,9 +130,31 @@ public class AddActivityFragment extends DialogFragment {
         bundle.putSerializable(TRANSFER_OBJECT, transfer);
         bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
 
-        TransferFragment fragment = new TransferFragment();
+        AddUpdateTransferFragment fragment = new AddUpdateTransferFragment();
         fragment.setArguments(bundle);
-        fragment.show(manager, FRAGMENT_TRANSFER);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSFER);
+
+        //close the current fragment
+        dismiss();
+    }
+
+    @OnClick(R.id.addActivityBudgetLLId)
+    public void showAddBudget(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_BUDGET);
+
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+
+        AddUpdateBudgetFragment fragment = new AddUpdateBudgetFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.show(manager, FRAGMENT_ADD_UPDATE_BUDGET);
 
         //close the current fragment
         dismiss();
@@ -152,7 +175,7 @@ public class AddActivityFragment extends DialogFragment {
 
         Dialog d = getDialog();
         if (d!=null) {
-            int width = 600;
+            int width = ViewGroup.LayoutParams.WRAP_CONTENT;
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             d.getWindow().setLayout(width, height);
         }

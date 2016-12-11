@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/spentonsRLId"
+    android:layout_width="@dimen/fragment_full_width"
+    android:layout_height="@dimen/fragment_full_height"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/screen_components_padding_from_walls"
+    android:background="@color/white"
+    android:gravity="right"
+    android:orientation="vertical"
+    app:theme="@style/FinappleTheme">
+
+    <!-- header -->
+
+    <LinearLayout
+        android:id="@+id/spentonsHeaderLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/screen_components_padding_from_walls"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/countryHeaderLLId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/screen_components_padding_from_walls"
+            android:visibility="visible">
+
+            <TextView
+                android:gravity="left"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CHOOSE A SPENT ON"
+                android:textColor="@color/finappleTheme"
+                android:textSize="@dimen/selectors_heading_text_size" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!--Page-->
+    <LinearLayout
+        android:id="@+id/spentonsContentLLId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/spentonsHeaderLLId"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/screen_components_padding_from_walls"
+        android:paddingRight="@dimen/screen_components_padding_from_walls"
+        android:paddingBottom="@dimen/screen_components_padding_from_walls">
+
+        <ListView
+            android:id="@+id/spentonsContentLVId"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+    </LinearLayout>
+</RelativeLayout>

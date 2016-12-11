@@ -195,13 +195,13 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
                         TextView transactIndicatorView = (TextView) calendarGridDayContentLL.findViewById(R.id.calendarCellTransactionIndicatorTVId);
                         TextView transferIndicatorView = (TextView) calendarGridDayContentLL.findViewById(R.id.calendarCellTransferIndicatorTVId);
 
-                        //if the activity transaction indicator or transfer indicator both are invisible...then do not proceed to ViewTransaction page..because there's no point
+                        //if the activity add_update_transaction indicator or add_update_transfer indicator both are invisible...then do not proceed to ViewTransaction page..because there's no point
                         if (transactIndicatorView.getVisibility() == View.GONE && transferIndicatorView.getVisibility() == View.GONE) {
                             showToast("No Activities to Show");
                             return;
                         }
 
-                        //TODO: show fragment with all the transactions and transfers on this day
+                        //TODO: show fragment with all the transactions and transfers on this calendar_day
 
                     } else if (dateCellColor == R.drawable.circle_calendar_no_tap) {
                         Log.i(CLASS_NAME, "New Date Cell is clicked(" + selectedDateFromCell + "), Checking whether its an prev month or next month date");

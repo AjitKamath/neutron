@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.dbServices.CalendarDbService;
 import com.finappl.fragments.LoginFragment;
 import com.finappl.models.UserMO;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,9 +31,6 @@ public class LoginViewPagerAdapter extends PagerAdapter {
     private Context mContext;
 
     private List<Integer> layoutsList;
-
-    //db services
-    private CalendarDbService calendarDbService;
 
     public int activePageIndex = 0;
 
@@ -54,13 +50,6 @@ public class LoginViewPagerAdapter extends PagerAdapter {
         this.mContext = context;
         this.layoutsList = layoutsList;
         this.onClickListener = onClickListener;
-
-        //initialize database connection
-        initDb();
-    }
-
-    private void initDb(){
-        calendarDbService = new CalendarDbService(mContext);
     }
 
     @Override
