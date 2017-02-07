@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/calendarActivityTabLLId"
+        android:id="@+id/CalendarActivity_NEWTabLLId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -23,7 +23,7 @@
             android:textColor="@color/DarkGray" />
 
         <ListView
-            android:id="@+id/calendarActivityLVId"
+            android:id="@+id/CalendarActivity_NEWLVId"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:dividerHeight="0.5dp"

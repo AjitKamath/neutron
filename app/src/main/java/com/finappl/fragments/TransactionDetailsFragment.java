@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.models.TransactionMO;
 import com.finappl.models.UserMO;
@@ -206,7 +206,7 @@ public class TransactionDetailsFragment extends DialogFragment {
 
         AddUpdateTransactionFragment fragment = new AddUpdateTransactionFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSACTION);
 
         //dismiss current fragment
@@ -229,7 +229,7 @@ public class TransactionDetailsFragment extends DialogFragment {
         ConfirmFragment fragment = new ConfirmFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_CONFIRM);
     }
 
@@ -289,7 +289,7 @@ public class TransactionDetailsFragment extends DialogFragment {
 
         closeFragment(messageStr);
 
-        ((CalendarActivity)getActivity()).initActivity();
-        ((CalendarActivity)getActivity()).showSnacks(messageStr, OK, Snackbar.LENGTH_LONG);
+        //((HomeActivity)getActivity()).initActivity();
+        ((HomeActivity)getActivity()).showSnacks(messageStr, OK, Snackbar.LENGTH_LONG);
     }
 }

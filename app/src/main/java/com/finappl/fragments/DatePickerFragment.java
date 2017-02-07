@@ -28,7 +28,7 @@ public class DatePickerFragment extends DialogFragment {
         super.setArguments(args);
         year = args.getInt("year");
         month = args.getInt("month");
-        day = args.getInt("calendar_day");
+        day = args.getInt("calendar_day__");
     }
 
     @Override

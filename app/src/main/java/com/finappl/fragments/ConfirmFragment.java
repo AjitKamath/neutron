@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.models.CategoryMO;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -87,7 +87,7 @@ public class ConfirmFragment extends DialogFragment {
                 else if(getTargetFragment() instanceof OptionsFragment){
                     FirebaseAuth user = FirebaseAuth.getInstance();
                     user.signOut();
-                    ((CalendarActivity)getActivity()).forceLogin();
+                    //((HomeActivity)getActivity()).forceLogin();
                 }
                 else if(getTargetFragment() instanceof SettingsFragment){
                     SettingsFragment fragment = (SettingsFragment) getTargetFragment();

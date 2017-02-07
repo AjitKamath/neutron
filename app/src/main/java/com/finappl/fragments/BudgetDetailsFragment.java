@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.dbServices.BudgetsDbService;
 import com.finappl.models.BudgetMO;
 import com.finappl.models.UserMO;
@@ -160,7 +160,7 @@ public class BudgetDetailsFragment extends DialogFragment {
 
         AddUpdateBudgetFragment fragment = new AddUpdateBudgetFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_ADD_UPDATE_BUDGET);
 
         //dismiss current fragment
@@ -187,7 +187,7 @@ public class BudgetDetailsFragment extends DialogFragment {
         ConfirmFragment fragment = new ConfirmFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_CONFIRM);
     }
 
@@ -246,7 +246,7 @@ public class BudgetDetailsFragment extends DialogFragment {
         }
 
         closeFragment(messageStr);
-        ((CalendarActivity)getActivity()).initActivity();
-        ((CalendarActivity)getActivity()).showSnacks(messageStr, OK, Snackbar.LENGTH_LONG);
+        //((HomeActivity)getActivity()).initActivity();
+        ((HomeActivity)getActivity()).showSnacks(messageStr, OK, Snackbar.LENGTH_LONG);
     }
 }

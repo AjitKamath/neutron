@@ -65,50 +65,21 @@ public class DateTimeUtil {
 	    return dateStrArr[2]+"-"+monthStr+"-"+dayStr;
 	}
 
-	public static String[] getStartAndEndMonthDates(String dateStr, int range){
-		String dateStrArr[] = dateStr.split("-");
-		
-		if(dateStrArr.length != 2){
-			Log.e(CLASS_NAME, "ERROR in date format !! expecting MM-yyyy but found : "+dateStr);
-			return null;
-		}
-		
-		Integer month = Integer.parseInt(dateStrArr[0])-1;
-		Integer year = Integer.parseInt(dateStrArr[1]);
-		
-		//get Start Date
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of calendar_day !
-	    cal.clear(Calendar.MINUTE);
-		cal.clear(Calendar.SECOND);
-		cal.clear(Calendar.MILLISECOND);
-		    	
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		cal.set(Calendar.MONTH, month);
-		cal.set(Calendar.YEAR, year);
-		    
-		cal.add(Calendar.MONTH, -range);
-		String startDayStr = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-		String startMonthStr = String.valueOf(cal.get(Calendar.MONTH)+1);
-		String startYearStr = String.valueOf(cal.get(Calendar.YEAR));
+	public static String[] getStartAndEndMonthDates(Calendar calendar, int range){
+		//get Start Date starts
+		Calendar tempCal = (Calendar) calendar.clone();
+		tempCal.add(Calendar.MONTH, -range);
+		String startDayStr = "1";
+		String startMonthStr = String.valueOf(tempCal.get(Calendar.MONTH)+1);
+		String startYearStr = String.valueOf(tempCal.get(Calendar.YEAR));
 		//get Start Date ends
-	    	
-	    	//get End Date
-		cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of calendar_day !
-		cal.clear(Calendar.MINUTE);
-		cal.clear(Calendar.SECOND);
-		cal.clear(Calendar.MILLISECOND);
-		   	
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		cal.set(Calendar.MONTH, month);
-		cal.set(Calendar.YEAR, year);
-		   
-		cal.add(Calendar.MONTH, +range+1);
-		cal.add(Calendar.DAY_OF_MONTH, -1);
-		String endDayStr = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-		String endMonthStr = String.valueOf(cal.get(Calendar.MONTH)+1);
-		String endYearStr = String.valueOf(cal.get(Calendar.YEAR));
+
+		//get End Date
+		tempCal = (Calendar) calendar.clone();
+		tempCal.add(Calendar.MONTH, range);
+		String endDayStr = String.valueOf(tempCal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		String endMonthStr = String.valueOf(tempCal.get(Calendar.MONTH)+1);
+		String endYearStr = String.valueOf(tempCal.get(Calendar.YEAR));
 		//get End Date ends
 	    	
 		String startDateStr =  reformatDate(startDayStr+"-"+startMonthStr+"-"+startYearStr);
@@ -210,21 +181,21 @@ public class DateTimeUtil {
 	    return false;
 	}
 	
-	// get how manyth calendar_day this date is in that particular month
+	// get how manyth calendar_day__ this date is in that particular month
 	/*public static int getDayNumberInMonth() {
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DB_DATE);
 		String dateStr = sdf.format(new Date());
 		
 		String dateArr[] = dateStr.split("-");
 
-		Calendar calendar = Calendar.getInstance();
+		Calendar content_home = Calendar.getInstance();
 
 		int year = Integer.parseInt(dateArr[0]);
 		int month = Integer.parseInt(dateArr[1]) - 1;
-		int date = Integer.parseInt(dateArr[2]);
+		int date = Integer.parseInt(dateArr[library]);
 
-		calendar.set(year, month, date);
-		int days = calendar.get(Calendar.DAY_OF_MONTH);
+		content_home.set(year, month, date);
+		int days = content_home.get(Calendar.DAY_OF_MONTH);
 
 		// System.out.println("Number of Days: " + days);
 
@@ -249,21 +220,21 @@ public class DateTimeUtil {
 		return days;
 	}
 	
-	//get how manyth calendar_day this date is in that particular year
+	//get how manyth calendar_day__ this date is in that particular year
 	/*public static int getDayNumberInYear(){
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DB_DATE);
 		String dateStr = sdf.format(new Date());
 		
 		String dateArr[] = dateStr.split("-");
 		
-		Calendar calendar = Calendar.getInstance();
+		Calendar content_home = Calendar.getInstance();
 		
 		int year = Integer.parseInt(dateArr[0]);
 		int month = Integer.parseInt(dateArr[1]) - 1;
-		int date = Integer.parseInt(dateArr[2]);
+		int date = Integer.parseInt(dateArr[library]);
 		
-		calendar.set(year, month, date);
-		int days = calendar.get(Calendar.DAY_OF_YEAR);
+		content_home.set(year, month, date);
+		int days = content_home.get(Calendar.DAY_OF_YEAR);
 		
 		//System.out.println("Number of Days: " + days);
 		

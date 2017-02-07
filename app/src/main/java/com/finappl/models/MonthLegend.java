@@ -9,7 +9,10 @@ import java.util.List;
 public class MonthLegend implements Serializable {
     private String date;
     private ActivitiesMO activities;
-    private Double totalAmount;
+    private Double transactionsAmountTotal;
+    private Double transfersAmountTotal;
+    private boolean hasTransactions;
+    private boolean hasTransfers;
 
     private List<ScheduledTransactionModel> scheduledTransactionModelList;
     private boolean hasScheduledTransaction;
@@ -64,13 +67,46 @@ public class MonthLegend implements Serializable {
 
     public void setActivities(ActivitiesMO activities) {
         this.activities = activities;
+
+        if(activities != null){
+            if(activities.getTransactionsList() != null && !activities.getTransactionsList().isEmpty()){
+                this.hasTransactions = true;
+            }
+            if(activities.getTransfersList() != null && !activities.getTransfersList().isEmpty()){
+                this.hasTransfers = true;
+            }
+        }
     }
 
-    public Double getTotalAmount() {
-        return totalAmount;
+    public Double getTransactionsAmountTotal() {
+        return transactionsAmountTotal;
     }
 
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setTransactionsAmountTotal(Double transactionsAmountTotal) {
+        this.transactionsAmountTotal = transactionsAmountTotal;
+    }
+
+    public Double getTransfersAmountTotal() {
+        return transfersAmountTotal;
+    }
+
+    public void setTransfersAmountTotal(Double transfersAmountTotal) {
+        this.transfersAmountTotal = transfersAmountTotal;
+    }
+
+    public boolean isHasTransactions() {
+        return hasTransactions;
+    }
+
+    public void setHasTransactions(boolean hasTransactions) {
+        this.hasTransactions = hasTransactions;
+    }
+
+    public boolean isHasTransfers() {
+        return hasTransfers;
+    }
+
+    public void setHasTransfers(boolean hasTransfers) {
+        this.hasTransfers = hasTransfers;
     }
 }

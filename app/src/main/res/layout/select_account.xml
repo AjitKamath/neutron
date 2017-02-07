@@ -8,7 +8,7 @@
     android:background="@color/white"
     android:gravity="right"
     android:orientation="vertical"
-    app:theme="@style/FinappleTheme">
+    app:theme="@style/AppTheme">
 
     <!-- header -->
 

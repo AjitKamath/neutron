@@ -46,7 +46,7 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
     private Map<String, MonthLegend> monthLegendDataMap;
     private LayoutInflater inflater;
 
-    private final int layoutResourceId = R.layout.calendar_day;
+    private final int layoutResourceId = 0;//R.layout.calendar_day__;
     private final int noTapCircle = R.drawable.circle_calendar_no_tap;
     private final int oneTapCircle = R.drawable.circle_calendar_one_tap;
     private static int pastFutureDateColor;
@@ -75,7 +75,7 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
         this.loggedInUser = loggedInUser;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        //prepare constants. This is to improve performance as object properties have to be read for each cell of the grid in the calendar
+        //prepare constants. This is to improve performance as object properties have to be read for each cell of the calendar_month in the content_home
         prepareConstants();
 
         // Print Month
@@ -171,7 +171,7 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
             }
         }
 
-        //converting single digit month to double digit..1 as 01..2 as 02
+        //converting single digit month to double digit..1 as 01..library as 02
         String preMonthStr;
         String currMonthStr;
         String nextMonthStr;
@@ -255,13 +255,13 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
             convertView = inflater.inflate(layoutResourceId, null);
 
             // Get a reference to the Day gridcell
-            mHolder.calendarGridDayContentLL = (LinearLayout) convertView.findViewById(R.id.calendarGridDayContentLLId);
+            /*mHolder.calendarGridDayContentLL = (LinearLayout) convertView.findViewById(R.id.calendarGridDayContentLLId);
             mHolder.gridcell_date_TV = (TextView) convertView.findViewById(R.id.calendarDayTVId);
             mHolder.calendarDayAmountTV = (TextView) convertView.findViewById(R.id.calendarDayAmountTVId);
             mHolder.calendarCellSchTransactionIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellSchTransactionIndicatorTVId);
             mHolder.calendarCellTransactionIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellTransactionIndicatorTVId);
             mHolder.calendarCellTransferIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellTransferIndicatorTVId);
-            mHolder.calendarCellSchTransferIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellSchTransferIndicatorTVId);
+            mHolder.calendarCellSchTransferIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellSchTransferIndicatorTVId);*/
 
             convertView.setTag(layoutResourceId, mHolder);
         } else {
@@ -275,14 +275,14 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
         if(monthLegendDataMap != null && monthLegendDataMap.containsKey(theDatsStr)) {
             MonthLegend monthLegend = monthLegendDataMap.get(theDatsStr);
 
-            //for calendar_day total amount
-            if(monthLegend.getTotalAmount() == null || monthLegend.getTotalAmount().equals(0.0)){
+            //for calendar_day__ total amount
+            /*if(monthLegend.getTotalAmount() == null || monthLegend.getTotalAmount().equals(0.0)){
                 mHolder.calendarDayAmountTV.setVisibility(View.GONE);
             }
             else{
                 mHolder.calendarDayAmountTV.setVisibility(View.VISIBLE);
                 mHolder.calendarDayAmountTV = FinappleUtility.shortenAmountView(mHolder.calendarDayAmountTV, loggedInUser, monthLegend.getTotalAmount());
-            }
+            }*/
 
             //for add_update_transaction indicator
             if(monthLegend.getActivities() != null && monthLegend.getActivities() != null
@@ -354,7 +354,7 @@ public class CalendarMonth3GridViewAdapter extends BaseAdapter {
         params.height = cellSize;
         params.width = cellSize;
 
-        //this is for changing grid cell color on click purpose...do not delete
+        //this is for changing calendar_month cell color on click purpose...do not delete
         mHolder.calendarGridDayContentLL.setTag(gridDrawable);
         mHolder.calendarGridDayContentLL.setTag(mHolder.calendarGridDayContentLL.getId(), theDatsStr);
 

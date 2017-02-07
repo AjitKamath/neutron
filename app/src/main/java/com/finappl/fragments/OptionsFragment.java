@@ -98,7 +98,7 @@ public class OptionsFragment extends DialogFragment {
         ConfirmFragment fragment = new ConfirmFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_CONFIRM);
     }
 
@@ -117,7 +117,7 @@ public class OptionsFragment extends DialogFragment {
 
         SpentonsFragment fragment = new SpentonsFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SPENTONS);
     }
 
@@ -136,7 +136,7 @@ public class OptionsFragment extends DialogFragment {
 
         AccountsFragment fragment = new AccountsFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_ACCOUNTS);
     }
 
@@ -155,7 +155,7 @@ public class OptionsFragment extends DialogFragment {
 
         CategoriesFragment fragment = new CategoriesFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_CATEGORIES);
     }
 
@@ -174,7 +174,7 @@ public class OptionsFragment extends DialogFragment {
 
         SettingsFragment fragment = new SettingsFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SETTINGS);
     }
 

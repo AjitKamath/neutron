@@ -1,6 +1,9 @@
 package com.finappl.utils;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -9,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,7 @@ import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
+import com.finappl.fragments.LoginFragment;
 import com.finappl.models.UserMO;
 
 import java.io.ByteArrayOutputStream;
@@ -23,9 +28,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -33,6 +42,7 @@ import java.util.Set;
 
 import static com.finappl.utils.Constants.DECIMAL_AFTER_LIMIT;
 import static com.finappl.utils.Constants.DECIMAL_BEFORE_LIMIT;
+import static com.finappl.utils.Constants.FRAGMENT_LOGIN;
 import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.SHARED_PREF;
 import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
@@ -92,8 +102,8 @@ public class FinappleUtility extends Activity{
         return str;
     }
 
-    public static void showSnacks(ViewGroup viewGroup, String messageStr, final String doWhatStr, int duration){
-        Snackbar snackbar = Snackbar.make(viewGroup, messageStr, duration).setAction(doWhatStr, new View.OnClickListener() {
+    public static void showSnacks(View view, String messageStr, final String doWhatStr, int duration){
+        Snackbar snackbar = Snackbar.make(view, messageStr, duration).setAction(doWhatStr, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //OK
@@ -475,7 +485,7 @@ public class FinappleUtility extends Activity{
         return colorList.get(0);
     }
 
-    //convert 02-02-2015 to 2 feb '15
+    //convert 02-02-2015 to library feb '15
     public String getFormattedDate(String dateStr){
         if(dateStr != null && "".equalsIgnoreCase(dateStr)){
             return "";
@@ -542,4 +552,50 @@ public class FinappleUtility extends Activity{
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
+    public static ProgressDialog getProgressDialog(Context context, String messageStr){
+        ProgressDialog progress = new ProgressDialog(context);
+        progress.setMessage(messageStr);
+        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.setIndeterminate(true);
+        progress.setCancelable(false);
+        return progress;
+    }
+
+    public static void showProgress(ProgressDialog progress) {
+        if(progress != null && !progress.isShowing()){
+            progress.show();
+        }
+    }
+
+    public static void closeProgress(ProgressDialog progress){
+        if(progress != null && progress.isShowing()){
+            progress.dismiss();
+        }
+    }
+
+    public static void showLoginFragment(FragmentManager manager){
+        String fragmentNameStr = FRAGMENT_LOGIN;
+
+        Fragment frag = manager.findFragmentByTag(fragmentNameStr);
+
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        LoginFragment fragment = new LoginFragment();
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+        fragment.show(manager, fragmentNameStr);
+    }
+
+    public static Date timeIgnoredDate(Date date){
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        try{
+            return formatter.parse(formatter.format(date));
+        }
+        catch (ParseException e){
+            Log.e(CLASS_NAME, "Error in date parsing"+e);
+        }
+        return null;
+    }
 }

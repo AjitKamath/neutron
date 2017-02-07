@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.adapters.SpentonsFragmentListViewAdapter;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.models.SpentOnMO;
@@ -132,7 +132,7 @@ public class SpentonsFragment extends DialogFragment {
         DeleteConfirmFragment fragment = new DeleteConfirmFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_DELETE_CONFIRM);
     }
 
@@ -153,7 +153,7 @@ public class SpentonsFragment extends DialogFragment {
         AddUpdateSpentonFragment fragment = new AddUpdateSpentonFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_ADD_UPDATE_SPENTON);
     }
 
@@ -227,6 +227,6 @@ public class SpentonsFragment extends DialogFragment {
         calendarDbService.deleteCategory(spenton.getSPNT_ON_ID());
         FinappleUtility.showSnacks(spentonsRL, "Spent On deleted !", OK, Snackbar.LENGTH_LONG);
         setupPage();
-        ((CalendarActivity)getActivity()).initActivity();
+        //((HomeActivity)getActivity()).initActivity();
     }
 }

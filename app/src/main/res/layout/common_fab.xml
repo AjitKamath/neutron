@@ -1,0 +1,112 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fabtoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:containerId="@+id/fabtoolbar_container"
+        app:fabId="@+id/fabtoolbar_fab"
+        app:fabToolbarId="@+id/fabtoolbar_toolbar"
+        app:fadeInFraction="0.2"
+        app:hideDuration="200"
+        app:horizontalMargin="30dp"
+        app:showDuration="600"
+        app:verticalMargin="30dp">
+
+        <RelativeLayout
+            android:id="@+id/fabtoolbar_container"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabtoolbar_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="center"
+                android:src="@drawable/paper_plane"
+                app:borderWidth="0dp"
+                app:backgroundTint="@color/OrangeRed"
+                app:fabSize="normal" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/fabtoolbar_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="115dp"
+            android:padding="@dimen/screen_components_padding_from_walls"
+            android:layout_alignParentBottom="true"
+            android:background="@color/finappleThemeDark"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="ADD A NEW"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:id="@+id/fab_transaction_ll"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/transaction"/>
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:text="TRANSACTION"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fab_transfer_ll"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/transfer"/>
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:text="TRANSFER"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout>
+</RelativeLayout>

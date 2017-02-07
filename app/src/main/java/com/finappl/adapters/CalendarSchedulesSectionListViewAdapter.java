@@ -188,7 +188,7 @@ public class CalendarSchedulesSectionListViewAdapter extends BaseAdapter {
             mHolder.calendarScheduleTransferToTV.setText(scheduledTransferModelObj.getToAccountStr());
         }
 
-        //this is to offset the last item to allow its content to be viewed by scrolling
+        //this is to offset the last item to allow its calendar_day to be viewed by scrolling
         if(position == mData.size()-1){
             mHolder.calendarSchedulesLL.setPadding(0, 0, 0, FinappleUtility.getInstance().getDpAsPixels(mContext.getResources(), 65));
         }

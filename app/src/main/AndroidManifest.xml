@@ -11,53 +11,56 @@
     <application
         android:icon="@drawable/launcher"
         android:label="@string/app_name"
-        android:theme="@style/FinappleTheme"
-        tools:ignore="NewApi">
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.CalendarActivity"
+            android:name=".activities.HomeActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!--Login-->
+        <!-- Login -->
 
-        <!--Notifications-->
 
-        <!--Services-->
+        <!-- Notifications -->
 
-        <!--Receivers-->
+
+        <!-- Services -->
+
+
+        <!-- Receivers -->
         <receiver android:name=".receivers.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".receivers.TimeSetReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".receivers.DateChangeReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DATE_CHANGED" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".receivers.ActivityActionCompleteReceiver" >
+        <receiver android:name=".receivers.ActivityActionCompleteReceiver">
             <intent-filter>
-                <action android:name="ACTIVITY_ACTION" >
-                </action>
+                <action android:name="ACTIVITY_ACTION"></action>
             </intent-filter>
         </receiver>
 
-        <!--Error page-->
+        <!-- Error page -->
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
     </application>
+
 </manifest>

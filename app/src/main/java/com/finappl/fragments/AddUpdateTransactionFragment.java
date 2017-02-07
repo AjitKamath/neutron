@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.TransactionsDbService;
 import com.finappl.models.AccountMO;
@@ -59,6 +60,7 @@ import static com.finappl.utils.Constants.FRAGMENT_SELECT_CATEGORY;
 import static com.finappl.utils.Constants.FRAGMENT_SELECT_REPEAT;
 import static com.finappl.utils.Constants.FRAGMENT_SELECT_SPENTON;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.REPEAT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_AMOUNT_OBJECT;
@@ -315,7 +317,8 @@ public class AddUpdateTransactionFragment extends DialogFragment {
     private void closeFragment(String messageStr){
         dismiss();
 
-        ((CalendarActivity)getActivity()).initActivity();
+        FinappleUtility.showSnacks(getActivity().getCurrentFocus(), "Transaction saved", OK, Snackbar.LENGTH_LONG);
+        ((HomeActivity)getActivity()).updateCalendarMonths();
     }
 
     private void getMasterData() {
@@ -334,7 +337,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putInt("year", year);
         args.putInt("month", month-1);
-        args.putInt("calendar_day", day);
+        args.putInt("calendar_day__", day);
         date.setArguments(args);
         /**
          * Set Call back to capture selected date
@@ -351,7 +354,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putInt("year", year);
         args.putInt("month", month-1);
-        args.putInt("calendar_day", day);
+        args.putInt("calendar_day__", day);
         date.setArguments(args);
         /**
          * Set Call back to capture selected date
@@ -713,7 +716,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
         SelectAmountFragment fragment = new SelectAmountFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_AMOUNT);
     }
 
@@ -733,7 +736,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
         SelectRepeatFragment fragment = new SelectRepeatFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_REPEAT);
     }
 
@@ -754,7 +757,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
         SelectCategoryFragment fragment = new SelectCategoryFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_CATEGORY);
     }
 
@@ -775,7 +778,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
         SelectAccountFragment fragment = new SelectAccountFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_ACCOUNT);
     }
 
@@ -795,7 +798,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
         SelectSpentonFragment fragment = new SelectSpentonFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_SPENTON);
     }
 
@@ -814,7 +817,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
         ConfirmFragment fragment = new ConfirmFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_CONFIRM);
     }
 

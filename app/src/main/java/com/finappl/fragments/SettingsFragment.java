@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.models.CountryMO;
@@ -109,7 +109,7 @@ public class SettingsFragment extends DialogFragment {
         ConfirmFragment fragment = new ConfirmFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_CONFIRM);
     }
 
@@ -118,9 +118,9 @@ public class SettingsFragment extends DialogFragment {
         if(validateAndGetInputs()){
             if(authorizationDbService.updateUser(loggedInUserObj)){
                 dismiss();
-                ((CalendarActivity)getActivity()).getLoggedInUser();
-                ((CalendarActivity)getActivity()).setUpTabs();
-                ((CalendarActivity)getActivity()).showSnacks(SAVED, OK, Snackbar.LENGTH_SHORT);
+                ((HomeActivity)getActivity()).fetchUserWrapper();
+                ((HomeActivity)getActivity()).setUpTabs();
+                ((HomeActivity)getActivity()).showSnacks(SAVED, OK, Snackbar.LENGTH_SHORT);
             }
             else{
                 showSnacks("Something went wrong. Could not save.");
@@ -173,7 +173,7 @@ public class SettingsFragment extends DialogFragment {
         SelectCountriesFragment fragment = new SelectCountriesFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_COUNTRIES);
     }
 

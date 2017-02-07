@@ -1,0 +1,136 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calendarPageRLId"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/white"
+    tools:context=".activities.HomeActivity"
+    android:layout_marginTop="@dimen/common_header_height"
+    tools:showIn="@layout/wrapper_home">
+
+    <LinearLayout
+        android:layout_below="@id/toolbar"
+        android:id="@+id/calendarPageLLId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <include android:id="@+id/calendar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            layout="@layout/calendar" />
+
+       <!-- <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/calendar"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="85dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/calendar_small_tab_outer"
+                    android:orientation="horizontal"
+                    android:padding="0.5dp">
+
+                    <TextView
+                        android:id="@+id/calendarSummaryTVId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/calendar_small_tab_active_inner"
+                        android:gravity="center"
+                        android:onClick="onTabSelect"
+                        android:tag="SELECTED"
+                        android:text="ACTIVITIES"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_tab_small_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="85dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/calendar_small_tab_outer"
+                    android:orientation="horizontal"
+                    android:padding="0.5dp">
+
+                    <TextView
+                        android:id="@+id/calendarAccountsTVId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/calendar_small_tab_inactive_inner"
+                        android:gravity="center"
+                        android:onClick="onTabSelect"
+                        android:tag=""
+                        android:text="ACCOUNTS"
+                        android:textColor="@color/finappleTheme"
+                        android:textSize="@dimen/text_tab_small_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="85dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/calendar_small_tab_outer"
+                    android:orientation="horizontal"
+                    android:padding="0.5dp">
+
+                    <TextView
+                        android:id="@+id/calendarBudgetsTVId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/calendar_small_tab_inactive_inner"
+                        android:gravity="center"
+                        android:onClick="onTabSelect"
+                        android:tag=""
+                        android:text="BUDGETS"
+                        android:textColor="@color/tab_text"
+                        android:textSize="@dimen/text_tab_small_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="85dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/calendar_small_tab_outer"
+                    android:orientation="horizontal"
+                    android:padding="0.5dp">
+
+                    <TextView
+                        android:id="@+id/calendarSchedulesTVId"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/calendar_small_tab_inactive_inner"
+                        android:gravity="center"
+                        android:onClick="onTabSelect"
+                        android:tag=""
+                        android:text="SCHEDULES"
+                        android:textColor="@color/tab_text"
+                        android:textSize="@dimen/text_tab_small_size" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            &lt;!&ndash;<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/calendarTabsVPId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />&ndash;&gt;
+
+        </LinearLayout>
+-->    </LinearLayout>
+
+</RelativeLayout>

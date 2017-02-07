@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Calendar New-->
+    <!-- Calendar -->
+    <string name="sunday_text">Sun</string>
+    <string name="monday_text">Mon</string>
+    <string name="tuesday_text">Tue</string>
+    <string name="wednesday_text">Wed</string>
+    <string name="thursday_text">Thu</string>
+    <string name="friday_text">Fri</string>
+    <string name="saturday_text">Sat</string>
+    <string name="no_events">No events</string>
+
+    <string name="invalid_attribute">Failed to create Calendar,\n\n invalid value of Attributes!,\n Please review &amp; try again!</string>
+    <string name="invalid_count">Failed to create Calendar,\n\n invalid eventCount,\n Please enter between 1 to 3</string>
+    <!--New Calendar-->
+
+
     <string name="app_name">finappl</string>
     <string name="app_name_main">finappl</string>
     <string name="approx">+</string>
@@ -14,4 +30,24 @@
     <!--OAuth-->
     <string name="OAUTH_TOKEN">408563722391-slic7tpnog3085j4mvc154tal2fov7ge.apps.googleusercontent.com</string>
     <string name="facebook_app_id">568619596494743</string>
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam eget ligula eu lectus lobortis condimentum.</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="weather_icon">Weather icon</string>
+    <string name="event_icon">Event icon</string>
+    <string name="add_thing">일정추가</string>
+    <string name="daily">일간</string>
+    <string name="weekly">주간</string>
+    <string name="monthly">월간</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="month">월</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!--calendar key-->
+    <item type="id" name="calendar_date_cell_date_key" />
+    <item type="id" name="calendar_date_cell_key" />
 </resources>

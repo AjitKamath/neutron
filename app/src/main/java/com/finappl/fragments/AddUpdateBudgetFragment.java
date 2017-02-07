@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.dbServices.BudgetsDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.models.AccountMO;
@@ -175,7 +175,7 @@ public class AddUpdateBudgetFragment extends DialogFragment {
         SelectRepeatFragment fragment = new SelectRepeatFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_REPEAT);
     }
 
@@ -196,7 +196,7 @@ public class AddUpdateBudgetFragment extends DialogFragment {
         SelectSpentonFragment fragment = new SelectSpentonFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_SPENTON);
     }
 
@@ -218,7 +218,7 @@ public class AddUpdateBudgetFragment extends DialogFragment {
         SelectAccountFragment fragment = new SelectAccountFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_ACCOUNT);
     }
 
@@ -239,7 +239,7 @@ public class AddUpdateBudgetFragment extends DialogFragment {
         SelectCategoryFragment fragment = new SelectCategoryFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_CATEGORY);
     }
 
@@ -260,7 +260,7 @@ public class AddUpdateBudgetFragment extends DialogFragment {
         SelectAmountFragment fragment = new SelectAmountFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_AMOUNT);
     }
 
@@ -390,8 +390,8 @@ public class AddUpdateBudgetFragment extends DialogFragment {
     private void closeFragment(String messageStr){
         close();
 
-        ((CalendarActivity)getActivity()).showSnacks(messageStr, OK, Snackbar.LENGTH_SHORT);
-        ((CalendarActivity)getActivity()).initActivity();
+        ((HomeActivity)getActivity()).showSnacks(messageStr, OK, Snackbar.LENGTH_SHORT);
+        //((HomeActivity)getActivity()).initActivity();
     }
 
     private AccountMO getAccountOnId(List<AccountMO> accountList, String accountIdStr){

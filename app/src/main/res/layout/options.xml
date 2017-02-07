@@ -8,7 +8,7 @@
     android:gravity="right"
     android:orientation="vertical"
     android:padding="@dimen/screen_components_padding_from_walls"
-    app:theme="@style/FinappleTheme">
+    app:theme="@style/AppTheme">
 
     <!-- header -->
 

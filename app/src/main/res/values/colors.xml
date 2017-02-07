@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--New Calendar-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- Calendar -->
+    <color name="calendar_month_text">#757575</color>
+    <color name="blue_circle_calendar">@color/colorPrimaryDark</color>
+    <color name="news_icon_background">#E3E3E3</color>
+    <!--New Calendar-->
+
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
@@ -213,10 +224,10 @@
     <color name="formTextLight">#FFFFFF</color>
     <color name="formSpinnerDark">#808080</color>
 
-    <!--Calendar grid colors-->
+    <!--Calendar calendar_month colors-->
     <color name="calendarThisMonthDate">#000000</color>
     <color name="calendarNextPrevMonthDate">#A0A0A9</color>
-    <color name="calendarTodayDate">#9932CC</color>
+    <color name="calendarTodayDate">#FF3200</color>
     <color name="calendarOneTap">@color/finappleTheme</color>
     <color name="calendarTwoTap">#64B5F6</color>
     <color name="calendarNoTap">#FFFFFF</color>
@@ -302,5 +313,13 @@
     <color name="textview_bg_light">#FFFFFF</color>
     <color name="textview_click_dark">#FF6347</color>
     <color name="textview_bg_dark">#727272</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="blue_50">#780000FF</color>
+    <color name="white_20">#32FFFFFF</color>
+    <color name="black_10">#16000000</color>
+
+    <!--fab-->
+    <color name="fab">#FF6347</color>
 
 </resources>

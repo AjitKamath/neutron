@@ -97,7 +97,7 @@ public class AddActivityFragment extends DialogFragment {
 
                 AddUpdateTransactionFragment fragment = new AddUpdateTransactionFragment();
                 fragment.setArguments(bundle);
-                fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+                fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
                 fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSACTION);
 
                 //close the current fragment
@@ -132,7 +132,7 @@ public class AddActivityFragment extends DialogFragment {
 
         AddUpdateTransferFragment fragment = new AddUpdateTransferFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSFER);
 
         //close the current fragment
@@ -153,7 +153,7 @@ public class AddActivityFragment extends DialogFragment {
 
         AddUpdateBudgetFragment fragment = new AddUpdateBudgetFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_ADD_UPDATE_BUDGET);
 
         //close the current fragment

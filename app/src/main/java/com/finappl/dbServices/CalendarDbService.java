@@ -25,6 +25,7 @@ import com.finappl.utils.IdGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -839,7 +840,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             sb.append(" FROM ");
             sb.append(DB_TABLE_SPENTON);
             sb.append(" WHERE ");
-            sb.append(" SPNT_ON = '" + budget.getBUDGET_GRP_ID() + "' ");
+            sb.append(" SPNT_ON_ID = '" + budget.getBUDGET_GRP_ID() + "' ");
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1005,6 +1006,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             String transferDateStr = tempDateStrArr[2] + "-" + tempDateStrArr[1] + "-" + tempDateStrArr[0];
 
             MonthLegend monthLegendObj;
+            Double totalAmount = 0.0;
             ActivitiesMO activities;
             List<TransferMO> transfersList;
             TransferMO transfer;
@@ -1038,6 +1040,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                 }
 
                 activities = monthLegendObj.getActivities();
+                totalAmount = amt+ monthLegendObj.getTransactionsAmountTotal();
 
                 if (activities == null) {
                     activities = new ActivitiesMO();
@@ -1053,12 +1056,14 @@ public class CalendarDbService extends SQLiteOpenHelper {
             else {
                 monthLegendObj = new MonthLegend();
                 activities = new ActivitiesMO();
+                totalAmount = amt;
                 transfersList = new ArrayList<>();
             }
 
             transfersList.add(transfer);
             activities.setTransfersList(transfersList);
             monthLegendObj.setActivities(activities);
+            monthLegendObj.setTransfersAmountTotal(totalAmount);
 
             monthLegendMap.put(transferDateStr, monthLegendObj);
         }
@@ -1067,7 +1072,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return monthLegendMap;
     }
 
-    public Map<String, MonthLegend> getTransactions(Map<String, MonthLegend> monthLegendMap, String[] dateStrArr, String userId) {
+    private Map<String, MonthLegend> getTransactions(Map<String, MonthLegend> monthLegendMap, String[] dateStrArr, String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -1197,7 +1202,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
                     monthLegendObj = new MonthLegend();
                 }
 
-                totalAmount = monthLegendObj.getTotalAmount();
+                totalAmount = monthLegendObj.getTransactionsAmountTotal();
                 if ("EXPENSE".equalsIgnoreCase(tranTypeStr)) {
                     totalAmount -= amt;
                 } else {
@@ -1233,7 +1238,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             transactionsList.add(transaction);
             activities.setTransactionsList(transactionsList);
             monthLegendObj.setActivities(activities);
-            monthLegendObj.setTotalAmount(totalAmount);
+            monthLegendObj.setTransactionsAmountTotal(totalAmount);
 
             monthLegendMap.put(tranDateStr, monthLegendObj);
         }
@@ -1242,11 +1247,11 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return monthLegendMap;
     }
 
-    public Map<String, MonthLegend> getMonthLegendOnDate(String dateStr, String userId) {
+    public Map<String, MonthLegend> getMonthLegendOnDate(Calendar calendar, int monthsRange, String userId) {
         Map<String, MonthLegend> monthLegendMap = new HashMap<>();
 
         //get start and end dates based on the passed date
-        String dateStrArr[] = DateTimeUtil.getStartAndEndMonthDates(dateStr, MONTHS_RANGE / 2);
+        String dateStrArr[] = DateTimeUtil.getStartAndEndMonthDates(calendar, monthsRange/2);
 
         //get all the transactions on the passed date
         monthLegendMap = getTransactions(monthLegendMap, dateStrArr, userId);

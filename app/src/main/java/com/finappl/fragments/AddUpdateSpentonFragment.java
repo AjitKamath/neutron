@@ -181,7 +181,7 @@ public class AddUpdateSpentonFragment extends DialogFragment {
         SelectImageFragment fragment = new SelectImageFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_IMAGE);
     }
 

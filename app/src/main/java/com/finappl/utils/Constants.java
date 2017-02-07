@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 public final class Constants{
     //DB
     public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 87;
+    public static final int DB_VERSION = 88;
 
     //Admin properties
     public static final String ADMIN_USERID = "ADMIN";
@@ -60,8 +60,9 @@ public final class Constants{
     public static final String REPEATS_YEAR = "YEAR";
     public static final String REPEATS = REPEATS_DAY+"-"+R.drawable.day+","+REPEATS_WEEK+"-"+R.drawable.week+","+REPEATS_MONTH+"-"+R.drawable.month+","+REPEATS_YEAR+"-"+R.drawable.year;
     public static final String DEFAULT_REPEAT = REPEATS_MONTH;
-    public static final String COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-INR-INDIAN-"+R.drawable.india+",USA-1-DOLLAR-USD-AMERICAN-"+R.drawable.united_states+",AUSTRALIA-61-DOLLAR-AUD-AMERICAN-"+R.drawable.australia;
+    public static final String COUNTRIES_CURRENCIES = "INDIA-91-RUPEE-₹-INDIAN-"+R.drawable.india+",USA-1-DOLLAR-$-AMERICAN-"+R.drawable.united_states+",AUSTRALIA-61-DOLLAR-$-AMERICAN-"+R.drawable.australia;
     public static final String DEFAULT_COUNTRY = "INDIA";
+    public static final Integer[] MONTH_IMAGES_ARR = new Integer[]{R.drawable.january, R.drawable.february, R.drawable.march, R.drawable.april, R.drawable.may, R.drawable.june, R.drawable.july, R.drawable.august, R.drawable.september, R.drawable.october, R.drawable.november, R.drawable.december};
 
     public static final String DEFAULT_QUICK_TRANSACTION_NAME = "Quick Transaction";
 

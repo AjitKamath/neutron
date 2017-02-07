@@ -1,11 +1,17 @@
 package com.finappl.fragments;
 
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
@@ -28,7 +34,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.adapters.LoginViewPagerAdapter;
 import com.finappl.customComponents.CustomLoginViewPager;
 import com.finappl.dbServices.AuthorizationDbService;
@@ -39,7 +45,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
@@ -57,6 +65,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -114,19 +123,34 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
     public void loginWithGoogle() {
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getResources().getString(R.string.OAUTH_TOKEN))
                 .requestEmail()
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                .enableAutoManage((CalendarActivity)getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
+                .enableAutoManage((HomeActivity)getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                         FinappleUtility.showSnacks(loginRL, "Connection Failed", OK, Snackbar.LENGTH_INDEFINITE);
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();*/
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
+                .requestScopes(new Scope(Scopes.PLUS_ME))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                .enableAutoManage((HomeActivity)getActivity(), this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                // .addApi(Plus.API, null)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                // .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .build();
 
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -451,7 +475,7 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
 
                         mProgressDialog.setMessage("All done !");
 
-                        ((CalendarActivity)getActivity()).initActivity();
+                        //((HomeActivity)getActivity()).initActivity();
 
                         hideProgressDialog();
                         dismiss();
@@ -464,7 +488,7 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
         //Add the user to the local database with default values
         authorizationDbService.addNewUser(user);
 
-        ((CalendarActivity)getActivity()).initActivity();
+        //((HomeActivity)getActivity()).initActivity();
 
         hideProgressDialog();
         dismiss();
@@ -474,7 +498,7 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
             nameStr = "";
         }
 
-        ((CalendarActivity)getActivity()).showSnacks("Hi "+nameStr+" !", "", Snackbar.LENGTH_SHORT);
+        ((HomeActivity)getActivity()).showSnacks("Hi "+nameStr+" !", "", Snackbar.LENGTH_SHORT);
     }
 
     public void onSignUpFailed(Task<AuthResult> task, UserMO user) {
@@ -561,13 +585,20 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.Con
         closeAuthenticators();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        closeAuthenticators();
+    }
+
     private void closeAuthenticators(){
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
 
         if(mGoogleApiClient != null){
-            mGoogleApiClient.stopAutoManage((CalendarActivity)getActivity());
+            mGoogleApiClient.stopAutoManage((HomeActivity)getActivity());
             mGoogleApiClient.disconnect();
         }
     }

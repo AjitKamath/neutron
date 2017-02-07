@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.adapters.calendar.CalendarMonth1GridViewAdapter;
 import com.finappl.adapters.calendar.CalendarMonth2GridViewAdapter;
 import com.finappl.adapters.calendar.CalendarMonth3GridViewAdapter;
@@ -46,7 +46,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
     //User
     private UserMO loggedInUserObj;
 
-    private CalendarActivity.GridViewItemClickListener gridViewItemClickListener;
+    private HomeActivity.GridViewItemClickListener gridViewItemClickListener;
 
     private CalendarMonth3GridViewAdapter calendarMonth3GridViewAdapter;
     private CalendarMonth2GridViewAdapter calendarMonth2GridViewAdapter;
@@ -65,7 +65,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
 
     public CalendarMonthsViewPagerAdapter(Context context, Date selectedDate, String centralMateMonthStr,
                                           UserMO loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
-                                          CalendarActivity.GridViewItemClickListener gridViewItemClickListener) {
+                                          HomeActivity.GridViewItemClickListener gridViewItemClickListener) {
         this.mContext = context;
         this.selectedDate = selectedDate;
         this.centralMateMonthStr = centralMateMonthStr;
@@ -100,7 +100,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
         int month = cal.get(Calendar.MONTH) + 1;
         int year = cal.get(Calendar.YEAR);
 
-        GridView currGrid = (GridView) layout.findViewById(R.id.calendarPageCalendarCurrGVId);
+        GridView currGrid = null;//(GridView) layout.findViewById(R.id.calendarPageCalendarCurrGVId);
 
         SimpleDateFormat sdf1 = new SimpleDateFormat(JAVA_DATE_FORMAT);
         Date junkDate;
@@ -156,12 +156,12 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (gridViewItemClickListener != null) {
-                    LinearLayout calendarGridDayContentLL = (LinearLayout) view.findViewById(R.id.calendarGridDayContentLLId);
+                    LinearLayout calendarGridDayContentLL = null;//(LinearLayout) view.findViewById(R.id.calendarGridDayContentLLId);
                     //get backGround color of the currently clicked date cell
                     int dateCellColor = (int) calendarGridDayContentLL.getTag();
 
                     //get the date text color
-                    TextView gridcell_date_TV = (TextView) view.findViewById(R.id.calendarDayTVId);
+                    TextView gridcell_date_TV = null;//(TextView) view.findViewById(R.id.calendarDayTVId);
 
                     Date selectedDateFromCell = null;
                     try{
@@ -192,8 +192,8 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
 
                         oldMonthView = calendarGridDayContentLL;
 
-                        TextView transactIndicatorView = (TextView) calendarGridDayContentLL.findViewById(R.id.calendarCellTransactionIndicatorTVId);
-                        TextView transferIndicatorView = (TextView) calendarGridDayContentLL.findViewById(R.id.calendarCellTransferIndicatorTVId);
+                        TextView transactIndicatorView = null;//(TextView) calendarGridDayContentLL.findViewById(R.id.calendarCellTransactionIndicatorTVId);
+                        TextView transferIndicatorView = null;//(TextView) calendarGridDayContentLL.findViewById(R.id.calendarCellTransferIndicatorTVId);
 
                         //if the activity add_update_transaction indicator or add_update_transfer indicator both are invisible...then do not proceed to ViewTransaction page..because there's no point
                         if (transactIndicatorView.getVisibility() == View.GONE && transferIndicatorView.getVisibility() == View.GONE) {
@@ -201,7 +201,7 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
                             return;
                         }
 
-                        //TODO: show fragment with all the transactions and transfers on this calendar_day
+                        //TODO: show fragment with all the transactions and transfers on this calendar_day__
 
                     } else if (dateCellColor == R.drawable.circle_calendar_no_tap) {
                         Log.i(CLASS_NAME, "New Date Cell is clicked(" + selectedDateFromCell + "), Checking whether its an prev month or next month date");

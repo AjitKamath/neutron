@@ -829,6 +829,11 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 5. update spenton implemented.
 6. delete spenton implemented.
 
+<--Git Push on 11-dec-2016-->
+
+7-feb-2017
+1. complete redesign of calendar & home activity.
+
 ------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE
 2. impl delete transaction, cat, spent on, account, transfer(take care of things like..impacts..should check for existing transactions with the same cat.

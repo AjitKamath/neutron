@@ -27,7 +27,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.TransfersDbService;
 import com.finappl.models.AccountMO;
@@ -278,7 +278,7 @@ public class AddUpdateTransferFragment extends DialogFragment {
 
 
     private void closeFragment(String messageStr){
-        ((CalendarActivity)getActivity()).initActivity();
+        //((HomeActivity)getActivity()).initActivity();
 
         dismiss();
     }
@@ -296,7 +296,7 @@ public class AddUpdateTransferFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putInt("year", year);
         args.putInt("month", month-1);
-        args.putInt("calendar_day", day);
+        args.putInt("calendar_day__", day);
         date.setArguments(args);
         /**
          * Set Call back to capture selected date
@@ -313,7 +313,7 @@ public class AddUpdateTransferFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putInt("year", year);
         args.putInt("month", month-1);
-        args.putInt("calendar_day", day);
+        args.putInt("calendar_day__", day);
         date.setArguments(args);
         /**
          * Set Call back to capture selected date
@@ -633,7 +633,7 @@ public class AddUpdateTransferFragment extends DialogFragment {
         SelectAmountFragment fragment = new SelectAmountFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_AMOUNT);
     }
 
@@ -654,7 +654,7 @@ public class AddUpdateTransferFragment extends DialogFragment {
         SelectRepeatFragment fragment = new SelectRepeatFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_REPEAT);
     }
 
@@ -677,7 +677,7 @@ public class AddUpdateTransferFragment extends DialogFragment {
         SelectAccountFragment fragment = new SelectAccountFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_ACCOUNT);
     }
 
@@ -700,7 +700,7 @@ public class AddUpdateTransferFragment extends DialogFragment {
         SelectAccountFragment fragment = new SelectAccountFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_SELECT_ACCOUNT);
     }
 
@@ -719,7 +719,7 @@ public class AddUpdateTransferFragment extends DialogFragment {
         ConfirmFragment fragment = new ConfirmFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_CONFIRM);
     }
 

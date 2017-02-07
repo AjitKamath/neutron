@@ -1,299 +1,112 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/calendarPageRLId"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calendar_rl"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:background="@color/white"
-    app:theme="@style/FinappleTheme">
+    android:layout_height="wrap_content"
+    tools:context=".activities.MainActivity">
 
-    <LinearLayout
-        android:id="@+id/calendarPageLLId"
+    <ImageView
+        android:id="@+id/calendar_background_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
+        android:scaleType="centerCrop"
+        android:src="@drawable/february" />
+
+    <LinearLayout
+        android:id="@+id/calendar_months_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="3">
 
         <LinearLayout
-            android:id="@+id/calendarHeaderId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/finappleThemeDark"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <LinearLayout
-                android:background="@color/finappleThemeDark"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="left|center_vertical"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_marginRight="15dp"
-                            android:id="@+id/calendarMonthTVId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center|right"
-                            android:maxLength="9"
-                            android:text="NOVEMBER"
-                            android:textColor="@drawable/textview_touch_month_year"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/calendarYearTVId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:maxLength="4"
-                            android:text="2016"
-                            android:textColor="@drawable/textview_touch_month_year"
-                            android:textSize="18sp" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/calendarHeaderAddIVId"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="-85dp"
-                        android:padding="10dp"
-                        android:src="@drawable/plus_white" />
-
-                    <ImageView
-                        android:id="@+id/calendarOptionsIVId"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:padding="10dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:src="@drawable/options_white_new" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/calendarFLID"
-            android:background="@color/finappleThemeDark"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/calendarHeaderId"
-            android:paddingTop="10dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <GridLayout
-                android:background="@color/finappleThemeDark"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:columnCount="7"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:rowCount="1">
-
-                <TextView
-                    android:layout_width="@dimen/calendar_week_name_width"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="MON"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/calendar_week_name_text_size" />
-
-                <TextView
-                    android:layout_width="@dimen/calendar_week_name_width"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="TUE"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/calendar_week_name_text_size" />
-
-                <TextView
-                    android:layout_width="@dimen/calendar_week_name_width"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="WED"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/calendar_week_name_text_size" />
-
-                <TextView
-                    android:layout_width="@dimen/calendar_week_name_width"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="THU"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/calendar_week_name_text_size" />
-
-                <TextView
-                    android:layout_width="@dimen/calendar_week_name_width"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="FRI"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/calendar_week_name_text_size" />
-
-                <TextView
-                    android:layout_width="@dimen/calendar_week_name_width"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="SAT"
-                    android:textColor="@color/Orange"
-                    android:textSize="@dimen/calendar_week_name_text_size" />
-
-                <TextView
-                    android:layout_width="@dimen/calendar_week_name_width"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="SUN"
-                    android:textColor="@color/Orange"
-                    android:textSize="@dimen/calendar_week_name_text_size" />
-            </GridLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v4.view.ViewPager
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_below="@+id/calendarFLID"
-                android:id="@+id/calendarDatesVPId"
-                android:layout_width="wrap_content"
-                android:layout_height="200dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_below="@+id/calendarDatesVPId"
+            android:layout_weight="1"
+            android:background="@drawable/radial_gradient_grey"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
+            <TextView
+                android:id="@+id/calendar_prev_month_month_tv"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:text="JAN"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
 
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:background="@drawable/calendar_small_tab_outer"
-                    android:orientation="horizontal"
-                    android:padding="0.5dp">
+            <TextView
+                android:id="@+id/calendar_prev_month_year_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="2017"
+                android:textColor="@color/white"
+                android:textSize="8sp" />
+        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/calendarSummaryTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@drawable/calendar_small_tab_active_inner"
-                        android:gravity="center"
-                        android:onClick="onTabSelect"
-                        android:tag="SELECTED"
-                        android:text="ACTIVITIES"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_tab_small_size" />
-                </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radial_gradient_grey"
+            android:gravity="center"
+            android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:background="@drawable/calendar_small_tab_outer"
-                    android:orientation="horizontal"
-                    android:padding="0.5dp">
+            <TextView
+                android:id="@+id/calendar_current_month_month_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FEB"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/calendarAccountsTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@drawable/calendar_small_tab_inactive_inner"
-                        android:gravity="center"
-                        android:onClick="onTabSelect"
-                        android:tag=""
-                        android:text="ACCOUNTS"
-                        android:textColor="@color/finappleTheme"
-                        android:textSize="@dimen/text_tab_small_size" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:background="@drawable/calendar_small_tab_outer"
-                    android:orientation="horizontal"
-                    android:padding="0.5dp">
-
-                    <TextView
-                        android:id="@+id/calendarBudgetsTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@drawable/calendar_small_tab_inactive_inner"
-                        android:gravity="center"
-                        android:onClick="onTabSelect"
-                        android:tag=""
-                        android:text="BUDGETS"
-                        android:textColor="@color/tab_text"
-                        android:textSize="@dimen/text_tab_small_size" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:background="@drawable/calendar_small_tab_outer"
-                    android:orientation="horizontal"
-                    android:padding="0.5dp">
-
-                    <TextView
-                        android:id="@+id/calendarSchedulesTVId"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@drawable/calendar_small_tab_inactive_inner"
-                        android:gravity="center"
-                        android:onClick="onTabSelect"
-                        android:tag=""
-                        android:text="SCHEDULES"
-                        android:textColor="@color/tab_text"
-                        android:textSize="@dimen/text_tab_small_size" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/calendarTabsVPId"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/calendar_current_month_year_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="2017"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/radial_gradient_grey"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/calendar_next_month_month_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MAR"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/calendar_next_month_year_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="2017"
+                android:textColor="@color/white"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
-    <!--<include layout="@layout/calendar_fab" />-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/calendar_vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/calendar_months_ll" />
+
 </RelativeLayout>

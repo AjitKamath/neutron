@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.adapters.AccountsFragmentListViewAdapter;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.models.AccountMO;
@@ -132,7 +132,7 @@ public class AccountsFragment extends DialogFragment {
         DeleteConfirmFragment fragment = new DeleteConfirmFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_DELETE_CONFIRM);
     }
 
@@ -153,7 +153,7 @@ public class AccountsFragment extends DialogFragment {
         AddUpdateAccountFragment fragment = new AddUpdateAccountFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_ADD_UPDATE_ACCOUNT);
     }
 
@@ -227,6 +227,6 @@ public class AccountsFragment extends DialogFragment {
         calendarDbService.deleteAccount(account.getACC_ID());
         FinappleUtility.showSnacks(accountsRL, "Account deleted !", OK, Snackbar.LENGTH_LONG);
         setupPage();
-        ((CalendarActivity)getActivity()).initActivity();
+        //((HomeActivity)getActivity()).initActivity();
     }
 }

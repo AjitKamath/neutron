@@ -18,6 +18,9 @@ import com.finappl.R;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_AMOUNT_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
@@ -29,6 +32,11 @@ import static com.finappl.utils.Constants.UN_IDENTIFIED_PARENT_FRAGMENT;
 public class SelectAmountFragment extends DialogFragment implements View.OnClickListener{
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
+
+    /*components*/
+    @InjectView(R.id.amount_curr_tv)
+    TextView amount_curr_tv;
+    /*components*/
 
     //components
     private LinearLayout amountLL;
@@ -55,6 +63,7 @@ public class SelectAmountFragment extends DialogFragment implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.select_amount, container);
+        ButterKnife.inject(this, view);
 
         Dialog d = getDialog();
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -72,6 +81,7 @@ public class SelectAmountFragment extends DialogFragment implements View.OnClick
     }
 
     private void setupPage() {
+        amount_curr_tv.setText(loggedInUserObj.getCUR_CODE());
         amountAmountTV.setText(amountStr);
     }
 
@@ -225,8 +235,8 @@ public class SelectAmountFragment extends DialogFragment implements View.OnClick
 
         Dialog d = getDialog();
         if (d!=null) {
-            int width = 500;
-            int height = 800;
+            int width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             d.getWindow().setLayout(width, height);
         }
     }

@@ -11,99 +11,163 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.adapters.CalendarMonthsViewPagerAdapter;
 import com.finappl.adapters.CalendarTabsViewPagerAdapter;
+import com.finappl.adapters.CalendarViewPagerAdapter;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
 import com.finappl.fragments.AddActivityFragment;
 import com.finappl.fragments.BudgetDetailsFragment;
-import com.finappl.fragments.DatePickerFragment;
-import com.finappl.fragments.LoginFragment;
 import com.finappl.fragments.OptionsFragment;
 import com.finappl.fragments.TransactionDetailsFragment;
 import com.finappl.fragments.TransferDetailsFragment;
 import com.finappl.models.AccountMO;
 import com.finappl.models.BudgetMO;
+import com.finappl.models.CalendarMonth;
 import com.finappl.models.MonthLegend;
 import com.finappl.models.TransactionMO;
 import com.finappl.models.TransferMO;
-import com.finappl.models.UserMO;
-import com.finappl.utils.Constants;
 import com.finappl.utils.DateTimeUtil;
 import com.finappl.utils.FinappleUtility;
-import com.google.firebase.auth.FirebaseAuth;
+import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.Optional;
 
 import static com.finappl.utils.Constants.BUDGET_OBJECT;
 import static com.finappl.utils.Constants.FRAGMENT_ADD_ACTIVITY;
 import static com.finappl.utils.Constants.FRAGMENT_BUDGET_DETAILS;
-import static com.finappl.utils.Constants.FRAGMENT_LOGIN;
 import static com.finappl.utils.Constants.FRAGMENT_OPTIONS;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION_DETAILS;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSFER_DETAILS;
-import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF_1;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.MONTH_IMAGES_ARR;
 import static com.finappl.utils.Constants.SELECTED_DATE;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
 import static com.finappl.utils.Constants.TRANSFER_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
 
 @SuppressLint("NewApi")
-public class CalendarActivity extends AppCompatActivity {
+public class HomeActivity extends CommonActivity {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext = this;
 
+    //------------------------------------------------------------------
+    /*components*/
+    @InjectView(R.id.calendar_background_iv)
+    ImageView calendar_background_iv;
+
+    @InjectView(R.id.calendar_prev_month_month_tv)
+    TextView calendar_prev_month_month_tv;
+
+    @InjectView(R.id.calendar_prev_month_year_tv)
+    TextView calendar_prev_month_year_tv;
+
+    @InjectView(R.id.calendar_current_month_month_tv)
+    TextView calendar_current_month_month_tv;
+
+    @InjectView(R.id.calendar_current_month_year_tv)
+    TextView calendar_current_month_year_tv;
+
+    @InjectView(R.id.calendar_next_month_month_tv)
+    TextView calendar_next_month_month_tv;
+
+    @InjectView(R.id.calendar_next_month_year_tv)
+    TextView calendar_next_month_year_tv;
+
+    @InjectView(R.id.calendar_vp)
+    ViewPager calendar_vp;
+    /*components*/
+
+    /*calendar*/
+    private static final int PAGE_LEFT = 0;
+    private static final int PAGE_MIDDLE = 1;
+    private static final int PAGE_RIGHT = 2;
+
+    private int selectedCalendarVPIndex = PAGE_MIDDLE;
+    private CalendarMonth[] calendarMonthsArr = new CalendarMonth[3];
+    /*calendar*/
+    //------------------------------------------------------------------
+
+    /*common components*/
+    @InjectView(R.id.wrapper_home_cl)
+    CoordinatorLayout wrapper_home_cl;
+
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout drawer_layout;
+
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @InjectView(R.id.nav_view)
+    NavigationView nav_view;
+
+    @InjectView(R.id.fabtoolbar)
+    FABToolbarLayout layout;
+
+    @InjectView(R.id.fabtoolbar_fab)
+    FloatingActionButton fabtoolbar_fab;
+
+    @InjectView(R.id.fab_transaction_ll)
+    LinearLayout fab_transaction_ll;
+
+    @InjectView(R.id.fab_transfer_ll)
+    LinearLayout fab_transfer_ll;
+    /*common components*/
+
     /*Components*/
+    @Optional
     @InjectView(R.id.calendarPageRLId)
     RelativeLayout calendarPageRL;
 
-    @InjectView(R.id.calendarMonthTVId)
-    TextView calendarMonthTV;
-
-    @InjectView(R.id.calendarYearTVId)
-    TextView calendarYearTV;
-
-    @InjectView(R.id.calendarSummaryTVId)
+    //@Optional
+    //@InjectView(R.id.calendarSummaryTVId)
     TextView calendarSummaryTV;
 
-    @InjectView(R.id.calendarAccountsTVId)
+    //@Optional
+    //@InjectView(R.id.calendarAccountsTVId)
     TextView calendarAccountsTV;
 
-    @InjectView(R.id.calendarBudgetsTVId)
+//    @Optional
+  //  @InjectView(R.id.calendarBudgetsTVId)
     TextView calendarBudgetsTV;
 
-    @InjectView(R.id.calendarSchedulesTVId)
+    //@Optional
+    //@InjectView(R.id.calendarSchedulesTVId)
     TextView calendarSchedulesTV;
     /*Components*/
 
-    //calendar
+    //content_home
     private String selectedDateStr = JAVA_DATE_FORMAT_SDF.format(new Date());
     private String currentFocusedMonthStr = JAVA_DATE_FORMAT_SDF_1.format(new Date());
 
@@ -111,31 +175,20 @@ public class CalendarActivity extends AppCompatActivity {
     private ViewPager viewPager, viewPagerMonths;
 
     //month legend
-    private Map<String, MonthLegend> monthLegendMap = new HashMap<String, MonthLegend>();
+    private Map<String, MonthLegend> monthLegendMap = new HashMap<>();
 
-    //back default_button counter
-    private Integer backButtonCounter = 0;
 
     //db services
     private Sqlite controller = new Sqlite(mContext);
     private CalendarDbService calendarDbService = new CalendarDbService(mContext);
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
 
-    //User
-    private UserMO loggedInUserObj;
-
     //Tabs
     private List<Integer> viewPagerTabsList = new ArrayList<>();
-    private List<TextView> tabHeadersList = new ArrayList<>();
 
     //view pager
     private CalendarTabsViewPagerAdapter calendarTabsViewPagerAdapter;
-    private CalendarMonthsViewPagerAdapter calendarMonthsViewPagerAdapter;
 
-    private int mSelectedPageIndex = 999;
-    private int oldScreenIndex;
-
-    private boolean ignore = false;
 
     //progress bar
     private ProgressDialog mProgressDialog;
@@ -144,7 +197,7 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.calendar);
+        setContentView(R.layout.activity_home);
         ButterKnife.inject(this);
 
         //this is to ensure the tables are in the db...actually calls the Sqlite class constructor..importance of this line is known only when the db is deleted and the app is run
@@ -152,31 +205,187 @@ public class CalendarActivity extends AppCompatActivity {
         controller.getWritableDatabase();
         Log.i(CLASS_NAME, "Initializing the application database ends");
 
-        initActivity();
+        fetchLedger();
+        initCalendarMonths();
+        setupCalendar();
+    }
 
-        //set font for all the text view
-        setFont(calendarPageRL);
+    public void fetchLedger() {
+        //get currently shown month, so as to get ledger for month -1, month, month +1 monhts
+        Calendar calendar = Calendar.getInstance();
 
-        if(loggedInUserObj == null){
-            forceLogin();
-            return;
+        if(calendarMonthsArr[PAGE_MIDDLE] != null){
+            calendar = calendarMonthsArr[PAGE_MIDDLE].getAdapter().getCurrentCalendar();
+        }
+
+        //get ledger
+        //the range for fetching the ledger is calendarMonthsArr.length+2 because, the user can see the dates(in grey) of the last+1 & next+1 month when he swipes to left/right
+        monthLegendMap = calendarDbService.getMonthLegendOnDate(calendar, calendarMonthsArr.length+2, user.getUSER_ID());
+    }
+
+    private void setupCalendar() {
+        CalendarViewPagerAdapter adapter = new CalendarViewPagerAdapter(this, calendarMonthsArr);
+        calendar_vp.setAdapter(adapter);
+        calendar_vp.setCurrentItem(PAGE_MIDDLE, false);
+        setupMonths();
+
+        calendar_vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            boolean loadCalendar;
+
+            @Override
+            public void onPageSelected(int position) {
+                selectedCalendarVPIndex = position;
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // the offset is zero when the swiping ends
+                loadCalendar = (positionOffset == 0 && positionOffsetPixels == 0);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            if(loadCalendar){
+                                // user swiped to right direction --> left page
+                                if (selectedCalendarVPIndex == PAGE_LEFT) {
+                                    calendarMonthsArr[2] = calendarMonthsArr[1];
+                                    calendarMonthsArr[1] = calendarMonthsArr[0];
+                                    fetchLedger();
+                                    calendarMonthsArr[0] = new CalendarMonth(calendarMonthsArr[0].getOffset()-1, mContext, monthLegendMap, user);
+
+                                }
+                                // user swiped to left direction --> right page
+                                else if (selectedCalendarVPIndex == PAGE_RIGHT) {
+                                    calendarMonthsArr[0] = calendarMonthsArr[1];
+                                    calendarMonthsArr[1] = calendarMonthsArr[2];
+                                    fetchLedger();
+                                    calendarMonthsArr[2] = new CalendarMonth(calendarMonthsArr[2].getOffset()+1, mContext, monthLegendMap, user);
+                                }
+
+                                //do something only if the month has been completely changed by the users swipe.
+                                //the onPageScrollStateChanged is called even if the user swipes a little bit and then leaves
+                                //in that  case nothing must be done. This can be ensured by checking for both selectedViewPagerIndex == LEFT|RIGHT
+                                if(selectedCalendarVPIndex == PAGE_LEFT || selectedCalendarVPIndex == PAGE_RIGHT){
+                                    calendar_vp.setCurrentItem(PAGE_MIDDLE, false);
+                                    refreshCalendar();
+                                }
+                            }
+                        }
+                    },100);
+                }
+            }
+        });
+    }
+
+    public void fetchUserWrapper(){
+        fetchUser();
+    }
+
+    public void refreshCalendar(){
+        CalendarViewPagerAdapter adapter = (CalendarViewPagerAdapter)calendar_vp.getAdapter();
+
+        //set the new calendarMonthsArr
+        adapter.setModel(calendarMonthsArr);
+        calendar_vp.getAdapter().notifyDataSetChanged();
+
+        setupMonths();
+    }
+
+    public void updateCalendarMonths(){
+        fetchLedger();
+
+        calendarMonthsArr[0] = new CalendarMonth(calendarMonthsArr[0].getOffset(), mContext, monthLegendMap, user);
+        calendarMonthsArr[1] = new CalendarMonth(calendarMonthsArr[1].getOffset(), mContext, monthLegendMap, user);
+        calendarMonthsArr[2] = new CalendarMonth(calendarMonthsArr[2].getOffset(), mContext, monthLegendMap, user);
+
+        setupCalendar();
+    }
+
+    @OnClick({R.id.calendar_prev_month_month_tv, R.id.calendar_prev_month_year_tv, R.id.calendar_current_month_month_tv, R.id.calendar_current_month_year_tv,
+            R.id.calendar_next_month_month_tv, R.id.calendar_next_month_year_tv})
+    public void onMonthClick(View view){
+        int id = view.getId();
+
+        switch(id){
+            case R.id.calendar_prev_month_month_tv : calendar_vp.setCurrentItem(PAGE_LEFT);
+                break;
+            case R.id.calendar_prev_month_year_tv : calendar_vp.setCurrentItem(PAGE_LEFT);
+                break;
+            case R.id.calendar_current_month_month_tv : //TODO:show date picker
+                break;
+            case R.id.calendar_current_month_year_tv : //TODO:show date picker
+                break;
+            case R.id.calendar_next_month_month_tv : calendar_vp.setCurrentItem(PAGE_RIGHT);
+                break;
+            case R.id.calendar_next_month_year_tv : calendar_vp.setCurrentItem(PAGE_RIGHT);
+                break;
         }
     }
 
-    public void getLoggedInUser() {
-        FirebaseAuth user = FirebaseAuth.getInstance();
-        if(user != null && user.getCurrentUser() != null && user.getCurrentUser().getUid() != null){
-            loggedInUserObj = authorizationDbService.getActiveUser(user.getCurrentUser().getUid());
+    private void setupMonths(){
+        CalendarMonth page = calendarMonthsArr[PAGE_MIDDLE];
 
-            //set if the user has verified his email
-            //loggedInUserObj.setEmailVerified(user.getCurrentUser().isEmailVerified());
+        Calendar calendar = Calendar.getInstance();
+
+        /*set the prev, current & next month*/
+        Formatter fmt = null;
+
+        //prev month
+        calendar.add(Calendar.MONTH, page.getOffset()-1);
+        fmt = new Formatter();
+        String prevMonthMonthStr = String.valueOf(fmt.format("%tb", calendar)).toUpperCase();
+        String prevMonthYearStr = String.valueOf(calendar.get(Calendar.YEAR));
+
+        //current month
+        calendar.add(Calendar.MONTH, 1);
+        fmt = new Formatter();
+        String currentMonthMonthStr = String.valueOf(fmt.format("%tb", calendar)).toUpperCase();
+        String currentMonthYearStr = String.valueOf(calendar.get(Calendar.YEAR));
+
+        //set background image for the month
+        //calendar_background_iv.setImageResource(MONTH_IMAGES_ARR[calendar.get(Calendar.MONTH)]);
+
+        //next month
+        calendar.add(Calendar.MONTH, 1);
+        fmt = new Formatter();
+        String nextMonthMonthStr = String.valueOf(fmt.format("%tb", calendar)).toUpperCase();
+        String nextMonthYearStr = String.valueOf(calendar.get(Calendar.YEAR));
+
+        fmt.close();
+
+        calendar_prev_month_month_tv.setText(prevMonthMonthStr);
+        calendar_prev_month_year_tv.setText(prevMonthYearStr);
+
+        calendar_current_month_month_tv.setText(currentMonthMonthStr);
+        calendar_current_month_year_tv.setText(currentMonthYearStr);
+
+        calendar_next_month_month_tv.setText(nextMonthMonthStr);
+        calendar_next_month_year_tv.setText(nextMonthYearStr);
+        /*set the prev, current & next month*/
+    }
+
+    public void changeMonth(boolean previousMonth){
+        if(previousMonth){
+            calendar_prev_month_month_tv.performClick();
         }
+        else{
+            calendar_next_month_month_tv.performClick();
+        }
+    }
+
+    private void initCalendarMonths() {
+        calendarMonthsArr[0] = new CalendarMonth(-1, mContext, monthLegendMap, user);
+        calendarMonthsArr[1] = new CalendarMonth(0, mContext, monthLegendMap, user);
+        calendarMonthsArr[2] = new CalendarMonth(1, mContext, monthLegendMap, user);
     }
 
     //progress bar
     public void showProgressDialog() {
         if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(CalendarActivity.this);
+            mProgressDialog = new ProgressDialog(HomeActivity.this);
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setCancelable(false);
         }
@@ -190,63 +399,6 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
-    public void initActivity(){
-        getLoggedInUser();
-
-        //Check if Obsolete since the app is going to be single screen app
-        if(getIntent().getExtras() != null && getIntent().getExtras().get("SELECTED_DATE") != null){
-            selectedDateStr = String.valueOf(getIntent().getExtras().get("SELECTED_DATE"));
-        }
-
-        String selectedDateStrArr[] = selectedDateStr.split("-");
-        if(selectedDateStrArr[0].length() == 1){
-            selectedDateStrArr[0] = "0"+ selectedDateStrArr[0];
-        }
-        if(selectedDateStrArr[1].length() == 1){
-            selectedDateStrArr[1] = "0"+ selectedDateStrArr[1];
-        }
-
-        //set current date
-        selectedDateStr = selectedDateStrArr[0]+"-"+selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
-
-        initUIComponents();
-
-        //set up calendar
-        currentFocusedMonthStr = selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
-        setUpCalendar();
-
-        //call notification service
-        //TODO: this might not be required in production
-        setUpServices();
-    }
-
-    public void forceLogin() {
-        // close existing dialog fragments
-        FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_LOGIN);
-        if (frag != null) {
-            manager.beginTransaction().remove(frag).commit();
-        }
-
-        LoginFragment fragment = new LoginFragment();
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
-        fragment.show(manager, FRAGMENT_LOGIN);
-
-        loggedInUserObj = null;
-        monthLegendMap = null;
-
-        setUpCalendar();
-        setUpTabs();
-    }
-
-    private void fetchMonthLegend(){
-        if(loggedInUserObj  == null){
-            return;
-        }
-
-        monthLegendMap = calendarDbService.getMonthLegendOnDate(currentFocusedMonthStr, loggedInUserObj.getUSER_ID());
-    }
-
     private void showTransactionDetails(TransactionMO transaction){
         FragmentManager manager = getFragmentManager();
         Fragment frag = manager.findFragmentByTag(FRAGMENT_TRANSACTION_DETAILS);
@@ -257,11 +409,11 @@ public class CalendarActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(TRANSACTION_OBJECT, transaction);
-        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
 
         TransactionDetailsFragment fragment = new TransactionDetailsFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_TRANSACTION_DETAILS);
     }
 
@@ -275,11 +427,11 @@ public class CalendarActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(TRANSFER_OBJECT, transfer);
-        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
 
         TransferDetailsFragment fragment = new TransferDetailsFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_TRANSFER_DETAILS);
     }
 
@@ -293,21 +445,21 @@ public class CalendarActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(BUDGET_OBJECT, budget);
-        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
 
         BudgetDetailsFragment fragment = new BudgetDetailsFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_BUDGET_DETAILS);
     }
 
     public void setUpTabs() {
-        calendarTabsViewPagerAdapter = new CalendarTabsViewPagerAdapter(mContext, viewPagerTabsList, DateTimeUtil.cleanUpDate(selectedDateStr), loggedInUserObj, monthLegendMap,
-                        new ListViewItemClickListener() {
+        calendarTabsViewPagerAdapter = new CalendarTabsViewPagerAdapter(mContext, viewPagerTabsList, DateTimeUtil.cleanUpDate(selectedDateStr), user, monthLegendMap,
+                        new HomeActivity.ListViewItemClickListener() {
                             @Override
                             public void onListItemClick(Object listItemObject) {
                                 if(listItemObject instanceof TransactionMO){
-                                    showTransactionDetails((TransactionMO) listItemObject);
+                           showTransactionDetails((TransactionMO) listItemObject);
                                 }
                                 else if(listItemObject instanceof TransferMO){
                                     showTransferDetails((TransferMO) listItemObject);
@@ -363,119 +515,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpCalendar() {
-        if(viewPagerMonths == null){
-            return;
-        }
-
-        setUpHeader();
-        fetchMonthLegend();
-        setUpTabs();
-        calendarMonthsViewPagerAdapter = new CalendarMonthsViewPagerAdapter(mContext, DateTimeUtil.cleanUpDate(selectedDateStr), currentFocusedMonthStr, loggedInUserObj, monthLegendMap,
-                new GridViewItemClickListener() {
-                    @Override
-                    public void onGridViewItemClick(Object position) {
-                        SimpleDateFormat sdf = new SimpleDateFormat(JAVA_DATE_FORMAT);
-                        selectedDateStr = sdf.format(calendarMonthsViewPagerAdapter.selectedDate);
-                        setUpTabs();
-
-                        if(calendarMonthsViewPagerAdapter.doMonthChange) {
-                            String selectedDateStrArr[] = selectedDateStr.split("-");
-                            currentFocusedMonthStr = selectedDateStrArr[1]+"-"+selectedDateStrArr[2];
-                            setUpCalendar();
-                        }
-                    }
-                });
-        viewPagerMonths.setAdapter(calendarMonthsViewPagerAdapter);
-        viewPagerMonths.setCurrentItem(calendarMonthsViewPagerAdapter.getCount() / 2, false);
-        calendarMonthsViewPagerAdapter.notifyDataSetChanged();
-        oldScreenIndex = viewPagerMonths.getCurrentItem();
-
-        /*Dynamically set height of the month view pager since view pager WRAP_CONTENT is useless*/
-        ViewGroup.LayoutParams params = viewPagerMonths.getLayoutParams();
-        params.height = getResources().getInteger(R.integer.calendar_grid_cell_size)*6;
-        viewPagerMonths.setLayoutParams(params);
-
-        viewPagerMonths.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                //for all the left/right swipes in the limited loaded months
-                if(!ignore) {
-                    currentFocusedMonthStr = calendarMonthsViewPagerAdapter.currentFocusedMonthStr;
-                    String dateMonthStrArr[] = currentFocusedMonthStr.split("-");
-
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
-
-                    Calendar cal = Calendar.getInstance(Locale.getDefault());
-                    cal.set(Integer.parseInt(dateMonthStrArr[1]), Integer.parseInt(dateMonthStrArr[0]) - 1, 1);
-                    cal.add(Calendar.MONTH, position-oldScreenIndex);
-
-                    int month = cal.get(Calendar.MONTH) + 1;
-                    int year = cal.get(Calendar.YEAR);
-
-                    currentFocusedMonthStr = "";
-                    if (month < 10) {
-                        currentFocusedMonthStr = "0";
-                    }
-                    currentFocusedMonthStr += month + "-" + year;
-                    setUpHeader();
-                    calendarMonthsViewPagerAdapter.currentFocusedMonthStr = currentFocusedMonthStr;
-                }
-                else{
-                    ignore = false;
-                }
-
-                mSelectedPageIndex = position;
-                oldScreenIndex = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager.SCROLL_STATE_IDLE) {
-                    currentFocusedMonthStr = calendarMonthsViewPagerAdapter.currentFocusedMonthStr;
-                    String dateMonthStrArr[] = currentFocusedMonthStr.split("-");
-
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
-                    String monthAndYear = sdf.format(new Date());
-
-                    Calendar cal = Calendar.getInstance(Locale.getDefault());
-                    cal.set(Integer.parseInt(dateMonthStrArr[1]), Integer.parseInt(dateMonthStrArr[0]) - 1, 1);
-
-                    boolean refreshCalendar = false;
-                    //if the user has reached to the beginning of the limited loaded months
-                    if (mSelectedPageIndex == 0) {
-                        cal.add(Calendar.MONTH, -1);
-                        refreshCalendar = true;
-                    }
-                    //if the user has reached to the end of the limited loaded months
-                    else if (mSelectedPageIndex == calendarMonthsViewPagerAdapter.getCount() - 1) {
-                        cal.add(Calendar.MONTH, +1);
-                        refreshCalendar = true;
-                    }
-
-                    if(refreshCalendar){
-                        int month = cal.get(Calendar.MONTH) + 1;
-                        int year = cal.get(Calendar.YEAR);
-
-                        currentFocusedMonthStr = "";
-                        if (month < 10) {
-                            currentFocusedMonthStr = "0";
-                        }
-                        currentFocusedMonthStr += month + "-" + year;
-                        ignore = true;
-                        setUpCalendar();
-                        return;
-                    }
-                }
-            }
-        });
-    }
-
-    private void selectTab(int position){
+    private void selectTab(int position){/*
         TextView calendarSummaryTV = (TextView) this.findViewById(R.id.calendarSummaryTVId);
         TextView calendarAccountsTV = (TextView) this.findViewById(R.id.calendarAccountsTVId);
         TextView calendarBudgetsTV = (TextView) this.findViewById(R.id.calendarBudgetsTVId);
@@ -520,15 +560,15 @@ public class CalendarActivity extends AppCompatActivity {
 
             default:
                 showToast("Tab Error !!");
-        }
+        }*/
     }
 
-    public void onTabSelect(View view) {
+    public void onTabSelect(View view) {/*
         Log.i(CLASS_NAME, "Son....i created you. The tab implementation...although sucks, a very own of my creation. And you work !! selected: " + view.getId());
 
-        /*if(checkAndCollapseFab()){
+        *//*if(checkAndCollapseFab()){
             return;
-        }*/
+        }*//*
 
         TextView calendarSummaryTV = (TextView) this.findViewById(R.id.calendarSummaryTVId);
         TextView calendarAccountsTV = (TextView) this.findViewById(R.id.calendarAccountsTVId);
@@ -579,9 +619,9 @@ public class CalendarActivity extends AppCompatActivity {
             default:
                 showToast("Tab Error !!");
         }
-    }
+    */}
 
-    private void deselectAllTabs() {
+    private void deselectAllTabs() {/*
         TextView calendarSummaryTV = (TextView) this.findViewById(R.id.calendarSummaryTVId);
         TextView calendarAccountsTV = (TextView) this.findViewById(R.id.calendarAccountsTVId);
         TextView calendarBudgetsTV = (TextView) this.findViewById(R.id.calendarBudgetsTVId);
@@ -602,7 +642,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         calendarSchedulesTV.setBackgroundResource(R.drawable.calendar_small_tab_inactive_inner);
         calendarSchedulesTV.setTextColor(calendarSummaryTV.getResources().getColor(R.color.finappleTheme));
-        calendarSchedulesTV.setTag("");
+        calendarSchedulesTV.setTag("");*/
     }
 
     private void setUpServices() {
@@ -612,43 +652,23 @@ public class CalendarActivity extends AppCompatActivity {
         sendBroadcast(notifIntent);
     }
 
-    @OnClick(R.id.calendarOptionsIVId)
     public void showOptions(){
         FragmentManager fragmentManager = getFragmentManager();
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
 
         OptionsFragment fragment = new OptionsFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
 
         transaction.add(fragment, FRAGMENT_OPTIONS);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    private void initUIComponents() {
-        //view pager
-        viewPager = (ViewPager) this.findViewById(R.id.calendarTabsVPId);
-        viewPagerMonths = (ViewPager) this.findViewById(R.id.calendarDatesVPId);
-
-        viewPagerTabsList.clear();
-        viewPagerTabsList.add(R.layout.calendar_tab_activities);
-        viewPagerTabsList.add(R.layout.calendar_tab_accounts);
-        viewPagerTabsList.add(R.layout.calendar_tab_budgets);
-        viewPagerTabsList.add(R.layout.calendar_tab_schedules);
-
-        tabHeadersList.clear();
-        tabHeadersList.add(calendarSummaryTV);
-        tabHeadersList.add(calendarAccountsTV);
-        tabHeadersList.add(calendarBudgetsTV);
-        tabHeadersList.add(calendarSchedulesTV);
-    }
-
-    @OnClick(R.id.calendarHeaderAddIVId)
     public void addActivity(){
         FragmentManager fragmentManager = getFragmentManager();
 
@@ -656,22 +676,15 @@ public class CalendarActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_DATE, selectedDateStr);
-        bundle.putSerializable(LOGGED_IN_OBJECT, loggedInUserObj);
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
 
         AddActivityFragment fragment = new AddActivityFragment();
         fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.PopupDialogTheme);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
 
         transaction.add(fragment, FRAGMENT_ADD_ACTIVITY);
         transaction.addToBackStack(null);
         transaction.commit();
-    }
-
-    private void setUpHeader() {
-        String tempSelectedDateStrArr[] = currentFocusedMonthStr.split("-");
-
-        calendarMonthTV.setText(Constants.MONTHS_ARRAY[Integer.parseInt(tempSelectedDateStrArr[0])-1]);
-        calendarYearTV.setText(tempSelectedDateStrArr[1]);
     }
 
     protected void showToast(String string){
@@ -687,7 +700,7 @@ public class CalendarActivity extends AppCompatActivity {
         FinappleUtility.showSnacks(calendarPageRL, messageStr, doWhatStr, duration);
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         if(backButtonCounter == 0){
             backButtonCounter++;
@@ -700,28 +713,28 @@ public class CalendarActivity extends AppCompatActivity {
             startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(startMain);
         }
-    }
+    }*/
 
-    @OnClick({R.id.calendarMonthTVId, R.id.calendarYearTVId})
+    /*@OnClick({R.id.calendar_current_month_month_tv, R.id.calendar_current_month_year_tv})
     public void showDatePicker() {
         String tempStr = JAVA_DATE_FORMAT_SDF.format(DateTimeUtil.cleanUpDate(selectedDateStr));
         String tempStrArr[] = tempStr.split("-");
 
         DatePickerFragment date = new DatePickerFragment();
-        /**
+        *//**
          * Set Up Current Date Into dialog
-         */
+         *//*
         Bundle args = new Bundle();
         args.putInt("year", Integer.parseInt(tempStrArr[2]));
         args.putInt("month", Integer.parseInt(tempStrArr[1])-1);
-        args.putInt("calendar_day", Integer.parseInt(tempStrArr[0]));
+        args.putInt("calendar_day__", Integer.parseInt(tempStrArr[0]));
         date.setArguments(args);
-        /**
+        *//**
          * Set Call back to capture selected date
-         */
+         *//*
         date.setCallBack(datePickerListener);
         date.show(getFragmentManager(), "Date Picker");
-    }
+    }*/
 
     private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -743,28 +756,15 @@ public class CalendarActivity extends AppCompatActivity {
 
             String tempStr = dayStr+"-"+monthStr+"-"+year;
 
-            //no need to set up calendar if there's no change in the selected date
+            //no need to set up content_home if there's no change in the selected date
             if(!tempStr.equalsIgnoreCase(selectedDateStr)){
                 selectedDateStr = tempStr;
 
-                //change calendar accordingly
-                setUpCalendar();
+                //change content_home accordingly
+                //setupCalendar();
             }
         }
     };
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //activityResumed();
-
-        getLoggedInUser();
-
-        //TODO: enable this oce the Firebase supports email verification check
-        /*if(!loggedInUserObj.isEmailVerified()){
-            showSnacks(EMAIL_NOT_VERIFIED, VERIFY_EMAIL);
-        }*/
-    }
 
     @Override
     protected void onPause() {
@@ -778,6 +778,46 @@ public class CalendarActivity extends AppCompatActivity {
 
     public interface GridViewItemClickListener {
         void onGridViewItemClick(Object position);
+    }
+
+    @Override
+    protected Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    @Override
+    protected DrawerLayout getDrawer_layout() {
+        return drawer_layout;
+    }
+
+    @Override
+    protected NavigationView getNav_view() {
+        return nav_view;
+    }
+
+    @Override
+    protected FABToolbarLayout getLayout() {
+        return layout;
+    }
+
+    @Override
+    protected FloatingActionButton getFabtoolbar_fab() {
+        return fabtoolbar_fab;
+    }
+
+    @Override
+    protected LinearLayout getFab_transaction_ll() {
+        return fab_transaction_ll;
+    }
+
+    @Override
+    protected LinearLayout getFab_transfer_ll() {
+        return fab_transfer_ll;
+    }
+
+    @Override
+    protected CoordinatorLayout getWrapper_home_cl() {
+        return wrapper_home_cl;
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font

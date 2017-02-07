@@ -6,5 +6,5 @@
 
     <integer name="fragmentAnimationTime">5000</integer>
 
-    <integer name="calendar_grid_cell_size">90</integer>
+    <integer name="calendar_grid_cell_size">100</integer>
 </resources>

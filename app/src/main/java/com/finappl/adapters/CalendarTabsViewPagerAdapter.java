@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.activities.CalendarActivity;
+import com.finappl.activities.HomeActivity;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.models.AccountMO;
 import com.finappl.models.ActivitiesMO;
@@ -40,7 +40,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     private List<Integer> layoutsList;
     private Map<String, MonthLegend> monthLegendMap;
     private Date selectedDate;
-    private CalendarActivity.ListViewItemClickListener listViewItemClickListener;
+    private HomeActivity.ListViewItemClickListener listViewItemClickListener;
 
     //db services
     private CalendarDbService calendarDbService;
@@ -63,7 +63,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
 
     public CalendarTabsViewPagerAdapter(Context context, List<Integer> layoutsList, Date selectedDate
             , UserMO loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
-                                        CalendarActivity.ListViewItemClickListener listViewItemClickListener) {
+                                        HomeActivity.ListViewItemClickListener listViewItemClickListener) {
         this.mContext = context;
         this.layoutsList = layoutsList;
         this.selectedDate = selectedDate;
@@ -151,29 +151,29 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
 
     private void setUpActivitiesTab(ViewGroup layout) {
         TextView calendarNoActivityTV = (TextView) layout.findViewById(R.id.calendarNoActivityTVId);
-        ListView calendarActivityLV = (ListView) layout.findViewById(R.id.calendarActivityLVId);
+        ListView CalendarActivity_NEWLV = (ListView) layout.findViewById(R.id.CalendarActivity_NEWLVId);
 
         if (!hasSummary) {
-            Log.i(CLASS_NAME, "No activities to show on this calendar_day(" + JAVA_DATE_FORMAT_SDF.format(selectedDate) + ")");
+            Log.i(CLASS_NAME, "No activities to show on this calendar_day__(" + JAVA_DATE_FORMAT_SDF.format(selectedDate) + ")");
 
             calendarNoActivityTV.setText("No Activities");
             calendarNoActivityTV.setTextColor(mContext.getResources().getColor(R.color.DarkGray));
-            calendarActivityLV.setVisibility(View.GONE);
+            CalendarActivity_NEWLV.setVisibility(View.GONE);
             return;
         }
 
         CalendarActivitiesSectionListViewAdapter consolAdapter =
                 new CalendarActivitiesSectionListViewAdapter(mContext, monthLegendMap.get(JAVA_DATE_FORMAT_SDF.format(selectedDate)).getActivities(), loggedInUserObj);
-        calendarActivityLV.setAdapter(consolAdapter);
-        calendarActivityLV.setOnItemClickListener(listViewClickListener);
+        CalendarActivity_NEWLV.setAdapter(consolAdapter);
+        CalendarActivity_NEWLV.setOnItemClickListener(listViewClickListener);
 
         //if there are no summary on the selected date then show no add_update_transaction/add_update_transfer text
         if (consolAdapter != null & consolAdapter.getCount() != 0) {
             calendarNoActivityTV.setVisibility(View.GONE);
-            calendarActivityLV.setVisibility(View.VISIBLE);
+            CalendarActivity_NEWLV.setVisibility(View.VISIBLE);
         } else {
             calendarNoActivityTV.setVisibility(View.VISIBLE);
-            calendarActivityLV.setVisibility(View.GONE);
+            CalendarActivity_NEWLV.setVisibility(View.GONE);
         }
     }
 
@@ -209,7 +209,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         ListView budgetsLV = (ListView) layout.findViewById(R.id.budgetsLVId);
 
         if (!hasBudgets) {
-            Log.e(CLASS_NAME, "No Budgets for this calendar_day/week/month/year !!");
+            Log.e(CLASS_NAME, "No Budgets for this calendar_day__/week/month/year !!");
 
             calendarNoBudgetsTV.setText("No Budgets");
             calendarNoBudgetsTV.setTextColor(mContext.getResources().getColor(R.color.DarkGray));
@@ -221,7 +221,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         budgetsLV.setAdapter(calendarBudgetsAdapter);
         budgetsLV.setOnItemClickListener(listViewClickListener);
 
-        //if there are budgets for this calendar_day/week/month/year
+        //if there are budgets for this calendar_day__/week/month/year
         if (calendarBudgetsAdapter != null & calendarBudgetsAdapter.getCount() != 0) {
             calendarNoBudgetsTV.setVisibility(View.GONE);
             budgetsLV.setVisibility(View.VISIBLE);

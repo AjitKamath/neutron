@@ -4,7 +4,7 @@
 3. End 2 End Adding of a Transfer (must include scheduling & repeating)                                         (14-nov-16 to 20-nov-16).    (COMPLETED on 14-nov-16)
 4. End 2 End of List, Display, Edit & Delete a Transfer from Calendar Summary                                   (21-nov-16 to 27-nov-16).    (COMPLETED on 16-nov-16)
 5. Login & signup using email, google & facebook                                                                (28-nov-16 to 04-dec-16).    (COMPLETED on 04-dec-16)
-6. View, Add, Edit, Delete the Categories, Accounts & Spent Ons                                                 (05-dec-16 to 18-dec-16).
+6. View, Add, Edit, Delete the Categories, Accounts & Spent Ons                                                 (05-dec-16 to 18-dec-16).    (COMPLETED on 11-dec-16)
 7. Re-engineering calendar.                                                                                     (19-dec-16 to 31-dec-16).
 
 

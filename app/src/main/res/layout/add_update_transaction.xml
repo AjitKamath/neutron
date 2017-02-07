@@ -7,7 +7,7 @@
     android:layout_margin="@dimen/screen_components_padding_from_walls"
     android:gravity="right"
     android:orientation="vertical"
-    app:theme="@style/FinappleTheme">
+    app:theme="@style/AppTheme">
 
     <!-- header -->
 
@@ -104,27 +104,28 @@
 
 
                 <LinearLayout
+                    android:background="@drawable/edit_text_border_light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/transactionContentCurrencyTVId"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:background="@drawable/edit_text_border_light"
                         android:clickable="false"
                         android:gravity="bottom"
-                        android:text="USD"
+                        android:text="$"
                         android:tag="CURRENCY"
                         android:textColor="@color/white"
-                        android:textSize="15sp" />
+                        android:textSize="@dimen/text_form_text_size" />
 
                     <TextView
+                        android:layout_marginLeft="2dp"
                         android:id="@+id/transactionContentAmountTVId"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_border_light"
                         android:gravity="center"
                         android:text="0"
                         android:inputType="numberDecimal"
@@ -226,7 +227,7 @@
                             android:layout_height="wrap_content"
                             android:text="CATEGORY"
                             android:textColor="@color/formHeadingTextDark"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/text_form_header_size" />
 
                     </LinearLayout>
 
@@ -281,7 +282,7 @@
                             android:layout_height="wrap_content"
                             android:text="ACCOUNT"
                             android:textColor="@color/formHeadingTextDark"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/text_form_header_size" />
 
                     </LinearLayout>
 
@@ -333,7 +334,7 @@
                                 android:id="@+id/transactionContentAccountCurrencyTVId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="INR"
+                                android:text="$"
                                 android:textColor="@color/finappleCurrencyCodeColor"
                                 android:textSize="@dimen/spinner_text_size_secondary" />
 
@@ -403,7 +404,7 @@
                             android:layout_height="wrap_content"
                             android:text="EXPENSE / INCOME"
                             android:textColor="@color/formHeadingTextDark"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/text_form_header_size" />
 
                     </LinearLayout>
 
@@ -478,7 +479,7 @@
                             android:layout_height="wrap_content"
                             android:text="SPENT ON"
                             android:textColor="@color/formHeadingTextDark"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/text_form_header_size" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -547,7 +548,7 @@
                             android:layout_height="wrap_content"
                             android:text="NOTES"
                             android:textColor="@color/formHeadingTextDark"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/text_form_header_size" />
 
                     </LinearLayout>
 
@@ -614,7 +615,7 @@
                             android:layout_height="wrap_content"
                             android:text="REPEAT"
                             android:textColor="@color/formHeadingTextDark"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/text_form_header_size" />
 
                         <Switch
                             android:layout_marginLeft="5dp"
@@ -707,7 +708,7 @@
                             android:layout_height="wrap_content"
                             android:text="NOTIFY"
                             android:textColor="@color/formHeadingTextDark"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/text_form_header_size" />
 
                     </LinearLayout>
 
@@ -815,7 +816,7 @@
                             android:layout_height="wrap_content"
                             android:text="SCHEDULE UNTIL"
                             android:textColor="@color/formHeadingTextDark"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/text_form_header_size" />
 
                     </LinearLayout>
 
