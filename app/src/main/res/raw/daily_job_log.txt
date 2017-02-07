@@ -834,6 +834,12 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 7-feb-2017
 1. complete redesign of calendar & home activity.
 
+<--Git Push on 7-feb-2017-->
+
+8-feb-2017
+1. added unnecessary files to git ignore.
+2. created local branch dev_branch for development.
+
 ------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE
 2. impl delete transaction, cat, spent on, account, transfer(take care of things like..impacts..should check for existing transactions with the same cat.
