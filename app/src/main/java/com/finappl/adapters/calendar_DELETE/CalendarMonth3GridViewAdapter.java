@@ -1,6 +1,5 @@
-package com.finappl.adapters.calendar;
+package com.finappl.adapters.calendar_DELETE;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.finappl.R;
 import com.finappl.models.MonthLegend;
 import com.finappl.models.UserMO;
-import com.finappl.utils.FinappleUtility;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +28,7 @@ import static com.finappl.utils.Constants.UI_FONT;
  * Created by ajit on 8/1/15.
  */
 // Inner Class
-public class CalendarMonth2GridViewAdapter extends BaseAdapter {
+public class CalendarMonth3GridViewAdapter extends BaseAdapter {
     private final String CLASS_NAME = this.getClass().getName();
 
     private final Context mContext;
@@ -61,11 +59,8 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
 
     private UserMO loggedInUser;
 
-    //progress bar
-    private ProgressDialog mProgressDialog;
-
     // Days in Current Month
-    public CalendarMonth2GridViewAdapter(Context context, Map<String, MonthLegend> monthLegendMap, int month, int year, Date dateToPreselect, UserMO loggedInUser) {
+    public CalendarMonth3GridViewAdapter(Context context, Map<String, MonthLegend> monthLegendMap, int month, int year, Date dateToPreselect, UserMO loggedInUser) {
         super();
         this.mContext = context;
         list = new ArrayList<>();
@@ -265,8 +260,8 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             mHolder.calendarCellSchTransactionIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellSchTransactionIndicatorTVId);
             mHolder.calendarCellTransactionIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellTransactionIndicatorTVId);
             mHolder.calendarCellTransferIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellTransferIndicatorTVId);
-            mHolder.calendarCellSchTransferIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellSchTransferIndicatorTVId);
-*/
+            mHolder.calendarCellSchTransferIndicatorTV = (TextView) convertView.findViewById(R.id.calendarCellSchTransferIndicatorTVId);*/
+
             convertView.setTag(layoutResourceId, mHolder);
         } else {
             mHolder = (ViewHolder) convertView.getTag(layoutResourceId);

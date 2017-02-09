@@ -839,6 +839,8 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 8-feb-2017
 1. added unnecessary files to git ignore.
 2. created local branch dev_branch for development.
+3. month header implemented.
+4. next and prev month using arrows in header.
 
 ------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE

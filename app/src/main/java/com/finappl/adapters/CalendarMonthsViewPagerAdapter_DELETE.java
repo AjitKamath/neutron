@@ -16,9 +16,9 @@ import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.activities.HomeActivity;
-import com.finappl.adapters.calendar.CalendarMonth1GridViewAdapter;
-import com.finappl.adapters.calendar.CalendarMonth2GridViewAdapter;
-import com.finappl.adapters.calendar.CalendarMonth3GridViewAdapter;
+import com.finappl.adapters.calendar_DELETE.CalendarMonth1GridViewAdapter;
+import com.finappl.adapters.calendar_DELETE.CalendarMonth2GridViewAdapter;
+import com.finappl.adapters.calendar_DELETE.CalendarMonth3GridViewAdapter;
 import com.finappl.models.MonthLegend;
 import com.finappl.models.UserMO;
 
@@ -36,7 +36,7 @@ import static com.finappl.utils.Constants.MONTHS_RANGE;
 /**
  * Created by ajit on 30/9/15.
  */
-public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
+public class CalendarMonthsViewPagerAdapter_DELETE extends PagerAdapter {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
 
@@ -63,9 +63,9 @@ public class CalendarMonthsViewPagerAdapter extends PagerAdapter {
     //progress bar
     private ProgressDialog mProgressDialog;
 
-    public CalendarMonthsViewPagerAdapter(Context context, Date selectedDate, String centralMateMonthStr,
-                                          UserMO loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
-                                          HomeActivity.GridViewItemClickListener gridViewItemClickListener) {
+    public CalendarMonthsViewPagerAdapter_DELETE(Context context, Date selectedDate, String centralMateMonthStr,
+                                                 UserMO loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
+                                                 HomeActivity.GridViewItemClickListener gridViewItemClickListener) {
         this.mContext = context;
         this.selectedDate = selectedDate;
         this.centralMateMonthStr = centralMateMonthStr;

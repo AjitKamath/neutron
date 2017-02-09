@@ -24,15 +24,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Login -->
-
-
-        <!-- Notifications -->
-
-
-        <!-- Services -->
-
-
         <!-- Receivers -->
         <receiver android:name=".receivers.BootCompleteReceiver">
             <intent-filter>

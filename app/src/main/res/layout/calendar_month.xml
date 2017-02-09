@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/screen_components_padding_from_walls"
-    android:paddingRight="@dimen/screen_components_padding_from_walls">
+    android:orientation="vertical">
+
+    <include android:id="@+id/calendar_months_header"
+        layout="@layout/calendar_month_header" />
 
     <LinearLayout
         android:layout_width="match_parent"

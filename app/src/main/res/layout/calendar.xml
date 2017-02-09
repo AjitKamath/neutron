@@ -3,7 +3,7 @@
     android:id="@+id/calendar_rl"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.HomeActivity">
 
     <ImageView
         android:id="@+id/calendar_background_iv"
@@ -12,101 +12,10 @@
         android:scaleType="centerCrop"
         android:src="@drawable/february" />
 
-    <LinearLayout
-        android:id="@+id/calendar_months_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/radial_gradient_grey"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/calendar_prev_month_month_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="JAN"
-                android:textColor="@color/white"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/calendar_prev_month_year_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="2017"
-                android:textColor="@color/white"
-                android:textSize="8sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/radial_gradient_grey"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/calendar_current_month_month_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FEB"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/calendar_current_month_year_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="2017"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/radial_gradient_grey"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/calendar_next_month_month_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MAR"
-                android:textColor="@color/white"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/calendar_next_month_year_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="2017"
-                android:textColor="@color/white"
-                android:textSize="8sp" />
-        </LinearLayout>
-
-
-    </LinearLayout>
-
     <android.support.v4.view.ViewPager
         android:id="@+id/calendar_vp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/calendar_months_ll" />
+        android:layout_below="@+id/calendar_months_vp"/>
 
 </RelativeLayout>

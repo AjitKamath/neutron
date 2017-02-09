@@ -1,11 +1,20 @@
 ---------------------PLANNING---------------------
-1. End 2 End Adding of a Transaction (must include scheduling & repeating)                                      (10-oct-16 to 31-oct-16).    (COMPLETED on 31-oct-16)
-2. End 2 End of List, Display, Edit & Delete a Transaction from Calendar Summary                                (01-nov-16 to 13-nov-16).    (COMPLETED on 08-nov-16)
-3. End 2 End Adding of a Transfer (must include scheduling & repeating)                                         (14-nov-16 to 20-nov-16).    (COMPLETED on 14-nov-16)
-4. End 2 End of List, Display, Edit & Delete a Transfer from Calendar Summary                                   (21-nov-16 to 27-nov-16).    (COMPLETED on 16-nov-16)
-5. Login & signup using email, google & facebook                                                                (28-nov-16 to 04-dec-16).    (COMPLETED on 04-dec-16)
-6. View, Add, Edit, Delete the Categories, Accounts & Spent Ons                                                 (05-dec-16 to 18-dec-16).    (COMPLETED on 11-dec-16)
-7. Re-engineering calendar.                                                                                     (19-dec-16 to 31-dec-16).
+1.   End 2 End Adding of a Transaction (must include scheduling & repeating)                                      (10-oct-16 to 31-oct-16).    (COMPLETED on 31-oct-16)
+2.   End 2 End of List, Display, Edit & Delete a Transaction from Calendar Summary                                (01-nov-16 to 13-nov-16).    (COMPLETED on 08-nov-16)
+3.   End 2 End Adding of a Transfer (must include scheduling & repeating)                                         (14-nov-16 to 20-nov-16).    (COMPLETED on 14-nov-16)
+4.   End 2 End of List, Display, Edit & Delete a Transfer from Calendar Summary                                   (21-nov-16 to 27-nov-16).    (COMPLETED on 16-nov-16)
+5.   Login & signup using email, google & facebook                                                                (28-nov-16 to 04-dec-16).    (COMPLETED on 04-dec-16)
+6.   View, Add, Edit, Delete the Categories, Accounts & Spent Ons                                                 (05-dec-16 to 18-dec-16).    (COMPLETED on 11-dec-16)
+------------------------- CRUNCH ---------------------------------------------------------------------------------(12-dec-16 to 31-jan-17).
+7.   Re-engineering calendar.                                                                                     (01-feb-17 to 07-feb-17).    (COMPLETED on 07-feb-17)
+8.   Swipeable Months Headers in Home screen                                                                      (08-feb-17 to 09-feb-17).    (COMPLETED on 08-feb-17)
+9.   Re engineering Todays summary                                                                                (10-feb-17 to 12-feb-17).
+10.  Day Summary on click on date                                                                                 (13-feb-17 to 17-feb-17).
+11.  Registration & Login using PHP & MYSQL                                                                       (18-feb-17 to 23-feb-17).
+--------------------------ON VACATION-----------------------------------------------------------------------------(24-feb-17 to 06-mar-17).
+12.  Attach Manage Content screens to other options button on Home screen                                         (07-mar-17 to 12-mar-17).
+13.  My Account                                                                                                   (13-mar-17 to 19-mar-17).
+14.  Reports                                                                                                      (20-mar-17 to 02-apr-17).
 
 
 

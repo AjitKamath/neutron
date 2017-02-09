@@ -52,14 +52,12 @@ import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import butterknife.Optional;
 
 import static com.finappl.utils.Constants.BUDGET_OBJECT;
@@ -71,7 +69,6 @@ import static com.finappl.utils.Constants.FRAGMENT_TRANSFER_DETAILS;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF_1;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
-import static com.finappl.utils.Constants.MONTH_IMAGES_ARR;
 import static com.finappl.utils.Constants.SELECTED_DATE;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
 import static com.finappl.utils.Constants.TRANSFER_OBJECT;
@@ -87,35 +84,38 @@ public class HomeActivity extends CommonActivity {
     @InjectView(R.id.calendar_background_iv)
     ImageView calendar_background_iv;
 
-    @InjectView(R.id.calendar_prev_month_month_tv)
-    TextView calendar_prev_month_month_tv;
+//    @InjectView(R.id.calendar_prev_month_month_tv)
+//    TextView calendar_prev_month_month_tv;
+//
+//    @InjectView(R.id.calendar_prev_month_year_tv)
+//    TextView calendar_prev_month_year_tv;
+//
+//    @InjectView(R.id.calendar_current_month_month_tv)
+//    TextView calendar_current_month_month_tv;
+//
+//    @InjectView(R.id.calendar_current_month_year_tv)
+//    TextView calendar_current_month_year_tv;
+//
+//    @InjectView(R.id.calendar_next_month_month_tv)
+//    TextView calendar_next_month_month_tv;
+//
+//    @InjectView(R.id.calendar_next_month_year_tv)
+//    TextView calendar_next_month_year_tv;
 
-    @InjectView(R.id.calendar_prev_month_year_tv)
-    TextView calendar_prev_month_year_tv;
-
-    @InjectView(R.id.calendar_current_month_month_tv)
-    TextView calendar_current_month_month_tv;
-
-    @InjectView(R.id.calendar_current_month_year_tv)
-    TextView calendar_current_month_year_tv;
-
-    @InjectView(R.id.calendar_next_month_month_tv)
-    TextView calendar_next_month_month_tv;
-
-    @InjectView(R.id.calendar_next_month_year_tv)
-    TextView calendar_next_month_year_tv;
+    /*@InjectView(R.id.calendar_months_vp)
+    ViewPager calendar_months_vp;*/
 
     @InjectView(R.id.calendar_vp)
     ViewPager calendar_vp;
     /*components*/
 
     /*calendar*/
-    private static final int PAGE_LEFT = 0;
-    private static final int PAGE_MIDDLE = 1;
-    private static final int PAGE_RIGHT = 2;
+    //private static final int PAGE_LEFT = 0;
+    private static final int PAGE_MIDDLE = 2;
+    //private static final int PAGE_RIGHT = 2;
 
     private int selectedCalendarVPIndex = PAGE_MIDDLE;
-    private CalendarMonth[] calendarMonthsArr = new CalendarMonth[3];
+    private CalendarMonth[] calendarMonthsArr = new CalendarMonth[(PAGE_MIDDLE*2)+1];
     /*calendar*/
     //------------------------------------------------------------------
 
@@ -227,10 +227,13 @@ public class HomeActivity extends CommonActivity {
         CalendarViewPagerAdapter adapter = new CalendarViewPagerAdapter(this, calendarMonthsArr);
         calendar_vp.setAdapter(adapter);
         calendar_vp.setCurrentItem(PAGE_MIDDLE, false);
-        setupMonths();
+        calendar_vp.setClipToPadding(false);
+        calendar_vp.setPadding(50,0,50,0);
+        calendar_vp.setPageMargin(20);
 
         calendar_vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             boolean loadCalendar;
+            private int calendarScrollState = ViewPager.SCROLL_STATE_IDLE;
 
             @Override
             public void onPageSelected(int position) {
@@ -245,30 +248,37 @@ public class HomeActivity extends CommonActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                calendarScrollState = state;
+
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
                             if(loadCalendar){
+                                int max = calendarMonthsArr.length-1;
+                                int min = 0;
+
                                 // user swiped to right direction --> left page
-                                if (selectedCalendarVPIndex == PAGE_LEFT) {
-                                    calendarMonthsArr[2] = calendarMonthsArr[1];
-                                    calendarMonthsArr[1] = calendarMonthsArr[0];
+                                if (selectedCalendarVPIndex < PAGE_MIDDLE) {
+                                    for(int i=max; i>min; i--){
+                                        calendarMonthsArr[i] = calendarMonthsArr[i-1];
+                                    }
                                     fetchLedger();
-                                    calendarMonthsArr[0] = new CalendarMonth(calendarMonthsArr[0].getOffset()-1, mContext, monthLegendMap, user);
+                                    calendarMonthsArr[min] = new CalendarMonth(calendarMonthsArr[min].getOffset()-1, mContext, monthLegendMap, user);
 
                                 }
                                 // user swiped to left direction --> right page
-                                else if (selectedCalendarVPIndex == PAGE_RIGHT) {
-                                    calendarMonthsArr[0] = calendarMonthsArr[1];
-                                    calendarMonthsArr[1] = calendarMonthsArr[2];
+                                else if (selectedCalendarVPIndex > PAGE_MIDDLE) {
+                                    for(int i=min; i<max; i++){
+                                        calendarMonthsArr[i] = calendarMonthsArr[i+1];
+                                    }
                                     fetchLedger();
-                                    calendarMonthsArr[2] = new CalendarMonth(calendarMonthsArr[2].getOffset()+1, mContext, monthLegendMap, user);
+                                    calendarMonthsArr[max] = new CalendarMonth(calendarMonthsArr[max].getOffset()+1, mContext, monthLegendMap, user);
                                 }
 
                                 //do something only if the month has been completely changed by the users swipe.
                                 //the onPageScrollStateChanged is called even if the user swipes a little bit and then leaves
                                 //in that  case nothing must be done. This can be ensured by checking for both selectedViewPagerIndex == LEFT|RIGHT
-                                if(selectedCalendarVPIndex == PAGE_LEFT || selectedCalendarVPIndex == PAGE_RIGHT){
+                                if(selectedCalendarVPIndex != PAGE_MIDDLE){
                                     calendar_vp.setCurrentItem(PAGE_MIDDLE, false);
                                     refreshCalendar();
                                 }
@@ -285,101 +295,47 @@ public class HomeActivity extends CommonActivity {
     }
 
     public void refreshCalendar(){
+        //calendar
         CalendarViewPagerAdapter adapter = (CalendarViewPagerAdapter)calendar_vp.getAdapter();
 
         //set the new calendarMonthsArr
         adapter.setModel(calendarMonthsArr);
         calendar_vp.getAdapter().notifyDataSetChanged();
 
-        setupMonths();
+        //months
+        /*CalendarMonthsHeaderViewPagerAdapter_DELETE adapterMonths = (CalendarMonthsHeaderViewPagerAdapter_DELETE)calendar_months_vp.getAdapter();
+
+        //set the new calendarMonthsArr
+        adapterMonths.setModel(calendarMonthsArr);
+        calendar_months_vp.getAdapter().notifyDataSetChanged();*/
+
     }
 
     public void updateCalendarMonths(){
         fetchLedger();
 
-        calendarMonthsArr[0] = new CalendarMonth(calendarMonthsArr[0].getOffset(), mContext, monthLegendMap, user);
-        calendarMonthsArr[1] = new CalendarMonth(calendarMonthsArr[1].getOffset(), mContext, monthLegendMap, user);
-        calendarMonthsArr[2] = new CalendarMonth(calendarMonthsArr[2].getOffset(), mContext, monthLegendMap, user);
+        for(int i=0; i<calendarMonthsArr.length; i++){
+            calendarMonthsArr[i] = new CalendarMonth(calendarMonthsArr[i].getOffset(), mContext, monthLegendMap, user);
+        }
 
         setupCalendar();
     }
 
-    @OnClick({R.id.calendar_prev_month_month_tv, R.id.calendar_prev_month_year_tv, R.id.calendar_current_month_month_tv, R.id.calendar_current_month_year_tv,
-            R.id.calendar_next_month_month_tv, R.id.calendar_next_month_year_tv})
-    public void onMonthClick(View view){
-        int id = view.getId();
-
-        switch(id){
-            case R.id.calendar_prev_month_month_tv : calendar_vp.setCurrentItem(PAGE_LEFT);
-                break;
-            case R.id.calendar_prev_month_year_tv : calendar_vp.setCurrentItem(PAGE_LEFT);
-                break;
-            case R.id.calendar_current_month_month_tv : //TODO:show date picker
-                break;
-            case R.id.calendar_current_month_year_tv : //TODO:show date picker
-                break;
-            case R.id.calendar_next_month_month_tv : calendar_vp.setCurrentItem(PAGE_RIGHT);
-                break;
-            case R.id.calendar_next_month_year_tv : calendar_vp.setCurrentItem(PAGE_RIGHT);
-                break;
-        }
-    }
-
-    private void setupMonths(){
-        CalendarMonth page = calendarMonthsArr[PAGE_MIDDLE];
-
-        Calendar calendar = Calendar.getInstance();
-
-        /*set the prev, current & next month*/
-        Formatter fmt = null;
-
-        //prev month
-        calendar.add(Calendar.MONTH, page.getOffset()-1);
-        fmt = new Formatter();
-        String prevMonthMonthStr = String.valueOf(fmt.format("%tb", calendar)).toUpperCase();
-        String prevMonthYearStr = String.valueOf(calendar.get(Calendar.YEAR));
-
-        //current month
-        calendar.add(Calendar.MONTH, 1);
-        fmt = new Formatter();
-        String currentMonthMonthStr = String.valueOf(fmt.format("%tb", calendar)).toUpperCase();
-        String currentMonthYearStr = String.valueOf(calendar.get(Calendar.YEAR));
-
-        //set background image for the month
-        //calendar_background_iv.setImageResource(MONTH_IMAGES_ARR[calendar.get(Calendar.MONTH)]);
-
-        //next month
-        calendar.add(Calendar.MONTH, 1);
-        fmt = new Formatter();
-        String nextMonthMonthStr = String.valueOf(fmt.format("%tb", calendar)).toUpperCase();
-        String nextMonthYearStr = String.valueOf(calendar.get(Calendar.YEAR));
-
-        fmt.close();
-
-        calendar_prev_month_month_tv.setText(prevMonthMonthStr);
-        calendar_prev_month_year_tv.setText(prevMonthYearStr);
-
-        calendar_current_month_month_tv.setText(currentMonthMonthStr);
-        calendar_current_month_year_tv.setText(currentMonthYearStr);
-
-        calendar_next_month_month_tv.setText(nextMonthMonthStr);
-        calendar_next_month_year_tv.setText(nextMonthYearStr);
-        /*set the prev, current & next month*/
-    }
-
     public void changeMonth(boolean previousMonth){
         if(previousMonth){
-            calendar_prev_month_month_tv.performClick();
+            calendar_vp.setCurrentItem(calendar_vp.getCurrentItem()-1);
         }
         else{
-            calendar_next_month_month_tv.performClick();
+            calendar_vp.setCurrentItem(calendar_vp.getCurrentItem()+1);
         }
     }
 
     private void initCalendarMonths() {
-        calendarMonthsArr[0] = new CalendarMonth(-1, mContext, monthLegendMap, user);
-        calendarMonthsArr[1] = new CalendarMonth(0, mContext, monthLegendMap, user);
-        calendarMonthsArr[2] = new CalendarMonth(1, mContext, monthLegendMap, user);
+        int offset = PAGE_MIDDLE * -1;
+        for(int i=0; i<calendarMonthsArr.length; i++){
+            calendarMonthsArr[i] = new CalendarMonth(offset, mContext, monthLegendMap, user);
+            offset = offset+1;
+        }
     }
 
     //progress bar
@@ -459,7 +415,7 @@ public class HomeActivity extends CommonActivity {
                             @Override
                             public void onListItemClick(Object listItemObject) {
                                 if(listItemObject instanceof TransactionMO){
-                           showTransactionDetails((TransactionMO) listItemObject);
+                                    showTransactionDetails((TransactionMO) listItemObject);
                                 }
                                 else if(listItemObject instanceof TransferMO){
                                     showTransferDetails((TransferMO) listItemObject);

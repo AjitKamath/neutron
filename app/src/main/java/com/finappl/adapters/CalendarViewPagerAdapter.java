@@ -1,6 +1,7 @@
 package com.finappl.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import java.util.Map;
 import static com.finappl.R.id.calendar_date_cell_date_key;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.OK;
+import static com.finappl.utils.Constants.UI_FONT;
 
 /**
  * Created by ajit on 1/2/17.
@@ -61,8 +64,15 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View view =  inflater.inflate(R.layout.calendar_month, null);
         final GridView grid = (GridView) view.findViewById(R.id.calendar_month_gv);
+        final TextView calendar_month_header_month_month_tv = (TextView) view.findViewById(R.id.calendar_month_header_month_month_tv);
+        final TextView calendar_month_header_month_year_tv = (TextView) view.findViewById(R.id.calendar_month_header_month_year_tv);
+        final ImageView calendar_month_header_prev_iv = (ImageView) view.findViewById(R.id.calendar_month_header_prev_iv);
+        final ImageView calendar_month_header_next_iv = (ImageView) view.findViewById(R.id.calendar_month_header_next_iv);
 
         final CalendarMonth currentPage = calendarMonth[position];
+
+        calendar_month_header_month_month_tv.setText(currentPage.getMonth());
+        calendar_month_header_month_year_tv.setText(currentPage.getYear());
 
         grid.setAdapter(currentPage.getAdapter());
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,7 +96,22 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
             }
         });
 
+        calendar_month_header_prev_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) mContext).changeMonth(true);
+            }
+        });
+        calendar_month_header_next_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) mContext).changeMonth(false);
+            }
+        });
+
         container.addView(view);
+
+        setFont(container);
         return view;
     }
 
@@ -98,5 +123,23 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object obj) {
         return view == obj;
+    }
+
+    //method iterates over each component in the activity and when it finds a text view..sets its font
+    public void setFont(ViewGroup group) {
+        final Typeface font = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
+
+        int count = group.getChildCount();
+        View v;
+
+        for(int i = 0; i < count; i++) {
+            v = group.getChildAt(i);
+            if(v instanceof TextView) {
+                ((TextView) v).setTypeface(font);
+            }
+            else if(v instanceof ViewGroup) {
+                setFont((ViewGroup) v);
+            }
+        }
     }
 }

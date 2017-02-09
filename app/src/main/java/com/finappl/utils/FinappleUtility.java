@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
@@ -46,6 +47,7 @@ import static com.finappl.utils.Constants.FRAGMENT_LOGIN;
 import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.SHARED_PREF;
 import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
+import static com.finappl.utils.Constants.UI_FONT;
 
 public class FinappleUtility extends Activity{
 
