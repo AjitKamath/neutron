@@ -1,0 +1,59 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/calendar_summary_list_item_cv"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="8dp">
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/calendar_summary_list_item_heading_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="8sp"
+                android:text="TRANSACTIONS"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:id="@+id/calendar_summary_list_item_amount_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/finappleCurrencyNegColor"
+                android:textSize="8sp"
+                android:text="₹ 965"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/calendar_summary_list_item_no_transactions_tv"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="6sp"
+            android:textColor="@color/tertiaryText"
+            android:text="NO XXXXX YET"
+            android:gravity="center"/>
+
+        <ListView
+            android:dividerHeight="@dimen/divider_height"
+            android:layout_marginTop="10dp"
+            android:id="@+id/calendar_summary_list_item_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/calendar_summary_transactions_list_item" />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,10 +23,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.internal.Utility;
 import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.fragments.AddUpdateTransactionFragment;
+import com.finappl.fragments.AddUpdateTransferFragment;
 import com.finappl.models.TransactionMO;
+import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 import com.finappl.utils.TestData;
@@ -37,9 +41,12 @@ import java.text.ParseException;
 import java.util.Date;
 
 import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSACTION;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSFER;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
+import static com.finappl.utils.Constants.TRANSFER_OBJECT;
 
 public abstract class CommonActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
     private static final String CLASS_NAME = CommonActivity.class.getName();
@@ -140,19 +147,40 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View view) {
-        if(R.id.fab_transaction_ll == view.getId()){
-            getLayout().hide();
+        getLayout().hide();
 
+        if(R.id.fab_transaction_ll == view.getId()){
             TransactionMO transaction = new TransactionMO();
             transaction.setTRAN_DATE(new Date());
             showTransactionFragment(transaction);
         }
         else if(R.id.fab_transfer_ll == view.getId()){
+            TransferMO transfer = new TransferMO();
+            transfer.setTRNFR_DATE(new Date());
+            showAddTransferFragment(transfer);
         }
         else{
             Log.e(CLASS_NAME, "Could not identify the view");
-            //Utility.showSnacks(getWrapper_home_cl(), "Could not identify the view", OK, Snackbar.LENGTH_INDEFINITE);
+            FinappleUtility.showSnacks(getWrapper_home_cl(), "Could not identify the view", OK, Snackbar.LENGTH_INDEFINITE);
         }
+    }
+
+    private void showAddTransferFragment(TransferMO transfer){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_TRANSFER);
+
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(TRANSFER_OBJECT, transfer);
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
+
+        AddUpdateTransferFragment fragment = new AddUpdateTransferFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+        fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSFER);
     }
 
     private void showTransactionFragment(TransactionMO transactionModelObj) {

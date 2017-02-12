@@ -8,7 +8,7 @@
 ------------------------- CRUNCH ---------------------------------------------------------------------------------(12-dec-16 to 31-jan-17).
 7.   Re-engineering calendar.                                                                                     (01-feb-17 to 07-feb-17).    (COMPLETED on 07-feb-17)
 8.   Swipeable Months Headers in Home screen                                                                      (08-feb-17 to 09-feb-17).    (COMPLETED on 08-feb-17)
-9.   Re engineering Todays summary                                                                                (10-feb-17 to 12-feb-17).
+9.   Re engineering Todays summary                                                                                (10-feb-17 to 12-feb-17).    (COMPLETED on 12-feb-17)
 10.  Day Summary on click on date                                                                                 (13-feb-17 to 17-feb-17).
 11.  Registration & Login using PHP & MYSQL                                                                       (18-feb-17 to 23-feb-17).
 --------------------------ON VACATION-----------------------------------------------------------------------------(24-feb-17 to 06-mar-17).

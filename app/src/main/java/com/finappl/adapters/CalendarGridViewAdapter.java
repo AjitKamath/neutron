@@ -12,9 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.internal.Utility;
 import com.finappl.R;
-import com.finappl.models.MonthLegend;
+import com.finappl.models.DayLedger;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
@@ -43,11 +42,11 @@ public class CalendarGridViewAdapter extends BaseAdapter {
     private List<Integer> itemsList = new ArrayList<>();
     private List<Date> datesList = new ArrayList<>();
     private int monthOffset;
-    private Map<String, MonthLegend> ledger;
+    private Map<String, DayLedger> ledger;
     private UserMO user;
     private Date today = FinappleUtility.timeIgnoredDate(new Date());
 
-    public CalendarGridViewAdapter(Context context, int monthOffset,Map<String, MonthLegend> ledger, UserMO user) {
+    public CalendarGridViewAdapter(Context context, int monthOffset, Map<String, DayLedger> ledger, UserMO user) {
         super();
         this.mContext = context;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -145,7 +144,7 @@ public class CalendarGridViewAdapter extends BaseAdapter {
 
         //set cell data
         if(ledger != null && ledger.containsKey(cellDate)){
-            MonthLegend dayLedger = ledger.get(cellDate);
+            DayLedger dayLedger = ledger.get(cellDate);
 
             //transaction
             if(dayLedger.isHasTransactions()){

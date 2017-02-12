@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.fragments.LoginFragment;
+import com.finappl.models.AccountMO;
 import com.finappl.models.UserMO;
 
 import java.io.ByteArrayOutputStream;
@@ -256,7 +257,7 @@ public class FinappleUtility extends Activity{
         else{
             amountTV.setTextColor(amountTV.getResources().getColor(R.color.finappleCurrencyPosColor));
         }
-        amountTV.setText(FinappleUtility.formatAmount(userMO.getMETRIC(), String.valueOf(amount)));
+        amountTV.setText(userMO.getCUR_CODE()+" "+FinappleUtility.formatAmount(userMO.getMETRIC(), String.valueOf(amount)));
 
         return amountTV;
     }
@@ -599,5 +600,18 @@ public class FinappleUtility extends Activity{
             Log.e(CLASS_NAME, "Error in date parsing"+e);
         }
         return null;
+    }
+
+    public static Double getConolidatedAccountsAmount(List<AccountMO> accountsList){
+        Double total = 0.0;
+        if(accountsList == null || accountsList.isEmpty()){
+            return total;
+        }
+
+        for(AccountMO iterList : accountsList){
+            total += iterList.getACC_TOTAL();
+        }
+
+        return total;
     }
 }

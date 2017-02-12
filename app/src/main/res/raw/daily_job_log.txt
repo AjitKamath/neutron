@@ -842,6 +842,18 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 3. month header implemented.
 4. next and prev month using arrows in header.
 
+<--Git Push on 9-feb-2017-->
+
+10-feb-2017
+1. calendar summary implemented.
+2. add transfer integration complete.
+
+12-feb-2017
+1. calendar summary with accounts implemented.
+2. dynamically change the height of summary cards according to the number of items to display.
+3. summary briefing implemented.
+4. dynamically change the height of the calendar accounts list based on the number of accounts to display.
+
 ------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE
 2. impl delete transaction, cat, spent on, account, transfer(take care of things like..impacts..should check for existing transactions with the same cat.

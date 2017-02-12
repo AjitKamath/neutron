@@ -23,73 +23,72 @@ import static com.finappl.utils.Constants.UI_FONT;
  * Created by ajit on 17/1/15.
  */
 public class CalendarAccountsListViewAdapter extends BaseAdapter {
-
+    private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
-    private int layoutResourceId;
-    private List<AccountMO> dataList;
-    private List<Integer> colorList;
     private LayoutInflater inflater;
 
     private UserMO user;
+    private List<AccountMO> accountsList;
+    private View.OnClickListener clickListener;
 
-    public CalendarAccountsListViewAdapter(Context mContext, int layoutResourceId, List<AccountMO> data, UserMO user) {
+    public CalendarAccountsListViewAdapter(Context mContext, UserMO user, List<AccountMO> accountsList, View.OnClickListener clickListener) {
         super();
 
-        this.layoutResourceId = layoutResourceId;
         this.mContext = mContext;
-        this.dataList = data;
-        this.user = user;
         this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        //get random colors in a list
-        colorList = FinappleUtility.getInstance().getUnRandomizedColorList(dataList.size());
+        this.accountsList = accountsList;
+        this.clickListener = clickListener;
+        this.user = user;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
+        int layout = R.layout.calendar_accounts_list_item;
 
         if(convertView == null) {
             mHolder = new ViewHolder();
-            convertView = inflater.inflate(layoutResourceId, null);
+            convertView = inflater.inflate(layout, null);
 
-            mHolder.summayAccountsLL = (LinearLayout) convertView.findViewById(R.id.summayAccountsLLId);
-            mHolder.accountIV = (ImageView) convertView.findViewById(R.id.accountIVId);
-            mHolder.accountsCurrTV = (TextView) convertView.findViewById(R.id.accountsCurrTVId);
-            mHolder.accountNameTV = (TextView) convertView.findViewById(R.id.accountsNameTVId);
-            mHolder.accountsCurrTV = (TextView) convertView.findViewById(R.id.accountsCurrTVId);
-            mHolder.accountTotalTV = (TextView) convertView.findViewById(R.id.accountsTotalTVId);
+            mHolder.calendar_accounts_list_item_ll = (LinearLayout) convertView.findViewById(R.id.calendar_accounts_list_item_ll);
+            mHolder.calendar_accounts_list_item_account_iv = (ImageView) convertView.findViewById(R.id.calendar_accounts_list_item_account_iv);
+            mHolder.calendar_accounts_list_item_account_tv = (TextView) convertView.findViewById(R.id.calendar_accounts_list_item_account_tv);
+            mHolder.calendar_accounts_list_item_amt_tv = (TextView) convertView.findViewById(R.id.calendar_accounts_list_item_amt_tv);
 
-            convertView.setTag(layoutResourceId, mHolder);
+            convertView.setTag(layout, mHolder);
 
         } else {
-            mHolder = (ViewHolder) convertView.getTag(layoutResourceId);
+            mHolder = (ViewHolder) convertView.getTag(layout);
         }
 
-        // object item based on the position
-        AccountMO accountItem = dataList.get(position);
+        AccountMO account = accountsList.get(position);
 
-        mHolder.summayAccountsLL.setTag(accountItem);
+        mHolder.calendar_accounts_list_item_account_iv.setBackgroundResource(Integer.parseInt(account.getACC_IMG()));
+        mHolder.calendar_accounts_list_item_account_tv.setText(account.getACC_NAME());
+        mHolder.calendar_accounts_list_item_amt_tv = FinappleUtility.formatAmountView(mHolder.calendar_accounts_list_item_amt_tv, user, account.getACC_TOTAL());
 
-        mHolder.accountIV.setBackgroundResource(Integer.parseInt(accountItem.getACC_IMG()));
-        mHolder.accountNameTV.setText(accountItem.getACC_NAME());
-
-        mHolder.accountsCurrTV.setText(user.getCUR_CODE());
-        mHolder.accountTotalTV = FinappleUtility.formatAmountView(mHolder.accountTotalTV, user, accountItem.getACC_TOTAL());
-
-        setFont(mHolder.summayAccountsLL);
+        setFont(mHolder.calendar_accounts_list_item_ll);
 
         return convertView;
     }
 
+
+    private class ViewHolder {
+        private LinearLayout calendar_accounts_list_item_ll;
+        private ImageView calendar_accounts_list_item_account_iv;
+        private TextView calendar_accounts_list_item_account_tv;
+        private TextView calendar_accounts_list_item_amt_tv;
+    }
+
     @Override
     public int getCount() {
-        return dataList.size();
+        return accountsList.size();
     }
 
     @Override
     public AccountMO getItem(int position) {
-        return dataList.get(position);
+        return accountsList.get(position);
     }
 
     @Override
@@ -115,13 +114,4 @@ public class CalendarAccountsListViewAdapter extends BaseAdapter {
             }
         }
     }
-
-    private class ViewHolder {
-        LinearLayout summayAccountsLL;
-        ImageView accountIV;
-        TextView accountNameTV;
-        TextView accountsCurrTV;
-        TextView accountTotalTV;
-    }
-
 }

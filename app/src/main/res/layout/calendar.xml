@@ -13,9 +13,135 @@
         android:src="@drawable/february" />
 
     <android.support.v4.view.ViewPager
+        android:background="@null"
         android:id="@+id/calendar_vp"
         android:layout_width="match_parent"
+        android:layout_height="255dp" />
+
+    <RelativeLayout
+        android:paddingRight="@dimen/screen_components_padding_from_walls"
+        android:paddingLeft="@dimen/screen_components_padding_from_walls"
+        android:layout_marginTop="5dp"
+        android:id="@+id/calendar_summary_briefings_ll"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/calendar_months_vp"/>
+        android:layout_below="@id/calendar_vp">
+
+        <LinearLayout
+            android:layout_alignParentLeft="true"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/secondary_text"
+            android:alpha="0.5"
+            android:weightSum="2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TODAY"
+                android:textColor="@color/white"
+                android:textSize="8sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/secondary_text"
+            android:alpha="0.5"
+            android:weightSum="2"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_marginRight="2dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/notification" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SCHED."
+                    android:textColor="@color/white"
+                    android:layout_marginRight="5dp"
+                    android:textSize="8sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="8sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/calendar_summary_briefings_accounts_summary_ll"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/calendar_summary_briefings_accounts_summary_iv"
+                    android:layout_marginRight="2dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/money_bag" />
+
+                <TextView
+                    android:id="@+id/calendar_summary_briefings_accounts_summary_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ACC."
+                    android:textColor="@color/white"
+                    android:layout_marginRight="5dp"
+                    android:textSize="8sp" />
+
+                <TextView
+                    android:id="@+id/calendar_summary_briefings_accounts_count_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    android:textColor="@color/white"
+                    android:textSize="8sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/calendar_summary_briefings_ll">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/calendar_summary_vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/calendar_month_header"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="20dp"
     android:gravity="center"
     android:orientation="horizontal"
     android:weightSum="3">
@@ -30,7 +30,7 @@
         android:layout_weight="1"
         android:background="@drawable/radial_gradient_grey"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
 
         <TextView
@@ -42,6 +42,7 @@
             android:textSize="12sp" />
 
         <TextView
+            android:layout_marginLeft="10dp"
             android:id="@+id/calendar_month_header_month_year_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

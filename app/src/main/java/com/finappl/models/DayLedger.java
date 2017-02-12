@@ -6,11 +6,11 @@ import java.util.List;
 /**
  * Created by ajit on 18/1/15.
  */
-public class MonthLegend implements Serializable {
+public class DayLedger implements Serializable  {
     private String date;
     private ActivitiesMO activities;
-    private Double transactionsAmountTotal;
-    private Double transfersAmountTotal;
+    private Double transactionsAmountTotal = 0.0;
+    private Double transfersAmountTotal = 0.0;
     private boolean hasTransactions;
     private boolean hasTransfers;
 

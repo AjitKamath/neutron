@@ -84,7 +84,7 @@ public final class Constants{
     public static final String DB_TIME_FORMAT = "HH:mm";
     public static final String UI_DATE_TIME_FORMAT = "d MMM ''yy H:mm:ss a";
     public static final String UI_DATE_FORMAT = "d MMM yyyy";
-    public static final String UI_TIME_FORMAT = "hh:mm a";
+    public static final String UI_TIME_FORMAT = "h:mm a";
     public static final SimpleDateFormat JAVA_DATE_FORMAT_SDF = new SimpleDateFormat(JAVA_DATE_FORMAT);
     public static final SimpleDateFormat JAVA_DATE_FORMAT_SDF_1 = new SimpleDateFormat(JAVA_DATE_FORMAT_1);
     public static final SimpleDateFormat DB_DATE_FORMAT_SDF = new SimpleDateFormat(DB_DATE_FORMAT);

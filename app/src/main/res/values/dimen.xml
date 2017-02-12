@@ -46,7 +46,7 @@
     <dimen name="calendar_week_name_text_size">12sp</dimen>
     <dimen name="calendar_grid_cell_activity_indicator_size">3dp</dimen>
     <dimen name="calendar_tab_first_column_width">90dp</dimen>
-    <dimen name="calendar_cell_dimen">40dp</dimen>
+    <dimen name="calendar_cell_dimen">35dp</dimen>
 
     <dimen name="image_header_size">25dp</dimen>
     <dimen name="text_header_title_size">18sp</dimen>

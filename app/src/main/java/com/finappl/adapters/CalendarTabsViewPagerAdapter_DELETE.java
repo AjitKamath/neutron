@@ -18,7 +18,7 @@ import com.finappl.dbServices.CalendarDbService;
 import com.finappl.models.AccountMO;
 import com.finappl.models.ActivitiesMO;
 import com.finappl.models.BudgetMO;
-import com.finappl.models.MonthLegend;
+import com.finappl.models.DayLedger;
 import com.finappl.models.TransactionMO;
 import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
@@ -33,12 +33,12 @@ import static com.finappl.utils.Constants.UI_FONT;
 /**
  * Created by ajit on 30/9/15.
  */
-public class CalendarTabsViewPagerAdapter extends PagerAdapter {
+public class CalendarTabsViewPagerAdapter_DELETE extends PagerAdapter {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
 
     private List<Integer> layoutsList;
-    private Map<String, MonthLegend> monthLegendMap;
+    private Map<String, DayLedger> monthLegendMap;
     private Date selectedDate;
     private HomeActivity.ListViewItemClickListener listViewItemClickListener;
 
@@ -61,9 +61,9 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
     public int activePageIndex = 0;
 
 
-    public CalendarTabsViewPagerAdapter(Context context, List<Integer> layoutsList, Date selectedDate
-            , UserMO loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
-                                        HomeActivity.ListViewItemClickListener listViewItemClickListener) {
+    public CalendarTabsViewPagerAdapter_DELETE(Context context, List<Integer> layoutsList, Date selectedDate
+            , UserMO loggedInUserObj, Map<String, DayLedger> monthLegendMap,
+                                               HomeActivity.ListViewItemClickListener listViewItemClickListener) {
         this.mContext = context;
         this.layoutsList = layoutsList;
         this.selectedDate = selectedDate;
@@ -93,14 +93,14 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         }
         //Budgets check ends
 
-        MonthLegend monthLegendObj = monthLegendMap.get(JAVA_DATE_FORMAT_SDF.format(selectedDate));
-        if (monthLegendObj == null) {
-            Log.e(CLASS_NAME, "Nothing found in MonthLegend...");
+        DayLedger dayLedger = monthLegendMap.get(JAVA_DATE_FORMAT_SDF.format(selectedDate));
+        if (dayLedger == null) {
+            Log.e(CLASS_NAME, "Nothing found in DayLedger...");
             return;
         }
 
         //Activities check
-        ActivitiesMO activities = monthLegendObj.getActivities();
+        ActivitiesMO activities = dayLedger.getActivities();
         if (activities != null) {
             transactionsList = activities.getTransactionsList();
             transfersList = activities.getTransfersList();
@@ -121,22 +121,22 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         checkMonthLegend();
 
         switch (layoutsList.get(position)) {
-            case R.layout.calendar_tab_activities:
+            case R.layout.calendar_tab_activities_delete:
                 setUpActivitiesTab(layout);
                 activePageIndex = 0;
                 break;
 
-            case R.layout.calendar_tab_accounts:
+            case R.layout.calendar_tab_accounts_delete:
                 setUpAccountsTab(layout);
                 activePageIndex = 1;
                 break;
 
-            case R.layout.calendar_tab_budgets:
+            case R.layout.calendar_tab_budgets_delete:
                 setUpBudgetsTab(layout);
                 activePageIndex = 2;
                 break;
 
-            case R.layout.calendar_tab_schedules:
+            case R.layout.calendar_tab_schedules_delete:
                 setUpSchedulesTab(layout);
                 activePageIndex = 3;
                 break;
@@ -162,8 +162,8 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        CalendarActivitiesSectionListViewAdapter consolAdapter =
-                new CalendarActivitiesSectionListViewAdapter(mContext, monthLegendMap.get(JAVA_DATE_FORMAT_SDF.format(selectedDate)).getActivities(), loggedInUserObj);
+        CalendarActivitiesSectionListViewAdapter_DELETE consolAdapter =
+                new CalendarActivitiesSectionListViewAdapter_DELETE(mContext, monthLegendMap.get(JAVA_DATE_FORMAT_SDF.format(selectedDate)).getActivities(), loggedInUserObj);
         CalendarActivity_NEWLV.setAdapter(consolAdapter);
         CalendarActivity_NEWLV.setOnItemClickListener(listViewClickListener);
 
@@ -190,7 +190,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        CalendarAccountsListViewAdapter accAdapter = new CalendarAccountsListViewAdapter(mContext, R.layout.calendar_tab_account, accountsList, loggedInUserObj);
+        CalendarAccountsListViewAdapter_DELETE accAdapter = new CalendarAccountsListViewAdapter_DELETE(mContext, R.layout.calendar_tab_account_delete, accountsList, loggedInUserObj);
         accountsLV.setAdapter(accAdapter);
         accountsLV.setOnItemClickListener(listViewClickListener);
 
@@ -217,7 +217,7 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
             return;
         }
 
-        CalendarBudgetsListViewAdapter calendarBudgetsAdapter = new CalendarBudgetsListViewAdapter(mContext, R.layout.calendar_tab_budget, budgetsList, loggedInUserObj);
+        CalendarBudgetsListViewAdapter_DELETE calendarBudgetsAdapter = new CalendarBudgetsListViewAdapter_DELETE(mContext, R.layout.calendar_tab_budget_delete, budgetsList, loggedInUserObj);
         budgetsLV.setAdapter(calendarBudgetsAdapter);
         budgetsLV.setOnItemClickListener(listViewClickListener);
 
@@ -235,8 +235,8 @@ public class CalendarTabsViewPagerAdapter extends PagerAdapter {
         /*TextView calendarTransHeaderOrMsgTV = (TextView) layout.findViewById(R.id.calendarTransHeaderOrMsgTVId);
         ListView schedulesLV = (ListView) layout.findViewById(R.id.schedulesLVId);
 
-        CalendarSchedulesSectionListViewAdapter schedulesListAdapter =
-                new CalendarSchedulesSectionListViewAdapter(mContext, R.layout.calendar_schedules_list_view, scheduledTransactionModelList,
+        CalendarSchedulesSectionListViewAdapter_DELETE schedulesListAdapter =
+                new CalendarSchedulesSectionListViewAdapter_DELETE(mContext, R.layout.calendar_schedules_list_view, scheduledTransactionModelList,
                         scheduledTransferModelList);
         schedulesLV.setAdapter(schedulesListAdapter);
         schedulesListAdapter.notifyDataSetChanged();

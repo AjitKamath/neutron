@@ -91,7 +91,6 @@ public class AddUpdateTransactionFragment extends DialogFragment {
     private LinearLayout transactionContentCategoryLL;
     private LinearLayout transactionContentAccountLL;
     private LinearLayout transactionContentSpentonLL;
-    private TextView transactionContentAccountCurrencyTV;
     private TextView transactionContentAccountTotalTV;
     private TextView transactionContentAccountStatusTV;
     private RadioGroup addUpdateTranExpIncRadioGrp;
@@ -181,8 +180,6 @@ public class AddUpdateTransactionFragment extends DialogFragment {
 
         //set Currency Code
         transactionContentCurrencyTV.setText(loggedInUserObj.getCUR_CODE());
-        //set up calendar_tab_account currency code
-        transactionContentAccountCurrencyTV.setText(loggedInUserObj.getCUR_CODE());
 
         String dateStr = (UI_DATE_FORMAT_SDF.format(transactionModelObj.getTRAN_DATE())).toUpperCase();
         addUpdateDateTV.setText(dateStr);
@@ -246,7 +243,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
             //set default select_category_category to be set
             setCategory(getDefaultCategory(categoriesList));
 
-            //set default calendar_tab_account to be set
+            //set default calendar_tab_account_delete to be set
             setAccount(getDefaultAccount(accountList));
 
             //set default select_spenton_spenton to be set
@@ -411,7 +408,6 @@ public class AddUpdateTransactionFragment extends DialogFragment {
         transactionContentAccountLL = (LinearLayout) view.findViewById(R.id.transactionContentAccountLLId);
         transactionContentSpentonLL = (LinearLayout) view.findViewById(R.id.transactionContentSpentonLLId);
 
-        transactionContentAccountCurrencyTV = (TextView) view.findViewById(R.id.transactionContentAccountCurrencyTVId);
         transactionContentAccountTotalTV = (TextView) view.findViewById(R.id.transactionContentAccountTotalTVId);
         transactionContentAccountStatusTV = (TextView) view.findViewById(R.id.transactionContentAccountStatusTVId);
 

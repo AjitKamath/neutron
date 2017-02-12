@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.finappl.R;
-import com.finappl.adapters.CalendarTabsViewPagerAdapter;
+import com.finappl.adapters.CalendarSummaryViewPagerAdapter;
+import com.finappl.adapters.CalendarTabsViewPagerAdapter_DELETE;
 import com.finappl.adapters.CalendarViewPagerAdapter;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
@@ -42,7 +44,7 @@ import com.finappl.fragments.TransferDetailsFragment;
 import com.finappl.models.AccountMO;
 import com.finappl.models.BudgetMO;
 import com.finappl.models.CalendarMonth;
-import com.finappl.models.MonthLegend;
+import com.finappl.models.DayLedger;
 import com.finappl.models.TransactionMO;
 import com.finappl.models.TransferMO;
 import com.finappl.utils.DateTimeUtil;
@@ -58,6 +60,7 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import butterknife.Optional;
 
 import static com.finappl.utils.Constants.BUDGET_OBJECT;
@@ -69,6 +72,7 @@ import static com.finappl.utils.Constants.FRAGMENT_TRANSFER_DETAILS;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF_1;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.SELECTED_DATE;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
 import static com.finappl.utils.Constants.TRANSFER_OBJECT;
@@ -84,35 +88,23 @@ public class HomeActivity extends CommonActivity {
     @InjectView(R.id.calendar_background_iv)
     ImageView calendar_background_iv;
 
-//    @InjectView(R.id.calendar_prev_month_month_tv)
-//    TextView calendar_prev_month_month_tv;
-//
-//    @InjectView(R.id.calendar_prev_month_year_tv)
-//    TextView calendar_prev_month_year_tv;
-//
-//    @InjectView(R.id.calendar_current_month_month_tv)
-//    TextView calendar_current_month_month_tv;
-//
-//    @InjectView(R.id.calendar_current_month_year_tv)
-//    TextView calendar_current_month_year_tv;
-//
-//    @InjectView(R.id.calendar_next_month_month_tv)
-//    TextView calendar_next_month_month_tv;
-//
-//    @InjectView(R.id.calendar_next_month_year_tv)
-//    TextView calendar_next_month_year_tv;
-
-    /*@InjectView(R.id.calendar_months_vp)
-    ViewPager calendar_months_vp;*/
-
     @InjectView(R.id.calendar_vp)
     ViewPager calendar_vp;
+
+    @InjectView(R.id.calendar_summary_briefings_accounts_summary_iv)
+    ImageView calendar_summary_briefings_accounts_summary_iv;
+
+    @InjectView(R.id.calendar_summary_briefings_accounts_summary_tv)
+    TextView calendar_summary_briefings_accounts_summary_tv;
+
+    @InjectView(R.id.calendar_summary_briefings_accounts_count_tv)
+    TextView calendar_summary_briefings_accounts_count_tv;
+
+    @InjectView(R.id.calendar_summary_vp)
+    ViewPager calendar_summary_vp;
     /*components*/
 
-    /*calendar*/
-    //private static final int PAGE_LEFT = 0;
     private static final int PAGE_MIDDLE = 2;
-    //private static final int PAGE_RIGHT = 2;
 
     private int selectedCalendarVPIndex = PAGE_MIDDLE;
     private CalendarMonth[] calendarMonthsArr = new CalendarMonth[(PAGE_MIDDLE*2)+1];
@@ -175,7 +167,10 @@ public class HomeActivity extends CommonActivity {
     private ViewPager viewPager, viewPagerMonths;
 
     //month legend
-    private Map<String, MonthLegend> monthLegendMap = new HashMap<>();
+    private Map<String, DayLedger> dayLederMap = new HashMap<>();
+
+    //accounts
+    private List<AccountMO> accountsList = new ArrayList<>();
 
 
     //db services
@@ -187,7 +182,7 @@ public class HomeActivity extends CommonActivity {
     private List<Integer> viewPagerTabsList = new ArrayList<>();
 
     //view pager
-    private CalendarTabsViewPagerAdapter calendarTabsViewPagerAdapter;
+    private CalendarTabsViewPagerAdapter_DELETE calendarTabsViewPagerAdapter;
 
 
     //progress bar
@@ -205,13 +200,83 @@ public class HomeActivity extends CommonActivity {
         controller.getWritableDatabase();
         Log.i(CLASS_NAME, "Initializing the application database ends");
 
-        fetchLedger();
+        fetchLegend();
         initCalendarMonths();
         setupCalendar();
+
+        setupSummary();
     }
 
-    public void fetchLedger() {
-        //get currently shown month, so as to get ledger for month -1, month, month +1 monhts
+    private void setupSummary() {
+        setupSummaryBriefings("SUMMARY");
+
+        String today = JAVA_DATE_FORMAT_SDF.format(new Date());
+        DayLedger dayLedger = dayLederMap.get(today);
+
+        List<Object> summaryList = new ArrayList<>();
+
+        //adding summary into summaryList
+        summaryList.add(dayLedger);
+
+        //adding accounts into summaryList
+        summaryList.add(accountsList);
+
+        CalendarSummaryViewPagerAdapter adapter = new CalendarSummaryViewPagerAdapter(this, user, summaryList);
+        calendar_summary_vp.setAdapter(adapter);
+
+        calendar_summary_vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0: setupSummaryBriefings("SUMMARY");
+                        break;
+                    case 1: setupSummaryBriefings("ACCOUNTS");
+                        break;
+                    default: FinappleUtility.showSnacks(wrapper_home_cl, "Un Identified Screen", OK, Snackbar.LENGTH_INDEFINITE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    @OnClick(R.id.calendar_summary_briefings_accounts_summary_ll)
+    public void onBriefingClick(View view){
+        if(calendar_summary_vp.getCurrentItem() == 0){
+            calendar_summary_vp.setCurrentItem(1);
+            setupSummaryBriefings("ACCOUNTS");
+        }
+        else if(calendar_summary_vp.getCurrentItem() == 1){
+            calendar_summary_vp.setCurrentItem(0);
+            setupSummaryBriefings("SUMMARY");
+        }
+    }
+
+    private void setupSummaryBriefings(String whichBrifings){
+        switch(whichBrifings){
+            case "SUMMARY" : calendar_summary_briefings_accounts_summary_iv.setBackgroundResource(R.drawable.money_bag);
+                calendar_summary_briefings_accounts_count_tv.setVisibility(View.VISIBLE);
+                calendar_summary_briefings_accounts_summary_tv.setText("ACCOUNTS");
+                calendar_summary_briefings_accounts_count_tv.setText(String.valueOf(accountsList.size()));
+                break;
+            case "ACCOUNTS": calendar_summary_briefings_accounts_summary_iv.setBackgroundResource(R.drawable.summary);
+                calendar_summary_briefings_accounts_count_tv.setVisibility(View.GONE);
+                calendar_summary_briefings_accounts_summary_tv.setText("SUMMARY");
+                break;
+            default: FinappleUtility.showSnacks(getWrapper_home_cl(), "Could not identify the purpose("+whichBrifings+")", OK, Snackbar.LENGTH_INDEFINITE);
+        }
+    }
+
+    public void fetchLegend() {
+        //get currently shown month, so as to get ledger for month - MIDDLE_PAGE, month, month + MIDDLE_PAGE monhts
         Calendar calendar = Calendar.getInstance();
 
         if(calendarMonthsArr[PAGE_MIDDLE] != null){
@@ -220,7 +285,10 @@ public class HomeActivity extends CommonActivity {
 
         //get ledger
         //the range for fetching the ledger is calendarMonthsArr.length+2 because, the user can see the dates(in grey) of the last+1 & next+1 month when he swipes to left/right
-        monthLegendMap = calendarDbService.getMonthLegendOnDate(calendar, calendarMonthsArr.length+2, user.getUSER_ID());
+        dayLederMap = calendarDbService.getMonthLegendOnDate(calendar, calendarMonthsArr.length+2, user.getUSER_ID());
+
+        //fetch accounts
+        accountsList = calendarDbService.getAllAccounts(user.getUSER_ID());
     }
 
     private void setupCalendar() {
@@ -229,7 +297,7 @@ public class HomeActivity extends CommonActivity {
         calendar_vp.setCurrentItem(PAGE_MIDDLE, false);
         calendar_vp.setClipToPadding(false);
         calendar_vp.setPadding(50,0,50,0);
-        calendar_vp.setPageMargin(20);
+        calendar_vp.setPageMargin(40);
 
         calendar_vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             boolean loadCalendar;
@@ -262,8 +330,8 @@ public class HomeActivity extends CommonActivity {
                                     for(int i=max; i>min; i--){
                                         calendarMonthsArr[i] = calendarMonthsArr[i-1];
                                     }
-                                    fetchLedger();
-                                    calendarMonthsArr[min] = new CalendarMonth(calendarMonthsArr[min].getOffset()-1, mContext, monthLegendMap, user);
+                                    fetchLegend();
+                                    calendarMonthsArr[min] = new CalendarMonth(calendarMonthsArr[min].getOffset()-1, mContext, dayLederMap, user);
 
                                 }
                                 // user swiped to left direction --> right page
@@ -271,8 +339,8 @@ public class HomeActivity extends CommonActivity {
                                     for(int i=min; i<max; i++){
                                         calendarMonthsArr[i] = calendarMonthsArr[i+1];
                                     }
-                                    fetchLedger();
-                                    calendarMonthsArr[max] = new CalendarMonth(calendarMonthsArr[max].getOffset()+1, mContext, monthLegendMap, user);
+                                    fetchLegend();
+                                    calendarMonthsArr[max] = new CalendarMonth(calendarMonthsArr[max].getOffset()+1, mContext, dayLederMap, user);
                                 }
 
                                 //do something only if the month has been completely changed by the users swipe.
@@ -303,7 +371,7 @@ public class HomeActivity extends CommonActivity {
         calendar_vp.getAdapter().notifyDataSetChanged();
 
         //months
-        /*CalendarMonthsHeaderViewPagerAdapter_DELETE adapterMonths = (CalendarMonthsHeaderViewPagerAdapter_DELETE)calendar_months_vp.getAdapter();
+        /*CalendarMonthsHeaderViewPagerAdapter_DELETE adapterMonths = (CalendarMonthsHeaderViewPagerAdapter_DELETE)calendar_months_vp.getAdaptRer();
 
         //set the new calendarMonthsArr
         adapterMonths.setModel(calendarMonthsArr);
@@ -312,13 +380,14 @@ public class HomeActivity extends CommonActivity {
     }
 
     public void updateCalendarMonths(){
-        fetchLedger();
+        fetchLegend();
 
         for(int i=0; i<calendarMonthsArr.length; i++){
-            calendarMonthsArr[i] = new CalendarMonth(calendarMonthsArr[i].getOffset(), mContext, monthLegendMap, user);
+            calendarMonthsArr[i] = new CalendarMonth(calendarMonthsArr[i].getOffset(), mContext, dayLederMap, user);
         }
 
         setupCalendar();
+        setupSummary();
     }
 
     public void changeMonth(boolean previousMonth){
@@ -333,7 +402,7 @@ public class HomeActivity extends CommonActivity {
     private void initCalendarMonths() {
         int offset = PAGE_MIDDLE * -1;
         for(int i=0; i<calendarMonthsArr.length; i++){
-            calendarMonthsArr[i] = new CalendarMonth(offset, mContext, monthLegendMap, user);
+            calendarMonthsArr[i] = new CalendarMonth(offset, mContext, dayLederMap, user);
             offset = offset+1;
         }
     }
@@ -410,7 +479,7 @@ public class HomeActivity extends CommonActivity {
     }
 
     public void setUpTabs() {
-        calendarTabsViewPagerAdapter = new CalendarTabsViewPagerAdapter(mContext, viewPagerTabsList, DateTimeUtil.cleanUpDate(selectedDateStr), user, monthLegendMap,
+        calendarTabsViewPagerAdapter = new CalendarTabsViewPagerAdapter_DELETE(mContext, viewPagerTabsList, DateTimeUtil.cleanUpDate(selectedDateStr), user, dayLederMap,
                         new HomeActivity.ListViewItemClickListener() {
                             @Override
                             public void onListItemClick(Object listItemObject) {

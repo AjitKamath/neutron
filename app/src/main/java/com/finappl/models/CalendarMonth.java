@@ -5,8 +5,6 @@ import android.content.Context;
 import com.finappl.adapters.CalendarGridViewAdapter;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Formatter;
 import java.util.Locale;
 import java.util.Map;
 
@@ -21,7 +19,7 @@ public class CalendarMonth {
     private String year;
 
 
-    public CalendarMonth(int offset, Context mContext, Map<String, MonthLegend> ledger, UserMO user) {
+    public CalendarMonth(int offset, Context mContext, Map<String, DayLedger> ledger, UserMO user) {
         this.offset = offset;
         this.adapter = new CalendarGridViewAdapter(mContext, offset, ledger, user);
 

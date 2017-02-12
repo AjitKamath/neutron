@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by ajit on 17/1/15.
  */
-public class CalendarSchedulesSectionListViewAdapter extends BaseAdapter {
+public class CalendarSchedulesSectionListViewAdapter_DELETE extends BaseAdapter {
 
     private final String CLASS_NAME = this.getClass().getName();
 
@@ -37,7 +37,7 @@ public class CalendarSchedulesSectionListViewAdapter extends BaseAdapter {
     private List<ScheduledTransactionModel> scheduledTransactionModelList;
     private List<ScheduledTransferModel> scheduledTransferModelList;
 
-    public CalendarSchedulesSectionListViewAdapter(Context context, int contentLayoutId, List<ScheduledTransactionModel> scheduledTransactionModelList
+    public CalendarSchedulesSectionListViewAdapter_DELETE(Context context, int contentLayoutId, List<ScheduledTransactionModel> scheduledTransactionModelList
             , List<ScheduledTransferModel> scheduledTransferModelList) {
         super();
         this.contentLayoutId = contentLayoutId;

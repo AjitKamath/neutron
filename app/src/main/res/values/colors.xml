@@ -227,7 +227,7 @@
     <!--Calendar calendar_month colors-->
     <color name="calendarThisMonthDate">#000000</color>
     <color name="calendarNextPrevMonthDate">#A0A0A9</color>
-    <color name="calendarTodayDate">#FF3200</color>
+    <color name="calendarTodayDate">#FF5722</color>
     <color name="calendarOneTap">@color/finappleTheme</color>
     <color name="calendarTwoTap">#64B5F6</color>
     <color name="calendarNoTap">#FFFFFF</color>
@@ -241,6 +241,7 @@
 
     <!-- week colors -->
     <color name="weekdays">#000000</color>
+    <color name="weekends">#FFCA28</color>
     <color name="greyDays">#696969</color>
     <color name="saturday">#000000</color>
     <color name="sunday">#9966CC</color>
@@ -262,6 +263,7 @@
     <color name="finappleCurrencyApproxColor">#000000</color>
     <color name="finappleCurrencyNegColor">#FF6347</color>
     <color name="finappleCurrencyPosColor">#006400</color>
+    <color name="finappleCurrencyNeutralColor">#64B5F6</color>
     <color name="finappleCurrencyDividerColor">#000000</color>
     <color name="finappleLimitCrossColor">#FFEFD5</color>
     <color name="finappleCurrencyCodeColor">#A9A9A9</color>

@@ -12,7 +12,7 @@ import com.finappl.models.ActivitiesMO;
 import com.finappl.models.BudgetMO;
 import com.finappl.models.CategoryMO;
 import com.finappl.models.CountryMO;
-import com.finappl.models.MonthLegend;
+import com.finappl.models.DayLedger;
 import com.finappl.models.RepeatMO;
 import com.finappl.models.SpentOnMO;
 import com.finappl.models.TagsMO;
@@ -47,7 +47,6 @@ import static com.finappl.utils.Constants.DB_TABLE_TAGS;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSACTION;
 import static com.finappl.utils.Constants.DB_TABLE_TRANSFER;
 import static com.finappl.utils.Constants.DB_VERSION;
-import static com.finappl.utils.Constants.MONTHS_RANGE;
 import static com.finappl.utils.Constants.REPEATS_DAY;
 import static com.finappl.utils.Constants.REPEATS_MONTH;
 import static com.finappl.utils.Constants.REPEATS_WEEK;
@@ -929,7 +928,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return 0.0;
     }
 
-    private Map<String, MonthLegend> getTransfers(Map<String, MonthLegend> monthLegendMap, String dateStrArr[], String userId) {
+    private Map<String, DayLedger> getTransfers(Map<String, DayLedger> monthLegendMap, String dateStrArr[], String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -993,6 +992,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             String tranDateStr = ColumnFetcher.loadString(cursor, "TRNFR_DATE");
             String tranIdStr = ColumnFetcher.loadString(cursor, "TRNFR_ID");
             String creatDtmStr = ColumnFetcher.loadString(cursor, "CREAT_DTM");
+            Date creatDtm = ColumnFetcher.loadDateTime(cursor, "CREAT_DTM");
             String schedDateStr = ColumnFetcher.loadString(cursor, "SCHD_UPTO_DATE");
             String notifyStr = ColumnFetcher.loadString(cursor, "NOTIFY");
             String notifyTimeStr = ColumnFetcher.loadString(cursor, "NOTIFY_TIME");
@@ -1005,7 +1005,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             String transferDateStr = tempDateStrArr[2] + "-" + tempDateStrArr[1] + "-" + tempDateStrArr[0];
 
-            MonthLegend monthLegendObj;
+            DayLedger dayLedger;
             Double totalAmount = 0.0;
             ActivitiesMO activities;
             List<TransferMO> transfersList;
@@ -1030,17 +1030,18 @@ public class CalendarDbService extends SQLiteOpenHelper {
             transfer.setRepeat(repeatStr);
             transfer.setRepeatImg(repeatImgStr);
             transfer.setTRNFR_NOTE(noteStr);
+            transfer.setCREAT_DTM(creatDtm);
 
             //if the legend map already contains an entry for this date
             if (monthLegendMap.containsKey(transferDateStr)) {
-                monthLegendObj = monthLegendMap.get(transferDateStr);
+                dayLedger = monthLegendMap.get(transferDateStr);
 
-                if (monthLegendObj == null) {
-                    monthLegendObj = new MonthLegend();
+                if (dayLedger == null) {
+                    dayLedger = new DayLedger();
                 }
 
-                activities = monthLegendObj.getActivities();
-                totalAmount = amt+ monthLegendObj.getTransactionsAmountTotal();
+                activities = dayLedger.getActivities();
+                totalAmount = amt+ dayLedger.getTransfersAmountTotal();
 
                 if (activities == null) {
                     activities = new ActivitiesMO();
@@ -1054,7 +1055,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             }
             //if the legend map doesnt contains an entry for this date
             else {
-                monthLegendObj = new MonthLegend();
+                dayLedger = new DayLedger();
                 activities = new ActivitiesMO();
                 totalAmount = amt;
                 transfersList = new ArrayList<>();
@@ -1062,17 +1063,17 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             transfersList.add(transfer);
             activities.setTransfersList(transfersList);
-            monthLegendObj.setActivities(activities);
-            monthLegendObj.setTransfersAmountTotal(totalAmount);
+            dayLedger.setActivities(activities);
+            dayLedger.setTransfersAmountTotal(totalAmount);
 
-            monthLegendMap.put(transferDateStr, monthLegendObj);
+            monthLegendMap.put(transferDateStr, dayLedger);
         }
         cursor.close();
         db.close();
         return monthLegendMap;
     }
 
-    private Map<String, MonthLegend> getTransactions(Map<String, MonthLegend> monthLegendMap, String[] dateStrArr, String userId) {
+    private Map<String, DayLedger> getTransactions(Map<String, DayLedger> monthLegendMap, String[] dateStrArr, String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         StringBuilder sqlQuerySB = new StringBuilder(50);
 
@@ -1160,6 +1161,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             String transactionDateStr = ColumnFetcher.loadString(cursor, "TRAN_DATE");
             Date transactionDate = ColumnFetcher.loadDate(cursor, "TRAN_DATE");
             String creatDtmStr = ColumnFetcher.loadString(cursor, "CREAT_DTM");
+            Date creatDtm = ColumnFetcher.loadDateTime(cursor, "CREAT_DTM");
             String tempDateStrArr[] = transactionDateStr.split("-");
 
             String tranDateStr = tempDateStrArr[2] + "-" + tempDateStrArr[1] + "-" + tempDateStrArr[0];
@@ -1179,6 +1181,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             transaction.setTransactionDate(transactionDateStr);
             transaction.setTRAN_DATE(transactionDate);
             transaction.setCreatDtm(creatDtmStr);
+            transaction.setCREAT_DTM(creatDtm);
             transaction.setSCHD_UPTO_DATE(schedDateStr);
             transaction.setNOTIFY(notifyStr);
             transaction.setNOTIFY_TIME(notifyTimeStr);
@@ -1189,27 +1192,27 @@ public class CalendarDbService extends SQLiteOpenHelper {
             transaction.setAccountImg(accountImgStr);
             transaction.setTRAN_NOTE(tranNoteStr);
 
-            MonthLegend monthLegendObj;
+            DayLedger dayLedger;
             Double totalAmount;
             ActivitiesMO activities;
             List<TransactionMO> transactionsList;
 
             //if the legend map already contains an entry for this date
             if (monthLegendMap.containsKey(tranDateStr)) {
-                monthLegendObj = monthLegendMap.get(tranDateStr);
+                dayLedger = monthLegendMap.get(tranDateStr);
 
-                if (monthLegendObj == null) {
-                    monthLegendObj = new MonthLegend();
+                if (dayLedger == null) {
+                    dayLedger = new DayLedger();
                 }
 
-                totalAmount = monthLegendObj.getTransactionsAmountTotal();
+                totalAmount = dayLedger.getTransactionsAmountTotal();
                 if ("EXPENSE".equalsIgnoreCase(tranTypeStr)) {
                     totalAmount -= amt;
                 } else {
                     totalAmount += amt;
                 }
 
-                activities = monthLegendObj.getActivities();
+                activities = dayLedger.getActivities();
 
                 if (activities == null) {
                     activities = new ActivitiesMO();
@@ -1230,25 +1233,25 @@ public class CalendarDbService extends SQLiteOpenHelper {
                     totalAmount += amt;
                 }
 
-                monthLegendObj = new MonthLegend();
+                dayLedger = new DayLedger();
                 activities = new ActivitiesMO();
                 transactionsList = new ArrayList<>();
             }
 
             transactionsList.add(transaction);
             activities.setTransactionsList(transactionsList);
-            monthLegendObj.setActivities(activities);
-            monthLegendObj.setTransactionsAmountTotal(totalAmount);
+            dayLedger.setActivities(activities);
+            dayLedger.setTransactionsAmountTotal(totalAmount);
 
-            monthLegendMap.put(tranDateStr, monthLegendObj);
+            monthLegendMap.put(tranDateStr, dayLedger);
         }
         cursor.close();
         db.close();
         return monthLegendMap;
     }
 
-    public Map<String, MonthLegend> getMonthLegendOnDate(Calendar calendar, int monthsRange, String userId) {
-        Map<String, MonthLegend> monthLegendMap = new HashMap<>();
+    public Map<String, DayLedger> getMonthLegendOnDate(Calendar calendar, int monthsRange, String userId) {
+        Map<String, DayLedger> monthLegendMap = new HashMap<>();
 
         //get start and end dates based on the passed date
         String dateStrArr[] = DateTimeUtil.getStartAndEndMonthDates(calendar, monthsRange/2);

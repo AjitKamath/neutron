@@ -19,7 +19,7 @@ import com.finappl.activities.HomeActivity;
 import com.finappl.adapters.calendar_DELETE.CalendarMonth1GridViewAdapter;
 import com.finappl.adapters.calendar_DELETE.CalendarMonth2GridViewAdapter;
 import com.finappl.adapters.calendar_DELETE.CalendarMonth3GridViewAdapter;
-import com.finappl.models.MonthLegend;
+import com.finappl.models.DayLedger;
 import com.finappl.models.UserMO;
 
 import java.text.ParseException;
@@ -41,7 +41,7 @@ public class CalendarMonthsViewPagerAdapter_DELETE extends PagerAdapter {
     private Context mContext;
 
     public Date selectedDate;
-    private Map<String, MonthLegend> monthLegendMap;
+    private Map<String, DayLedger> monthLegendMap;
 
     //User
     private UserMO loggedInUserObj;
@@ -64,7 +64,7 @@ public class CalendarMonthsViewPagerAdapter_DELETE extends PagerAdapter {
     private ProgressDialog mProgressDialog;
 
     public CalendarMonthsViewPagerAdapter_DELETE(Context context, Date selectedDate, String centralMateMonthStr,
-                                                 UserMO loggedInUserObj, Map<String, MonthLegend> monthLegendMap,
+                                                 UserMO loggedInUserObj, Map<String, DayLedger> monthLegendMap,
                                                  HomeActivity.GridViewItemClickListener gridViewItemClickListener) {
         this.mContext = context;
         this.selectedDate = selectedDate;

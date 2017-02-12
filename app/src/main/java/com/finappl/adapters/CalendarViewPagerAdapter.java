@@ -10,18 +10,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.activities.HomeActivity;
 import com.finappl.models.CalendarMonth;
-import com.finappl.models.MonthLegend;
 import com.finappl.utils.FinappleUtility;
 
 import java.util.Date;
-import java.util.Map;
 
 import static com.finappl.R.id.calendar_date_cell_date_key;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;

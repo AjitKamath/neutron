@@ -28,7 +28,7 @@ import static com.finappl.utils.Constants.UI_FONT;
 /**
  * Created by ajit on 17/1/15.
  */
-public class CalendarActivitiesSectionListViewAdapter extends BaseAdapter {
+public class CalendarActivitiesSectionListViewAdapter_DELETE extends BaseAdapter {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
     private ActivitiesMO dataList;
@@ -36,7 +36,7 @@ public class CalendarActivitiesSectionListViewAdapter extends BaseAdapter {
     private List<Object> itemsList = new ArrayList<>();
     private UserMO userObject;
 
-    public CalendarActivitiesSectionListViewAdapter(Context mContext, ActivitiesMO data, UserMO userObject) {
+    public CalendarActivitiesSectionListViewAdapter_DELETE(Context mContext, ActivitiesMO data, UserMO userObject) {
         super();
         this.mContext = mContext;
         this.dataList = data;
@@ -76,7 +76,7 @@ public class CalendarActivitiesSectionListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder;
-        int layout = R.layout.calendar_tab_activity;
+        int layout = R.layout.calendar_tab_activity_delete;
 
         if(convertView == null) {
             mHolder = new ViewHolder();

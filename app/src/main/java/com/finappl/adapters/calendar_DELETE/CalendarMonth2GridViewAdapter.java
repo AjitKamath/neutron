@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.models.MonthLegend;
+import com.finappl.models.DayLedger;
 import com.finappl.models.UserMO;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
     public String dateToPreSelect;
     public Date toSelectDate;
 
-    private Map<String, MonthLegend> monthLegendDataMap;
+    private Map<String, DayLedger> monthLegendDataMap;
     private LayoutInflater inflater;
 
     private final int layoutResourceId = 0;//R.layout.calendar_day__;
@@ -64,7 +64,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
     private ProgressDialog mProgressDialog;
 
     // Days in Current Month
-    public CalendarMonth2GridViewAdapter(Context context, Map<String, MonthLegend> monthLegendMap, int month, int year, Date dateToPreselect, UserMO loggedInUser) {
+    public CalendarMonth2GridViewAdapter(Context context, Map<String, DayLedger> monthLegendMap, int month, int year, Date dateToPreselect, UserMO loggedInUser) {
         super();
         this.mContext = context;
         list = new ArrayList<>();
@@ -276,20 +276,20 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
         mHolder.calendarGridDayContentLL.setBackgroundResource(noTapCircle);
 
         if(monthLegendDataMap != null && monthLegendDataMap.containsKey(theDatsStr)) {
-            MonthLegend monthLegend = monthLegendDataMap.get(theDatsStr);
+            DayLedger dayLedger = monthLegendDataMap.get(theDatsStr);
 
             //for calendar_day__ total amount
-            /*if(monthLegend.getTotalAmount() == null || monthLegend.getTotalAmount().equals(0.0)){
+            /*if(dayLedger.getTotalAmount() == null || dayLedger.getTotalAmount().equals(0.0)){
                 mHolder.calendarDayAmountTV.setVisibility(View.GONE);
             }
             else{
                 mHolder.calendarDayAmountTV.setVisibility(View.VISIBLE);
-                mHolder.calendarDayAmountTV = FinappleUtility.shortenAmountView(mHolder.calendarDayAmountTV, loggedInUser, monthLegend.getTotalAmount());
+                mHolder.calendarDayAmountTV = FinappleUtility.shortenAmountView(mHolder.calendarDayAmountTV, loggedInUser, dayLedger.getTotalAmount());
             }*/
 
             //for add_update_transaction indicator
-            if(monthLegend.getActivities() != null && monthLegend.getActivities() != null
-                    && monthLegend.getActivities().getTransactionsList() != null && !monthLegend.getActivities().getTransactionsList().isEmpty()){
+            if(dayLedger.getActivities() != null && dayLedger.getActivities() != null
+                    && dayLedger.getActivities().getTransactionsList() != null && !dayLedger.getActivities().getTransactionsList().isEmpty()){
                 mHolder.calendarCellTransactionIndicatorTV.setVisibility(View.VISIBLE);
             }
             else{
@@ -297,8 +297,8 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             }
 
             //for add_update_transfer indicator
-            if(monthLegend.getActivities() != null && monthLegend.getActivities() != null
-                    && monthLegend.getActivities().getTransfersList() != null && !monthLegend.getActivities().getTransfersList().isEmpty()){
+            if(dayLedger.getActivities() != null && dayLedger.getActivities() != null
+                    && dayLedger.getActivities().getTransfersList() != null && !dayLedger.getActivities().getTransfersList().isEmpty()){
                 mHolder.calendarCellTransferIndicatorTV.setVisibility(View.VISIBLE);
             }
             else{
@@ -306,7 +306,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             }
 
             //for scheduled add_update_transaction indicator
-            if(monthLegend.isHasScheduledTransaction()){
+            if(dayLedger.isHasScheduledTransaction()){
                 mHolder.calendarCellSchTransactionIndicatorTV.setVisibility(View.VISIBLE);
             }
             else{
@@ -314,7 +314,7 @@ public class CalendarMonth2GridViewAdapter extends BaseAdapter {
             }
 
             //for scheduled transfers indicator
-            if(monthLegend.isHasScheduledTransfer()){
+            if(dayLedger.isHasScheduledTransfer()){
                 mHolder.calendarCellSchTransferIndicatorTV.setVisibility(View.VISIBLE);
             }
             else{

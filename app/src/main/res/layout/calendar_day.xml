@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/calendar_day_transaction_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
 
         <LinearLayout
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="7dp"
+            android:layout_marginBottom="5dp"
             android:id="@+id/calendar_day_transfer_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

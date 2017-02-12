@@ -340,7 +340,7 @@ public class AddUpdateBudgetFragment extends DialogFragment {
         //set up select_category_category
         setCategory(getDefaultCategory(categoriesList));
 
-        //set up calendar_tab_account
+        //set up calendar_tab_account_delete
         setAccount(getDefaultAccount(accountList));
 
         //set up spent on

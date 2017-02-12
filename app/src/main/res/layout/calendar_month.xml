@@ -69,7 +69,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="SAT"
-            android:textColor="@color/orrange"
+            android:textColor="@color/weekends"
             android:textSize="8sp" />
 
         <TextView
@@ -78,7 +78,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="SUN"
-            android:textColor="@color/orrange"
+            android:textColor="@color/weekends"
             android:textSize="8sp" />
 
     </LinearLayout>
@@ -86,7 +86,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardElevation="5dp">
+        app:cardElevation="2dp">
 
         <GridView
             android:id="@+id/calendar_month_gv"

@@ -1,0 +1,14 @@
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/screen_components_padding_from_walls"
+    android:paddingRight="@dimen/screen_components_padding_from_walls"
+    tools:context=".activities.HomeActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/calendar_summary_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</android.support.v4.widget.NestedScrollView>

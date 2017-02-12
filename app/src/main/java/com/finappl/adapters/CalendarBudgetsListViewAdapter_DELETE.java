@@ -22,7 +22,7 @@ import static com.finappl.utils.Constants.UI_FONT;
 /**
  * Created by ajit on 5/4/15.
  */
-public class CalendarBudgetsListViewAdapter extends BaseAdapter {
+public class CalendarBudgetsListViewAdapter_DELETE extends BaseAdapter {
 
     private Context mContext;
     private int layoutResourceId;
@@ -31,7 +31,7 @@ public class CalendarBudgetsListViewAdapter extends BaseAdapter {
 
     private UserMO user;
 
-    public CalendarBudgetsListViewAdapter(Context mContext, int layoutResourceId, List<BudgetMO> data, UserMO user) {
+    public CalendarBudgetsListViewAdapter_DELETE(Context mContext, int layoutResourceId, List<BudgetMO> data, UserMO user) {
         super();
 
         this.layoutResourceId = layoutResourceId;

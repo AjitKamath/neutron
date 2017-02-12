@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,7 @@ import static com.finappl.utils.Constants.FRAGMENT_SELECT_ACCOUNT;
 import static com.finappl.utils.Constants.FRAGMENT_SELECT_AMOUNT;
 import static com.finappl.utils.Constants.FRAGMENT_SELECT_REPEAT;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.REPEAT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_AMOUNT_OBJECT;
@@ -278,9 +280,10 @@ public class AddUpdateTransferFragment extends DialogFragment {
 
 
     private void closeFragment(String messageStr){
-        //((HomeActivity)getActivity()).initActivity();
-
         dismiss();
+
+        FinappleUtility.showSnacks(getActivity().getCurrentFocus(), "Transfer saved", OK, Snackbar.LENGTH_LONG);
+        ((HomeActivity)getActivity()).updateCalendarMonths();
     }
 
     private void getMasterData() {
