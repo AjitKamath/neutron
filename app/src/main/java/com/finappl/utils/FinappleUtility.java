@@ -49,6 +49,7 @@ import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.SHARED_PREF;
 import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
 import static com.finappl.utils.Constants.UI_FONT;
+import static com.finappl.utils.Constants.UI_TIME_FORMAT_SDF;
 
 public class FinappleUtility extends Activity{
 
@@ -261,6 +262,37 @@ public class FinappleUtility extends Activity{
 
         return amountTV;
     }
+
+    public static String formatTime(Date date){
+        int minutes  = minutesDifference(new Date(), date);
+
+        if(minutes == 0){
+            return "just now";
+        }
+        else if(minutes > 0 && minutes < 60){
+            return minutes + " min. ago";
+        }
+        else if(minutes >= 0 && minutes < 120){
+            return  "1 hr. ago";
+        }
+        else if(minutes >= 0 && minutes <= 300){
+            int hours = minutes / 60;
+            return hours + " hrs. ago";
+        }
+        else{
+            return UI_TIME_FORMAT_SDF.format(date);
+        }
+    }
+
+    private static int minutesDifference(Date date1, Date date2) {
+        final int MILLI_TO_MINUTES = 1000 * 60;
+        return (int) (date1.getTime() - date2.getTime()) / MILLI_TO_MINUTES;
+    }
+
+    public static String formatAmountWithNegative( UserMO userMO, Double amount){
+        return userMO.getCUR_CODE()+" "+FinappleUtility.formatAmount(userMO.getMETRIC(), String.valueOf(amount));
+    }
+
 
     private static String formatDecimals(String inputStr){
         if(inputStr.contains(".")){

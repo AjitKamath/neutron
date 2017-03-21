@@ -113,21 +113,6 @@ public class SettingsFragment extends DialogFragment {
         fragment.show(manager, FRAGMENT_CONFIRM);
     }
 
-    @OnClick(R.id.settingsSaveTVId)
-    public void saveSettings(){
-        if(validateAndGetInputs()){
-            if(authorizationDbService.updateUser(loggedInUserObj)){
-                dismiss();
-                ((HomeActivity)getActivity()).fetchUserWrapper();
-                ((HomeActivity)getActivity()).setUpTabs();
-                ((HomeActivity)getActivity()).showSnacks(SAVED, OK, Snackbar.LENGTH_SHORT);
-            }
-            else{
-                showSnacks("Something went wrong. Could not save.");
-            }
-        }
-    }
-
     private boolean validateAndGetInputs() {
         String emailStr = String.valueOf(settingsEmailET.getText());
         String nameStr = String.valueOf(settingsNameET.getText());

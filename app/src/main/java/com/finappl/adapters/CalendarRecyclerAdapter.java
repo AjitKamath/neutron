@@ -1,79 +1,101 @@
 package com.finappl.adapters;
 
+/**
+ * Created by ajit on 15/2/17.
+ */
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
+import com.finappl.interfaces.OnItemClickListener;
 import com.finappl.models.DayLedger;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import static com.finappl.R.id.calendar_date_cell_date_key;
-import static com.finappl.utils.Constants.UI_DATE_FORMAT_SDF;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.UI_FONT;
 
-/**
- * Created by ajit on 8/1/15.
- */
-// Inner Class
-public class CalendarGridViewAdapter extends BaseAdapter {
+
+public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecyclerAdapter.ViewHolder>{
     private final String CLASS_NAME = this.getClass().getName();
     private final Context mContext;
-    private LayoutInflater inflater;
     private final int LAYOUT = R.layout.calendar_day;
 
     private List<Date> datesList = new ArrayList<>();
     private Map<String, DayLedger> ledger;
     private UserMO user;
-    private String today = UI_DATE_FORMAT_SDF.format(new Date());
+    private String today = JAVA_DATE_FORMAT_SDF.format(new Date());
 
-    public CalendarGridViewAdapter(Context context, List<Date> datesList, Map<String, DayLedger> ledger, UserMO user) {
+    private final OnItemClickListener listener;
+
+
+    public CalendarRecyclerAdapter(Context context, List<Date> datesList, Map<String, DayLedger> ledger, UserMO user, OnItemClickListener listener){
         super();
         this.mContext = context;
-        this.inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         this.datesList = datesList;
         this.user = user;
         this.ledger = ledger;
+
+        this.listener = listener;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        private TextView calendar_day_date_tv;
+        private LinearLayout calendar_day_ll;
+        private RelativeLayout calendar_day_content_rl;
+        private LinearLayout calendar_day_transaction_ll;
+        private TextView calendar_day_transactions_amt_tv;
+        private LinearLayout calendar_day_transfer_ll;
+        private TextView calendar_day_transfers_amt_tv;
+
+        public ViewHolder(View v){
+            super(v);
+            calendar_day_date_tv = (TextView) v.findViewById(R.id.calendar_day_date_tv);
+            calendar_day_ll = (LinearLayout) v.findViewById(R.id.calendar_day_ll);
+            calendar_day_content_rl = (RelativeLayout) v.findViewById(R.id.calendar_day_content_rl);
+            calendar_day_transaction_ll = (LinearLayout) v.findViewById(R.id.calendar_day_transaction_ll);
+            calendar_day_transactions_amt_tv = (TextView) v.findViewById(R.id.calendar_day_transactions_amt_tv);
+            calendar_day_transfer_ll = (LinearLayout) v.findViewById(R.id.calendar_day_transfer_ll);
+            calendar_day_transfers_amt_tv = (TextView) v.findViewById(R.id.calendar_day_transfers_amt_tv);
+        }
+
+        public void bind(final Date item, final View viewObj, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(viewObj);
+                }
+            });
+        }
+
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder mHolder;
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        View v = LayoutInflater.from(mContext).inflate(LAYOUT ,parent,false);
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
+    }
 
-        if(convertView == null) {
-            mHolder = new ViewHolder();
-            convertView = inflater.inflate(LAYOUT, null);
-
-            mHolder.calendar_day_date_tv = (TextView) convertView.findViewById(R.id.calendar_day_date_tv);
-            mHolder.calendar_day_ll = (LinearLayout) convertView.findViewById(R.id.calendar_day_ll);
-            mHolder.calendar_day_content_rl = (RelativeLayout) convertView.findViewById(R.id.calendar_day_content_rl);
-            mHolder.calendar_day_transaction_ll = (LinearLayout) convertView.findViewById(R.id.calendar_day_transaction_ll);
-            mHolder.calendar_day_transactions_amt_tv = (TextView) convertView.findViewById(R.id.calendar_day_transactions_amt_tv);
-            mHolder.calendar_day_transfer_ll = (LinearLayout) convertView.findViewById(R.id.calendar_day_transfer_ll);
-            mHolder.calendar_day_transfers_amt_tv = (TextView) convertView.findViewById(R.id.calendar_day_transfers_amt_tv);
-
-            convertView.setTag(LAYOUT, mHolder);
-        } else {
-            mHolder = (ViewHolder) convertView.getTag(LAYOUT);
-        }
-
+    @Override
+    public void onBindViewHolder(ViewHolder mHolder, int position){
         Date dateObj = datesList.get(position);
-        String cellDate = UI_DATE_FORMAT_SDF.format(dateObj);
+        String cellDate = JAVA_DATE_FORMAT_SDF.format(dateObj);
         int date = Integer.parseInt(cellDate.split("-")[0]);
 
         //set cell data
@@ -91,6 +113,8 @@ public class CalendarGridViewAdapter extends BaseAdapter {
                 mHolder.calendar_day_transfer_ll.setVisibility(View.VISIBLE);
                 mHolder.calendar_day_transfers_amt_tv = FinappleUtility.shortenAmountView(mHolder.calendar_day_transfers_amt_tv, user, dayLedger.getTransfersAmountTotal());
             }
+
+            mHolder.calendar_day_content_rl.setTag(calendar_date_cell_date_key, dayLedger);
         }
 
         //date text
@@ -115,35 +139,9 @@ public class CalendarGridViewAdapter extends BaseAdapter {
             mHolder.calendar_day_date_tv.setTextColor(ContextCompat.getColor(mContext, R.color.calendarTodayDate));
         }
 
-        mHolder.calendar_day_content_rl.setTag(calendar_date_cell_date_key, dateObj);
+        mHolder.bind(datesList.get(position), mHolder.calendar_day_content_rl, listener);
 
         setFont(mHolder.calendar_day_ll);
-
-        return convertView;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public class ViewHolder {
-        private TextView calendar_day_date_tv;
-        private LinearLayout calendar_day_ll;
-        private RelativeLayout calendar_day_content_rl;
-        private LinearLayout calendar_day_transaction_ll;
-        private TextView calendar_day_transactions_amt_tv;
-        private LinearLayout calendar_day_transfer_ll;
-        private TextView calendar_day_transfers_amt_tv;
-    }
-
-    public Object getItem(int position) {
-        return datesList.get(position);
-    }
-
-    @Override
-    public int getCount() {
-        return 42;
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
@@ -162,5 +160,10 @@ public class CalendarGridViewAdapter extends BaseAdapter {
                 setFont((ViewGroup) v);
             }
         }
+    }
+
+    @Override
+    public int getItemCount(){
+        return datesList.size();
     }
 }

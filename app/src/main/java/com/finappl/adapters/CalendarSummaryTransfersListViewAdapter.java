@@ -93,9 +93,15 @@ public class CalendarSummaryTransfersListViewAdapter extends BaseAdapter {
         mHolder.calendar_summary_transfers_list_item_account_from_tv.setText(transfer.getFromAccName());
         mHolder.calendar_summary_transfers_list_item_account_to_iv.setBackgroundResource(Integer.parseInt(transfer.getToAccImg()));
         mHolder.calendar_summary_transfers_list_item_account_to_tv.setText(transfer.getToAccName());
-        mHolder.calendar_summary_transfers_list_item_time_tv.setText(UI_TIME_FORMAT_SDF.format(transfer.getCREAT_DTM()));
         mHolder.calendar_summary_transfers_list_item_amt_tv = FinappleUtility.formatAmountView(mHolder.calendar_summary_transfers_list_item_amt_tv, user, transfer.getTRNFR_AMT());
         mHolder.calendar_summary_transfers_list_item_amt_tv.setTextColor(mContext.getResources().getColor(R.color.finappleCurrencyNeutralColor));
+
+        if(transfer.getMOD_DTM() != null){
+            mHolder.calendar_summary_transfers_list_item_time_tv.setText(FinappleUtility.formatTime(transfer.getMOD_DTM()));
+        }
+        else{
+            mHolder.calendar_summary_transfers_list_item_time_tv.setText(FinappleUtility.formatTime(transfer.getCREAT_DTM()));
+        }
 
         setFont(mHolder.calendar_summary_transfers_list_item_ll);
 

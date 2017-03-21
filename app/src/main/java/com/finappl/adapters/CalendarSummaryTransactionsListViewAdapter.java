@@ -97,8 +97,14 @@ public class CalendarSummaryTransactionsListViewAdapter extends BaseAdapter {
         mHolder.calendar_summary_transactions_list_item_name_tv.setText(transaction.getTRAN_NAME());
         mHolder.calendar_summary_transactions_list_item_cat_tv.setText(transaction.getCategory());
         mHolder.calendar_summary_transactions_list_item_account_tv.setText(transaction.getAccount());
-        mHolder.calendar_summary_transactions_list_item_time_tv.setText(UI_TIME_FORMAT_SDF.format(transaction.getCREAT_DTM()));
         mHolder.calendar_summary_transactions_list_item_amount_tv = FinappleUtility.formatAmountView(mHolder.calendar_summary_transactions_list_item_amount_tv, user, transaction.getTRAN_AMT());
+
+        if(transaction.getMOD_DTM() != null){
+            mHolder.calendar_summary_transactions_list_item_time_tv.setText(FinappleUtility.formatTime(transaction.getMOD_DTM()));
+        }
+        else{
+            mHolder.calendar_summary_transactions_list_item_time_tv.setText(FinappleUtility.formatTime(transaction.getCREAT_DTM()));
+        }
 
         if("EXPENSE".equalsIgnoreCase(transaction.getTRAN_TYPE())){
             mHolder.calendar_summary_transactions_list_item_amount_tv.setTextColor(mContext.getResources().getColor(R.color.finappleCurrencyNegColor));

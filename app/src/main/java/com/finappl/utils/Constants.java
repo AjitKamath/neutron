@@ -102,6 +102,7 @@ public final class Constants{
     public static final String FRAGMENT_ADD_UPDATE_CATEGORY = "FRAGMENT_ADD_UPDATE_CATEGORY";
     public static final String FRAGMENT_ADD_UPDATE_ACCOUNT = "FRAGMENT_ADD_UPDATE_ACCOUNT";
     public static final String FRAGMENT_ADD_UPDATE_SPENTON = "FRAGMENT_ADD_UPDATE_SPENTON";
+    public static final String FRAGMENT_DAY_SUMMARY = "FRAGMENT_DAY_SUMMARY";
 
     public static final String FRAGMENT_SELECT_REPEAT = "FRAGMENT_SELECT_REPEAT";
     public static final String FRAGMENT_SELECT_AMOUNT = "FRAGMENT_SELECT_AMOUNT";
@@ -140,6 +141,7 @@ public final class Constants{
     public static final String COUNTRY_OBJECT = "COUNTRY_OBJECT";
     public static final String BUDGET_OBJECT = "BUDGET_OBJECT";
     public static final String IMAGE_OBJECT = "IMAGE_OBJECT";
+    public static final String DAY_SUMMARY_OBJECT = "DAY_SUMMARY_OBJECT";
 
     public static final String SELECTED_CATEGORY_OBJECT = "SELECTED_CATEGORY_OBJECT";
     public static final String SELECTED_ACCOUNT_OBJECT = "SELECTED_ACCOUNT_OBJECT";
