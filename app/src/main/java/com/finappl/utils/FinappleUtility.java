@@ -290,7 +290,13 @@ public class FinappleUtility extends Activity{
     }
 
     public static String formatAmountWithNegative( UserMO userMO, Double amount){
-        return userMO.getCUR_CODE()+" "+FinappleUtility.formatAmount(userMO.getMETRIC(), String.valueOf(amount));
+        String result = userMO.getCUR_CODE()+" "+FinappleUtility.formatAmount(userMO.getMETRIC(), String.valueOf(amount).replace("-",""));
+
+        if(amount < 0){
+            result = result.replace(userMO.getCUR_CODE()+" ", userMO.getCUR_CODE()+" -");
+        }
+
+        return result;
     }
 
 

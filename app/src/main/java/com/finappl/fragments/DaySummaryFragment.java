@@ -5,27 +5,32 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.adapters.CalendarSummaryRecyclerViewAdapter;
+import com.finappl.activities.HomeActivity;
 import com.finappl.adapters.DaySummaryListViewAdapter;
+import com.finappl.dbServices.TransactionsDbService;
+import com.finappl.dbServices.TransfersDbService;
 import com.finappl.models.ActivitiesMO;
 import com.finappl.models.DayLedger;
+import com.finappl.models.TransactionMO;
+import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +40,18 @@ import butterknife.OnClick;
 
 import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
 import static com.finappl.utils.Constants.DAY_SUMMARY_OBJECT;
-import static com.finappl.utils.Constants.FRAGMENT_ACCOUNTS;
-import static com.finappl.utils.Constants.FRAGMENT_CATEGORIES;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSACTION;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSFER;
 import static com.finappl.utils.Constants.FRAGMENT_CONFIRM;
-import static com.finappl.utils.Constants.FRAGMENT_OPTIONS;
-import static com.finappl.utils.Constants.FRAGMENT_SETTINGS;
-import static com.finappl.utils.Constants.FRAGMENT_SPENTONS;
+import static com.finappl.utils.Constants.FRAGMENT_DAY_SUMMARY;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
+import static com.finappl.utils.Constants.OK;
+import static com.finappl.utils.Constants.SELECTED_GENERIC_OBJECT;
+import static com.finappl.utils.Constants.SELECTED_TRANASCTION_OBJECT;
+import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
+import static com.finappl.utils.Constants.TRANSFER_OBJECT;
+import static com.finappl.utils.Constants.UI_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.UI_FONT;
 
 /**
@@ -77,6 +87,11 @@ public class DaySummaryFragment extends DialogFragment {
     private DayLedger dayLedger;
     private UserMO user;
 
+    private boolean refreshCalendar = false;
+
+    private TransactionsDbService transactionsDbService;
+    private TransfersDbService transfersDbService;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.day_summary, container);
@@ -93,7 +108,13 @@ public class DaySummaryFragment extends DialogFragment {
     }
 
     private void setupPage() {
-        day_summary_date_tv.setText(dayLedger.getDate());
+        try{
+            day_summary_date_tv.setText(String.valueOf(UI_DATE_FORMAT_SDF.format(JAVA_DATE_FORMAT_SDF.parse(dayLedger.getDate()))).toUpperCase());
+        }
+        catch(ParseException e){
+            Log.e(CLASS_NAME, "Parse Exception while parsing the date:"+dayLedger.getDate());
+            return;
+        }
 
         List<Object> activitiesList = new ArrayList<>();
         ActivitiesMO activities = dayLedger.getActivities();
@@ -113,13 +134,98 @@ public class DaySummaryFragment extends DialogFragment {
         day_summary_transfers_amount_tv.setText(String.valueOf(FinappleUtility.formatAmountWithNegative(user, dayLedger.getTransfersAmountTotal())));
 
         //set up list of transactions and transfers
-        DaySummaryListViewAdapter listViewAdapter = new DaySummaryListViewAdapter(mContext, user, activitiesList);
+        DaySummaryListViewAdapter listViewAdapter = new DaySummaryListViewAdapter(mContext, user, activitiesList, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(R.id.day_summary_transactions_list_item_edit_iv == v.getId()){
+                    onClose(v);
+
+                    FragmentManager manager = getFragmentManager();
+                    Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_TRANSACTION);
+
+                    if (frag != null) {
+                        manager.beginTransaction().remove(frag).commit();
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(TRANSACTION_OBJECT, (TransactionMO) v.getTag(R.layout.day_summary_transactions_list_item));
+                    bundle.putSerializable(LOGGED_IN_OBJECT, user);
+
+                    AddUpdateTransactionFragment fragment = new AddUpdateTransactionFragment();
+                    fragment.setArguments(bundle);
+                    fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+                    fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSACTION);
+                }
+                else if(R.id.day_summary_transactions_list_item_delete_iv == v.getId()){
+                    FragmentManager manager = getFragmentManager();
+                    Fragment frag = manager.findFragmentByTag(FRAGMENT_CONFIRM);
+                    if (frag != null) {
+                        manager.beginTransaction().remove(frag).commit();
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(CONFIRM_MESSAGE, "Delete Transaction ?");
+                    bundle.putSerializable(SELECTED_GENERIC_OBJECT, (TransactionMO) v.getTag(R.layout.day_summary_transactions_list_item));
+
+                    Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_DAY_SUMMARY);
+
+                    ConfirmFragment fragment = new ConfirmFragment();
+                    fragment.setArguments(bundle);
+                    fragment.setTargetFragment(currentFrag, 0);
+                    fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+                    fragment.show(manager, FRAGMENT_CONFIRM);
+                }
+                else if(R.id.day_summary_transfers_list_item_edit_iv == v.getId()){
+                    onClose(v);
+
+                    FragmentManager manager = getFragmentManager();
+                    Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_TRANSFER);
+
+                    if (frag != null) {
+                        manager.beginTransaction().remove(frag).commit();
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(TRANSFER_OBJECT, (TransferMO) v.getTag(R.layout.day_summary_transfers_list_item));
+                    bundle.putSerializable(LOGGED_IN_OBJECT, user);
+
+                    AddUpdateTransferFragment fragment = new AddUpdateTransferFragment();
+                    fragment.setArguments(bundle);
+                    fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+                    fragment.show(manager, FRAGMENT_ADD_UPDATE_TRANSFER);
+                }
+                else if(R.id.day_summary_transfers_list_item_delete_iv == v.getId()){
+                    FragmentManager manager = getFragmentManager();
+                    Fragment frag = manager.findFragmentByTag(FRAGMENT_CONFIRM);
+                    if (frag != null) {
+                        manager.beginTransaction().remove(frag).commit();
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(CONFIRM_MESSAGE, "Delete Transfer ?");
+                    bundle.putSerializable(SELECTED_GENERIC_OBJECT, (TransferMO) v.getTag(R.layout.day_summary_transfers_list_item));
+
+                    Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_DAY_SUMMARY);
+
+                    ConfirmFragment fragment = new ConfirmFragment();
+                    fragment.setArguments(bundle);
+                    fragment.setTargetFragment(currentFrag, 0);
+                    fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+                    fragment.show(manager, FRAGMENT_CONFIRM);
+                }
+            }
+        });
         day_summary_lv.setAdapter(listViewAdapter);
     }
 
     private void getDataFromBundle() {
         dayLedger = (DayLedger) getArguments().get(DAY_SUMMARY_OBJECT);
         user = (UserMO) getArguments().get(LOGGED_IN_OBJECT);
+    }
+
+    @OnClick(R.id.day_summary_close_iv)
+    public void onClose(View view){
+        dismiss();
     }
 
     private void initComps(){
@@ -133,6 +239,18 @@ public class DaySummaryFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity().getApplicationContext();
+
+        transactionsDbService = new TransactionsDbService(mContext);
+        transfersDbService = new TransfersDbService(mContext);
+    }
+
+    @Override
+    public void onDismiss(final DialogInterface dialog){
+        super.onDismiss(dialog);
+
+        if(refreshCalendar){
+            ((HomeActivity)getActivity()).updateCalendarMonths();
+        }
     }
 
     @Override
@@ -163,6 +281,37 @@ public class DaySummaryFragment extends DialogFragment {
             else if(v instanceof ViewGroup) {
                 setFont((ViewGroup) v);
             }
+        }
+    }
+
+    public void deleteTransaction(TransactionMO transaction) {
+        if(transactionsDbService.deleteTransaction(transaction.getTRAN_ID())){
+            DayLedger temp = dayLedger;
+            temp.getActivities().getTransactionsList().remove(transaction);
+
+            if("EXPENSE".equalsIgnoreCase(transaction.getTRAN_TYPE())){
+                temp.setTransactionsAmountTotal(temp.getTransactionsAmountTotal()+transaction.getTRAN_AMT());
+            }
+            else{
+                temp.setTransactionsAmountTotal(temp.getTransactionsAmountTotal()-transaction.getTRAN_AMT());
+            }
+
+            dayLedger = temp;
+            setupPage();
+            refreshCalendar = true;
+            FinappleUtility.showSnacks(getActivity().getCurrentFocus(), "Transaction deleted !", OK, Snackbar.LENGTH_LONG);
+        }
+    }
+
+    public void deleteTransfer(TransferMO transfer) {
+        if(transfersDbService.deleteTransfer(transfer.getTRNFR_ID())){
+            DayLedger temp = dayLedger;
+            temp.getActivities().getTransfersList().remove(transfer);
+            temp.setTransfersAmountTotal(temp.getTransfersAmountTotal()-transfer.getTRNFR_AMT());
+            dayLedger = temp;
+            setupPage();
+            refreshCalendar = true;
+            FinappleUtility.showSnacks(getActivity().getCurrentFocus(), "Transfer deleted !", OK, Snackbar.LENGTH_LONG);
         }
     }
 }

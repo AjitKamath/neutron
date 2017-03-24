@@ -112,6 +112,7 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
             if(dayLedger.isHasTransfers()){
                 mHolder.calendar_day_transfer_ll.setVisibility(View.VISIBLE);
                 mHolder.calendar_day_transfers_amt_tv = FinappleUtility.shortenAmountView(mHolder.calendar_day_transfers_amt_tv, user, dayLedger.getTransfersAmountTotal());
+                mHolder.calendar_day_transfers_amt_tv.setTextColor(ContextCompat.getColor(mContext, R.color.finappleTheme));
             }
 
             mHolder.calendar_day_content_rl.setTag(calendar_date_cell_date_key, dayLedger);

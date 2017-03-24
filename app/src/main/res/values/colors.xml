@@ -263,7 +263,7 @@
     <color name="finappleCurrencyApproxColor">#000000</color>
     <color name="finappleCurrencyNegColor">#FF6347</color>
     <color name="finappleCurrencyPosColor">#006400</color>
-    <color name="finappleCurrencyNeutralColor">#64B5F6</color>
+    <color name="finappleCurrencyNeutralColor">#536dfe</color>
     <color name="finappleCurrencyDividerColor">#000000</color>
     <color name="finappleLimitCrossColor">#FFEFD5</color>
     <color name="finappleCurrencyCodeColor">#A9A9A9</color>

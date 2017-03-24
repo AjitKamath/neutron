@@ -16,11 +16,16 @@ import android.widget.TextView;
 import com.finappl.R;
 import com.finappl.activities.HomeActivity;
 import com.finappl.models.CategoryMO;
+import com.finappl.models.TransactionMO;
+import com.finappl.models.TransferMO;
 import com.google.firebase.auth.FirebaseAuth;
 
 import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
 import static com.finappl.utils.Constants.SELECTED_CATEGORY_OBJECT;
+import static com.finappl.utils.Constants.SELECTED_GENERIC_OBJECT;
+import static com.finappl.utils.Constants.SELECTED_TRANASCTION_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
+import static com.finappl.utils.Constants.UN_IDENTIFIED_OBJECT_TYPE;
 import static com.finappl.utils.Constants.UN_IDENTIFIED_PARENT_FRAGMENT;
 
 /**
@@ -101,6 +106,22 @@ public class ConfirmFragment extends DialogFragment {
                     CategoriesFragment fragment = (CategoriesFragment) getTargetFragment();
                     CategoryMO category = (CategoryMO) getArguments().get(SELECTED_CATEGORY_OBJECT);
                     fragment.deleteCategory(category);
+                }
+                else if(getTargetFragment() instanceof DaySummaryFragment){
+                    DaySummaryFragment fragment = (DaySummaryFragment) getTargetFragment();
+
+                    if(getArguments().get(SELECTED_GENERIC_OBJECT) instanceof TransactionMO){
+                        TransactionMO transaction = (TransactionMO) getArguments().get(SELECTED_GENERIC_OBJECT);
+                        fragment.deleteTransaction(transaction);
+                    }
+                    else if(getArguments().get(SELECTED_GENERIC_OBJECT) instanceof TransferMO){
+                        TransferMO transfer = (TransferMO) getArguments().get(SELECTED_GENERIC_OBJECT);
+                        fragment.deleteTransfer(transfer);
+                    }
+                    else{
+                        Log.e(CLASS_NAME, UN_IDENTIFIED_OBJECT_TYPE);
+                        return;
+                    }
                 }
                 else{
                     Log.e(CLASS_NAME, UN_IDENTIFIED_PARENT_FRAGMENT);

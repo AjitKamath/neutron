@@ -2,7 +2,9 @@ package com.finappl.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +47,7 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
     private List<Object> itemsList;
     private View.OnClickListener clickListener;
 
-    public DaySummaryListViewAdapter(Context mContext, UserMO user, List<Object> itemsList) {
+    public DaySummaryListViewAdapter(Context mContext, UserMO user, List<Object> itemsList, View.OnClickListener clickListener) {
         super();
 
         this.mContext = mContext;
@@ -53,6 +55,7 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
 
         this.itemsList = itemsList;
         this.user = user;
+        this.clickListener = clickListener;
 
         prepareData();
     }
@@ -109,6 +112,8 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
                 mHolder = new ViewHolder();
                 convertView = inflater.inflate(layout, null);
 
+                mHolder.day_summary_transactions_list_item_edit_iv = (ImageView) convertView.findViewById(R.id.day_summary_transactions_list_item_edit_iv);
+                mHolder.day_summary_transactions_list_item_delete_iv = (ImageView) convertView.findViewById(R.id.day_summary_transactions_list_item_delete_iv);
                 mHolder.day_summary_transactions_list_item_cv = (CardView) convertView.findViewById(R.id.day_summary_transactions_list_item_cv);
                 mHolder.day_summary_transactions_list_item_cat_iv = (ImageView) convertView.findViewById(R.id.day_summary_transactions_list_item_cat_iv);
                 mHolder.day_summary_transactions_list_item_name_tv = (TextView) convertView.findViewById(R.id.day_summary_transactions_list_item_name_tv);
@@ -135,10 +140,10 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
             mHolder.day_summary_transactions_list_item_amount_tv = FinappleUtility.formatAmountView(mHolder.day_summary_transactions_list_item_amount_tv, user, transaction.getTRAN_AMT());
 
             if("EXPENSE".equalsIgnoreCase(transaction.getTRAN_TYPE())){
-                mHolder.day_summary_transactions_list_item_amount_tv.setTextColor(mHolder.day_summary_transactions_list_item_amount_tv.getResources().getColor(R.color.finappleCurrencyNegColor));
+                mHolder.day_summary_transactions_list_item_amount_tv.setTextColor(ContextCompat.getColor(mContext, R.color.finappleCurrencyNegColor));
             }
             else{
-                mHolder.day_summary_transactions_list_item_amount_tv.setTextColor(mHolder.day_summary_transactions_list_item_amount_tv.getResources().getColor(R.color.finappleCurrencyPosColor));
+                mHolder.day_summary_transactions_list_item_amount_tv.setTextColor(ContextCompat.getColor(mContext, R.color.finappleCurrencyPosColor));
             }
 
             if(transaction.getTRAN_NOTE() != null && !transaction.getTRAN_NOTE().trim().isEmpty()){
@@ -155,6 +160,12 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
                 mHolder.day_summary_transactions_list_item_time_tv.setText(FinappleUtility.formatTime(transaction.getMOD_DTM()));
             }
 
+            mHolder.day_summary_transactions_list_item_edit_iv.setTag(layout, transaction);
+            mHolder.day_summary_transactions_list_item_delete_iv.setTag(layout, transaction);
+
+            mHolder.day_summary_transactions_list_item_edit_iv.setOnClickListener(clickListener);
+            mHolder.day_summary_transactions_list_item_delete_iv.setOnClickListener(clickListener);
+
             setFont(mHolder.day_summary_transactions_list_item_cv);
         }
         else if(item instanceof TransferMO){
@@ -164,6 +175,8 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
                 mHolder = new ViewHolder();
                 convertView = inflater.inflate(layout, null);
 
+                mHolder.day_summary_transfers_list_item_edit_iv = (ImageView) convertView.findViewById(R.id.day_summary_transfers_list_item_edit_iv);
+                mHolder.day_summary_transfers_list_item_delete_iv = (ImageView) convertView.findViewById(R.id.day_summary_transfers_list_item_delete_iv);
                 mHolder.day_summary_transfers_list_item_cv = (CardView) convertView.findViewById(R.id.day_summary_transfers_list_item_cv);
                 mHolder.day_summary_transfers_list_item_account_from_iv = (ImageView) convertView.findViewById(R.id.day_summary_transfers_list_item_account_from_iv);
                 mHolder.day_summary_transfers_list_item_account_to_iv = (ImageView) convertView.findViewById(R.id.day_summary_transfers_list_item_account_to_iv);
@@ -185,8 +198,10 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
             mHolder.day_summary_transfers_list_item_account_to_iv.setBackgroundResource(Integer.parseInt(transfer.getToAccImg()));
             mHolder.day_summary_transfers_list_item_account_from_tv.setText(transfer.getFromAccName());
             mHolder.day_summary_transfers_list_item_account_to_tv.setText(transfer.getToAccName());
-            mHolder.day_summary_transfers_list_item_amt_tv.setText(String.valueOf(transfer.getTRNFR_AMT()));
             mHolder.day_summary_transfers_list_item_notes_tv.setText(transfer.getTRNFR_NOTE());
+
+            mHolder.day_summary_transfers_list_item_amt_tv = FinappleUtility.formatAmountView(mHolder.day_summary_transfers_list_item_amt_tv, user, transfer.getTRNFR_AMT());
+            mHolder.day_summary_transfers_list_item_amt_tv.setTextColor(ContextCompat.getColor(mContext, R.color.finappleCurrencyNeutralColor));
 
             if(transfer.getMOD_DTM() == null){
                 mHolder.day_summary_transfers_list_item_time_tv.setText(FinappleUtility.formatTime(transfer.getCREAT_DTM()));
@@ -194,6 +209,12 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
             else{
                 mHolder.day_summary_transfers_list_item_time_tv.setText(FinappleUtility.formatTime(transfer.getMOD_DTM()));
             }
+
+            mHolder.day_summary_transfers_list_item_edit_iv.setTag(layout, transfer);
+            mHolder.day_summary_transfers_list_item_delete_iv.setTag(layout, transfer);
+
+            mHolder.day_summary_transfers_list_item_edit_iv.setOnClickListener(clickListener);
+            mHolder.day_summary_transfers_list_item_delete_iv.setOnClickListener(clickListener);
 
             setFont(mHolder.day_summary_transfers_list_item_cv);
         }
@@ -208,6 +229,8 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
 
     private class ViewHolder {
         //transaction
+        private ImageView day_summary_transactions_list_item_edit_iv;
+        private ImageView day_summary_transactions_list_item_delete_iv;
         private CardView day_summary_transactions_list_item_cv;
         private ImageView day_summary_transactions_list_item_cat_iv;
         private TextView day_summary_transactions_list_item_name_tv;
@@ -219,6 +242,8 @@ public class DaySummaryListViewAdapter extends BaseAdapter {
         private TextView day_summary_transactions_list_item_notes_tv;
 
         //transfer
+        private ImageView day_summary_transfers_list_item_edit_iv;
+        private ImageView day_summary_transfers_list_item_delete_iv;
         private CardView day_summary_transfers_list_item_cv;
         private ImageView day_summary_transfers_list_item_account_from_iv;
         private ImageView day_summary_transfers_list_item_account_to_iv;

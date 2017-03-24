@@ -860,6 +860,15 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 21-mar-2017
 1. day summary implemented on day click.
 
+<--Git Push on 21-mar-2017-->
+
+23-mar-2017
+1. day summary fragment wip.
+2. fixed the issue with formatting of amount with - sign.
+
+24-mar-2017
+1. day summary fragment completed
+
 ------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE
 2. impl delete transaction, cat, spent on, account, transfer(take care of things like..impacts..should check for existing transactions with the same cat.

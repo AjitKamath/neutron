@@ -1063,6 +1063,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             transfersList.add(transfer);
             activities.setTransfersList(transfersList);
+            dayLedger.setDate(transferDateStr);
             dayLedger.setActivities(activities);
             dayLedger.setTransfersAmountTotal(totalAmount);
 
@@ -1240,6 +1241,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
             transactionsList.add(transaction);
             activities.setTransactionsList(transactionsList);
+            dayLedger.setDate(tranDateStr);
             dayLedger.setActivities(activities);
             dayLedger.setTransactionsAmountTotal(totalAmount);
 

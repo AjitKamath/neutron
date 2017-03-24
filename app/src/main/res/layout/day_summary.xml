@@ -20,7 +20,7 @@
         android:background="@color/finappleTheme"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="@dimen/screen_components_padding_from_walls"
+        android:padding="5dp"
         android:visibility="visible">
 
 
@@ -37,19 +37,18 @@
                 android:gravity="left|center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
+                <ImageView
+                    android:id="@+id/day_summary_close_iv"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:gravity="center_vertical"
-                    android:text="CLOSE"
-                    android:textColor="@drawable/textview_touch_light"
-                    android:textSize="10sp" />
+                    android:src="@drawable/cross_white_small"/>
 
                 <TextView
                     android:id="@+id/day_summary_date_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="-50dp"
+                    android:layout_marginLeft="-15dp"
                     android:gravity="center"
                     android:text="28 SEP '16"
                     android:textColor="@drawable/textview_touch_light"

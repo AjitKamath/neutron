@@ -15,6 +15,28 @@
         android:orientation="vertical"
         android:padding="5dp">
 
+        <LinearLayout
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <ImageView
+                android:id="@+id/day_summary_transactions_list_item_edit_iv"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/write_grey"/>
+
+            <ImageView
+                android:id="@+id/day_summary_transactions_list_item_delete_iv"
+                android:layout_marginLeft="2dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/cross_grey"/>
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"

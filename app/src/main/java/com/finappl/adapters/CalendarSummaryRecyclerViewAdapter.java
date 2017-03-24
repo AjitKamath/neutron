@@ -7,6 +7,7 @@ package com.finappl.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -76,7 +77,7 @@ public class CalendarSummaryRecyclerViewAdapter extends RecyclerView.Adapter<Cal
             }
             else if(calendarSummary.getListViewAdapter() instanceof CalendarSummaryTransfersListViewAdapter){
                 viewHolder.calendar_summary_list_item_lv.setAdapter((CalendarSummaryTransfersListViewAdapter)calendarSummary.getListViewAdapter());
-                viewHolder.calendar_summary_list_item_amount_tv.setTextColor(viewHolder.calendar_summary_list_item_amount_tv.getResources().getColor(R.color.finappleCurrencyNeutralColor));
+                viewHolder.calendar_summary_list_item_amount_tv.setTextColor(ContextCompat.getColor(mContext, R.color.finappleCurrencyNeutralColor));
 
                 if(((CalendarSummaryTransfersListViewAdapter) calendarSummary.getListViewAdapter()).getCount() <= 3){
                     calculateListViewHeight = (baseHeightForListView * ((CalendarSummaryTransfersListViewAdapter) calendarSummary.getListViewAdapter()).getCount());

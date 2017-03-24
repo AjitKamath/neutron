@@ -151,6 +151,8 @@ public final class Constants{
     public static final String SELECTED_COUNTRY_OBJECT = "SELECTED_COUNTRY_OBJECT";
     public static final String SELECTED_IMAGE_OBJECT = "SELECTED_IMAGE_OBJECT";
     public static final String SELECTED_GENERIC_OBJECT = "SELECTED_GENERIC_OBJECT";
+    public static final String SELECTED_TRANASCTION_OBJECT = "SELECTED_TRANSACTION_OBJECT";
+    public static final String SELECTED_TRANSFER_OBJECT = "SELECTED_TRANSFER_OBJECT";
 
     public static final String ACCOUNT_TYPE_FLAG = "ACCOUNT_TYPE_FLAG";
 
