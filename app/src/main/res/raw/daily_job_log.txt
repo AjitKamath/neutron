@@ -869,6 +869,15 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 24-mar-2017
 1. day summary fragment completed
 
+<--Git Push on 24-mar-2017-->
+
+27-mar-2017
+1. linked the master content screens to the calendar menu.
+2. cosmetic changes al over
+
+28-mar-2017
+1. budget screens added in calendar menu
+
 ------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE
 2. impl delete transaction, cat, spent on, account, transfer(take care of things like..impacts..should check for existing transactions with the same cat.
@@ -934,7 +943,7 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 60. InjectView and OnClick annotations in all the fragments and activity
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-CORE FUNCTIONALITY CHECK:	13/20
+CORE FUNCTIONALITY CHECK:	20/20
 
 TRANSACTION: 			    4/4
 1. NEW TRANSACTION		    (Y)
@@ -953,17 +962,17 @@ BUDGET:				        3/3
 2. UPDATE BUDGET		    (Y)
 3. DELETE BUDGET		    (Y)
 				
-ACCOUNT:        			0/3
-1. NEW ACCOUNT	    		(N)
-2. UPDATE ACCOUNT	    	(N)
-3. DELETE ACCOUNT	    	(N)
+ACCOUNT:        			3/3
+1. NEW ACCOUNT	    		(Y)
+2. UPDATE ACCOUNT	    	(Y)
+3. DELETE ACCOUNT	    	(Y)
 
-CATEGORY:		        	0/3
+CATEGORY:		        	3/3
 1. NEW CATEGORY	    		(Y)
 2. UPDATE CATEGORY	    	(Y)
-3. DELETE CATEGORY	    	(N)
+3. DELETE CATEGORY	    	(Y)
 
-SPENT ON:			        0/3
-1. NEW SPENT ON			    (N)
-2. UPDATE SPENT ON		    (N)
-3. DELETE SPENT ON		    (N)
+SPENT ON:			        3/3
+1. NEW SPENT ON			    (Y)
+2. UPDATE SPENT ON		    (Y)
+3. DELETE SPENT ON		    (Y)

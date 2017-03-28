@@ -55,7 +55,6 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
             mHolder.accountLL = (LinearLayout) convertView.findViewById(R.id.accountLLId);
             mHolder.accountIV = (ImageView) convertView.findViewById(R.id.accountIVId);
             mHolder.accountTV = (TextView) convertView.findViewById(R.id.accountTVId);
-            mHolder.accountCurrencyTV = (TextView) convertView.findViewById(R.id.accountCurrencyTVId);
             mHolder.accountAmountTV = (TextView) convertView.findViewById(R.id.accountAmountTVId);
             mHolder.accountDeleteIV = (ImageView) convertView.findViewById(R.id.accountDeleteIVId);
             mHolder.accountModifyIV = (ImageView) convertView.findViewById(R.id.accountModifyIVId);
@@ -70,7 +69,6 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
 
         mHolder.accountTV.setText(account.getACC_NAME());
         mHolder.accountIV.setBackgroundResource(Integer.parseInt(account.getACC_IMG()));
-        mHolder.accountCurrencyTV.setText(user.getCUR_CODE());
         mHolder.accountAmountTV = FinappleUtility.formatAmountView(mHolder.accountAmountTV, user, account.getACC_TOTAL());
 
         mHolder.accountModifyIV.setTag(account);
@@ -129,7 +127,6 @@ public class AccountsFragmentListViewAdapter extends BaseAdapter {
         private LinearLayout accountLL;
         private ImageView accountIV;
         private TextView accountTV;
-        private TextView accountCurrencyTV;
         private TextView accountAmountTV;
         private ImageView accountDeleteIV;
         private ImageView accountModifyIV;

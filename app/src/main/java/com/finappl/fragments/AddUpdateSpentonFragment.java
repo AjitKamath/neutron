@@ -95,12 +95,12 @@ public class AddUpdateSpentonFragment extends DialogFragment {
         return view;
     }
 
-    @OnClick(R.id.addUpdateSpentonHeaderCloseTVId)
+    @OnClick(R.id.addUpdateSpentonHeaderCloseIVId)
     public void close(){
         dismiss();
     }
 
-    @OnClick(R.id.addUpdateSpentonHeaderSaveTVId)
+    @OnClick(R.id.addUpdateSpentonHeaderSaveIVId)
     public void onAddUpdate(){
         SpentOnMO tempSpenton = validateAndGetInputs();
 

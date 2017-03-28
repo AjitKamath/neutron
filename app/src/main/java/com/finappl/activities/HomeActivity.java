@@ -35,11 +35,9 @@ import com.finappl.adapters.CalendarViewPagerAdapter;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
-import com.finappl.fragments.BudgetDetailsFragment;
 import com.finappl.fragments.TransactionDetailsFragment;
 import com.finappl.fragments.TransferDetailsFragment;
 import com.finappl.models.AccountMO;
-import com.finappl.models.BudgetMO;
 import com.finappl.models.CalendarMonth;
 import com.finappl.models.DayLedger;
 import com.finappl.models.TransactionMO;
@@ -60,8 +58,6 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Optional;
 
-import static com.finappl.utils.Constants.BUDGET_OBJECT;
-import static com.finappl.utils.Constants.FRAGMENT_BUDGET_DETAILS;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION_DETAILS;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSFER_DETAILS;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
@@ -431,24 +427,6 @@ public class HomeActivity extends CommonActivity {
         fragment.setArguments(bundle);
         fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_TRANSFER_DETAILS);
-    }
-
-    private void showBudgetDetails(BudgetMO budget){
-        FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_BUDGET_DETAILS);
-
-        if (frag != null) {
-            manager.beginTransaction().remove(frag).commit();
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(BUDGET_OBJECT, budget);
-        bundle.putSerializable(LOGGED_IN_OBJECT, user);
-
-        BudgetDetailsFragment fragment = new BudgetDetailsFragment();
-        fragment.setArguments(bundle);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
-        fragment.show(manager, FRAGMENT_BUDGET_DETAILS);
     }
 
     @Override

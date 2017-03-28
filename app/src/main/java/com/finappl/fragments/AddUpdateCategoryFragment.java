@@ -95,12 +95,12 @@ public class AddUpdateCategoryFragment extends DialogFragment {
         return view;
     }
 
-    @OnClick(R.id.addUpdateCategoryHeaderCloseTVId)
+    @OnClick(R.id.addUpdateCategoryHeaderCloseIVId)
     public void close(){
         dismiss();
     }
 
-    @OnClick(R.id.addUpdateCategoryHeaderSaveTVId)
+    @OnClick(R.id.addUpdateCategoryHeaderSaveIVId)
     public void onAddUpdate(){
         CategoryMO tempCategory = validateAndGetInputs();
 

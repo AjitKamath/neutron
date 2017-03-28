@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/book_options_seek"
-        android:icon="@drawable/cash"
-        android:title="TEST"/>
+        android:id="@+id/calendar_menu_manage_categories"
+        android:title="CATEGORIES"/>
 
+    <item
+        android:id="@+id/calendar_menu_manage_accounts"
+        android:title="ACCOUNTS"/>
 
+    <item
+        android:id="@+id/calendar_menu_manage_spent_ons"
+        android:title="SPENT ONS"/>
+
+    <item
+        android:id="@+id/calendar_menu_manage_budgets"
+        android:title="BUDGETS"/>
+
+    <item
+        android:id="@+id/calendar_menu_manage_reports"
+        android:title="REPORTS"/>
 
 </menu>

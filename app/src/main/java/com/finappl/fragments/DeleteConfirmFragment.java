@@ -104,13 +104,13 @@ public class DeleteConfirmFragment extends DialogFragment {
             category.setDefaultCategoryId(((CategoryMO)deleteConfirmDefaultIV.getTag()).getCAT_ID());
             fragment.normalizeImpactsAndDeleteCategory(category);
         }
-        if(getTargetFragment() instanceof AccountsFragment){
+        else if(getTargetFragment() instanceof AccountsFragment){
             AccountsFragment fragment = (AccountsFragment) getTargetFragment();
             AccountMO account = (AccountMO) getArguments().get(SELECTED_GENERIC_OBJECT);
             account.setDefaultAccountId(((AccountMO)deleteConfirmDefaultIV.getTag()).getACC_ID());
             fragment.normalizeImpactsAndDeleteAccount(account);
         }
-        if(getTargetFragment() instanceof SpentonsFragment){
+        else if(getTargetFragment() instanceof SpentonsFragment){
             SpentonsFragment fragment = (SpentonsFragment) getTargetFragment();
             SpentOnMO spentOn = (SpentOnMO) getArguments().get(SELECTED_GENERIC_OBJECT);
             spentOn.setDefaultSpentonId(((SpentOnMO)deleteConfirmDefaultIV.getTag()).getSPNT_ON_ID());
@@ -189,73 +189,21 @@ public class DeleteConfirmFragment extends DialogFragment {
             deleteConfirmDefaultIV.setTag(spentOn);
         }
 
-        //if there are no transactions, transfers and budgets then show delete confirmation
-        if(transactionsCount == 0 && transfersCount == 0 && budgetsCount == 0){
-            showDelete();
-            dismiss();
-            return;
-        }
-
         //transactions
-        if(transactionsCount > 0){
-            deleteConfirmTransactionsCountTV.setText(String.valueOf(transactionsCount));
-        }
-        else{
-            deleteConfirmTransactionsLL.setVisibility(View.GONE);
-        }
+        deleteConfirmTransactionsCountTV.setText(String.valueOf(transactionsCount));
+
         //transfers
-        if(transfersCount > 0){
-            deleteConfirmTransfersCountTV.setText(String.valueOf(transfersCount));
-        }
-        else{
-            deleteConfirmTransfersLL.setVisibility(View.GONE);
-        }
+        deleteConfirmTransfersCountTV.setText(String.valueOf(transfersCount));
+
         //budgets
-        if(budgetsCount > 0){
-            deleteConfirmBudgetsCountTV.setText(String.valueOf(budgetsCount));
-        }
-        else{
-            deleteConfirmBudgetsLL.setVisibility(View.GONE);
-        }
+        deleteConfirmBudgetsCountTV.setText(String.valueOf(budgetsCount));
 
         //set default
         deleteConfirmDefaultIV.setBackgroundResource(Integer.parseInt(defaultImageStr));
         deleteConfirmDefaultTV.setText(defaultTextStr);
     }
 
-    private void showDelete() {
-        FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_CONFIRM);
-        if (frag != null) {
-            manager.beginTransaction().remove(frag).commit();
-        }
-
-        Bundle bundle = new Bundle();
-        if(object instanceof CategoryMO){
-            bundle.putSerializable(CONFIRM_MESSAGE, "Delete Category ?");
-            bundle.putSerializable(SELECTED_CATEGORY_OBJECT, (CategoryMO)object);
-        }
-        else if(object instanceof AccountMO){
-            bundle.putSerializable(CONFIRM_MESSAGE, "Delete Account ?");
-            bundle.putSerializable(SELECTED_ACCOUNT_OBJECT, (AccountMO)object);
-        }
-        else if(object instanceof SpentOnMO){
-            bundle.putSerializable(CONFIRM_MESSAGE, "Delete Spent On ?");
-            bundle.putSerializable(SELECTED_SPENTON_OBJECT, (SpentOnMO)object);
-        }
-
-        Fragment currentFrag = getTargetFragment();
-
-        ConfirmFragment fragment = new ConfirmFragment();
-        fragment.setArguments(bundle);
-        fragment.setTargetFragment(currentFrag, 0);
-        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
-        fragment.show(manager, FRAGMENT_CONFIRM);
-    }
-
     private void initComps(){
-
-
         setFont(deleteConfirmLL);
     }
 

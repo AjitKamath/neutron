@@ -8,50 +8,33 @@
 
     <ImageView
         android:id="@+id/accountIVId"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_marginLeft="5dp"
         android:background="@drawable/cash" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/accountTVId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:text="CASH"
             android:textColor="@color/formSpinnerDark"
             android:textSize="12sp" />
-
-        <LinearLayout
-            android:layout_marginTop="2dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/accountCurrencyTVId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="INR"
-                android:textColor="@color/finappleCurrencyCodeColor"
-                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/accountAmountTVId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:text="1,078"
+                android:text="₹ 1,078"
                 android:textColor="@color/finappleCurrencyNegColor"
-                android:textSize="10sp" />
-
-        </LinearLayout>
+                android:textSize="8sp" />
 
     </LinearLayout>
 
@@ -61,18 +44,16 @@
         android:gravity="right|center_vertical">
 
         <ImageView
+            android:layout_marginRight="5dp"
             android:id="@+id/accountDeleteIVId"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/delete_small_grey"
-            android:text="MODIFY" />
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/cross_grey" />
 
         <ImageView
             android:id="@+id/accountModifyIVId"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="5dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:background="@drawable/write_grey"
             android:text="MODIFY" />
 

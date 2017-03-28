@@ -15,18 +15,18 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="center"
             android:background="@drawable/warning" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Proceeding with deletion would cause"
+            android:layout_marginLeft="10dp"
+            android:text="PROCEEDING WITH DELETION WOULD CAUSE"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="10sp" />
 
     </LinearLayout>
 
@@ -34,7 +34,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:background="@color/divider" />
 
     <LinearLayout
@@ -72,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="Transaction(s)"
+                    android:text="TRANSACTION(S)"
                     android:textColor="@color/tertiaryText"
                     android:textSize="12sp" />
 
@@ -99,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="Transfer(s)"
+                    android:text="TRANSFER(S)"
                     android:textColor="@color/tertiaryText"
                     android:textSize="12sp" />
 
@@ -126,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="Budget(s)"
+                    android:text="BUDGET(S)"
                     android:textColor="@color/tertiaryText"
                     android:textSize="12sp" />
 
@@ -143,12 +143,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="to be marked as"
+                    android:text="TO BE MARKED AS"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:gravity="center"
@@ -156,18 +156,18 @@
 
                     <ImageView
                         android:id="@+id/deleteConfirmDefaultIVId"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:background="@drawable/other" />
 
                     <TextView
                         android:id="@+id/deleteConfirmDefaultTVId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="5dp"
                         android:text="OTHER"
                         android:textColor="@color/formSpinnerDark"
-                        android:textSize="12sp" />
+                        android:textSize="10sp" />
 
                 </LinearLayout>
             </LinearLayout>

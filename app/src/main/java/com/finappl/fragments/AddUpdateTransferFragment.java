@@ -206,8 +206,6 @@ public class AddUpdateTransferFragment extends DialogFragment {
 
         //set Currency Code
         transferCurrencyTV.setText(loggedInUserObj.getCUR_CODE());
-        ((TextView)transferFromAccountLL.findViewById(R.id.transferFromAccountCurrencyTVId)).setText(loggedInUserObj.getCUR_CODE());
-        ((TextView)transferToAccountLL.findViewById(R.id.transferToAccountCurrencyTVId)).setText(loggedInUserObj.getCUR_CODE());
 
         String dateStr = (UI_DATE_FORMAT_SDF.format(transfer.getTRNFR_DATE())).toUpperCase();
         transferDateTV.setText(dateStr);

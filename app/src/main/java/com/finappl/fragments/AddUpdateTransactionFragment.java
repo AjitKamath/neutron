@@ -8,6 +8,7 @@ import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -83,7 +85,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
     //components
     private RelativeLayout addUpdateTransactionRL;
     private TextView addUpdateDateTV;
-    private TextView transactionHeaderCloseTV;
+    private ImageView transactionHeaderCloseTV;
     private EditText addUpdateTranNameET;
     private TextView transactionContentCurrencyTV;
     private TextView transactionContentAmountTV;
@@ -95,7 +97,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
     private TextView transactionContentAccountStatusTV;
     private RadioGroup addUpdateTranExpIncRadioGrp;
     private EditText addUpdateNoteET;
-    private TextView transactionHeaderSaveTV;
+    private ImageView transactionHeaderSaveTV;
     private LinearLayout transactionContentRepeatLL;
     private Switch transactionContentRepeatSwitch;
     private View transactionContentNotifyDivider;
@@ -397,7 +399,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
     private void initComps(View view){
         addUpdateTransactionRL = (RelativeLayout) view.findViewById(R.id.addUpdateTransactionRLId);
         addUpdateDateTV = (TextView) view.findViewById(R.id.addUpdateDateTVId);
-        transactionHeaderCloseTV = (TextView) view.findViewById(R.id.transactionHeaderCloseTVId);
+        transactionHeaderCloseTV = (ImageView) view.findViewById(R.id.transactionHeaderCloseTVId);
         addUpdateTranNameET = (EditText) view.findViewById(R.id.addUpdateTranNameETId);
         transactionContentCurrencyTV = (TextView) view.findViewById(R.id.transactionContentCurrencyTVId);
         transactionContentAmountTV = (TextView) view.findViewById(R.id.transactionContentAmountTVId);
@@ -413,7 +415,7 @@ public class AddUpdateTransactionFragment extends DialogFragment {
 
         addUpdateTranExpIncRadioGrp = (RadioGroup) view.findViewById(R.id.addUpdateTranExpIncRadioGrpId);
         addUpdateNoteET = (EditText) view.findViewById(R.id.addUpdateNoteETId);
-        transactionHeaderSaveTV = (TextView) view.findViewById(R.id.transactionHeaderSaveTVId);
+        transactionHeaderSaveTV = (ImageView) view.findViewById(R.id.transactionHeaderSaveTVId);
 
         transactionContentRepeatLL = (LinearLayout) view.findViewById(R.id.transactionContentRepeatLLId);
         transactionContentRepeatSwitch = (Switch) view.findViewById(R.id.transactionContentRepeatSwitchId);

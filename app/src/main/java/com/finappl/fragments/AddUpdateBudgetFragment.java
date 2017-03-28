@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ import static com.finappl.utils.Constants.SELECTED_SPENTON_OBJECT;
 import static com.finappl.utils.Constants.SOMETHING_WENT_WRONG;
 import static com.finappl.utils.Constants.SPENTON_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
+import static com.finappl.utils.Constants.UN_IDENTIFIED_PARENT_FRAGMENT;
 
 /**
  * Created by ajit on 21/3/16.
@@ -390,8 +392,13 @@ public class AddUpdateBudgetFragment extends DialogFragment {
     private void closeFragment(String messageStr){
         close();
 
-        ((HomeActivity)getActivity()).showSnacks(messageStr, OK, Snackbar.LENGTH_SHORT);
-        //((HomeActivity)getActivity()).initActivity();
+        if(getTargetFragment() instanceof BudgetsFragment){
+            BudgetsFragment fragment = (BudgetsFragment) getTargetFragment();
+            fragment.onFragmentClose(messageStr);
+        }
+        else{
+            Log.e(CLASS_NAME, UN_IDENTIFIED_PARENT_FRAGMENT+":"+getTargetFragment());
+        }
     }
 
     private AccountMO getAccountOnId(List<AccountMO> accountList, String accountIdStr){

@@ -1,0 +1,122 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/budget_ll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/budget_iv"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/shopping" />
+
+        <TextView
+            android:id="@+id/budget_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="MONTHLY SHOPPING"
+            android:textColor="@color/formSpinnerDark"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right|center_vertical">
+
+            <ImageView
+                android:id="@+id/budget_delete_iv"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/cross_grey" />
+
+            <ImageView
+                android:id="@+id/budget_modify_iv"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/write_grey"
+                android:text="MODIFY" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        android:paddingLeft="25dp">
+
+        <TextView
+            android:id="@+id/budget_for_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CATEGORY"
+            android:textColor="@color/secondary_text_dark"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/budget_for_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="SHOPPING"
+            android:textColor="@color/finappleTheme"
+            android:textSize="8sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/budget_amount_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹ 3,450"
+                android:textColor="@color/finappleCurrencyPosColor"
+                android:textSize="8sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:text="/"
+                android:textColor="@color/tertiaryText"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/budget_type_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="MONTH"
+                android:textColor="@color/tertiaryText"
+                android:textSize="8sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/budget_notes_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="25dp"
+        android:text="Lorem ipsum Lorem ipsum Lorem ipsum"
+        android:textColor="@color/secondary_text_dark"
+        android:textSize="8sp" />
+
+
+</LinearLayout>

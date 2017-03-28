@@ -28,14 +28,12 @@
             android:layout_gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
                 android:id="@+id/budgetCloseTVId"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:gravity="center_vertical"
-                android:text="CLOSE"
-                android:textColor="@drawable/textview_touch_light"
-                android:textSize="10sp" />
+                android:src="@drawable/cross_white_small"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,14 +41,12 @@
                 android:gravity="right|center"
                 android:orientation="horizontal">
 
-                <TextView
+                <ImageView
                     android:id="@+id/budgetSaveTVId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:gravity="right|center_vertical"
-                    android:text="SAVE"
-                    android:textColor="@drawable/textview_touch_light"
-                    android:textSize="10sp" />
+                    android:src="@drawable/tick_white_small" />
 
             </LinearLayout>
 
@@ -85,34 +81,35 @@
 
 
                 <LinearLayout
+                    android:background="@drawable/edit_text_border_light"
                     android:id="@+id/budgetAmountLLId"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="25dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:gravity="center"
                         android:id="@+id/budgetCurrencyTVId"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:background="@drawable/edit_text_border_light"
                         android:clickable="false"
-                        android:gravity="bottom"
                         android:tag="CURRENCY"
-                        android:text="USD"
+                        android:text="₹"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/budgetAmountTVId"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_border_light"
+                        android:layout_marginLeft="2dp"
                         android:gravity="center"
+                        android:id="@+id/budgetAmountTVId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:inputType="numberDecimal"
                         android:text="0"
                         android:textColor="@drawable/textview_touch_light"
                         android:textColorHint="@color/formHintTextLight"
-                        android:textSize="@dimen/text_form_text_size" />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -140,8 +137,9 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:background="@drawable/edit_text_border_light"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="25dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -153,14 +151,14 @@
                     <EditText
                         android:id="@+id/budgetNameETId"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="@drawable/edit_text_border_light"
                         android:gravity="center"
                         android:inputType="textCapWords"
                         android:maxLength="25"
                         android:maxLines="1"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_form_text_size" />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -580,8 +578,9 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:background="@drawable/edit_text_border"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="25dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -593,12 +592,12 @@
                         <EditText
                             android:id="@+id/budgetNoteETId"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:background="@drawable/edit_text_border"
                             android:gravity="center"
                             android:inputType="textCapWords"
                             android:textColor="@color/tertiaryText"
-                            android:textSize="@dimen/text_form_text_size" />
+                            android:textSize="15sp" />
                     </LinearLayout>
 
                 </LinearLayout>

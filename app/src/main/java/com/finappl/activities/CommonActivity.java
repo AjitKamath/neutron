@@ -28,8 +28,13 @@ import android.widget.TextView;
 import com.facebook.internal.Utility;
 import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
+import com.finappl.fragments.AccountsFragment;
+import com.finappl.fragments.AddUpdateBudgetFragment;
 import com.finappl.fragments.AddUpdateTransactionFragment;
 import com.finappl.fragments.AddUpdateTransferFragment;
+import com.finappl.fragments.BudgetsFragment;
+import com.finappl.fragments.CategoriesFragment;
+import com.finappl.fragments.SpentonsFragment;
 import com.finappl.models.TransactionMO;
 import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
@@ -42,8 +47,15 @@ import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.Date;
 
+import butterknife.OnClick;
+
+import static com.finappl.utils.Constants.FRAGMENT_ACCOUNTS;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_BUDGET;
 import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSACTION;
 import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_TRANSFER;
+import static com.finappl.utils.Constants.FRAGMENT_BUDGETS;
+import static com.finappl.utils.Constants.FRAGMENT_CATEGORIES;
+import static com.finappl.utils.Constants.FRAGMENT_SPENTONS;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.OK;
@@ -207,7 +219,6 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.calendar_menu, menu);
-
         return true;
     }
 
@@ -222,8 +233,85 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
         if (id == R.id.action_settings) {
             return true;
         }
+        else if(id == R.id.calendar_menu_manage_categories){
+            showCategories();
+        }
+        else if(id == R.id.calendar_menu_manage_accounts){
+            showAccounts();
+        }
+        else if(id == R.id.calendar_menu_manage_spent_ons){
+            showSpentons();
+        }
+        else if(id == R.id.calendar_menu_manage_budgets){
+            showBudgets();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showBudgets(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_BUDGETS);
+
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
+
+        BudgetsFragment fragment = new BudgetsFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+        fragment.show(manager, FRAGMENT_BUDGETS);
+    }
+
+    private void showSpentons(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_SPENTONS);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
+
+        SpentonsFragment fragment = new SpentonsFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+        fragment.show(manager, FRAGMENT_SPENTONS);
+    }
+
+    private void showAccounts(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_ACCOUNTS);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
+
+        AccountsFragment fragment = new AccountsFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+        fragment.show(manager, FRAGMENT_ACCOUNTS);
+    }
+
+    private void showCategories(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_CATEGORIES);
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(LOGGED_IN_OBJECT, user);
+
+        CategoriesFragment fragment = new CategoriesFragment();
+        fragment.setArguments(bundle);
+        fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+        fragment.show(manager, FRAGMENT_CATEGORIES);
     }
 
     private void setupFab() {

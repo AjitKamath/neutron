@@ -60,7 +60,7 @@
 
     <dimen name="text_header_primary">40sp</dimen>
     <dimen name="text_header_secondary">10sp</dimen>
-    <dimen name="input_indicator_image_size">20dp</dimen>
+    <dimen name="input_indicator_image_size">15dp</dimen>
     <dimen name="input_indicator_image_size_negative">-25dp</dimen>
 
     <dimen name="text_form_header_size">8sp</dimen>

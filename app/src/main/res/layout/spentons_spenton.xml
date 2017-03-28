@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/spentonIVId"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_marginLeft="5dp"
         android:background="@drawable/cash" />
 
@@ -17,7 +17,7 @@
         android:id="@+id/spentonTVId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:text="CASH"
         android:textColor="@color/formSpinnerDark"
         android:textSize="12sp" />
@@ -29,17 +29,15 @@
 
         <ImageView
             android:id="@+id/spentonDeleteIVId"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/delete_small_grey"
-            android:text="MODIFY" />
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/cross_grey" />
 
         <ImageView
             android:id="@+id/spentonModifyIVId"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="5dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:background="@drawable/write_grey"
             android:text="MODIFY" />
 

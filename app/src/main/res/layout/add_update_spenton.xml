@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addUpdateSpentonRLId"
     android:layout_width="@dimen/fragment_full_width"
     android:layout_height="@dimen/fragment_full_height"
@@ -21,22 +22,19 @@
         android:padding="@dimen/screen_components_padding_from_walls"
         android:visibility="visible">
 
-
-        <GridLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="3">
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_alignParentLeft="true"
+                android:id="@+id/addUpdateSpentonHeaderCloseIVId"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/cross_white_small"/>
 
             <TextView
-                android:id="@+id/addUpdateSpentonHeaderCloseTVId"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="CLOSE"
-                android:textColor="@drawable/textview_touch_light"
-                android:textSize="10sp" />
-
-            <TextView
+                android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,22 +43,19 @@
                 android:textColor="@drawable/textview_touch_light"
                 android:textSize="12sp" />
 
-            <TextView
-                android:gravity="right|center_vertical"
-                android:id="@+id/addUpdateSpentonHeaderSaveTVId"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:text="SAVE"
-                android:textColor="@drawable/textview_touch_light"
-                android:textSize="10sp" />
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:id="@+id/addUpdateSpentonHeaderSaveIVId"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/tick_white_small"/>
 
-        </GridLayout>
-
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="50dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -94,26 +89,27 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="25dp"
                     android:gravity="center_vertical"
+                    android:background="@drawable/edit_text_border_light"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="@dimen/input_indicator_image_size"
                         android:layout_height="@dimen/input_indicator_image_size"
-                        android:background="@drawable/write_white" />
+                        android:src="@drawable/write_white" />
 
                     <EditText
                         android:id="@+id/addUpdateSpentonNameETId"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="@drawable/edit_text_border_light"
                         android:gravity="center"
-                        android:inputType="textCapWords"
+                        android:inputType="textCapCharacters"
                         android:maxLength="25"
                         android:maxLines="1"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_form_text_size" />
+                        android:textSize="12sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -169,30 +165,31 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="25dp"
+                        android:background="@drawable/edit_text_border"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="@dimen/input_indicator_image_size"
                             android:layout_height="@dimen/input_indicator_image_size"
-                            android:background="@drawable/write_grey" />
+                            android:src="@drawable/write_grey" />
 
                         <EditText
                             android:id="@+id/addUpdateSpentonTagsETId"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:background="@drawable/edit_text_border"
                             android:gravity="center"
-                            android:inputType="textCapWords"
+                            android:inputType="textCapCharacters"
                             android:paddingRight="40dp"
                             android:textColor="@color/tertiaryText"
-                            android:textSize="@dimen/text_form_text_size" />
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/addUpdateSpentonTagsTVId"
                             android:layout_width="40dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="ADD"
                             android:layout_marginLeft="-40dp"
@@ -223,6 +220,7 @@
                 android:text="- NO TAGS YET -"/>
 
             <GridView
+                tools:listitem="@layout/tag"
                 android:numColumns="2"
                 android:padding="@dimen/screen_components_padding_from_walls"
                 android:id="@+id/addUpdateSpentonTagsGVId"

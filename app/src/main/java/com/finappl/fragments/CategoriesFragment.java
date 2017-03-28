@@ -20,7 +20,9 @@ import com.finappl.R;
 import com.finappl.activities.HomeActivity;
 import com.finappl.adapters.CategoriesFragmentListViewAdapter;
 import com.finappl.dbServices.CalendarDbService;
+import com.finappl.models.AccountMO;
 import com.finappl.models.CategoryMO;
+import com.finappl.models.SpentOnMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
@@ -31,15 +33,20 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
 import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_CATEGORY;
 import static com.finappl.utils.Constants.FRAGMENT_CATEGORIES;
+import static com.finappl.utils.Constants.FRAGMENT_CONFIRM;
 import static com.finappl.utils.Constants.FRAGMENT_DELETE_CONFIRM;
 import static com.finappl.utils.Constants.IMAGE_OBJECT;
 import static com.finappl.utils.Constants.IMAGE_SELECTED_CATEGORY;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.OK;
+import static com.finappl.utils.Constants.SELECTED_ACCOUNT_OBJECT;
+import static com.finappl.utils.Constants.SELECTED_CATEGORY_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_GENERIC_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_IMAGE_OBJECT;
+import static com.finappl.utils.Constants.SELECTED_SPENTON_OBJECT;
 import static com.finappl.utils.Constants.UI_FONT;
 import static com.finappl.utils.Constants.UN_IDENTIFIED_VIEW;
 

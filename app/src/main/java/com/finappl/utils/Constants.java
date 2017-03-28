@@ -46,6 +46,7 @@ public final class Constants{
     public static final Integer IMAGE_SELECTED_CATEGORY = R.drawable.shopping;
     public static final Integer IMAGE_SELECTED_ACCOUNT = R.drawable.cash;
     public static final Integer IMAGE_SELECTED_SPENTON = R.drawable.myself;
+    public static final Integer IMAGE_SELECTED_BUDGET = IMAGE_SELECTED_CATEGORY;
 
     //defaults
     public static final String CATEGORIES = "TRAVEL-"+R.drawable.travel+",SHOPPING-"+IMAGE_SELECTED_CATEGORY+",SALARY-"+R.drawable.salary+",MORTGAGE-"+R.drawable.mortgage+",INVESTMENT-"+R.drawable.investment+",GIFT-"+R.drawable.gift+",FUEL-"+R.drawable.fuel+",COMMUTE-"+R.drawable.commute+",BILL-"+R.drawable.bill+",FOOD-"+ R.drawable.food+",ENTERTAINMENT-"+ R.drawable.entertainment+",HEALTH-"+R.drawable.health+",GROCERY-"+R.drawable.grocery+",OTHER-"+ R.drawable.other;
@@ -125,6 +126,7 @@ public final class Constants{
     public static final String FRAGMENT_CATEGORIES = "FRAGMENT_CATEGORIES";
     public static final String FRAGMENT_ACCOUNTS = "FRAGMENT_ACCOUNTS";
     public static final String FRAGMENT_SPENTONS = "FRAGMENT_SPENTONS";
+    public static final String FRAGMENT_BUDGETS = "FRAGMENT_BUDGETS";
 
     //FRAGMENT OBJECT KEYS
     public static final String CONFIRM_MESSAGE = "CONFIRM_MESSAGE";

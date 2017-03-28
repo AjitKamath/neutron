@@ -189,6 +189,13 @@ public class SelectAmountFragment extends DialogFragment implements View.OnClick
                     AddUpdateTransferFragment fragment = (AddUpdateTransferFragment) getTargetFragment();
                     fragment.onFinishDialog(FinappleUtility.cleanUpAmount(amountStr));
                 }
+                else if(getTargetFragment() instanceof AddUpdateBudgetFragment){
+                    AddUpdateBudgetFragment fragment = (AddUpdateBudgetFragment) getTargetFragment();
+                    fragment.onFinishDialog(FinappleUtility.cleanUpAmount(amountStr));
+                }
+                else{
+                    Log.e(CLASS_NAME, UN_IDENTIFIED_PARENT_FRAGMENT);
+                }
 
                 dismiss();
                 break;

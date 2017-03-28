@@ -2,6 +2,8 @@ package com.finappl.fragments;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,12 +17,20 @@ import android.widget.TextView;
 
 import com.finappl.R;
 import com.finappl.activities.HomeActivity;
+import com.finappl.models.BudgetMO;
 import com.finappl.models.CategoryMO;
 import com.finappl.models.TransactionMO;
 import com.finappl.models.TransferMO;
+import com.finappl.models.UserMO;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.Serializable;
+
 import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
+import static com.finappl.utils.Constants.FRAGMENT_CATEGORIES;
+import static com.finappl.utils.Constants.FRAGMENT_CONFIRM;
+import static com.finappl.utils.Constants.FRAGMENT_DELETE_CONFIRM;
+import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_CATEGORY_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_GENERIC_OBJECT;
 import static com.finappl.utils.Constants.SELECTED_TRANASCTION_OBJECT;
@@ -41,6 +51,7 @@ public class ConfirmFragment extends DialogFragment {
     //end of components
 
     private String messageStr;
+    private UserMO user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +69,7 @@ public class ConfirmFragment extends DialogFragment {
 
     private void getMessageFromBundle() {
         messageStr = (String) getArguments().get(CONFIRM_MESSAGE);
+        user = (UserMO) getArguments().get(LOGGED_IN_OBJECT);
     }
 
     private void setupPage() {
@@ -89,23 +101,13 @@ public class ConfirmFragment extends DialogFragment {
                     TransferDetailsFragment fragment = (TransferDetailsFragment) getTargetFragment();
                     fragment.onFinishDialog("Transfer Deleted !");
                 }
-                else if(getTargetFragment() instanceof OptionsFragment){
-                    FirebaseAuth user = FirebaseAuth.getInstance();
-                    user.signOut();
-                    //((HomeActivity)getActivity()).forceLogin();
-                }
                 else if(getTargetFragment() instanceof SettingsFragment){
                     SettingsFragment fragment = (SettingsFragment) getTargetFragment();
                     fragment.dismiss();
                 }
-                else if(getTargetFragment() instanceof BudgetDetailsFragment){
-                    BudgetDetailsFragment fragment = (BudgetDetailsFragment) getTargetFragment();
-                    fragment.onFinishDialog("Budget Deleted !");
-                }
-                else if(getTargetFragment() instanceof CategoriesFragment){
-                    CategoriesFragment fragment = (CategoriesFragment) getTargetFragment();
-                    CategoryMO category = (CategoryMO) getArguments().get(SELECTED_CATEGORY_OBJECT);
-                    fragment.deleteCategory(category);
+                else if(getTargetFragment() instanceof BudgetsFragment){
+                    BudgetsFragment fragment = (BudgetsFragment) getTargetFragment();
+                    fragment.deleteBudget((BudgetMO) getArguments().get(SELECTED_GENERIC_OBJECT));
                 }
                 else if(getTargetFragment() instanceof DaySummaryFragment){
                     DaySummaryFragment fragment = (DaySummaryFragment) getTargetFragment();

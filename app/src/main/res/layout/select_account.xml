@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/accountsRLId"
     android:layout_width="@dimen/fragment_full_width"
     android:layout_height="@dimen/fragment_full_height"
@@ -17,16 +18,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@color/finappleTheme"
+        android:gravity="center_vertical"
         android:padding="@dimen/screen_components_padding_from_walls"
         android:visibility="visible">
 
         <TextView
-            android:gravity="left"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
             android:text="CHOOSE AN ACCOUNT"
-            android:textColor="@color/finappleTheme"
-            android:textSize="@dimen/selectors_heading_text_size" />
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
 
     </LinearLayout>
@@ -45,7 +48,8 @@
         <ListView
             android:id="@+id/accountsContentLVId"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:listitem="@layout/select_account_account">
 
         </ListView>
 

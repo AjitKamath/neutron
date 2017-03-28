@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/categoriesRLId"
+    android:id="@+id/budgets_rl"
     android:layout_width="@dimen/fragment_full_width"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -9,7 +9,7 @@
     app:theme="@style/AppTheme">
 
     <LinearLayout
-        android:id="@+id/categoriesHeaderLLId"
+        android:id="@+id/budgets_header_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/finappleTheme"
@@ -24,7 +24,7 @@
 
             <ImageView
                 android:layout_alignParentLeft="true"
-                android:id="@+id/categoriesCloseTVId"
+                android:id="@+id/budgets_close_iv"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:gravity="center_vertical"
@@ -34,13 +34,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="CATEGORIES"
+                android:text="BUDGETS"
                 android:textColor="@drawable/textview_touch_light"
                 android:textSize="10sp" />
 
             <ImageView
                 android:layout_alignParentRight="true"
-                android:id="@+id/categoriesAddUpdateTVId"
+                android:id="@+id/budgets_add_update_iv"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:src="@drawable/plus_white"/>
@@ -51,16 +51,27 @@
 
     <!--Page-->
     <LinearLayout
-        android:id="@+id/categoriesLLId"
+        android:id="@+id/budgets_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/categoriesHeaderLLId"
+        android:layout_below="@+id/budgets_header_ll"
         android:padding="5dp"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/budgets_no_budgets_tv"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_text_dark"
+            android:gravity="center"
+            android:text="NO BUDGETS FOUND"
+            android:textSize="12sp"/>
+
         <ListView
-            tools:listitem="@layout/categories_category"
-            android:id="@+id/categoriesLVId"
+            tools:listitem="@layout/budgets_budget"
+            android:id="@+id/budgets_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

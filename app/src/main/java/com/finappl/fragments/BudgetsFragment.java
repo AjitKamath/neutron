@@ -17,26 +17,34 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.finappl.R;
-import com.finappl.activities.HomeActivity;
 import com.finappl.adapters.AccountsFragmentListViewAdapter;
+import com.finappl.adapters.BudgetsFragmentListViewAdapter;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.models.AccountMO;
+import com.finappl.models.BudgetMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import static com.finappl.utils.Constants.BUDGET_OBJECT;
+import static com.finappl.utils.Constants.CONFIRM_MESSAGE;
 import static com.finappl.utils.Constants.FRAGMENT_ACCOUNTS;
 import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_ACCOUNT;
-import static com.finappl.utils.Constants.FRAGMENT_CATEGORIES;
+import static com.finappl.utils.Constants.FRAGMENT_ADD_UPDATE_BUDGET;
+import static com.finappl.utils.Constants.FRAGMENT_BUDGETS;
+import static com.finappl.utils.Constants.FRAGMENT_BUDGET_DETAILS;
+import static com.finappl.utils.Constants.FRAGMENT_CONFIRM;
 import static com.finappl.utils.Constants.FRAGMENT_DELETE_CONFIRM;
 import static com.finappl.utils.Constants.IMAGE_OBJECT;
 import static com.finappl.utils.Constants.IMAGE_SELECTED_ACCOUNT;
+import static com.finappl.utils.Constants.IMAGE_SELECTED_BUDGET;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.SELECTED_GENERIC_OBJECT;
@@ -47,19 +55,22 @@ import static com.finappl.utils.Constants.UN_IDENTIFIED_VIEW;
 /**
  * Created by ajit on 21/3/16.
  */
-public class AccountsFragment extends DialogFragment {
+public class BudgetsFragment extends DialogFragment {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext;
 
     /*Components*/
-    @InjectView(R.id.accountsRLId)
-    RelativeLayout accountsRL;
+    @InjectView(R.id.budgets_rl)
+    RelativeLayout budgets_rl;
 
-    @InjectView(R.id.accountsLVId)
-    ListView accountsLV;
+    @InjectView(R.id.budgets_no_budgets_tv)
+    TextView budgets_no_budgets_tv;
+
+    @InjectView(R.id.budgets_lv)
+    ListView budgets_lv;
     /*Components*/
 
-    private List<AccountMO> accountsList;
+    private List<BudgetMO> budgetsList;
     private UserMO user;
 
     /*Database Service*/
@@ -67,7 +78,7 @@ public class AccountsFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.accounts, container);
+        View view = inflater.inflate(R.layout.budgets, container);
         ButterKnife.inject(this, view);
 
         Dialog d = getDialog();
@@ -80,14 +91,12 @@ public class AccountsFragment extends DialogFragment {
         return view;
     }
 
-    @OnClick(R.id.accountsAddUpdateIVId)
-    public void showAddUpdateAccount(){
-        AccountMO account = new AccountMO();
-        account.setACC_IMG(String.valueOf(IMAGE_SELECTED_ACCOUNT));
-        showAddUpdateAccount(account);
+    @OnClick(R.id.budgets_add_update_iv)
+    public void showAddUpdateBudget(){
+        showAddUpdateBudget(null);
     }
 
-    @OnClick(R.id.accountsCloseIVId)
+    @OnClick(R.id.budgets_close_iv)
     public void close(){
         dismiss();
     }
@@ -99,75 +108,78 @@ public class AccountsFragment extends DialogFragment {
     private void setupPage() {
         getMasterData();
 
-        AccountsFragmentListViewAdapter adapter = new AccountsFragmentListViewAdapter(mContext, user, accountsList, new View.OnClickListener() {
+        //if there are no budgets
+        if(budgetsList != null &&  !budgetsList.isEmpty()){
+            budgets_no_budgets_tv.setVisibility(View.GONE);
+        }
+
+        BudgetsFragmentListViewAdapter adapter = new BudgetsFragmentListViewAdapter(mContext, user, budgetsList, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(R.id.accountDeleteIVId == view.getId()){
-                    //check for transactions & budgets which were created using the account & warn user that all the transactions/budgets will be marked to default account
-                    showDeleteConfirm((AccountMO)view.getTag());
+                if(R.id.budget_delete_iv == view.getId()){
+                    showDeleteConfirm((BudgetMO) view.getTag(R.layout.budgets_budget));
                 }
-                else if(R.id.accountModifyIVId == view.getId()){
-                    showAddUpdateAccount((AccountMO)view.getTag());
+                else if(R.id.budget_modify_iv == view.getId()){
+                    showAddUpdateBudget((BudgetMO) view.getTag(R.layout.budgets_budget));
                 }
                 else{
-                    FinappleUtility.showSnacks(accountsRL, UN_IDENTIFIED_VIEW, OK, Snackbar.LENGTH_INDEFINITE);
+                    FinappleUtility.showSnacks(budgets_rl, UN_IDENTIFIED_VIEW, OK, Snackbar.LENGTH_INDEFINITE);
                 }
             }
         });
-        accountsLV.setAdapter(adapter);
+        budgets_lv.setAdapter(adapter);
     }
 
-    private void showDeleteConfirm(AccountMO account){
+    private void showDeleteConfirm(BudgetMO budget){
         FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_DELETE_CONFIRM);
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_CONFIRM);
         if (frag != null) {
             manager.beginTransaction().remove(frag).commit();
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(SELECTED_GENERIC_OBJECT, account);
-        bundle.putSerializable(LOGGED_IN_OBJECT, user);
+        bundle.putSerializable(CONFIRM_MESSAGE, "Delete Budget ?");
+        bundle.putSerializable(SELECTED_GENERIC_OBJECT, budget);
 
-        Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_ACCOUNTS);
+        Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_BUDGETS);
 
-        DeleteConfirmFragment fragment = new DeleteConfirmFragment();
+        ConfirmFragment fragment = new ConfirmFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
         fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
         fragment.show(manager, FRAGMENT_DELETE_CONFIRM);
     }
 
-    private void showAddUpdateAccount(AccountMO account){
+    private void showAddUpdateBudget(BudgetMO budget){
         FragmentManager manager = getFragmentManager();
-        Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_ACCOUNT);
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_ADD_UPDATE_BUDGET);
         if (frag != null) {
             manager.beginTransaction().remove(frag).commit();
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(SELECTED_IMAGE_OBJECT, account);
-        bundle.putSerializable(IMAGE_OBJECT, (Serializable) accountsList);
+        bundle.putSerializable(BUDGET_OBJECT, budget);
         bundle.putSerializable(LOGGED_IN_OBJECT, user);
 
-        Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_ACCOUNTS);
+        Fragment currentFrag = manager.findFragmentByTag(FRAGMENT_BUDGETS);
 
-        AddUpdateAccountFragment fragment = new AddUpdateAccountFragment();
+        AddUpdateBudgetFragment fragment = new AddUpdateBudgetFragment();
         fragment.setArguments(bundle);
         fragment.setTargetFragment(currentFrag, 0);
         fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
-        fragment.show(manager, FRAGMENT_ADD_UPDATE_ACCOUNT);
+        fragment.show(manager, FRAGMENT_ADD_UPDATE_BUDGET);
     }
 
     private void getMasterData() {
-        accountsList = calendarDbService.getAllAccounts(user.getUSER_ID());
+        budgetsList = calendarDbService.getAllBudgets(new Date(), user.getUSER_ID());
     }
 
     private void initComps(){
-        setFont(accountsRL);
+        setFont(budgets_rl);
     }
 
     // Empty constructor required for DialogFragment
-    public AccountsFragment() {}
+    public BudgetsFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -212,22 +224,14 @@ public class AccountsFragment extends DialogFragment {
         }
     }
 
+    public void deleteBudget(BudgetMO budget) {
+        calendarDbService.deleteBudget(budget.getBUDGET_ID());
+        FinappleUtility.showSnacks(budgets_rl, "Budget deleted !", OK, Snackbar.LENGTH_LONG);
+        setupPage();
+    }
+
     public void onFragmentClose(String messageStr) {
-        FinappleUtility.showSnacks(accountsRL, messageStr, OK, Snackbar.LENGTH_LONG);
+        FinappleUtility.showSnacks(budgets_rl, "Budget Added !", OK, Snackbar.LENGTH_LONG);
         setupPage();
-    }
-
-    //this method is called when u have to change all over the db where this account was used and then delete the account
-    public void normalizeImpactsAndDeleteAccount(AccountMO account) {
-        calendarDbService.updateAll(user, account);
-        deleteAccount(account);
-    }
-
-    //this method is called when we just have to delete the account which has not been used anywhere
-    public void deleteAccount(AccountMO account) {
-        calendarDbService.deleteAccount(account.getACC_ID());
-        FinappleUtility.showSnacks(accountsRL, "Account deleted !", OK, Snackbar.LENGTH_LONG);
-        setupPage();
-        //((HomeActivity)getActivity()).initActivity();
     }
 }

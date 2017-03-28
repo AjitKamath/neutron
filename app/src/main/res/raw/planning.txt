@@ -12,7 +12,7 @@
 10.  Day Summary on click on date                                                                                 (13-feb-17 to 17-feb-17).    (COMPLETED on 24-mar-17)
 11.  Registration & Login using PHP & MYSQL                                                                       (18-feb-17 to 23-feb-17).
 --------------------------ON VACATION-----------------------------------------------------------------------------(24-feb-17 to 06-mar-17).
-12.  Attach Manage Content screens to other options button on Home screen                                         (07-mar-17 to 12-mar-17).
+12.  Attach Manage Content screens to other options button on Home screen                                         (07-mar-17 to 12-mar-17).    (COMPLETED on 27-mar-17)
 13.  My Account                                                                                                   (13-mar-17 to 19-mar-17).
 14.  Reports                                                                                                      (20-mar-17 to 02-apr-17).
 

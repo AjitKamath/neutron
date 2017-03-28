@@ -219,14 +219,13 @@ public class SpentonsFragment extends DialogFragment {
     //this method is called when u have to change all over the db where this spenton was used and then delete the spent on
     public void normalizeImpactsAndDeleteSpenton(SpentOnMO spentOn) {
         calendarDbService.updateAll(user, spentOn);
-        deleteCategory(spentOn);
+        deleteSpenton(spentOn);
     }
 
-    //this method is called when we just have to delete the apent on which has not been used anywhere
-    public void deleteCategory(SpentOnMO spenton) {
-        calendarDbService.deleteCategory(spenton.getSPNT_ON_ID());
+    //this method is called when we just have to delete the spent on which has not been used anywhere
+    public void deleteSpenton(SpentOnMO spenton) {
+        calendarDbService.deleteSpenton(spenton.getSPNT_ON_ID());
         FinappleUtility.showSnacks(spentonsRL, "Spent On deleted !", OK, Snackbar.LENGTH_LONG);
         setupPage();
-        //((HomeActivity)getActivity()).initActivity();
     }
 }

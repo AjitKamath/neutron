@@ -336,6 +336,11 @@ public class CalendarDbService extends SQLiteOpenHelper {
         return result;
     }
 
+    public boolean deleteBudget(String budget_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(DB_TABLE_BUDGET, "BUDGET_ID = '" + budget_id + "'", null) > 0;
+    }
+
     public boolean deleteAccount(String accountIdStr) {
         SQLiteDatabase db = this.getWritableDatabase();
         boolean result = db.delete(DB_TABLE_ACCOUNT, "ACC_ID = '" + accountIdStr + "'", null) > 0;

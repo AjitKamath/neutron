@@ -24,15 +24,15 @@
 
         <ImageView
             android:id="@+id/accountIVId"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:background="@drawable/cash" />
 
         <TextView
             android:id="@+id/accountTVId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:text="CREDIT CARD"
             android:textColor="@color/formSpinnerDark"
             android:textSize="15sp" />
@@ -40,26 +40,17 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginLeft="42dp"
+        android:layout_marginLeft="35dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-        <TextView
-            android:gravity="center"
-            android:id="@+id/accountCurrencyCodeTVId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="INR"
-            android:textColor="@color/finappleCurrencyCodeColor"
-            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/accountTotalTVId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="2,345.50"
+            android:text="₹ 2,345.50"
             android:textColor="@color/finappleCurrencyPosColor"
             android:textSize="12sp" />
 

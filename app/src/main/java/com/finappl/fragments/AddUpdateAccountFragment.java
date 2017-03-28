@@ -95,12 +95,12 @@ public class AddUpdateAccountFragment extends DialogFragment {
         return view;
     }
 
-    @OnClick(R.id.addUpdateAccountHeaderCloseTVId)
+    @OnClick(R.id.addUpdateAccountHeaderCloseIVId)
     public void close(){
         dismiss();
     }
 
-    @OnClick(R.id.addUpdateAccountHeaderSaveTVId)
+    @OnClick(R.id.addUpdateAccountHeaderSaveIVId)
     public void onAddUpdate(){
         AccountMO tempAccount = validateAndGetInputs();
 
