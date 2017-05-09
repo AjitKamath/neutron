@@ -878,6 +878,11 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 28-mar-2017
 1. budget screens added in calendar menu
 
+9-may-2017
+1. calendar finalized.
+2. today summary
+3. on demand date summary
+
 ------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE
 2. impl delete transaction, cat, spent on, account, transfer(take care of things like..impacts..should check for existing transactions with the same cat.

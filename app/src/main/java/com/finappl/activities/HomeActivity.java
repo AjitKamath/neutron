@@ -44,7 +44,9 @@ import com.finappl.models.TransactionMO;
 import com.finappl.models.TransferMO;
 import com.finappl.utils.FinappleUtility;
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
+import com.google.android.gms.vision.text.Text;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,12 +62,14 @@ import butterknife.Optional;
 
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION_DETAILS;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSFER_DETAILS;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF_1;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
 import static com.finappl.utils.Constants.TRANSFER_OBJECT;
+import static com.finappl.utils.Constants.UI_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.UI_FONT;
 
 @SuppressLint("NewApi")
@@ -81,6 +85,9 @@ public class HomeActivity extends CommonActivity {
     @InjectView(R.id.calendar_vp)
     ViewPager calendar_vp;
 
+    @InjectView(R.id.calendar_summary_briefings_date_tv)
+    TextView calendar_summary_briefings_date_tv;
+
     @InjectView(R.id.calendar_summary_briefings_accounts_summary_iv)
     ImageView calendar_summary_briefings_accounts_summary_iv;
 
@@ -94,7 +101,7 @@ public class HomeActivity extends CommonActivity {
     ViewPager calendar_summary_vp;
     /*components*/
 
-    private static final int PAGE_COUNT = 5;
+    private static final int PAGE_COUNT = 11;
     private static final int PAGE_MIDDLE = PAGE_COUNT/2;
 
     private int selectedCalendarVPIndex = PAGE_MIDDLE;
@@ -159,6 +166,8 @@ public class HomeActivity extends CommonActivity {
     private ProgressBar mProgressDialog;
     private ProgressDialog progressDialog;
 
+    private static LoadUI loadUIThread;
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -171,14 +180,40 @@ public class HomeActivity extends CommonActivity {
         controller.getWritableDatabase();
         Log.i(CLASS_NAME, "Initializing the application database ends");
 
-        new LoadUI().execute("FIRST_LOAD");
+        loadUIThread = new LoadUI();
+        loadUIThread.execute("FIRST_LOAD");
     }
 
-    private void setupSummary() {
+    private void setupSummary(Date date) {
         setupSummaryBriefings("SUMMARY");
 
-        String today = JAVA_DATE_FORMAT_SDF.format(new Date());
-        DayLedger dayLedger = dayLederMap.get(today);
+        DayLedger dayLedger = null;
+        String dateUiStr = null;
+        Date today = null;
+
+        try{
+            today = JAVA_DATE_FORMAT_SDF.parse(JAVA_DATE_FORMAT_SDF.format(new Date()));
+        }
+        catch (ParseException e){
+            Log.e(CLASS_NAME, "Date Parse Exception : "+today);
+            return;
+        }
+
+        if(date == null){
+            date = today;
+        }
+
+        String dateStr = JAVA_DATE_FORMAT_SDF.format(date);
+        dayLedger = dayLederMap.get(dateStr);
+
+        if(date.equals(today)){
+            dateUiStr = "TODAY";
+        }
+        else{
+            dateUiStr = UI_DATE_FORMAT_SDF.format(date);
+        }
+
+        calendar_summary_briefings_date_tv.setText(dateUiStr.toUpperCase());
 
         List<Object> summaryList = new ArrayList<>();
 
@@ -216,6 +251,47 @@ public class HomeActivity extends CommonActivity {
 
             }
         });
+    }
+
+    /*pass month as jan-0, feb-1*/
+    @OnClick(R.id.calendar_summary_briefings_date_tv)
+    public void showDatepickerForSummary(View view) {
+        String dateStr = String.valueOf(((TextView) view).getText());
+
+        if("TODAY".equalsIgnoreCase(dateStr)){
+            dateStr = JAVA_DATE_FORMAT_SDF.format(new Date());
+        }
+        else{
+            try{
+                dateStr = JAVA_DATE_FORMAT_SDF.format(UI_DATE_FORMAT_SDF.parse(dateStr));
+            }
+            catch (ParseException e){
+                Log.e(CLASS_NAME, "Date Parse Exception : "+dateStr);
+                return;
+            }
+        }
+
+        final int month = Integer.parseInt(dateStr.split("-")[1])-1;
+        final int year = Integer.parseInt(dateStr.split("-")[2]);
+        final int day = Integer.parseInt(dateStr.split("-")[0]);
+
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String dateStr = dayOfMonth+"-"+(monthOfYear+1)+"-"+year;
+                        try{
+                            Date date = JAVA_DATE_FORMAT_SDF.parse(dateStr);
+                            setupSummary(date);
+                        }
+                        catch (ParseException e){
+                            Log.e(CLASS_NAME, "Date Parse Exception : "+dateStr);
+                            return;
+                        }
+                    }
+                }, year, month, day);
+        datePickerDialog.show();
     }
 
     @OnClick(R.id.calendar_summary_briefings_accounts_summary_ll)
@@ -287,7 +363,7 @@ public class HomeActivity extends CommonActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
-                    FinappleUtility.showSnacks(calendarPageRL, String.valueOf(selectedCalendarVPIndex), OK, Snackbar.LENGTH_SHORT);
+                    //FinappleUtility.showSnacks(calendarPageRL, String.valueOf(selectedCalendarVPIndex), OK, Snackbar.LENGTH_SHORT);
                     int max = calendarMonthsArr.size() - 1;
                     int min = 0;
 
@@ -319,7 +395,6 @@ public class HomeActivity extends CommonActivity {
         }
 
         setupCalendar();
-        setupSummary();
     }
 
     public void changeMonth(boolean previousMonth){
@@ -347,7 +422,7 @@ public class HomeActivity extends CommonActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         reInitCalendarMonths(monthOfYear, year);
-                        new LoadUI().execute("REFRESH_CALENDAR");
+                        loadUIThread.execute("REFRESH_CALENDAR");
                     }
                 }, year, month, 1);
         datePickerDialog.show();
@@ -356,7 +431,7 @@ public class HomeActivity extends CommonActivity {
             @Override
             public void onCancel(DialogInterface dialog) {
                 reInitCalendarMonths(month, year);
-                new LoadUI().execute("REFRESH_CALENDAR");
+                loadUIThread.execute("REFRESH_CALENDAR");
             }
         });
     }
@@ -495,11 +570,11 @@ public class HomeActivity extends CommonActivity {
         protected void onPreExecute() {
             if(pd == null){
                 pd = new ProgressDialog(mContext);
-                pd.setIndeterminate(true);
-                pd.setMessage("Hello");
-                pd.setTitle("Hi");
             }
 
+            pd.setIndeterminate(true);
+            pd.setMessage("..loading data");
+            pd.setTitle("please wait..");
             pd.show();
         }
 
@@ -509,17 +584,22 @@ public class HomeActivity extends CommonActivity {
                 return null;
             }
 
-            String whatToDo = params[0];
+            final String whatToDo = params[0];
 
-            if("FIRST_LOAD".equalsIgnoreCase(whatToDo)){
-                fetchLegend();
-                initCalendarMonths();
-                setupCalendar();
-                setupSummary();
-            }
-            else if ("REFRESH_CALENDAR".equalsIgnoreCase(whatToDo)){
-                refreshCalendar();
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if("FIRST_LOAD".equalsIgnoreCase(whatToDo)){
+                        fetchLegend();
+                        initCalendarMonths();
+                        setupCalendar();
+                        setupSummary(null);
+                    }
+                    else if ("REFRESH_CALENDAR".equalsIgnoreCase(whatToDo)){
+                        refreshCalendar();
+                    }
+                }
+            });
 
             return null;
         }
