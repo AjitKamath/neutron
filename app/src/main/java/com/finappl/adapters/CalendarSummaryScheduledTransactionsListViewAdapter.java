@@ -2,6 +2,7 @@ package com.finappl.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,7 +84,7 @@ public class CalendarSummaryScheduledTransactionsListViewAdapter extends BaseAda
             mHolder.calendar_summary_scheduled_transactions_list_item_cat_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transactions_list_item_cat_tv);
             mHolder.calendar_summary_scheduled_transactions_list_item_account_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transactions_list_item_account_tv);
             mHolder.calendar_summary_scheduled_transactions_list_item_repeat_until_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transactions_list_item_repeat_until_tv);
-            mHolder.calendar_summary_scheduled_transactions_list_item_next_occurence_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transactions_list_item_next_occurence_tv);
+            //mHolder.calendar_summary_scheduled_transactions_list_item_next_occurence_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transactions_list_item_next_occurence_tv);
             mHolder.calendar_summary_scheduled_transactions_list_item_notify_add_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transactions_list_item_notify_add_tv);
             mHolder.calendar_summary_scheduled_transactions_list_item_notify_add_time_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transactions_list_item_notify_add_time_tv);
             mHolder.calendar_summary_scheduled_transactions_list_item_repeat_type_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transactions_list_item_repeat_type_tv);
@@ -101,10 +102,17 @@ public class CalendarSummaryScheduledTransactionsListViewAdapter extends BaseAda
         mHolder.calendar_summary_scheduled_transactions_list_item_cat_tv.setText(transaction.getCategory());
         mHolder.calendar_summary_scheduled_transactions_list_item_account_tv.setText(transaction.getAccount());
         mHolder.calendar_summary_scheduled_transactions_list_item_amount_tv = FinappleUtility.formatAmountView(mHolder.calendar_summary_scheduled_transactions_list_item_amount_tv, user, transaction.getTRAN_AMT());
-        mHolder.calendar_summary_scheduled_transactions_list_item_next_occurence_tv.setText("NO_IMPL");
+        //mHolder.calendar_summary_scheduled_transactions_list_item_next_occurence_tv.setText("NO_IMPL");
         mHolder.calendar_summary_scheduled_transactions_list_item_notify_add_tv.setText(transaction.getNOTIFY());
         mHolder.calendar_summary_scheduled_transactions_list_item_notify_add_time_tv.setText(transaction.getNOTIFY_TIME());
         mHolder.calendar_summary_scheduled_transactions_list_item_repeat_type_tv.setText(transaction.getRepeat());
+
+        if("EXPENSE".equalsIgnoreCase(transaction.getTRAN_TYPE())){
+            mHolder.calendar_summary_scheduled_transactions_list_item_amount_tv.setTextColor(ContextCompat.getColor(mContext, R.color.finappleCurrencyNegColor));
+        }
+        else{
+            mHolder.calendar_summary_scheduled_transactions_list_item_amount_tv.setTextColor(ContextCompat.getColor(mContext, R.color.finappleCurrencyPosColor));
+        }
 
         if(!"FOREVER".equalsIgnoreCase(transaction.getSCHD_UPTO_DATE())){
             String dateStr = transaction.getSCHD_UPTO_DATE();
@@ -134,7 +142,7 @@ public class CalendarSummaryScheduledTransactionsListViewAdapter extends BaseAda
         private TextView calendar_summary_scheduled_transactions_list_item_cat_tv;
         private TextView calendar_summary_scheduled_transactions_list_item_account_tv;
         private TextView calendar_summary_scheduled_transactions_list_item_repeat_until_tv;
-        private TextView calendar_summary_scheduled_transactions_list_item_next_occurence_tv;
+        //private TextView calendar_summary_scheduled_transactions_list_item_next_occurence_tv;
         private TextView calendar_summary_scheduled_transactions_list_item_notify_add_tv;
         private TextView calendar_summary_scheduled_transactions_list_item_notify_add_time_tv;
         private TextView calendar_summary_scheduled_transactions_list_item_repeat_type_tv;

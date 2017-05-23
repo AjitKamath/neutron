@@ -10,7 +10,8 @@ import java.text.SimpleDateFormat;
 public final class Constants{
     //DB
     public static final String DB_NAME = "FINAPPL.db";
-    public static final int DB_VERSION = 88;
+    public static final int DB_VERSION = 92
+            ;
 
     //Admin properties
     public static final String ADMIN_USERID = "ADMIN";

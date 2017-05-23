@@ -14,7 +14,7 @@ public class TransferMO implements Serializable {
     private String USER_ID;
     private String ACC_ID_FRM;
     private String ACC_ID_TO;
-    private String SCH_TRNFR_ID;
+    private String PARENT_TRNFR_ID;
     private Double TRNFR_AMT;
     private String TRNFR_IS_DEL;
     private String TRNFR_NOTE;
@@ -92,14 +92,6 @@ public class TransferMO implements Serializable {
 
     public void setACC_ID_TO(String ACC_ID_TO) {
         this.ACC_ID_TO = ACC_ID_TO;
-    }
-
-    public String getSCH_TRNFR_ID() {
-        return SCH_TRNFR_ID;
-    }
-
-    public void setSCH_TRNFR_ID(String SCH_TRNFR_ID) {
-        this.SCH_TRNFR_ID = SCH_TRNFR_ID;
     }
 
     public Double getTRNFR_AMT() {
@@ -236,5 +228,17 @@ public class TransferMO implements Serializable {
 
     public void setRepeatImg(String repeatImg) {
         this.repeatImg = repeatImg;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getPARENT_TRNFR_ID() {
+        return PARENT_TRNFR_ID;
+    }
+
+    public void setPARENT_TRNFR_ID(String PARENT_TRNFR_ID) {
+        this.PARENT_TRNFR_ID = PARENT_TRNFR_ID;
     }
 }

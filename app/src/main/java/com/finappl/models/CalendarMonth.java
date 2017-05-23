@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.finappl.R;
+import com.finappl.activities.HomeActivity;
 import com.finappl.adapters.CalendarRecyclerAdapter;
 import com.finappl.interfaces.OnItemClickListener;
 import com.finappl.fragments.DaySummaryFragment;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +24,8 @@ import java.util.Map;
 
 import static com.finappl.utils.Constants.DAY_SUMMARY_OBJECT;
 import static com.finappl.utils.Constants.FRAGMENT_DAY_SUMMARY;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 
 /**
@@ -51,7 +55,25 @@ public class CalendarMonth {
             public void onItemClick(View item) {
                 DayLedger dayLedger = (DayLedger) item.getTag(R.id.calendar_date_cell_date_key);
 
-                if(dayLedger != null){
+                String selectedDateStr = dayLedger.getDate();
+                Date selectedDate = new Date();
+
+                try{
+                    selectedDate = JAVA_DATE_FORMAT_SDF.parse(selectedDateStr);
+                }
+                catch (ParseException e){
+                    Log.e(CLASS_NAME, "Date Parse exception ("+selectedDateStr+") :"+e);
+                    return;
+                }
+
+                ((HomeActivity)activity).setupSummary(selectedDate);
+            }
+
+            @Override
+            public void onItemLongClick(View item) {
+                DayLedger dayLedger = (DayLedger) item.getTag(R.id.calendar_date_cell_date_key);
+
+                if(dayLedger != null && (dayLedger.isHasTransactions() || dayLedger.isHasTransfers())){
                     showTransactionFragment(activity.getFragmentManager(), dayLedger, user);
                 }
             }

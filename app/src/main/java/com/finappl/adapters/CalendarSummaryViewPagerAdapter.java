@@ -18,6 +18,7 @@ import com.finappl.R;
 import com.finappl.models.AccountMO;
 import com.finappl.models.CalendarSummary;
 import com.finappl.models.DayLedger;
+import com.finappl.models.SchedulesMO;
 import com.finappl.models.UserMO;
 import com.finappl.utils.FinappleUtility;
 
@@ -68,11 +69,14 @@ public class CalendarSummaryViewPagerAdapter extends PagerAdapter {
         switch(position){
             case 0: return setupSummary(container, position);
             case 1: return setupAccounts(container, position);
+            case 2: return setupSchedules(container, position);
             default:
                 Log.e(CLASS_NAME, "Error !! possible cause : SummaryList size is not equal to the no. of viewpager views");
                 return null;
         }
     }
+
+
 
     private Object setupAccounts(ViewGroup container, int position) {
         final View view = inflater.inflate(R.layout.calendar_accounts, null);
@@ -105,6 +109,61 @@ public class CalendarSummaryViewPagerAdapter extends PagerAdapter {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, calculateListViewHeight);
         layoutParams.setMargins(0, 0, 0, 30);
         calendar_accounts_lv.setLayoutParams(layoutParams);
+
+        setFont(container);
+        container.addView(view);
+
+        return view;
+    }
+
+    private View setupSchedules(ViewGroup container, int position) {
+        final View view = inflater.inflate(R.layout.calendar_schedules, null);
+
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.calendar_schedules_rv);
+        recyclerView.setHasFixedSize(true);
+
+        SchedulesMO schedules = (SchedulesMO) summaryList.get(position);
+
+        List<CalendarSummary> calendarSummaryList = new ArrayList<>();
+        CalendarSummary calendarSummary = null;
+
+        //sched. transactions
+        calendarSummary = new CalendarSummary();
+        calendarSummary.setHeading("SCHEDULED TRANSACTIONS");
+        if(schedules != null && schedules.getScheduledTransactionsList() != null && !schedules.getScheduledTransactionsList().isEmpty()){
+            CalendarSummaryScheduledTransactionsListViewAdapter adapter = new CalendarSummaryScheduledTransactionsListViewAdapter(mContext, user, schedules.getScheduledTransactionsList(), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FinappleUtility.showSnacks(view, "Yet to be implemented !", OK, Snackbar.LENGTH_SHORT);
+                }
+            });
+
+            calendarSummary.setListViewAdapter(adapter);
+        }
+        calendarSummaryList.add(calendarSummary);
+        //sched. transactions
+
+        //sched. transfers
+        calendarSummary = new CalendarSummary();
+        calendarSummary.setHeading("SCHEDULED TRANSFERS");
+        if(schedules != null && schedules.getScheduledTransfersList() != null && !schedules.getScheduledTransfersList().isEmpty()){
+            CalendarSummaryScheduledTransfersListViewAdapter adapter = new CalendarSummaryScheduledTransfersListViewAdapter(mContext, user, schedules.getScheduledTransfersList(), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FinappleUtility.showSnacks(view, "Yet to be implemented !", OK, Snackbar.LENGTH_SHORT);
+                }
+            });
+
+            calendarSummary.setListViewAdapter(adapter);
+        }
+        calendarSummaryList.add(calendarSummary);
+        //transfers
+
+        LinearLayoutManager horizontalManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(horizontalManager);
+        CalendarSummaryRecyclerViewAdapter listViewAdapter = new CalendarSummaryRecyclerViewAdapter(mContext, user, calendarSummaryList);
+        recyclerView.setAdapter(listViewAdapter);
+        recyclerView.setNestedScrollingEnabled(true);
 
         setFont(container);
         container.addView(view);

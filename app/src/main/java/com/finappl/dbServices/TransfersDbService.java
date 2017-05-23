@@ -31,6 +31,13 @@ public class TransfersDbService extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        if(transfer.getREPEAT_ID() == null || transfer.getREPEAT_ID().trim().isEmpty()){
+            transfer.setPARENT_TRNFR_ID("");
+        }
+        else{
+            transfer.setPARENT_TRNFR_ID(transfer.getTRNFR_ID());
+        }
+
         values.put("TRNFR_ID", transfer.getTRNFR_ID());
         values.put("USER_ID", transfer.getUSER_ID());
         values.put("ACC_ID_FRM", transfer.getACC_ID_FRM());
@@ -40,6 +47,7 @@ public class TransfersDbService extends SQLiteOpenHelper {
         values.put("REPEAT_ID", transfer.getREPEAT_ID());
         values.put("NOTIFY", transfer.getNOTIFY());
         values.put("NOTIFY_TIME", transfer.getNOTIFY_TIME());
+        values.put("PARENT_TRNFR_ID", transfer.getPARENT_TRNFR_ID());
         values.put("SCHD_UPTO_DATE", transfer.getSCHD_UPTO_DATE());
         values.put("TRNFR_DATE", DB_DATE_FORMAT_SDF.format(transfer.getTRNFR_DATE()));
         values.put("CREAT_DTM", DB_DATE_TIME_FORMAT_SDF.format(new Date()));
@@ -60,6 +68,13 @@ public class TransfersDbService extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        if(transfer.getREPEAT_ID() == null || transfer.getREPEAT_ID().trim().isEmpty()){
+            transfer.setPARENT_TRNFR_ID("");
+        }
+        else{
+            transfer.setPARENT_TRNFR_ID(transfer.getTRNFR_ID());
+        }
+
         values.put("ACC_ID_FRM", transfer.getACC_ID_FRM());
         values.put("ACC_ID_TO", transfer.getACC_ID_TO());
         values.put("REPEAT_ID", transfer.getREPEAT_ID());
@@ -67,6 +82,7 @@ public class TransfersDbService extends SQLiteOpenHelper {
         values.put("TRNFR_NOTE", transfer.getTRNFR_NOTE());
         values.put("NOTIFY", transfer.getNOTIFY());
         values.put("NOTIFY_TIME", transfer.getNOTIFY_TIME());
+        values.put("PARENT_TRNFR_ID", transfer.getPARENT_TRNFR_ID());
         values.put("SCHD_UPTO_DATE", transfer.getSCHD_UPTO_DATE());
         values.put("TRNFR_DATE", DB_DATE_FORMAT_SDF.format(transfer.getTRNFR_DATE()));
         values.put("MOD_DTM", DB_DATE_TIME_FORMAT_SDF.format(new Date()));

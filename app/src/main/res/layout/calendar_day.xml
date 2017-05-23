@@ -15,7 +15,7 @@
         android:background="@drawable/circle_calendar_no_tap"
         android:gravity="center"
         android:orientation="vertical">
-
+        
         <LinearLayout
             android:layout_marginTop="5dp"
             android:id="@+id/calendar_day_transaction_ll"
@@ -45,17 +45,34 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/calendar_day_date_tv"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="31"
-            android:textColor="@color/calendarThisMonthDate"
-            android:textSize="10sp" />
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/calendar_day_date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="31"
+                android:textColor="@color/calendarThisMonthDate"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:visibility="invisible"
+                android:id="@+id/calendar_day_sched_indicator_iv"
+                android:layout_gravity="top"
+                android:layout_marginRight="-10dp"
+                android:layout_alignLeft="@+id/calendar_day_date_tv"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:background="@drawable/notification"/>
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_alignParentBottom="true"

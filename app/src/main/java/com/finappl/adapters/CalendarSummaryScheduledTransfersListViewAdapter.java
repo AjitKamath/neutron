@@ -82,7 +82,7 @@ public class CalendarSummaryScheduledTransfersListViewAdapter extends BaseAdapte
             mHolder.calendar_summary_scheduled_transfers_list_item_account_to_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transfers_list_item_account_to_tv);
             mHolder.calendar_summary_scheduled_transfers_list_item_amt_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transfers_list_item_amt_tv);
             mHolder.calendar_summary_scheduled_transfers_list_item_repeat_until_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transfers_list_item_repeat_until_tv);
-            mHolder.calendar_summary_scheduled_transfers_list_item_next_occurence_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transfers_list_item_next_occurence_tv);
+            //mHolder.calendar_summary_scheduled_transfers_list_item_next_occurence_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transfers_list_item_next_occurence_tv);
             mHolder.calendar_summary_scheduled_transfers_list_item_notify_add_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transfers_list_item_notify_add_tv);
             mHolder.calendar_summary_scheduled_transfers_list_item_notify_add_time_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transfers_list_item_notify_add_time_tv);
             mHolder.calendar_summary_scheduled_transfers_list_item_repeat_type_tv = (TextView) convertView.findViewById(R.id.calendar_summary_scheduled_transfers_list_item_repeat_type_tv);
@@ -102,7 +102,7 @@ public class CalendarSummaryScheduledTransfersListViewAdapter extends BaseAdapte
         mHolder.calendar_summary_scheduled_transfers_list_item_amt_tv = FinappleUtility.formatAmountView(mHolder.calendar_summary_scheduled_transfers_list_item_amt_tv, user, transfer.getTRNFR_AMT());
         mHolder.calendar_summary_scheduled_transfers_list_item_amt_tv.setTextColor(mContext.getResources().getColor(R.color.finappleCurrencyNeutralColor));
 
-        mHolder.calendar_summary_scheduled_transfers_list_item_next_occurence_tv.setText("NO_IMPL");
+        //mHolder.calendar_summary_scheduled_transfers_list_item_next_occurence_tv.setText("NO_IMPL");
         mHolder.calendar_summary_scheduled_transfers_list_item_notify_add_tv.setText(transfer.getNOTIFY());
         mHolder.calendar_summary_scheduled_transfers_list_item_notify_add_time_tv.setText(transfer.getNOTIFY_TIME());
         mHolder.calendar_summary_scheduled_transfers_list_item_repeat_type_tv.setText(transfer.getRepeat());
@@ -135,7 +135,7 @@ public class CalendarSummaryScheduledTransfersListViewAdapter extends BaseAdapte
         private TextView calendar_summary_scheduled_transfers_list_item_account_to_tv;
         private TextView calendar_summary_scheduled_transfers_list_item_amt_tv;
         private TextView calendar_summary_scheduled_transfers_list_item_repeat_until_tv;
-        private TextView calendar_summary_scheduled_transfers_list_item_next_occurence_tv;
+        //private TextView calendar_summary_scheduled_transfers_list_item_next_occurence_tv;
         private TextView calendar_summary_scheduled_transfers_list_item_notify_add_tv;
         private TextView calendar_summary_scheduled_transfers_list_item_notify_add_time_tv;
         private TextView calendar_summary_scheduled_transfers_list_item_repeat_type_tv;

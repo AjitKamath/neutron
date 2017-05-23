@@ -13,6 +13,7 @@ public class TransactionMO implements Serializable {
 	private String SPNT_ON_ID;
 	private String ACC_ID;
 	private String REPEAT_ID;
+	private String PARENT_TRAN_ID;
 	private Double TRAN_AMT;
 	private String TRAN_NAME;
 	private String TRAN_TYPE;
@@ -42,10 +43,6 @@ public class TransactionMO implements Serializable {
     private AccountMO accountObj;
 
     private Date schCreateDate;
-
-	//possibly obsoletes
-	private String SCH_TRAN_ID;
-	private String TRAN_IS_DEL;
 
 	private String transactionDate;
 	private String creatDtm;
@@ -155,12 +152,6 @@ public class TransactionMO implements Serializable {
 	public void setACC_ID(String aCC_ID) {
 		ACC_ID = aCC_ID;
 	}
-	public String getSCH_TRAN_ID() {
-		return SCH_TRAN_ID;
-	}
-	public void setSCH_TRAN_ID(String sCH_TRAN_ID) {
-		SCH_TRAN_ID = sCH_TRAN_ID;
-	}
 	public Double getTRAN_AMT() {
 		return TRAN_AMT;
 	}
@@ -192,14 +183,6 @@ public class TransactionMO implements Serializable {
 
 	public void setTRAN_DATE(Date TRAN_DATE) {
 		this.TRAN_DATE = TRAN_DATE;
-	}
-
-	public String getTRAN_IS_DEL() {
-		return TRAN_IS_DEL;
-	}
-
-	public void setTRAN_IS_DEL(String TRAN_IS_DEL) {
-		this.TRAN_IS_DEL = TRAN_IS_DEL;
 	}
 
 	public Date getCREAT_DTM() {
@@ -305,5 +288,13 @@ public class TransactionMO implements Serializable {
 
 	public void setSCHD_UPTO_DATE(String SCHD_UPTO_DATE) {
 		this.SCHD_UPTO_DATE = SCHD_UPTO_DATE;
+	}
+
+	public String getPARENT_TRAN_ID() {
+		return PARENT_TRAN_ID;
+	}
+
+	public void setPARENT_TRAN_ID(String PARENT_TRAN_ID) {
+		this.PARENT_TRAN_ID = PARENT_TRAN_ID;
 	}
 }

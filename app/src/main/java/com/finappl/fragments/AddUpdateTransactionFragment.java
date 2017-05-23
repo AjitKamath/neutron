@@ -240,6 +240,10 @@ public class AddUpdateTransactionFragment extends DialogFragment {
                 //schedule untill
                 transactionContentScheduleUptoDateTV.setText(transactionModelObj.getSCHD_UPTO_DATE());
             }
+            else{
+                //set default Repeat to be set
+                setRepeat(getDefaultRepeat(repeatsList));
+            }
         }
         else{
             //set default select_category_category to be set

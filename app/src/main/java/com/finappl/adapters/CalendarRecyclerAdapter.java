@@ -6,11 +6,14 @@ package com.finappl.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -63,6 +66,7 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
         private TextView calendar_day_transactions_amt_tv;
         private LinearLayout calendar_day_transfer_ll;
         private TextView calendar_day_transfers_amt_tv;
+        private ImageView calendar_day_sched_indicator_iv;
 
         public ViewHolder(View v){
             super(v);
@@ -73,12 +77,22 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
             calendar_day_transactions_amt_tv = (TextView) v.findViewById(R.id.calendar_day_transactions_amt_tv);
             calendar_day_transfer_ll = (LinearLayout) v.findViewById(R.id.calendar_day_transfer_ll);
             calendar_day_transfers_amt_tv = (TextView) v.findViewById(R.id.calendar_day_transfers_amt_tv);
+            calendar_day_sched_indicator_iv = (ImageView) v.findViewById(R.id.calendar_day_sched_indicator_iv);
         }
 
         public void bind(final Date item, final View viewObj, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick(viewObj);
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    listener.onItemLongClick(viewObj);
+                    return true;
                 }
             });
         }
@@ -97,10 +111,12 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
         Date dateObj = datesList.get(position);
         String cellDate = JAVA_DATE_FORMAT_SDF.format(dateObj);
         int date = Integer.parseInt(cellDate.split("-")[0]);
+        DayLedger dayLedger = new DayLedger();
+        dayLedger.setDate(cellDate);
 
         //set cell data
         if(ledger != null && ledger.containsKey(cellDate)){
-            DayLedger dayLedger = ledger.get(cellDate);
+            dayLedger = ledger.get(cellDate);
 
             //transaction
             if(dayLedger.isHasTransactions()){
@@ -114,9 +130,9 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
                 mHolder.calendar_day_transfers_amt_tv = FinappleUtility.shortenAmountView(mHolder.calendar_day_transfers_amt_tv, user, dayLedger.getTransfersAmountTotal());
                 mHolder.calendar_day_transfers_amt_tv.setTextColor(ContextCompat.getColor(mContext, R.color.finappleTheme));
             }
-
-            mHolder.calendar_day_content_rl.setTag(calendar_date_cell_date_key, dayLedger);
         }
+
+        mHolder.calendar_day_content_rl.setTag(calendar_date_cell_date_key, dayLedger);
 
         //date text
         mHolder.calendar_day_date_tv.setText(String.valueOf(date));

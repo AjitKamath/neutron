@@ -883,6 +883,13 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 2. today summary
 3. on demand date summary
 
+<--Git Push on 9-may-2017-->
+
+23-may-2017
+1. schedules on calendar summary.
+2. any day summary by clicking on the calendar.
+3. day summary on long click on calendar.
+
 ------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE
 2. impl delete transaction, cat, spent on, account, transfer(take care of things like..impacts..should check for existing transactions with the same cat.

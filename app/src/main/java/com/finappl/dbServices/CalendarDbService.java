@@ -951,6 +951,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" RPT.REPEAT_ID, ");
         sqlQuerySB.append(" RPT.REPEAT_NAME, ");
         sqlQuerySB.append(" RPT.REPEAT_IMG, ");
+        sqlQuerySB.append(" TRFR.PARENT_TRNFR_ID, ");
         sqlQuerySB.append(" TRFR.SCHD_UPTO_DATE, ");
         sqlQuerySB.append(" TRFR.NOTIFY, ");
         sqlQuerySB.append(" TRFR.NOTIFY_TIME, ");
@@ -999,6 +1000,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             String creatDtmStr = ColumnFetcher.loadString(cursor, "CREAT_DTM");
             Date creatDtm = ColumnFetcher.loadDateTime(cursor, "CREAT_DTM");
             String schedDateStr = ColumnFetcher.loadString(cursor, "SCHD_UPTO_DATE");
+            String parentTransferIdStr = ColumnFetcher.loadString(cursor, "PARENT_TRNFR_ID");
             String notifyStr = ColumnFetcher.loadString(cursor, "NOTIFY");
             String notifyTimeStr = ColumnFetcher.loadString(cursor, "NOTIFY_TIME");
             String repeatIdStr = ColumnFetcher.loadString(cursor, "REPEAT_ID");
@@ -1036,6 +1038,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             transfer.setRepeatImg(repeatImgStr);
             transfer.setTRNFR_NOTE(noteStr);
             transfer.setCREAT_DTM(creatDtm);
+            transfer.setPARENT_TRNFR_ID(parentTransferIdStr);
 
             //if the legend map already contains an entry for this date
             if (monthLegendMap.containsKey(transferDateStr)) {
@@ -1072,6 +1075,10 @@ public class CalendarDbService extends SQLiteOpenHelper {
             dayLedger.setActivities(activities);
             dayLedger.setTransfersAmountTotal(totalAmount);
 
+            if(transfer.getRepeat() != null && !transfer.getRepeat().trim().isEmpty()){
+                dayLedger.setHasScheduledTransfer(true);
+            }
+
             monthLegendMap.put(transferDateStr, dayLedger);
         }
         cursor.close();
@@ -1093,6 +1100,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
         sqlQuerySB.append(" TRAN.TRAN_DATE, ");
         sqlQuerySB.append(" TRAN.TRAN_NAME, ");
         sqlQuerySB.append(" TRAN.CREAT_DTM, ");
+        sqlQuerySB.append(" TRAN.PARENT_TRAN_ID, ");
         sqlQuerySB.append(" TRAN.SCHD_UPTO_DATE, ");
         sqlQuerySB.append(" TRAN.NOTIFY, ");
         sqlQuerySB.append(" TRAN.NOTIFY_TIME, ");
@@ -1145,6 +1153,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
 
         while (cursor.moveToNext()) {
             String tranNoteStr = ColumnFetcher.loadString(cursor, "TRAN_NOTE");
+            String parentTransactionIdStr = ColumnFetcher.loadString(cursor, "PARENT_TRAN_ID");
             String schedDateStr = ColumnFetcher.loadString(cursor, "SCHD_UPTO_DATE");
             String notifyStr = ColumnFetcher.loadString(cursor, "NOTIFY");
             String notifyTimeStr = ColumnFetcher.loadString(cursor, "NOTIFY_TIME");
@@ -1188,6 +1197,7 @@ public class CalendarDbService extends SQLiteOpenHelper {
             transaction.setTRAN_DATE(transactionDate);
             transaction.setCreatDtm(creatDtmStr);
             transaction.setCREAT_DTM(creatDtm);
+            transaction.setPARENT_TRAN_ID(parentTransactionIdStr);
             transaction.setSCHD_UPTO_DATE(schedDateStr);
             transaction.setNOTIFY(notifyStr);
             transaction.setNOTIFY_TIME(notifyTimeStr);
@@ -1249,6 +1259,10 @@ public class CalendarDbService extends SQLiteOpenHelper {
             dayLedger.setDate(tranDateStr);
             dayLedger.setActivities(activities);
             dayLedger.setTransactionsAmountTotal(totalAmount);
+
+            if(transaction.getRepeat() != null && !transaction.getRepeat().trim().isEmpty()){
+                dayLedger.setHasScheduledTransaction(true);
+            }
 
             monthLegendMap.put(tranDateStr, dayLedger);
         }

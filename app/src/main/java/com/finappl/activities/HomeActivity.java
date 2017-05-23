@@ -40,13 +40,16 @@ import com.finappl.fragments.TransferDetailsFragment;
 import com.finappl.models.AccountMO;
 import com.finappl.models.CalendarMonth;
 import com.finappl.models.DayLedger;
+import com.finappl.models.SchedulesMO;
 import com.finappl.models.TransactionMO;
 import com.finappl.models.TransferMO;
 import com.finappl.utils.FinappleUtility;
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.google.android.gms.vision.text.Text;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -96,6 +99,9 @@ public class HomeActivity extends CommonActivity {
 
     @InjectView(R.id.calendar_summary_briefings_accounts_count_tv)
     TextView calendar_summary_briefings_accounts_count_tv;
+
+    @InjectView(R.id.calendar_summary_briefings_scheds_count_tv)
+    TextView calendar_summary_briefings_scheds_count_tv;
 
     @InjectView(R.id.calendar_summary_vp)
     ViewPager calendar_summary_vp;
@@ -184,7 +190,7 @@ public class HomeActivity extends CommonActivity {
         loadUIThread.execute("FIRST_LOAD");
     }
 
-    private void setupSummary(Date date) {
+    public void setupSummary(Date date) {
         setupSummaryBriefings("SUMMARY");
 
         DayLedger dayLedger = null;
@@ -223,6 +229,20 @@ public class HomeActivity extends CommonActivity {
         //adding accounts into summaryList
         summaryList.add(accountsList);
 
+        //adding scheduled transactions/transfers into summaryList
+        SchedulesMO schedules = FinappleUtility.getScheduledActivities(dateStr, dayLedger, dayLederMap);
+        summaryList.add(schedules);
+        int schedulesCount = 0;
+        if(schedules != null){
+            if(schedules.getScheduledTransactionsList() != null){
+                schedulesCount += schedules.getScheduledTransactionsList().size();
+            }
+            if(schedules.getScheduledTransfersList() != null){
+                schedulesCount += schedules.getScheduledTransfersList().size();
+            }
+        }
+        calendar_summary_briefings_scheds_count_tv.setText(String.valueOf(schedulesCount));
+
         CalendarSummaryViewPagerAdapter adapter = new CalendarSummaryViewPagerAdapter(mContext, user, summaryList);
         calendar_summary_vp.setAdapter(adapter);
 
@@ -241,6 +261,8 @@ public class HomeActivity extends CommonActivity {
                     case 1:
                         setupSummaryBriefings("ACCOUNTS");
                         break;
+                    case 2:
+                        setupSummaryBriefings("SUMMARY");
                     default:
                         FinappleUtility.showSnacks(wrapper_home_cl, "Un Identified Screen", OK, Snackbar.LENGTH_INDEFINITE);
                 }
@@ -294,15 +316,22 @@ public class HomeActivity extends CommonActivity {
         datePickerDialog.show();
     }
 
-    @OnClick(R.id.calendar_summary_briefings_accounts_summary_ll)
+    @OnClick({R.id.calendar_summary_briefings_accounts_summary_ll, R.id.calendar_summary_briefings_scheds_summary_ll})
     public void onBriefingClick(View view){
-        if(calendar_summary_vp.getCurrentItem() == 0){
-            calendar_summary_vp.setCurrentItem(1);
-            setupSummaryBriefings("ACCOUNTS");
+        if(R.id.calendar_summary_briefings_scheds_summary_ll == view.getId()){
+            calendar_summary_vp.setCurrentItem(2);
         }
-        else if(calendar_summary_vp.getCurrentItem() == 1){
-            calendar_summary_vp.setCurrentItem(0);
-            setupSummaryBriefings("SUMMARY");
+        else if(R.id.calendar_summary_briefings_accounts_summary_ll == view.getId()) {
+            if (calendar_summary_vp.getCurrentItem() == 0) {
+                calendar_summary_vp.setCurrentItem(1);
+                setupSummaryBriefings("ACCOUNTS");
+            } else if (calendar_summary_vp.getCurrentItem() == 1) {
+                calendar_summary_vp.setCurrentItem(0);
+                setupSummaryBriefings("SUMMARY");
+            }
+        }
+        else{
+            FinappleUtility.showSnacks(getWrapper_home_cl(), "Could not identify the purpose", OK, Snackbar.LENGTH_INDEFINITE);
         }
     }
 
@@ -395,6 +424,23 @@ public class HomeActivity extends CommonActivity {
         }
 
         setupCalendar();
+
+        //update summary
+        String dateStr = String.valueOf(((TextView) calendar_summary_briefings_date_tv).getText());
+        Date date = null;
+        if("TODAY".equalsIgnoreCase(dateStr)){
+            date = new Date();
+        }
+        else{
+            try{
+                date = UI_DATE_FORMAT_SDF.parse(dateStr);
+            }
+            catch (ParseException e){
+                Log.e(CLASS_NAME, "Date Parse Exception : "+dateStr);
+                return;
+            }
+        }
+        setupSummary(date);
     }
 
     public void changeMonth(boolean previousMonth){

@@ -23,6 +23,10 @@ import com.finappl.R;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.fragments.LoginFragment;
 import com.finappl.models.AccountMO;
+import com.finappl.models.DayLedger;
+import com.finappl.models.SchedulesMO;
+import com.finappl.models.TransactionMO;
+import com.finappl.models.TransferMO;
 import com.finappl.models.UserMO;
 
 import java.io.ByteArrayOutputStream;
@@ -39,12 +43,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 import static com.finappl.utils.Constants.DECIMAL_AFTER_LIMIT;
 import static com.finappl.utils.Constants.DECIMAL_BEFORE_LIMIT;
 import static com.finappl.utils.Constants.FRAGMENT_LOGIN;
+import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.SHARED_PREF;
 import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
@@ -71,6 +77,178 @@ public class FinappleUtility extends Activity{
         }
 		return instance;
 	}
+
+    public static SchedulesMO getScheduledActivities(String dateStr, DayLedger dayLedger, Map<String, DayLedger> dayLederMap) {
+        SchedulesMO schedules = new SchedulesMO();
+        Date selectedDate = null;
+
+        try{
+            selectedDate = JAVA_DATE_FORMAT_SDF.parse(dateStr);
+        }
+        catch (ParseException e){
+            Log.e(CLASS_NAME, "Date Parse Exception : "+dateStr);
+            return null;
+        }
+
+        for(Map.Entry<String, DayLedger> iterMap : dayLederMap.entrySet()){
+            if(iterMap.getValue().equals(dayLedger)){
+                continue;
+            }
+
+            if((iterMap.getValue().isHasScheduledTransfer() || iterMap.getValue().isHasScheduledTransaction())){
+                /*sched. transactions*/
+                if(iterMap.getValue().isHasScheduledTransaction()){
+                    List<TransactionMO> transactions = iterMap.getValue().getActivities().getTransactionsList();
+                    List<TransactionMO> schedTransactions = new ArrayList<>();
+
+                    for(TransactionMO iterList : transactions){
+                        if(iterList.getTRAN_DATE().after(selectedDate)){
+                            continue;
+                        }
+                        if(iterList.getSCHD_UPTO_DATE() != null && !iterList.getSCHD_UPTO_DATE().trim().isEmpty() && !iterList.getSCHD_UPTO_DATE().equalsIgnoreCase("FOREVER")){
+                            Date schedUptoDate = null;
+                            try{
+                                schedUptoDate = JAVA_DATE_FORMAT_SDF.parse(iterList.getSCHD_UPTO_DATE());
+                            }
+                            catch (ParseException e){
+                                Log.e(CLASS_NAME, "Date Parse Exception : "+iterList.getSCHD_UPTO_DATE());
+                                continue;
+                            }
+
+                            if(selectedDate.after(schedUptoDate)){
+                                continue;
+                            }
+                        }
+
+                        if(dayLedger != null && dayLedger.isHasTransactions()){
+                            boolean schedAlreadyAdded = false;
+                            for(TransactionMO iter : dayLedger.getActivities().getTransactionsList()){
+                                if(iterList.getTRAN_ID().equalsIgnoreCase(iter.getPARENT_TRAN_ID())){
+                                    schedAlreadyAdded = true;
+                                    break;
+                                }
+                            }
+
+                            if(schedAlreadyAdded){
+                                continue;
+                            }
+                        }
+
+                        if(iterList.getRepeat() != null && !iterList.getRepeat().trim().isEmpty()){
+                            if("DAY".equalsIgnoreCase(iterList.getRepeat())){
+                                schedTransactions.add(iterList);
+                            }
+                            else if("WEEK".equalsIgnoreCase(iterList.getRepeat())){
+                                DateFormat sdf = new SimpleDateFormat("EEEE");
+
+                                String dayOfTransaction = sdf.format(iterList.getTRAN_DATE());
+                                String selectedDayOfWeek = sdf.format(selectedDate);
+
+                                if(dayOfTransaction.equalsIgnoreCase(selectedDayOfWeek)){
+                                    schedTransactions.add(iterList);
+                                }
+                            }
+                            else if("MONTH".equalsIgnoreCase(iterList.getRepeat())){
+                                String transactionDayStr = JAVA_DATE_FORMAT_SDF.format(iterList.getTRAN_DATE()).split("-")[0];
+                                String selectedDayStr = dateStr.split("-")[0];
+
+                                if(selectedDayStr.equalsIgnoreCase(transactionDayStr)){
+                                    schedTransactions.add(iterList);
+                                }
+                            }
+                            else if("YEAR".equalsIgnoreCase(iterList.getRepeat())){
+                                String transactionDayMonthStr = JAVA_DATE_FORMAT_SDF.format(iterList.getTRAN_DATE());
+                                transactionDayMonthStr = transactionDayMonthStr.substring(0, transactionDayMonthStr.lastIndexOf("-"));
+                                String selectedDayMonthStr = dateStr.substring(0, dateStr.lastIndexOf("-"));
+
+                                if(transactionDayMonthStr.equalsIgnoreCase(selectedDayMonthStr)){
+                                    schedTransactions.add(iterList);
+                                }
+                            }
+                        }
+                    }
+                    schedules.setScheduledTransactionsList(schedTransactions);
+                }
+                /*sched. transactions*/
+
+                /*sched. transfers*/
+                if(iterMap.getValue().isHasScheduledTransfer()){
+                    List<TransferMO> transfers = iterMap.getValue().getActivities().getTransfersList();
+                    List<TransferMO> schedTransfers = new ArrayList<>();
+
+                    for(TransferMO iterList : transfers){
+                        if(iterList.getTRNFR_DATE().after(selectedDate)){
+                            continue;
+                        }
+                        if(iterList.getSCHD_UPTO_DATE() != null && !iterList.getSCHD_UPTO_DATE().trim().isEmpty() && !iterList.getSCHD_UPTO_DATE().equalsIgnoreCase("FOREVER")){
+                            Date schedUptoDate = null;
+                            try{
+                                schedUptoDate = JAVA_DATE_FORMAT_SDF.parse(iterList.getSCHD_UPTO_DATE());
+                            }
+                            catch (ParseException e){
+                                Log.e(CLASS_NAME, "Date Parse Exception : "+iterList.getSCHD_UPTO_DATE());
+                                continue;
+                            }
+
+                            if(selectedDate.after(schedUptoDate)){
+                                continue;
+                            }
+                        }
+
+                        if(dayLedger != null && dayLedger.isHasTransfers()){
+                            boolean schedAlreadyAdded = false;
+                            for(TransferMO iter : dayLedger.getActivities().getTransfersList()){
+                                if(iterList.getTRNFR_ID().equalsIgnoreCase(iter.getPARENT_TRNFR_ID())){
+                                    schedAlreadyAdded = true;
+                                    break;
+                                }
+                            }
+
+                            if(schedAlreadyAdded){
+                                continue;
+                            }
+                        }
+
+                        if(iterList.getRepeat() != null && !iterList.getRepeat().trim().isEmpty()){
+                            if("DAY".equalsIgnoreCase(iterList.getRepeat())){
+                                schedTransfers.add(iterList);
+                            }
+                            else if("WEEK".equalsIgnoreCase(iterList.getRepeat())){
+                                DateFormat sdf = new SimpleDateFormat("EEEE");
+
+                                String dayOfTransfer = sdf.format(iterList.getTRNFR_DATE());
+                                String selectedDayOfWeek = sdf.format(selectedDate);
+
+                                if(dayOfTransfer.equalsIgnoreCase(selectedDayOfWeek)){
+                                    schedTransfers.add(iterList);
+                                }
+                            }
+                            else if("MONTH".equalsIgnoreCase(iterList.getRepeat())){
+                                String transferDayStr = JAVA_DATE_FORMAT_SDF.format(iterList.getTRNFR_DATE()).split("-")[0];
+                                String selectedDayStr = dateStr.split("-")[0];
+
+                                if(selectedDayStr.equalsIgnoreCase(transferDayStr)){
+                                    schedTransfers.add(iterList);
+                                }
+                            }
+                            else if("YEAR".equalsIgnoreCase(iterList.getRepeat())){
+                                String transferDayMonthStr = JAVA_DATE_FORMAT_SDF.format(iterList.getTRNFR_DATE());
+                                transferDayMonthStr = transferDayMonthStr.substring(0, transferDayMonthStr.lastIndexOf("-"));
+                                String selectedDayMonthStr = dateStr.substring(0, dateStr.lastIndexOf("-"));
+
+                                if(transferDayMonthStr.equalsIgnoreCase(selectedDayMonthStr)){
+                                    schedTransfers.add(iterList);
+                                }
+                            }
+                        }
+                    }
+                    schedules.setScheduledTransfersList(schedTransfers);
+                }
+                /*sched. transfers*/
+            }
+        }
+        return schedules;
+    }
 
     public static Set<String> csvToSet(Set<String> tagsSet, String csvStr){
         if(tagsSet == null){
@@ -249,6 +427,10 @@ public class FinappleUtility extends Activity{
     }
 
     public static TextView formatAmountView(TextView amountTV, UserMO userMO, Double amount){
+        if(amount == null){
+            amount = 0.0;
+        }
+
         if(amount <= 0){
             if(amount < 0) {
                 amount = amount * -1;

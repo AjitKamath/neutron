@@ -32,6 +32,13 @@ public class TransactionsDbService extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        if(transactionModel.getREPEAT_ID() == null || transactionModel.getREPEAT_ID().trim().isEmpty()){
+            transactionModel.setPARENT_TRAN_ID("");
+        }
+        else{
+            transactionModel.setPARENT_TRAN_ID(transactionModel.getTRAN_ID());
+        }
+
         values.put("CAT_ID", transactionModel.getCAT_ID());
         values.put("SPNT_ON_ID", transactionModel.getSPNT_ON_ID());
         values.put("ACC_ID", transactionModel.getACC_ID());
@@ -42,6 +49,7 @@ public class TransactionsDbService extends SQLiteOpenHelper {
         values.put("TRAN_NOTE", transactionModel.getTRAN_NOTE());
         values.put("NOTIFY", transactionModel.getNOTIFY());
         values.put("NOTIFY_TIME", transactionModel.getNOTIFY_TIME());
+        values.put("PARENT_TRAN_ID", transactionModel.getPARENT_TRAN_ID());
         values.put("SCHD_UPTO_DATE", transactionModel.getSCHD_UPTO_DATE());
         values.put("TRAN_DATE", DB_DATE_FORMAT_SDF.format(transactionModel.getTRAN_DATE()));
         values.put("MOD_DTM", DB_DATE_TIME_FORMAT_SDF.format(new Date()));
@@ -57,6 +65,13 @@ public class TransactionsDbService extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        if(transactionModel.getREPEAT_ID() == null || transactionModel.getREPEAT_ID().trim().isEmpty()){
+            transactionModel.setPARENT_TRAN_ID("");
+        }
+        else{
+            transactionModel.setPARENT_TRAN_ID(transactionModel.getTRAN_ID());
+        }
+
 		values.put("TRAN_ID", transactionModel.getTRAN_ID());
 		values.put("USER_ID", transactionModel.getUSER_ID());
 		values.put("CAT_ID", transactionModel.getCAT_ID());
@@ -69,6 +84,7 @@ public class TransactionsDbService extends SQLiteOpenHelper {
         values.put("REPEAT_ID", transactionModel.getREPEAT_ID());
         values.put("NOTIFY", transactionModel.getNOTIFY());
         values.put("NOTIFY_TIME", transactionModel.getNOTIFY_TIME());
+        values.put("PARENT_TRAN_ID", transactionModel.getPARENT_TRAN_ID());
         values.put("SCHD_UPTO_DATE", transactionModel.getSCHD_UPTO_DATE());
         values.put("TRAN_DATE", DB_DATE_FORMAT_SDF.format(transactionModel.getTRAN_DATE()));
 		values.put("CREAT_DTM", DB_DATE_TIME_FORMAT_SDF.format(new Date()));

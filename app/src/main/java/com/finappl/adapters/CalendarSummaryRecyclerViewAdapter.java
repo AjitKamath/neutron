@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -62,26 +63,63 @@ public class CalendarSummaryRecyclerViewAdapter extends RecyclerView.Adapter<Cal
 
         viewHolder.calendar_summary_list_item_heading_tv.setText(calendarSummary.getHeading());
         viewHolder.calendar_summary_list_item_amount_tv = FinappleUtility.formatAmountView(viewHolder.calendar_summary_list_item_amount_tv, user, calendarSummary.getAmount());
+        viewHolder.calendar_summary_list_item_amount_tv.setVisibility(View.GONE);
 
         if(calendarSummary.getListViewAdapter() != null){
             viewHolder.calendar_summary_list_item_no_transactions_tv.setVisibility(View.GONE);
 
-            int baseHeightForListView = 110;
-            int calculateListViewHeight = baseHeightForListView * 3;
+            int baseHeightForTransactionTransferListView = 110;
+            int calculateListViewHeightForTransactionTransfer = baseHeightForTransactionTransferListView * 3;
+
+            int baseHeightForSchedTransactionTransferListView = 210;
+            int calculateListViewHeightForSchedTransactionTransfer = baseHeightForSchedTransactionTransferListView * 3;
+
+            int commonCalculatedListHeight = 0;
+
+            //transactions
             if(calendarSummary.getListViewAdapter() instanceof CalendarSummaryTransactionsListViewAdapter){
                 viewHolder.calendar_summary_list_item_lv.setAdapter((CalendarSummaryTransactionsListViewAdapter)calendarSummary.getListViewAdapter());
+                viewHolder.calendar_summary_list_item_amount_tv.setVisibility(View.VISIBLE);
 
                 if(((CalendarSummaryTransactionsListViewAdapter) calendarSummary.getListViewAdapter()).getCount() <= 3){
-                    calculateListViewHeight = (baseHeightForListView * ((CalendarSummaryTransactionsListViewAdapter) calendarSummary.getListViewAdapter()).getCount());
+                    calculateListViewHeightForTransactionTransfer = (baseHeightForTransactionTransferListView * ((CalendarSummaryTransactionsListViewAdapter) calendarSummary.getListViewAdapter()).getCount());
                 }
+
+                commonCalculatedListHeight = calculateListViewHeightForTransactionTransfer;
             }
+            //transfers
             else if(calendarSummary.getListViewAdapter() instanceof CalendarSummaryTransfersListViewAdapter){
                 viewHolder.calendar_summary_list_item_lv.setAdapter((CalendarSummaryTransfersListViewAdapter)calendarSummary.getListViewAdapter());
                 viewHolder.calendar_summary_list_item_amount_tv.setTextColor(ContextCompat.getColor(mContext, R.color.finappleCurrencyNeutralColor));
+                viewHolder.calendar_summary_list_item_amount_tv.setVisibility(View.VISIBLE);
 
                 if(((CalendarSummaryTransfersListViewAdapter) calendarSummary.getListViewAdapter()).getCount() <= 3){
-                    calculateListViewHeight = (baseHeightForListView * ((CalendarSummaryTransfersListViewAdapter) calendarSummary.getListViewAdapter()).getCount());
+                    calculateListViewHeightForTransactionTransfer = (baseHeightForTransactionTransferListView * ((CalendarSummaryTransfersListViewAdapter) calendarSummary.getListViewAdapter()).getCount());
                 }
+
+                commonCalculatedListHeight = calculateListViewHeightForTransactionTransfer;
+            }
+            //sched. transactions
+            else if(calendarSummary.getListViewAdapter() instanceof CalendarSummaryScheduledTransactionsListViewAdapter){
+                viewHolder.calendar_summary_list_item_lv.setAdapter((CalendarSummaryScheduledTransactionsListViewAdapter)calendarSummary.getListViewAdapter());
+                viewHolder.calendar_summary_list_item_amount_tv.setVisibility(View.GONE);
+
+                if(((CalendarSummaryScheduledTransactionsListViewAdapter) calendarSummary.getListViewAdapter()).getCount() <= 3){
+                    calculateListViewHeightForSchedTransactionTransfer = (baseHeightForSchedTransactionTransferListView * ((CalendarSummaryScheduledTransactionsListViewAdapter) calendarSummary.getListViewAdapter()).getCount());
+                }
+
+                commonCalculatedListHeight = calculateListViewHeightForSchedTransactionTransfer;
+            }
+            //sched. transfers
+            else if(calendarSummary.getListViewAdapter() instanceof CalendarSummaryScheduledTransfersListViewAdapter){
+                viewHolder.calendar_summary_list_item_lv.setAdapter((CalendarSummaryScheduledTransfersListViewAdapter)calendarSummary.getListViewAdapter());
+                viewHolder.calendar_summary_list_item_amount_tv.setVisibility(View.GONE);
+
+                if(((CalendarSummaryScheduledTransfersListViewAdapter) calendarSummary.getListViewAdapter()).getCount() <= 3){
+                    calculateListViewHeightForSchedTransactionTransfer = (baseHeightForSchedTransactionTransferListView * ((CalendarSummaryScheduledTransfersListViewAdapter) calendarSummary.getListViewAdapter()).getCount());
+                }
+
+                commonCalculatedListHeight = calculateListViewHeightForSchedTransactionTransfer;
             }
             else{
                 Log.e(CLASS_NAME, UN_IDENTIFIED_OBJECT_TYPE+calendarSummary.getListViewAdapter());
@@ -89,9 +127,15 @@ public class CalendarSummaryRecyclerViewAdapter extends RecyclerView.Adapter<Cal
             }
 
             //set list views height
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, calculateListViewHeight);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, commonCalculatedListHeight);
             layoutParams.setMargins(0, 0, 0, 30);
             viewHolder.calendar_summary_list_item_lv.setLayoutParams(layoutParams);
+
+            viewHolder.calendar_summary_list_item_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                }
+            });
 
             viewHolder.calendar_summary_list_item_lv.setOnTouchListener(new ListView.OnTouchListener() {
                 @Override

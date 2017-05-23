@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/finappleCurrencyNegColor"
                 android:textSize="8sp"
-                android:text="₹ 965"/>
+                android:text="₹ NA"/>
 
         </LinearLayout>
 
