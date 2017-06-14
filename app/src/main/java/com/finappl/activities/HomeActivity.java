@@ -107,7 +107,7 @@ public class HomeActivity extends CommonActivity {
     ViewPager calendar_summary_vp;
     /*components*/
 
-    private static final int PAGE_COUNT = 11;
+    private static final int PAGE_COUNT = 3;
     private static final int PAGE_MIDDLE = PAGE_COUNT/2;
 
     private int selectedCalendarVPIndex = PAGE_MIDDLE;
@@ -359,8 +359,8 @@ public class HomeActivity extends CommonActivity {
         }
 
         //get ledger
-        //the range for fetching the ledger is calendarMonthsArr.length+2 because, the user can see the dates(in grey) of the last+1 & next+1 month when he swipes to left/right
-        dayLederMap = calendarDbService.getMonthLegendOnDate(calendar, calendarMonthsArr.size() + 2, user.getUSER_ID());
+        //the range for fetching the ledger is PAGE_MIDDLE+2 because, the user can see the dates(in grey) of the last+1 & next+1 month when he swipes to left/right
+        dayLederMap = calendarDbService.getMonthLegendOnDate(calendar, PAGE_MIDDLE + 2, user.getUSER_ID());
 
         //fetch accounts
         accountsList = calendarDbService.getAllAccounts(user.getUSER_ID());
@@ -373,7 +373,7 @@ public class HomeActivity extends CommonActivity {
         calendar_vp.setClipToPadding(false);
         calendar_vp.setPadding(50, 0, 50, 0);
         calendar_vp.setPageMargin(40);
-        calendar_vp.setOffscreenPageLimit(PAGE_COUNT);
+        calendar_vp.setOffscreenPageLimit(PAGE_COUNT/2);
 
         calendar_vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             boolean loadCalendar;
@@ -606,6 +606,11 @@ public class HomeActivity extends CommonActivity {
     @Override
     protected CoordinatorLayout getWrapper_home_cl() {
         return wrapper_home_cl;
+    }
+
+    @Override
+    protected TextView getCalendar_summary_briefings_date_tv() {
+        return calendar_summary_briefings_date_tv;
     }
 
     public class LoadUI extends AsyncTask<String, Void, Void> {

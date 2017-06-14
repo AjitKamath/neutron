@@ -61,6 +61,7 @@ import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
 import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.TRANSACTION_OBJECT;
 import static com.finappl.utils.Constants.TRANSFER_OBJECT;
+import static com.finappl.utils.Constants.UI_DATE_FORMAT_SDF;
 
 public abstract class CommonActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
     private static final String CLASS_NAME = CommonActivity.class.getName();
@@ -164,13 +165,35 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
         getLayout().hide();
 
         if(R.id.fab_transaction_ll == view.getId()){
+            String dateStr = String.valueOf(getCalendar_summary_briefings_date_tv().getText());
+            Date date = new Date();
+            if(!"TODAY".equalsIgnoreCase(dateStr)){
+                try{
+                    date = UI_DATE_FORMAT_SDF.parse(dateStr);
+                }
+                catch (Exception e){
+                    Log.e(CLASS_NAME, "Date Parse Exception : "+e);
+                }
+            }
+
             TransactionMO transaction = new TransactionMO();
-            transaction.setTRAN_DATE(new Date());
+            transaction.setTRAN_DATE(date);
             showTransactionFragment(transaction);
         }
         else if(R.id.fab_transfer_ll == view.getId()){
+            String dateStr = String.valueOf(getCalendar_summary_briefings_date_tv().getText());
+            Date date = new Date();
+            if(!"TODAY".equalsIgnoreCase(dateStr)){
+                try{
+                    date = UI_DATE_FORMAT_SDF.parse(dateStr);
+                }
+                catch (Exception e){
+                    Log.e(CLASS_NAME, "Date Parse Exception : "+e);
+                }
+            }
+
             TransferMO transfer = new TransferMO();
-            transfer.setTRNFR_DATE(new Date());
+            transfer.setTRNFR_DATE(date);
             showAddTransferFragment(transfer);
         }
         else{
@@ -373,4 +396,6 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
     protected abstract LinearLayout getFab_transfer_ll();
 
     protected abstract CoordinatorLayout getWrapper_home_cl();
+
+    protected abstract TextView getCalendar_summary_briefings_date_tv();
 }

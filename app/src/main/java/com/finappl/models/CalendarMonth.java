@@ -115,7 +115,6 @@ public class CalendarMonth {
 
         Calendar temp = (Calendar) this.calendar.clone();
         temp.set(Calendar.DAY_OF_MONTH, 1);
-        temp.add(Calendar.MONTH, offset);
 
         int currentWeekDay = temp.get(Calendar.DAY_OF_WEEK);
         int prevMonthDatesCount = 0;
@@ -151,7 +150,7 @@ public class CalendarMonth {
 
         anotherTemp.add(Calendar.MONTH, -1);
         int endingDateForPrevMonth = anotherTemp.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int startingDateForPrevMonth = endingDateForPrevMonth - prevMonthDatesCount + 1;
+        int startingDateForPrevMonth = endingDateForPrevMonth - prevMonthDatesCount +1;
 
         anotherTemp.set(Calendar.DAY_OF_MONTH, startingDateForPrevMonth);
 

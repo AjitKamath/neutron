@@ -9,14 +9,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.finappl.R;
@@ -39,6 +37,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -54,8 +53,8 @@ import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.OK;
 import static com.finappl.utils.Constants.SHARED_PREF;
 import static com.finappl.utils.Constants.SHARED_PREF_ACTIVE_USER_ID;
-import static com.finappl.utils.Constants.UI_FONT;
 import static com.finappl.utils.Constants.UI_TIME_FORMAT_SDF;
+import static com.finappl.utils.Constants.UN_IDENTIFIED_OBJECT_TYPE;
 
 public class FinappleUtility extends Activity{
 
@@ -248,6 +247,70 @@ public class FinappleUtility extends Activity{
             }
         }
         return schedules;
+    }
+
+    public List<String> getScheduledDatesInMonth(Object object, Date fromDate, Date uptoDate){
+        List<String> scheduledDatesList = new ArrayList<>();
+        Date activityDate = null;
+        Date today = new Date();
+        String repeatStr = null;
+
+        if(object instanceof TransactionMO){
+            activityDate = ((TransactionMO) object).getTRAN_DATE();
+            repeatStr = ((TransactionMO)object).getRepeat();
+        }
+        else if(object instanceof TransferMO){
+            activityDate = ((TransferMO) object).getTRNFR_DATE();
+            repeatStr = ((TransferMO)object).getRepeat();
+        }
+        else{
+            Log.e(CLASS_NAME, UN_IDENTIFIED_OBJECT_TYPE);
+            return null;
+        }
+
+        if(activityDate != null && repeatStr != null && !repeatStr.trim().isEmpty()){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setLenient(false);
+            calendar.setTime(fromDate);
+
+            Calendar activityCal = Calendar.getInstance();
+            activityCal.setTime(activityDate);
+
+            while(calendar.getTime().before(uptoDate) || calendar.equals(uptoDate)){
+                String fromDateStr = "";
+
+                try {
+                    if ("DAY".equalsIgnoreCase(repeatStr)) {
+                        fromDateStr = JAVA_DATE_FORMAT_SDF.format(calendar.getTime());
+                        scheduledDatesList.add(fromDateStr);
+                        calendar.add(Calendar.DAY_OF_MONTH, 1);
+                    } else if ("WEEK".equalsIgnoreCase(repeatStr)) {
+                        calendar.set(Calendar.DAY_OF_WEEK, activityCal.get(Calendar.DAY_OF_WEEK));
+                        fromDateStr = JAVA_DATE_FORMAT_SDF.format(calendar.getTime());
+                        scheduledDatesList.add(fromDateStr);
+
+                        calendar.add(Calendar.DAY_OF_MONTH, 7);
+                    } else if ("MONTH".equalsIgnoreCase(repeatStr)) {
+                        calendar.set(Calendar.DATE, activityCal.get(Calendar.DATE));
+                        fromDateStr = JAVA_DATE_FORMAT_SDF.format(calendar.getTime());
+                        scheduledDatesList.add(fromDateStr);
+
+                        calendar.add(Calendar.MONTH, 1);
+                    } else if ("YEAR".equalsIgnoreCase(repeatStr)) {
+                        calendar.set(Calendar.DATE, activityCal.get(Calendar.DATE));
+                        fromDateStr = JAVA_DATE_FORMAT_SDF.format(calendar.getTime());
+                        scheduledDatesList.add(fromDateStr);
+
+                        calendar.add(Calendar.YEAR, 1);
+                    }
+                }
+                catch (IllegalArgumentException e){
+                    Log.i(CLASS_NAME, e.getMessage());
+                }
+            }
+        }
+
+        return scheduledDatesList;
     }
 
     public static Set<String> csvToSet(Set<String> tagsSet, String csvStr){

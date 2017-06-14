@@ -66,7 +66,7 @@
                 android:visibility="invisible"
                 android:id="@+id/calendar_day_sched_indicator_iv"
                 android:layout_gravity="top"
-                android:layout_marginRight="-10dp"
+                android:layout_marginRight="-7.5dp"
                 android:layout_alignLeft="@+id/calendar_day_date_tv"
                 android:layout_width="5dp"
                 android:layout_height="5dp"
