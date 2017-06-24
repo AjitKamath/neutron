@@ -1,7 +1,9 @@
 package com.finappl.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.GridLayoutManager;
@@ -104,7 +106,6 @@ public class CalendarViewPagerAdapter extends PagerAdapter {
     public void setModel(LinkedList<CalendarMonth> calendarMonth){
         this.calendarMonth = calendarMonth;
         notifyDataSetChanged();
-
     }
 
     @Override

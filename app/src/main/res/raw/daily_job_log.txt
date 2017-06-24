@@ -895,6 +895,12 @@ doing this i could utilize the more real estate per tab. Yet to implement budget
 14-june-2017
 1. schedules are shown with a bell icon on dates.
 
+<--Git Push on 14-june-2017-->
+
+22-june-2017
+1. calendar loader when the calendar pages are loading.
+
+
 ------------------------------------------------------------------------------------38/60-----------------------------------------------------------------------------------
 1. ability to do a transfer from view transfers(obsolete)---------------------------------------------------------------------------------------------------------------------DONE
 2. impl delete transaction, cat, spent on, account, transfer(take care of things like..impacts..should check for existing transactions with the same cat.

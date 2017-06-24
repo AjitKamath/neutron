@@ -127,6 +127,7 @@ public final class Constants{
     public static final String FRAGMENT_ACCOUNTS = "FRAGMENT_ACCOUNTS";
     public static final String FRAGMENT_SPENTONS = "FRAGMENT_SPENTONS";
     public static final String FRAGMENT_BUDGETS = "FRAGMENT_BUDGETS";
+    public static final String FRAGMENT_CALENDAR_LOADER = "FRAGMENT_CALENDAR_LOADER";
 
     //FRAGMENT OBJECT KEYS
     public static final String CONFIRM_MESSAGE = "CONFIRM_MESSAGE";

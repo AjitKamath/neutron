@@ -1,6 +1,7 @@
 package com.finappl.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -11,6 +12,8 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -25,9 +28,9 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.finappl.R;
 import com.finappl.adapters.CalendarSummaryViewPagerAdapter;
@@ -35,6 +38,7 @@ import com.finappl.adapters.CalendarViewPagerAdapter;
 import com.finappl.dbServices.AuthorizationDbService;
 import com.finappl.dbServices.CalendarDbService;
 import com.finappl.dbServices.Sqlite;
+import com.finappl.fragments.CalendarLoaderFragment;
 import com.finappl.fragments.TransactionDetailsFragment;
 import com.finappl.fragments.TransferDetailsFragment;
 import com.finappl.models.AccountMO;
@@ -45,11 +49,8 @@ import com.finappl.models.TransactionMO;
 import com.finappl.models.TransferMO;
 import com.finappl.utils.FinappleUtility;
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
-import com.google.android.gms.vision.text.Text;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -63,9 +64,9 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Optional;
 
+import static com.finappl.utils.Constants.FRAGMENT_CALENDAR_LOADER;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSACTION_DETAILS;
 import static com.finappl.utils.Constants.FRAGMENT_TRANSFER_DETAILS;
-import static com.finappl.utils.Constants.JAVA_DATE_FORMAT;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF;
 import static com.finappl.utils.Constants.JAVA_DATE_FORMAT_SDF_1;
 import static com.finappl.utils.Constants.LOGGED_IN_OBJECT;
@@ -79,6 +80,7 @@ import static com.finappl.utils.Constants.UI_FONT;
 public class HomeActivity extends CommonActivity {
     private final String CLASS_NAME = this.getClass().getName();
     private Context mContext = this;
+    private Activity activity = this;
 
     //------------------------------------------------------------------
     /*components*/
@@ -150,9 +152,6 @@ public class HomeActivity extends CommonActivity {
     private String selectedDateStr = JAVA_DATE_FORMAT_SDF.format(new Date());
     private String currentFocusedMonthStr = JAVA_DATE_FORMAT_SDF_1.format(new Date());
 
-    //Swipe Multi Views
-    private ViewPager viewPager, viewPagerMonths;
-
     //month legend
     private Map<String, DayLedger> dayLederMap = new HashMap<>();
 
@@ -164,13 +163,6 @@ public class HomeActivity extends CommonActivity {
     private Sqlite controller = new Sqlite(mContext);
     private CalendarDbService calendarDbService = new CalendarDbService(mContext);
     private AuthorizationDbService authorizationDbService = new AuthorizationDbService(mContext);
-
-    //Tabs
-    private List<Integer> viewPagerTabsList = new ArrayList<>();
-
-    //progress bar
-    private ProgressBar mProgressDialog;
-    private ProgressDialog progressDialog;
 
     private static LoadUI loadUIThread;
 
@@ -188,6 +180,8 @@ public class HomeActivity extends CommonActivity {
 
         loadUIThread = new LoadUI();
         loadUIThread.execute("FIRST_LOAD");
+
+        calendarLoadingHandler.post(calendarLoadingHandlerRunnable);
     }
 
     public void setupSummary(Date date) {
@@ -373,7 +367,7 @@ public class HomeActivity extends CommonActivity {
         calendar_vp.setClipToPadding(false);
         calendar_vp.setPadding(50, 0, 50, 0);
         calendar_vp.setPageMargin(40);
-        calendar_vp.setOffscreenPageLimit(PAGE_COUNT/2);
+        calendar_vp.setOffscreenPageLimit(PAGE_COUNT);
 
         calendar_vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             boolean loadCalendar;
@@ -392,22 +386,38 @@ public class HomeActivity extends CommonActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
-                    //FinappleUtility.showSnacks(calendarPageRL, String.valueOf(selectedCalendarVPIndex), OK, Snackbar.LENGTH_SHORT);
-                    int max = calendarMonthsArr.size() - 1;
-                    int min = 0;
+                    if(loadCalendar && calendar_vp.getCurrentItem() != PAGE_MIDDLE){
+                        //swiped to right
+                        if(calendar_vp.getCurrentItem() > PAGE_MIDDLE){
+                            calendarMonthsArr.removeFirst();
+                            calendarMonthsArr.addLast(new CalendarMonth(calendarMonthsArr.getLast().getOffset()+1, activity, dayLederMap, user));
+                        }
+                        //swiped left
+                        else if(calendar_vp.getCurrentItem() < PAGE_MIDDLE){
+                            calendarMonthsArr.removeLast();
+                            calendarMonthsArr.addFirst(new CalendarMonth(calendarMonthsArr.getFirst().getOffset()-1, activity, dayLederMap, user));
+                        }
 
-                    if (selectedCalendarVPIndex == min || selectedCalendarVPIndex == max) {
-                        Calendar temp = calendarMonthsArr.get(selectedCalendarVPIndex).getCalendar();
-                        showDatepicker(temp.get(Calendar.MONTH), temp.get(Calendar.YEAR));
+                        setupCalendar();
                     }
                 }
             }
         });
     }
 
-    public void fetchUserWrapper(){
-        fetchUser();
-    }
+    final Handler calendarLoadingHandler = new Handler();
+    final Runnable calendarLoadingHandlerRunnable = new Runnable() {
+        public void run() {
+            if(calendar_vp.getCurrentItem() != PAGE_MIDDLE){
+                showCalendarLoadProgressDialog();
+            }
+            else{
+                hideCalendarLoadProgressDialog();
+            }
+
+            calendarLoadingHandler.postDelayed(this, 10);
+        }
+    };
 
     public void refreshCalendar() {
         PagerAdapter adapter = calendar_vp.getAdapter();
@@ -501,16 +511,36 @@ public class HomeActivity extends CommonActivity {
     }
 
     //progress bar
-    public void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressBar(HomeActivity.this);
-            mProgressDialog.setVisibility(View.VISIBLE);
+    public void showCalendarLoadProgressDialog() {
+        showCalendarLoader();
+
+        /*if (progressDialog == null) {
+            progressDialog = new ProgressDialog(mContext);
+        }
+
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("..loading data");
+        progressDialog.setTitle("please wait..");
+        progressDialog.show();*/
+    }
+
+    public void hideCalendarLoadProgressDialog() {
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_CALENDAR_LOADER);
+
+        if (frag != null && frag.isVisible()) {
+            manager.beginTransaction().remove(frag).commit();
         }
     }
 
-    public void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShown()) {
-            mProgressDialog.setVisibility(View.INVISIBLE);
+    private void showCalendarLoader(){
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag(FRAGMENT_CALENDAR_LOADER);
+
+        if(frag == null){
+            CalendarLoaderFragment fragment = new CalendarLoaderFragment();
+            fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.fragment_theme);
+            manager.beginTransaction().add(fragment, FRAGMENT_CALENDAR_LOADER).commit();
         }
     }
 
@@ -614,19 +644,9 @@ public class HomeActivity extends CommonActivity {
     }
 
     public class LoadUI extends AsyncTask<String, Void, Void> {
-        ProgressDialog pd;
-        Context context;
-
         @Override
         protected void onPreExecute() {
-            if(pd == null){
-                pd = new ProgressDialog(mContext);
-            }
-
-            pd.setIndeterminate(true);
-            pd.setMessage("..loading data");
-            pd.setTitle("please wait..");
-            pd.show();
+            super.onPreExecute();
         }
 
         @Override
@@ -657,15 +677,12 @@ public class HomeActivity extends CommonActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            if (pd.isShowing()) {
-                pd.dismiss();
-            }
             super.onPostExecute(result);
         }
     }
 
     //method iterates over each component in the activity and when it finds a text view..sets its font
-    public void setFont(ViewGroup group) {
+    /*public void setFont(ViewGroup group) {
         //set font for all the text view
         final Typeface robotoCondensedLightFont = Typeface.createFromAsset(mContext.getAssets(), UI_FONT);
 
@@ -681,5 +698,5 @@ public class HomeActivity extends CommonActivity {
                 setFont((ViewGroup) v);
             }
         }
-    }
+    }*/
 }
